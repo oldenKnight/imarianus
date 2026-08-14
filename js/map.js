@@ -354,7 +354,8 @@ var WorldMap = (function () {
       var open = (n.state === 'open' || n.state === 'done');
       var isHere = (n.id === model.foxNode);
       s += '<g class="map-node' + (open ? ' is-open' : ' is-shut') + (isHere ? ' is-here' : '') +
-           '" data-id="' + escXml(n.id) + '" data-kind="' + escXml(n.kind) + '"' +
+           '" data-id="' + escXml(n.id) + '" data-kind="' + escXml(n.kind) +
+           '" data-state="' + escXml(n.state) + '"' +
            ' transform="translate(' + p.x + ',' + p.y + ')"' +
            (open ? ' role="button" tabindex="0" style="cursor:pointer"' : ' aria-disabled="true"') +
            ' aria-label="' + escXml((n.titulus || n.label || '') + (n.state === 'shut' ? ' — clausum' : '')) + '">';

@@ -687,6 +687,10 @@ h1, h2, h3 { font-family: var(--serif); }
 .doors-head h2 { font-size: 1.5rem; margin: 0; }
 .doors-sub { color: var(--cream-dim); margin: 0.1rem 0 0; font-family: var(--serif); font-style: italic; }
 
+/* the portico and the landing are the two screens that earn extra width on a
+   desktop; every other screen stays in the 540px reading column. */
+.screen.doors-screen-wrap, .screen.landing-screen { max-width: 860px; }
+
 .doors {
   display: flex;
   flex-direction: column;
