@@ -420,6 +420,59 @@
   }
 
   /* ============================================================
+     hiems — the winter field.
+     Paired with the summer/forest grounds for aestās→hiems scene pairs
+     (Formīca et Cicāda and every later "then winter came" beat). Cold but
+     WARM-COMPATIBLE: the greys are mixed toward umber rather than toward
+     pure blue, so a terracotta robe or an ochre lion still sits in the
+     picture instead of clashing with it.
+     ============================================================ */
+  function bgHiems() {
+    var skyTop = '#c3ced6', skyLow = '#d9e1e4';
+    var snow = '#f2f1ea', snowD = '#dcdcd6';
+    var bare = '#8a7d70';                 /* warm grey-brown, not blue */
+    var s = '<rect width="' + W + '" height="' + H + '" fill="' + skyTop + '"/>';
+    s += '<rect y="' + (H * 0.3) + '" width="' + W + '" height="' + (H * 0.7) + '" fill="' + skyLow + '" opacity="0.75"/>';
+    /* a low winter sun, barely warm */
+    s += '<circle cx="316" cy="52" r="18" fill="#f0e3c6" opacity="0.75"/>';
+    s += '<circle cx="316" cy="52" r="30" fill="#f0e3c6" opacity="0.15"/>';
+
+    /* bare-branch silhouettes along the horizon. Each is a trunk plus a
+       handful of forking strokes — the same drawing language as the
+       arborNuda prop, one third of the size and flattened toward the sky. */
+    function bareTree(x, k, op) {
+      var t = '<g transform="translate(' + x + ',176) scale(' + k + ')" opacity="' + op + '">';
+      t += '<path d="M0,0 L0,-38" stroke="' + bare + '" stroke-width="5" stroke-linecap="round" fill="none"/>';
+      t += '<path d="M0,-24 Q-9,-34 -15,-48 M0,-28 Q9,-38 16,-50 M0,-34 Q1,-46 -3,-58" stroke="' + bare +
+        '" stroke-width="3.4" fill="none" stroke-linecap="round"/>';
+      t += '<path d="M-11,-42 l-7,-6 M11,-44 l8,-5 M-2,-50 l-6,-7 M-2,-52 l6,-6" stroke="' + bare +
+        '" stroke-width="2" fill="none" stroke-linecap="round"/>';
+      return t + '</g>';
+    }
+    s += bareTree(48, 1, 0.55) + bareTree(118, 0.78, 0.42) + bareTree(268, 0.9, 0.48) +
+      bareTree(342, 0.7, 0.36) + bareTree(196, 0.6, 0.3);
+
+    /* snow field: two soft drifts, then the standing band at y=210 */
+    s += '<path d="M0,184 q70,-14 148,-4 q80,10 160,-6 q50,-10 92,2 L400,240 L0,240 Z" fill="' + snow + '"/>';
+    s += '<path d="M0,200 q90,-10 180,-2 q110,10 220,-4 L400,240 L0,240 Z" fill="' + hi(snow) + '"/>';
+    s += '<rect y="' + GROUND + '" width="' + W + '" height="' + (H - GROUND) + '" fill="' + snow + '"/>';
+    s += '<rect y="' + GROUND + '" width="' + W + '" height="4" fill="#ffffff" opacity="0.85"/>';
+    /* drift shadows, the only thing that gives the snow a surface */
+    s += '<path d="M36,222 q26,-6 52,0 M188,228 q30,-6 60,0 M300,218 q24,-5 48,0" stroke="' + snowD +
+      '" stroke-width="3" fill="none" opacity="0.8" stroke-linecap="round"/>';
+
+    /* falling flakes: a fixed spread, biggest at the front */
+    var flakes = [[28, 40, 2.4], [92, 26, 1.8], [148, 62, 2.6], [206, 34, 1.6], [262, 70, 2.2],
+      [330, 44, 1.8], [372, 88, 2.4], [64, 104, 2], [176, 118, 2.6], [244, 132, 1.8],
+      [312, 112, 2.2], [124, 150, 2.8], [286, 160, 2.4], [40, 168, 2], [356, 148, 1.8]], i;
+    for (i = 0; i < flakes.length; i++) {
+      s += '<circle cx="' + flakes[i][0] + '" cy="' + flakes[i][1] + '" r="' + flakes[i][2] +
+        '" fill="#ffffff" opacity="' + (0.55 + (i % 3) * 0.15) + '"/>';
+    }
+    return s;
+  }
+
+  /* ============================================================
      stabulum — the stable interior of the Nativity
      ============================================================ */
   function bgStabulum() {
@@ -474,4 +527,5 @@
   Scenes.registerBg('riverNile', bgRiverNile);
   Scenes.registerBg('paradise', bgParadise);
   Scenes.registerBg('stabulum', bgStabulum);
+  Scenes.registerBg('hiems', bgHiems);
 }());

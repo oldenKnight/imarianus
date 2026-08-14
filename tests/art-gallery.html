@@ -213,7 +213,7 @@
     'fire', 'cityWall', 'mountain', 'ship', 'woodenHorse', 'swordShield', 'amphora',
     'temple', 'throne', 'palmTree', 'fiscella', 'scala', 'arcaFoederis', 'grapevine',
     'quercus', 'harundo', 'urna', 'umbra', 'columna', 'praesepe', 'mensa', 'patina',
-    'rete', 'truncus', 'fascis', 'frumentum', 'pellis', 'turris', 'pyramis',
+    'rete', 'truncus', 'fascis', 'frumentum', 'pellis', 'turris', 'pyramis', 'arborNuda', 'nidus',
     'rubusArdens', 'vitulusAureus', 'ramusAureus', 'arborFructus', 'crux', 'sepulcrum',
     'fons', 'sol', 'ventus', 'ovumAureum', 'murusAquae'];
   for (i = 0; i < props.length; i++) { cell(g, props[i], {}, ''); }
@@ -241,6 +241,13 @@
   cell(g, 'patina', { food: true }, 'patina plēna');
   cell(g, 'umbra', { w: 46, h: 10, opacity: 0.3 }, 'umbra (reflection helper)');
   cell(g, 'murusAquae', { floor: 150 }, 'wall + dry sea bed');
+  cell(g, 'arborNuda', { nix: true }, 'arbor nūda + nix');
+  cell(g, 'nidus', { ova: 0 }, 'nīdus vacuus (ōva 0)');
+  cell(g, 'nidus', { ova: 1 }, 'ōva 1');
+  cell(g, 'nidus', { ova: 3 }, 'ōva 3');
+  cell(g, 'nidus', { ova: 1, aureum: true }, 'ōvum aureum in nīdō');
+  cell(g, 'pellis', {}, 'pellis (outlined on cream)');
+  cell(g, 'ventus', {}, 'ventus (outlined on cream)');
   cell(g, 'scala', { glow: false }, 'scala, no glow');
   cell(g, 'testudo', { pose: 'hide' }, 'testūdō in shell');
 
@@ -332,6 +339,23 @@
     { t: 'person', x: 246, y: 96, s: 0.34, role: 'angel', pose: 'arms-up' },
     { t: 'person', x: 190, y: 62, s: 0.28, role: 'angel', pose: 'stand', flip: true }
   ] }, '(h) Scāla Iacōb');
+
+  /* (i) the aestās -> hiems pair: same tree, same spot, two seasons.
+     This is the pairing R2's Formīca et Cicāda turns on, so it is
+     staged here as an acceptance test of the winter set. */
+  sceneCell(g, { bg: 'forest', items: [
+    { t: 'tree', x: 300, y: 210, s: 1 },
+    { t: 'formica', x: 120, y: 212, s: 1.5 },
+    { t: 'frumentum', x: 176, y: 212, s: 0.9 },
+    { t: 'cicada', x: 236, y: 196, s: 1.3 }
+  ] }, '(i1) aestās — formīca labōrat');
+
+  sceneCell(g, { bg: 'hiems', items: [
+    { t: 'arborNuda', x: 300, y: 210, s: 1, nix: true },
+    { t: 'nidus', x: 176, y: 214, s: 0.9, ova: 0 },
+    { t: 'formica', x: 120, y: 212, s: 1.5 },
+    { t: 'cicada', x: 240, y: 214, s: 1.3 }
+  ] }, '(i2) hiems — nīdus vacuus, arbor nūda');
 
   /* ================= 6. THE OLDER ACTORS =================
      The M1 actors from js/scenes.js, shown last and deliberately: the M2

@@ -422,13 +422,14 @@
 
   check('M2-ART', 'the three art files all loaded (a syntax error drops a whole file silently)',
     function () {
-      var need = ['person', 'crowdGroup', 'leo', 'ark', 'ship', 'murusAquae'];
+      var need = ['person', 'crowdGroup', 'leo', 'ark', 'ship', 'murusAquae',
+        'arborNuda', 'nidus'];
       var have = {}, names = Scenes.actorNames(), i, missing = [];
       for (i = 0; i < names.length; i++) { have[names[i]] = true; }
       for (i = 0; i < need.length; i++) { if (!have[need[i]]) { missing.push(need[i]); } }
       if (missing.length) { return 'missing actors: ' + missing.join(', '); }
       var bgs = Scenes.bgNames().join(' ');
-      if (bgs.indexOf('stabulum') < 0 || bgs.indexOf('stormSea') < 0) {
+      if (bgs.indexOf('stabulum') < 0 || bgs.indexOf('stormSea') < 0 || bgs.indexOf('hiems') < 0) {
         return 'backgrounds2.js did not register: ' + bgs;
       }
       return null;
@@ -517,6 +518,43 @@
         if (svg.indexOf('NaN') >= 0) { return birds[i] + '/fly emitted NaN'; }
         msg = assertSized(birds[i] + '/fly', svg);
         if (msg) { return msg; }
+      }
+      return null;
+    });
+
+  check('M2-ART', 'nidus{ova:0} really is empty (the picture must not contradict the sentence)',
+    function () {
+      /* An empty nest is the whole point of the ova option: a capitulum
+         that says "iam gallīna ōva aurea nōn pōnit" is FALSE if the art
+         still shows eggs. Count the egg ellipses per setting. */
+      function eggs(opts) {
+        var svg = Scenes.sprite('nidus', opts, 120);
+        var m = svg.match(/<ellipse/g);
+        return m ? m.length : 0;
+      }
+      var e0 = eggs({ ova: 0 }), e1 = eggs({ ova: 1 }), e3 = eggs({ ova: 3 });
+      if (e0 !== 0) { return 'ova:0 still drew ' + e0 + ' ellipse(s) — the empty nest is not empty'; }
+      if (!(e1 > e0 && e3 > e1)) {
+        return 'egg count does not grow with ova: 0->' + e0 + ' 1->' + e1 + ' 3->' + e3;
+      }
+      /* out-of-range values must clamp, not throw or draw a fourth egg */
+      if (eggs({ ova: 9 }) !== e3) { return 'ova:9 did not clamp to three eggs'; }
+      if (eggs({ ova: -2 }) !== 0) { return 'ova:-2 did not clamp to an empty nest'; }
+      /* aureum must actually change the egg colour */
+      if (Scenes.sprite('nidus', { ova: 1, aureum: true }, 120) ===
+          Scenes.sprite('nidus', { ova: 1 }, 120)) {
+        return 'aureum:true renders identically to a plain egg';
+      }
+      return null;
+    });
+
+  check('M2-ART', 'arborNuda is the winter twin of tree (same crop box, so seasons align)',
+    function () {
+      /* the pair is used as aestās/hiems versions of ONE tree in the same
+         spot; different bounds would make the tree jump between pages. */
+      function vb(name) { return viewBoxOf(Scenes.sprite(name, {}, 100)); }
+      if (vb('arborNuda') !== vb('tree')) {
+        return 'arborNuda ' + vb('arborNuda') + ' does not match tree ' + vb('tree');
       }
       return null;
     });

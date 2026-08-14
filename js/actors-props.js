@@ -1231,6 +1231,86 @@
     return s;
   }
 
+  /* arborNuda — the winter twin of the `tree` actor in scenes.js.
+     The trunk is deliberately the SAME rect (x -11..11, y -95..0, rx 6) and
+     the crown reaches the same envelope, so putting tree and arborNuda in
+     the same spot of two scenes reads as one tree in two seasons rather
+     than as two different trees. opts.nix dusts the limbs with snow. */
+  function arborNuda(o) {
+    o = o || {};
+    var t = COL.umber, d = sh(t), s = '';
+    /* root flare, then the trunk */
+    s += '<path d="M-11,-10 q-9,4 -13,10 l48,0 q-4,-6 -13,-10 Z" fill="' + t + '"/>';
+    s += '<rect x="-11" y="-95" width="22" height="95" rx="6" fill="' + t + '"/>';
+    s += '<rect x="1" y="-93" width="9" height="91" rx="4.5" fill="' + d + '" opacity="0.45"/>';
+    /* three main limbs, forking twice, thinning as they go */
+    function limb(dd, w) {
+      return '<path d="' + dd + '" stroke="' + t + '" stroke-width="' + w +
+        '" fill="none" stroke-linecap="round"/>';
+    }
+    s += limb('M-6,-84 Q-24,-106 -36,-132', 9);
+    s += limb('M6,-88 Q26,-110 34,-138', 9);
+    s += limb('M0,-92 Q4,-122 -4,-154', 8);
+    s += limb('M-27,-116 Q-40,-126 -50,-140', 5.5);
+    s += limb('M-33,-127 Q-34,-146 -30,-158', 5);
+    s += limb('M25,-120 Q40,-130 50,-142', 5.5);
+    s += limb('M31,-131 Q34,-148 30,-160', 5);
+    s += limb('M2,-124 Q16,-138 22,-156', 5);
+    s += limb('M-1,-130 Q-14,-142 -18,-160', 5);
+    /* twigs */
+    s += '<path d="M-48,-138 l-8,-7 M-31,-156 l-7,-8 M-29,-157 l7,-7 M48,-140 l9,-6' +
+      ' M31,-158 l-7,-8 M33,-159 l7,-6 M21,-154 l7,-8 M-17,-158 l-8,-7 M-4,-152 l0,-10"' +
+      ' stroke="' + t + '" stroke-width="2.6" fill="none" stroke-linecap="round"/>';
+    if (o.nix) {
+      /* snow settles on the upper side of each limb only */
+      s += '<path d="M-6,-84 Q-24,-106 -36,-132 M6,-88 Q26,-110 34,-138 M0,-92 Q4,-122 -4,-154"' +
+        ' stroke="#f2f1ea" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.9"' +
+        ' transform="translate(-2,-3)"/>';
+      s += '<path d="M-11,-95 l22,0" stroke="#f2f1ea" stroke-width="3" stroke-linecap="round" opacity="0.8"/>';
+    }
+    return s;
+  }
+
+  /* nidus — a bird's nest. `ova` is 0..3 ON PURPOSE: an EMPTY nest is what
+     lets a scene say "iam gallīna ōva aurea nōn pōnit" truthfully, instead
+     of contradicting the sentence with eggs that are still there.
+     opts: { ova: 0..3, aureum: bool } */
+  function nidus(o) {
+    o = o || {};
+    var count = n(o.ova, 2);
+    if (count < 0) { count = 0; }
+    if (count > 3) { count = 3; }
+    var straw = '#c9a45e', s = '';
+    var eggCol = o.aureum ? COL.gold : COL.cream;
+    /* eggs sit INSIDE the bowl, so they are drawn between the back rim and
+       the front rim */
+    s += '<path d="M-28,-10 q4,-14 28,-14 q24,0 28,14 Z" fill="' + sh(straw) + '"/>';
+    /* eggs ride high in the bowl: sunk to the old -15 the front rim ate
+       most of each one and a single golden egg barely read at cell size */
+    var slots = [[-11, -19, 7.5], [11, -19, 7.5], [0, -23, 7]];
+    var i, e;
+    for (i = 0; i < count; i++) {
+      e = slots[i];
+      /* a thin darker edge: a gold egg against the tan straw of the nest
+         has almost no contrast without it (and the cream one little more) */
+      s += '<ellipse cx="' + e[0] + '" cy="' + e[1] + '" rx="' + (e[2] * 0.78) + '" ry="' + e[2] +
+        '" fill="' + eggCol + '" stroke="' + mix(eggCol, 0, 0.34) + '" stroke-width="1.4"/>';
+      s += '<path d="M' + e[0] + ',' + (e[1] - e[2]) + ' a' + (e[2] * 0.78) + ',' + e[2] + ' 0 0 1 0,' +
+        (2 * e[2]) + ' Z" fill="' + sh(eggCol) + '" opacity="0.4"/>';
+      s += '<ellipse cx="' + (e[0] - e[2] * 0.28) + '" cy="' + (e[1] - e[2] * 0.3) + '" rx="' + (e[2] * 0.22) +
+        '" ry="' + (e[2] * 0.3) + '" fill="' + hi(eggCol) + '" opacity="0.8"/>';
+    }
+    /* front of the bowl, woven */
+    s += '<path d="M-30,-12 q5,14 30,14 q25,0 30,-14 q-30,8 -60,0 Z" fill="' + straw + '"/>';
+    s += '<path d="M-30,-12 q30,8 60,0" stroke="' + sh(straw) + '" stroke-width="2.2" fill="none"/>';
+    s += '<path d="M-18,-9 q3,9 5,11 M0,-7 l0,13 M18,-9 q-3,9 -5,11" stroke="' + sh(straw) +
+      '" stroke-width="1.8" fill="none" opacity="0.8"/>';
+    /* loose twigs sticking out, which is what makes it read as a nest */
+    s += '<path d="M-30,-13 l-9,-3 M30,-13 l9,-4 M-24,-6 l-10,2 M25,-5 l10,3" stroke="' + sh(straw) +
+      '" stroke-width="1.8" fill="none" stroke-linecap="round"/>';
+    return s;
+  }
+
   /* harundo — reeds that bend and do not break */
   function harundo(o) {
     o = o || {};
@@ -1309,6 +1389,14 @@
   function ventus(o) {
     o = o || {};
     var c = '#cfd8dc', s = '';
+    /* Outline first, as a slightly larger silhouette UNDERNEATH the fills
+       rather than a stroke on each ellipse — a stroke per ellipse would
+       draw the seams where the three overlap. Needed for the same reason
+       as pellis: a pale cloud on the cream sky has no edge otherwise. */
+    var edge = mix(c, 0, 0.30);
+    s += '<ellipse cx="-14" cy="-40" rx="28" ry="20" fill="' + edge + '"/>';
+    s += '<ellipse cx="-34" cy="-36" rx="18" ry="14" fill="' + edge + '"/>';
+    s += '<ellipse cx="2" cy="-48" rx="20" ry="15" fill="' + edge + '"/>';
     s += '<ellipse cx="-14" cy="-40" rx="26" ry="18" fill="' + c + '"/>';
     s += '<ellipse cx="-34" cy="-36" rx="16" ry="12" fill="' + c + '"/>';
     s += '<ellipse cx="2" cy="-48" rx="18" ry="13" fill="' + hi(c) + '"/>';
@@ -1317,9 +1405,9 @@
     s += '<circle cx="6" cy="-45" r="2.4" fill="' + COL.ink + '"/>';
     s += '<ellipse cx="12" cy="-36" rx="5" ry="4" fill="' + COL.ink + '" opacity="0.8"/>';
     /* gusts */
-    s += '<path d="M20,-38 q22,-6 34,2 q-14,4 -30,2" stroke="' + hi(c) + '" stroke-width="3.4" fill="none" stroke-linecap="round"/>';
-    s += '<path d="M18,-26 q28,-4 44,6 q-18,2 -38,-1" stroke="' + hi(c) + '" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.8"/>';
-    s += '<path d="M22,-50 q18,-8 30,-4" stroke="' + hi(c) + '" stroke-width="2.6" fill="none" stroke-linecap="round" opacity="0.7"/>';
+    s += '<path d="M20,-38 q22,-6 34,2 q-14,4 -30,2" stroke="' + edge + '" stroke-width="3.4" fill="none" stroke-linecap="round"/>';
+    s += '<path d="M18,-26 q28,-4 44,6 q-18,2 -38,-1" stroke="' + edge + '" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.8"/>';
+    s += '<path d="M22,-50 q18,-8 30,-4" stroke="' + edge + '" stroke-width="2.6" fill="none" stroke-linecap="round" opacity="0.7"/>';
     return s;
   }
 
@@ -1459,13 +1547,22 @@
     o = o || {};
     var lion = (o.kind === 'leonis');
     var c = lion ? '#d9a441' : COL.white, d = sh(c), s = '';
+    /* An outline, which this actor needs and most do not: the fleece is
+       near-white on a cream ground (C.sky #f6e8c9), so without a darker
+       edge it dissolves into the background. Same 2px darker-tone stroke
+       the lamb in scenes.js uses for exactly the same reason. */
+    var edge = mix(c, 0, 0.34), ew = 2;
+    function hide(dd, fill) {
+      return '<path d="' + dd + '" fill="' + fill + '" stroke="' + edge +
+        '" stroke-width="' + ew + '" stroke-linejoin="round"/>';
+    }
     /* four splayed leg flaps make it read as a HIDE laid out flat rather
        than as a shapeless white blob */
-    s += '<path d="M-28,-40 q-14,-4 -18,6 q10,6 20,2 Z" fill="' + d + '"/>';
-    s += '<path d="M26,-40 q14,-4 18,6 q-10,6 -20,2 Z" fill="' + d + '"/>';
-    s += '<path d="M-26,-10 q-14,2 -16,12 q11,3 19,-6 Z" fill="' + d + '"/>';
-    s += '<path d="M24,-10 q14,2 16,12 q-11,3 -19,-6 Z" fill="' + d + '"/>';
-    s += '<path d="M-30,-2 q-6,-30 8,-42 q22,-10 44,2 q12,14 6,40 q-30,8 -58,0 Z" fill="' + c + '"/>';
+    s += hide('M-28,-40 q-14,-4 -18,6 q10,6 20,2 Z', d);
+    s += hide('M26,-40 q14,-4 18,6 q-10,6 -20,2 Z', d);
+    s += hide('M-26,-10 q-14,2 -16,12 q11,3 19,-6 Z', d);
+    s += hide('M24,-10 q14,2 16,12 q-11,3 -19,-6 Z', d);
+    s += hide('M-30,-2 q-6,-30 8,-42 q22,-10 44,2 q12,14 6,40 q-30,8 -58,0 Z', c);
     s += '<path d="M6,-46 q12,4 22,8 q12,14 6,40 q-14,4 -28,4 Z" fill="' + d + '" opacity="0.35"/>';
     if (lion) {
       s += '<circle cx="-2" cy="-52" r="18" fill="#a86a24"/>';
@@ -1821,5 +1918,9 @@
   reg('fons', fons, { x: -52, y: -23, w: 101, h: 34 });
   reg('piscis', piscis, { x: -41, y: -28, w: 52, h: 25 });
   reg('murusAquae', murusAquae, { x: -37, y: -160, w: 85, h: 167 });
+  /* measured like the rest; arborNuda deliberately matches the `tree`
+     bounds in scenes.js so the seasonal pair crops identically */
+  reg('arborNuda', arborNuda, { x: -62, y: -172, w: 124, h: 180 });
+  reg('nidus', nidus, { x: -43, y: -31, w: 86, h: 37 });
   reg('columna', columna, { x: -20, y: -109, w: 40, h: 112 });
 }());
