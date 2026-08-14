@@ -224,10 +224,14 @@ var CONTENT = (function () {
   /* Coarse POS used ONLY to keep generated distractors in the same class
      (a verb is never offered where a noun belongs). Three buckets is enough
      for that job and needs no dictionary. Authors may override per vocab
-     entry with `pos: 'nomen'|'verbum'|'adiectivum'|'praepositio'` — a
-     declared pos always wins (see content/README.md). */
+     entry with `pars: 'nomen'|'verbum'|'adiectivum'|'praepositio'` — a
+     declared part of speech always wins (see content/README.md). */
   function posOf(item) {
-    if (item && item.pos) { return item.pos; }
+    /* NOTE the field is `pars` (pars ōrātiōnis), not `pos`: a capitulum
+       already uses `pos` for its map POSITION, and one word meaning two
+       things in the same schema is how content bugs are born. `pos` is
+       still accepted on a vocab entry as an alias. */
+    if (item && (item.pars || item.pos)) { return item.pars || item.pos; }
     var w = normWord(item && item.la ? item.la : item);
     if (inArray(PREPOSITIONS, w)) { return 'praepositio'; }
     if (inArray(VERB_EXTRA, w)) { return 'verbum'; }

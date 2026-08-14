@@ -59,7 +59,7 @@ A capitulum is one lesson: seven steps generated from a small hand-authored core
   vocab: [
     { la: 'vulpēs', emoji: '🦊' },              // picture = emoji, or…
     { la: 'silva',  scene: SC.v_silva },        // …a scene spec (preferred)
-    { la: 'ambulat', scene: SC.v_ambulat, pos: 'verbum' }   // pos is OPTIONAL
+    { la: 'ambulat', scene: SC.v_ambulat, pars: 'verbum' }  // pars is OPTIONAL
   ],
   story: [
     { la: 'Vulpēs in silvā ambulat.',
@@ -84,10 +84,12 @@ A capitulum is one lesson: seven steps generated from a small hand-authored core
 
 ### Field notes
 
-- **`vocab[].pos`** — `'nomen' | 'verbum' | 'adiectivum' | 'praepositio'`.
-  Optional. Only the generators use it, to keep distractors in the same class.
-  Without it a coarse heuristic runs (`-t/-nt` ⇒ verb, closed list ⇒ preposition,
-  everything else ⇒ other). Declaring it makes generated exercises sharper.
+- **`vocab[].pars`** — pars ōrātiōnis: `'nomen' | 'verbum' | 'adiectivum' |
+  'praepositio'`. Optional. Only the generators use it, to keep distractors in
+  the same class. Without it a coarse heuristic runs (`-t/-nt` ⇒ verb, closed
+  list ⇒ preposition, everything else ⇒ other). Declaring it makes generated
+  exercises sharper. It is **not** called `pos` because a capitulum's `pos` is
+  its map position; `pos` on a vocab entry is accepted as a legacy alias.
 - **`story[].nova`** — new words for this page: `w` the word, `e` an emoji/diagram
   hint, `g` a Latin-only gloss (`= synōnymum`, `↔ contrārium`). Never a translation.
 - **`pos` (capitulum)** — fractions, not pixels, so one layout serves every screen
