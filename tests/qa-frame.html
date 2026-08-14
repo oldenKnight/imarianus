@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<!-- ============================================================
+     tests/qa-frame.html — true-width wrapper around qa.html
+     ------------------------------------------------------------
+     WHY THIS EXISTS: headless Chrome on Windows CLAMPS the window
+     to ~500px, so `--window-size=375,812` lays the page out at
+     500px and merely CROPS the screenshot to 375. Every "it
+     overflows at 375px" verdict taken that way is unreliable —
+     both false alarms and missed breakage.
+
+     An iframe has its own layout viewport, and it is exact. This
+     page sizes one to the requested width, so what you screenshot
+     is genuinely rendered at 360 / 375 / 900 px.
+
+     Usage:
+       qa-frame.html?w=360&screen=doors
+       qa-frame.html?w=900&screen=map&scroll=1
+     Screenshot (window a little larger than w):
+       chrome --headless=new --hide-scrollbars --screenshot=out.png \
+              --window-size=940,900 --virtual-time-budget=9000 URL
+
+     The green stamp inside the frame reports the width the app was
+     actually laid out at. If it does not match ?w=, do not trust
+     the picture.
+     ============================================================ -->
+<html lang="la">
+<head>
+  <meta charset="utf-8">
+  <title>QA frame</title>
+  <style>
+    html, body { margin: 0; background: #111; }
+    /* the ruler makes an off-by-a-few-pixels overflow obvious to the eye */
+    #ruler {
+      font: 11px/1.6 monospace; color: #8f8; background: #000;
+      padding: 1px 6px; border-bottom: 1px solid #333;
+    }
+    iframe { display: block; border: 0; background: #2b1c16; }
+    /* a hairline down the right edge of the frame: anything crossing it is
+       horizontal overflow */
+    #edge { position: fixed; top: 0; bottom: 0; width: 1px; background: #f0f; opacity: 0.6; }
+  </style>
+</head>
+<body>
+  <div id="ruler"></div>
+  <iframe id="f" height="812"></iframe>
+  <div id="edge"></div>
+  <script>
+    (function () {
+      var q = location.search;
+      var w = parseInt((q.match(/[?&]w=(\d+)/) || [])[1], 10) || 375;
+      var h = parseInt((q.match(/[?&]h=(\d+)/) || [])[1], 10) || 812;
+      /* pass everything except w/h straight through to qa.html */
+      var inner = q.replace(/[?&]w=\d+/, '').replace(/[?&]h=\d+/, '');
+      inner = inner.replace(/^&/, '?');
+      if (inner && inner.charAt(0) !== '?') { inner = '?' + inner; }
+
+      var f = document.getElementById('f');
+      f.style.width = w + 'px';
+      f.height = h;
+      f.src = 'qa.html' + inner;
+
+      document.getElementById('edge').style.left = w + 'px';
+
+      var ruler = document.getElementById('ruler');
+      function paint() {
+        var msg = 'frame ' + w + '×' + h + '  ';
+        try {
+          var d = f.contentWindow;
+          msg += 'inner=' + d.innerWidth +
+                 '  scrollW=' + d.document.documentElement.scrollWidth +
+                 (d.document.documentElement.scrollWidth > d.innerWidth
+                   ? '  ⚠ HORIZONTAL OVERFLOW' : '  ok');
+        } catch (e) { msg += '(cross-origin?)'; }
+        ruler.textContent = msg;
+      }
+      f.addEventListener('load', function () { paint(); setInterval(paint, 400); });
+    })();
+  </script>
+</body>
+</html>

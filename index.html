@@ -23,6 +23,13 @@
   <script src="js/audio.js" defer></script>
   <script src="js/tts.js" defer></script>
   <script src="js/scenes.js" defer></script>
+  <!-- Art library (M2). These register extra actors/backgrounds INTO scenes.js.
+       They are optional by construction: every caller feature-detects with
+       Scenes.actorNames(), so a missing file degrades to placeholder art
+       instead of breaking a screen. -->
+  <script src="js/actors-person.js" defer></script>
+  <script src="js/actors-props.js" defer></script>
+  <script src="js/backgrounds2.js" defer></script>
   <script src="js/data-core.js" defer></script>
   <script src="content/manifest.js" defer></script>
   <script src="js/content-loader.js" defer></script>

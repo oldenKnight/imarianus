@@ -173,11 +173,19 @@
     if (showBack === true || showBack === false) {
       topbarShowBack = showBack;
     }
+    /* Hearts in two forms, one hidden by CSS at a time (see styles.css):
+       the full row of glyphs when there is room, and a compact "❤️ 4/5"
+       under ~420px, where five emoji plus the other chips no longer fit on
+       one line and the bar wrapped to two rows. */
     var hearts = '';
     var i;
     for (i = 0; i < S.maxHearts; i++) {
       hearts += (i < S.hearts) ? '❤️' : '🖤';
     }
+    var heartsChip = '<span class="chip stat hearts">' +
+      '<span class="hearts-full">' + hearts + '</span>' +
+      '<span class="hearts-short">❤️ ' + S.hearts + '/' + S.maxHearts + '</span>' +
+      '</span>';
     var backChip = topbarShowBack
       ? '<button class="chip nav-back" type="button" aria-label="redī">←</button>'
       : '';
@@ -186,7 +194,7 @@
       '<button class="chip nav-home" type="button" aria-label="' + UI.domus + '">🏠</button>' +
       '<button class="chip nav-map" type="button" aria-label="' + DATA.MAP_UI.provincia + '">🗺️</button>' +
       '<span class="chip stat">🔥 ' + S.streak + '</span>' +
-      '<span class="chip stat hearts">' + hearts + '</span>' +
+      heartsChip +
       '<span class="chip stat">⭐ ' + S.xp + '</span>' +
       '<button class="chip nav-ordo" type="button" aria-label="' + UI.ordo + '">🏆</button>';
     $('.nav-home', bar).addEventListener('click', function () { stopAllGames(); showDoors(); });
@@ -300,31 +308,67 @@
     return s;
   }
 
+  /* Is this actor registered in the scene library? The art subsystem (M2)
+     registers 'ark' and 'ship' from js/actors-props.js; until that file is
+     present the inline placeholders below stand in, and the moment it loads
+     the doors and the hero band pick up the real artwork with no other
+     change. Never assume it is there. */
+  function hasActor(name) {
+    if (!window.Scenes || !Scenes.actorNames || !Scenes.sprite) { return false; }
+    var names = Scenes.actorNames() || [];
+    var i;
+    for (i = 0; i < names.length; i++) { if (names[i] === name) { return true; } }
+    return false;
+  }
+
+  /* The hero triptych wants the WHOLE animal, not the mascot head the doors
+     use, so it asks for the fox sprite when the art library is present. */
+  function heroArt(trackId, w) {
+    if (trackId === 'fabulae' && hasActor('fox')) { return Scenes.sprite('fox', {}, w); }
+    return trackArt(trackId, w);
+  }
+
   /* art for one track id, sized to fit a door or a hero panel */
   function trackArt(trackId, w) {
-    if (trackId === 'historia') { return artArca(w); }
-    if (trackId === 'aeneis') { return artNavis(w); }
+    if (trackId === 'historia') {
+      return hasActor('ark') ? Scenes.sprite('ark', {}, w) : artArca(w);
+    }
+    if (trackId === 'aeneis') {
+      /* full sail: at door size the furled version collapses to a hull and
+         a stick, and stops reading as a ship at a glance. */
+      return hasActor('ship') ? Scenes.sprite('ship', {}, w) : artNavis(w);
+    }
     return Scenes.mascot(Math.round(w * 0.62), 'fox');
   }
 
-  /* small laurel wreath around a word — the AENEIS "PRŌVECTĪS" badge.
-     It is a HINT, never a lock: the owner's rule is free choice. */
-  function laurelBadge(text) {
-    var s = '<span class="laurel"><svg viewBox="0 0 120 40" width="110" height="36" aria-hidden="true">';
-    s += '<path d="M28,32 q-16,-6 -18,-22 q14,2 20,12" fill="none" stroke="' + ART.gold +
-         '" stroke-width="2.5" stroke-linecap="round"/>';
-    s += '<path d="M92,32 q16,-6 18,-22 q-14,2 -20,12" fill="none" stroke="' + ART.gold +
-         '" stroke-width="2.5" stroke-linecap="round"/>';
-    var i, y;
-    for (i = 0; i < 4; i++) {
-      y = 10 + i * 6;
-      s += '<ellipse cx="' + (14 + i * 3.5) + '" cy="' + y + '" rx="4.5" ry="2.4" fill="' + ART.gold +
-           '" transform="rotate(' + (-40 + i * 12) + ' ' + (14 + i * 3.5) + ' ' + y + ')" opacity="0.9"/>';
-      s += '<ellipse cx="' + (106 - i * 3.5) + '" cy="' + y + '" rx="4.5" ry="2.4" fill="' + ART.gold +
-           '" transform="rotate(' + (40 - i * 12) + ' ' + (106 - i * 3.5) + ' ' + y + ')" opacity="0.9"/>';
+  /* One laurel sprig, curving up from the base. `dir` is 1 for the right-hand
+     sprig and -1 for the left (mirrored). Drawn small: it FLANKS a label, it
+     does not enclose it — the previous wreath-behind-text version rendered
+     the letters unreadable at phone size. */
+  function laurelSprig(dir) {
+    var s = '<svg class="sprig" viewBox="0 0 20 26" width="13" height="17" aria-hidden="true">';
+    s += '<g transform="' + (dir < 0 ? 'translate(20,0) scale(-1,1)' : '') + '">';
+    /* the stem */
+    s += '<path d="M4,25 C4,16 8,8 16,3" fill="none" stroke="' + ART.gold +
+         '" stroke-width="1.8" stroke-linecap="round"/>';
+    /* four leaves stepping up the outside of the curve */
+    var leaves = [[6, 19, -30], [8, 14, -20], [11, 9, -8], [14, 5, 4]];
+    var i;
+    for (i = 0; i < leaves.length; i++) {
+      s += '<ellipse cx="' + leaves[i][0] + '" cy="' + leaves[i][1] + '" rx="4.2" ry="2" fill="' +
+           ART.gold + '" transform="rotate(' + leaves[i][2] + ' ' + leaves[i][0] + ' ' + leaves[i][1] + ')"/>';
     }
-    s += '</svg><span class="laurel-text">' + esc(text) + '</span></span>';
+    s += '</g></svg>';
     return s;
+  }
+
+  /* the AENEIS "PRŌVECTĪS" badge: a small-caps label flanked by two sprigs,
+     nothing overlapping anything. It is a HINT, never a lock — the owner's
+     rule is free choice of track. */
+  function laurelBadge(text) {
+    return '<span class="laurel">' + laurelSprig(-1) +
+      '<span class="laurel-text">' + esc(text) + '</span>' +
+      laurelSprig(1) + '</span>';
   }
 
   /* one carved arch door: SVG frame + track art, wrapped in a button */
@@ -364,14 +408,14 @@
   function showDoors() {
     renderTopbar(false);
     var html = '<section class="doors-screen">' +
-      '<header class="doors-head"><h2>' + esc(UI.salve) + ', <span id="uname"></span>!</h2>' +
+      '<header class="doors-head"><h2>' + esc(UI.salveVoc) + ', <span id="uname"></span>!</h2>' +
       '<p class="doors-sub">' + esc(UI.eligePortam) + '</p></header>' +
       '<div class="doors">';
     var i;
     for (i = 0; i < DATA.TRACKS.length; i++) { html += doorButton(DATA.TRACKS[i], i); }
     html += '</div></section>';
     setScreen(html, 'doors-screen-wrap');
-    $('#uname').textContent = S.name;
+    $('#uname').textContent = DATA.vocative(S.name);
     $all('.door').forEach(function (b) {
       b.addEventListener('click', function () {
         var id = b.getAttribute('data-track');
@@ -392,9 +436,9 @@
         '<p class="tagline">' + esc(UI.tagline) + '</p>' +
       '</header>' +
       '<div class="hero-band" aria-hidden="true">' +
-        '<span class="hero-panel">' + Scenes.render({ bg: 'forest', items: [{ t: 'fox', x: 200, y: 210 }] }) + '</span>' +
-        '<span class="hero-panel hero-art">' + artArca(150) + '</span>' +
-        '<span class="hero-panel hero-art">' + artNavis(150) + '</span>' +
+        '<span class="hero-panel">' + heroArt('fabulae', 170) + '</span>' +
+        '<span class="hero-panel">' + heroArt('historia', 170) + '</span>' +
+        '<span class="hero-panel">' + heroArt('aeneis', 170) + '</span>' +
       '</div>' +
       '<p class="pitch">' + esc(UI.pitch) + '</p>' +
       '<p class="pitch-sub">' + esc(UI.pitchSub) + '</p>' +
@@ -452,7 +496,7 @@
   function showHome() {
     renderTopbar(false);
     var html = '<header class="home-head">' +
-      '<h2>' + esc(UI.salve) + ', <span id="uname"></span>!</h2></header>';
+      '<h2>' + esc(UI.salveVoc) + ', <span id="uname"></span>!</h2></header>';
     html += '<nav class="path" aria-label="cursus">';
     var fi;
     for (fi = 0; fi < caps().length; fi++) {
@@ -460,7 +504,7 @@
     }
     html += '</nav>';
     setScreen(html, 'home-screen');
-    $('#uname').textContent = S.name;
+    $('#uname').textContent = DATA.vocative(S.name);
     bindStepButtons();
   }
 

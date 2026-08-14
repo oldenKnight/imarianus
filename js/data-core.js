@@ -27,7 +27,8 @@ var DATA = (function () {
   var UI = {
     appName: 'MARIANE',
     tagline: 'Fābulae Latīnae per sē illūstrātae',
-    salve: 'Salvē!',
+    salve: 'Salvē!',        /* standalone greeting (no name follows) */
+    salveVoc: 'Salvē',      /* greeting that a VOCATIVE name completes */
     quidNomen: 'Quid nōmen tibi est?',
     incipe: 'INCIPE',
     intra: 'INTRĀ',
@@ -117,6 +118,51 @@ var DATA = (function () {
     }
     return g;
   }
+  /* ---------- vocative of a name (LATIN-STYLE §4) ----------
+     "Salvē!, Quintus!" was wrong twice: stray punctuation, and Latin
+     ADDRESSES a person in the vocative, not the nominative. Salvē, Quīnte!
+
+     Rules applied (only the ones that are safe on a user-supplied name):
+       -ius → -ī      Iūlius → Iūlī, Antōnius → Antōnī   (2nd decl. in -ius)
+       -us  → -e      Quintus → Quinte, Marcus → Marce
+       everything else is returned UNCHANGED — 1st decl. -a (Iūlia),
+       3rd decl. (Caesar), Greek names, nicknames with digits or
+       underscores, and anything with a space in it.
+
+     Deliberately NOT done: adding macrons the user did not type. Quintus
+     becomes Quinte, never Quīnte — we do not know how they write their own
+     name, and inventing vowel length in someone's name is worse than
+     leaving it short. (The -ius → -ī contraction is a real morphological
+     change, not decoration, so that one long ī stays.)
+
+     Case is preserved: QUINTUS → QUINTE, Quintus → Quinte. */
+  function vocative(name) {
+    if (!name) { return name; }
+    var n = String(name).replace(/^\s+|\s+$/g, '');
+    if (!n || /[\s\d_]/.test(n)) { return n; }          /* not a plain name */
+    var low = n.toLowerCase();
+
+    /* -eus (Orpheus, Perseus) has an irregular vocative; leave it alone
+       rather than produce a wrong form. */
+    if (/eus$/.test(low)) { return n; }
+
+    if (/ius$/.test(low)) {
+      var stem = n.slice(0, n.length - 3);
+      var iChar = isUpperTail(n, 3) ? 'Ī' : 'ī';
+      return stem + iChar;
+    }
+    if (/us$/.test(low)) {
+      var body = n.slice(0, n.length - 2);
+      return body + (isUpperTail(n, 2) ? 'E' : 'e');
+    }
+    return n;
+  }
+  /* were the last `count` characters upper case? (QUINTUS vs Quintus) */
+  function isUpperTail(s, count) {
+    var tail = s.slice(s.length - count);
+    return tail === tail.toUpperCase() && tail !== tail.toLowerCase();
+  }
+
   /* Look a rung up by its key. The server sends only the KEY on public
      boards ('tiro', 'auditor', …) and leaves the display string to the
      client — these ids and thresholds are the same list as
@@ -229,6 +275,7 @@ var DATA = (function () {
     GRADUS: GRADUS,
     gradusFor: gradusFor,
     gradusByKey: gradusByKey,
+    vocative: vocative,
     gradusRemaining: gradusRemaining,
     TRACKS: TRACKS,
     trackById: trackById,

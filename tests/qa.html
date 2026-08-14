@@ -1,17 +1,37 @@
 <!DOCTYPE html>
 <!-- ============================================================
      tests/qa.html — headless visual-QA harness (NOT deployed)
+     ------------------------------------------------------------
      Loads the real app WITHOUT js/api.js, so app.js takes its
      local-only branch (no backend needed). An inline script seeds
      localStorage BEFORE storage.js runs, then auto-navigates to
-     the screen named in the query string, e.g.:
-        qa.html?screen=doors
-        qa.html?screen=map
-        qa.html?screen=cap          (capitulum step list, f1)
-        qa.html?screen=verba        (first step running)
+     the screen named in the query string:
+
+        qa.html?screen=landing   logged-out landing page
+        qa.html?screen=doors     the three doors (home)
+        qa.html?screen=mox       a track still in fabricā
+        qa.html?screen=ordo      leaderboard (empty-board state)
+        qa.html?screen=map       the overworld board
+        qa.html?screen=cap       capitulum step list (f2)
+        qa.html?screen=verba     first step running
+        qa.html?screen=fabula    story page + autoplay controls
+        qa.html?screen=sonus     listen-and-pick-the-picture
+        qa.html?screen=comple    complete-the-sentence
+
+     Extra knobs:
+        &w=360                   nothing to do with layout; recorded
+                                 in the title so a screenshot is
+                                 self-identifying
+        &scroll=1                scroll the map to its bottom (to
+                                 check the boss node is reachable)
+
      Screenshot with:
-        chrome --headless=new --screenshot=out.png \
-               --window-size=375,812 --virtual-time-budget=8000 URL
+        chrome --headless=new --hide-scrollbars --screenshot=out.png \
+               --window-size=375,812 --virtual-time-budget=9000 URL
+
+     NOTE ON CLICKS: map nodes are SVG <g> elements. SVGElement has no
+     .click() in every engine, so this harness dispatches a real
+     MouseEvent instead — the same thing a finger does.
      ============================================================ -->
 <html lang="la">
 <head>
@@ -24,16 +44,49 @@
     /* seed BEFORE storage.js loads: a mid-progress student */
     (function () {
       var q = location.search;
+      window.__QA_SCREEN = (q.match(/screen=([a-z]+)/) || [])[1] || 'doors';
+      window.__QA_SCROLL = /scroll=1/.test(q);
+
+      /* f1 finished, f2 in progress. A step is only reachable when the one
+         before it is done, so unlock f2 UP TO whichever step was asked for —
+         otherwise ?screen=comple just lands on the capitulum screen with a
+         padlock, which is what happened the first time. */
+      var ORDER = ['verba', 'fabula', 'sonus', 'ludus', 'aenigmata', 'corrige', 'comple'];
+      var f2 = {};
+      var want = ORDER.indexOf(window.__QA_SCREEN);
+      var upTo = (want < 0) ? 2 : want;        /* default: verba + fabula done */
+      for (var i = 0; i < upTo; i++) { f2[ORDER[i]] = 1; }
+
       var state = {
-        name: 'Quintus', xp: 220, hearts: 4, maxHearts: 5,
+        name: 'Quintus', nickname: 'Quintus', avatar: 'fox',
+        xp: 220, hearts: 4, maxHearts: 5,
         streak: 3, lastDay: new Date().toISOString().slice(0, 10),
-        completed: { f1: { verba: 1, fabula: 1, sonus: 1, ludus: 1, aenigmata: 1, corrige: 1, comple: 1 },
-                     f2: { verba: 1, fabula: 1 } },
+        completed: {
+          f1: { verba: 1, fabula: 1, sonus: 1, ludus: 1, aenigmata: 1, corrige: 1, comple: 1 },
+          f2: f2
+        },
         bosses: {}, mapNode: 'f2',
         createdAt: 1700000000000
       };
-      try { localStorage.setItem('mariane_cache_v2', JSON.stringify(state)); } catch (e) {}
-      window.__QA_SCREEN = (q.match(/screen=([a-z]+)/) || [])[1] || 'doors';
+      /* the landing screen is the LOGGED-OUT route: no cached name, and a
+         stub Api whose me() fails, which is exactly what a visitor with no
+         session looks like to app.js. (api.js itself is never loaded here.) */
+      if (window.__QA_SCREEN === 'landing') {
+        try { localStorage.removeItem('mariane_cache_v2'); } catch (e) {}
+        window.Api = {
+          setCsrf: function () {}, getCsrf: function () { return ''; },
+          me: function (cb) { setTimeout(function () { cb({ status: 401 }, null); }, 10); },
+          login: function (u, p, r, cb) { cb({ status: 401 }, null); },
+          register: function (p, cb) { cb({ status: 400 }, null); },
+          logout: function (cb) { cb(null, { ok: true }); },
+          completeStep: function (f, s, sc, cb) { cb({ status: 401 }, null); },
+          bossFight: function (r, cb) { cb({ status: 401 }, null); },
+          bossQuiz: function (r, a, cb) { cb({ status: 401 }, null); },
+          sync: function (p, cb) { if (cb) { cb(null, {}); } }
+        };
+      } else {
+        try { localStorage.setItem('mariane_cache_v2', JSON.stringify(state)); } catch (e) {}
+      }
     })();
   </script>
   <script src="js/storage.js" defer></script>
@@ -53,28 +106,101 @@
   <script src="js/map.js" defer></script>
   <script src="js/app.js" defer></script>
   <script>
-    /* auto-navigate by clicking through the real UI after init */
+    /* Auto-navigate by driving the REAL UI — no test hooks inside app.js.
+       Every step waits on the element it needs instead of a fixed delay, so
+       the harness survives content loading on a slow machine. */
     window.addEventListener('load', function () {
-      function click(sel) {
-        var el = document.querySelector(sel);
-        if (el) { el.click(); return true; }
-        return false;
-      }
       var target = window.__QA_SCREEN;
-      var t = 400;
-      if (target === 'doors') { return; }
-      setTimeout(function () { click('.door-fabulae'); }, t);          /* -> map */
-      if (target === 'map') { return; }
-      setTimeout(function () {
-        /* current node on the map (f2) */
-        if (!click('[data-node="f2"]')) { click('[data-node="f1"]'); }
-      }, t + 500);
-      if (target === 'cap') { return; }
-      setTimeout(function () {
-        /* first step button on the capitulum screen */
-        var b = document.querySelector('.steps button, .step-list button, button[data-step]');
-        if (b) { b.click(); }
-      }, t + 1000);
+      if (target === 'doors' || target === 'landing') { return; }
+
+      /* poll for a selector, then run fn(el) */
+      function when(sel, fn, tries) {
+        tries = tries || 60;
+        var el = document.querySelector(sel);
+        if (el) { fn(el); return; }
+        if (tries <= 0) { return; }
+        setTimeout(function () { when(sel, fn, tries - 1); }, 100);
+      }
+      function tap(el) {
+        /* works for both HTML buttons and SVG <g> nodes */
+        el.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+      }
+      /* the step button whose visible label matches this Latin name */
+      function stepButton(label) {
+        var all = [].slice.call(document.querySelectorAll('.steps button.node'));
+        for (var i = 0; i < all.length; i++) {
+          var lab = all[i].querySelector('.node-label');
+          if (lab && lab.textContent === label) { return all[i]; }
+        }
+        return null;
+      }
+
+      var STEP_LABEL = {
+        verba: 'Verba', fabula: 'Fābula', sonus: 'Sonus', ludus: 'Lūdus',
+        aenigmata: 'Aenigmata', corrige: 'Corrige', comple: 'Complē'
+      };
+
+      if (target === 'mox') {
+        when('.door-historia', tap);
+        return;
+      }
+      if (target === 'ordo') {
+        when('.nav-ordo', tap);
+        return;
+      }
+
+      /* everything else lives behind the FABULAE door */
+      when('.door-fabulae', function (door) {
+        tap(door);
+        when('.map-view', function (view) {
+          if (target === 'map') {
+            /* &long=1 renders a SYNTHETIC 12-capitulum region into the same
+               frame. Region I only has three fables, so it cannot show what
+               a full-length board looks like — and "how many tiles fit on a
+               phone" is the whole reason the tile size was chosen. */
+            if (/long=1/.test(location.search) && window.WorldMap) {
+              setTimeout(function () {
+                var nodes = [], i;
+                for (i = 0; i < 12; i++) {
+                  nodes.push({
+                    id: 'c' + i, kind: 'fable', x: (i % 2 ? 0.70 : 0.30),
+                    y: 0.92 - i * 0.08, label: '' + (i + 1),
+                    titulus: 'Capitulum ' + (i + 1),
+                    state: i < 4 ? 'done' : (i === 4 ? 'open' : 'shut')
+                  });
+                }
+                nodes.push({ id: 'b', kind: 'boss', x: 0.5, y: 0.02, label: '👑',
+                             titulus: 'Lupus', state: 'shut' });
+                var model = { nodes: nodes, foxNode: 'c4', track: 'fabulae',
+                              titulus: 'Silva', avatar: 'fox' };
+                var host = document.querySelector('.map-frame');
+                host.innerHTML = WorldMap.render(model);
+                WorldMap.bind(host, model, { onNode: function () {} });
+              }, 300);
+            }
+            if (window.__QA_SCROLL) {
+              /* re-query: &long=1 REPLACES the frame's contents, so the
+                 `view` captured above may be a detached element by now. */
+              setTimeout(function () {
+                var v = document.querySelector('.map-view');
+                if (v) { v.scrollTop = 0; }        /* top of the board = the boss */
+              }, 1200);
+            }
+            return;
+          }
+          /* the capitulum the mascot stands on */
+          when('.map-node[data-id="f2"]', function (node) {
+            tap(node);
+            if (target === 'cap') { return; }
+            var label = STEP_LABEL[target];
+            if (!label) { return; }
+            when('.steps button.node', function () {
+              var b = stepButton(label);
+              if (b) { tap(b); }
+            });
+          });
+        });
+      });
     });
   </script>
 </head>
@@ -83,5 +209,23 @@
   <main id="app" class="screen">
     <noscript><p>Ad lūdendum, JavaScript necessārium est.</p></noscript>
   </main>
+  <!-- QA-only stamp: every screenshot says what width it was LAID OUT at,
+       which is not always the width the screenshot was cropped to. Finding
+       that out the hard way once is enough. -->
+  <div id="qa-stamp" style="position:fixed;right:0;bottom:0;z-index:99;
+       font:10px/1.4 monospace;background:rgba(0,0,0,.65);color:#0f0;padding:1px 4px;"></div>
+  <script>
+    (function stamp() {
+      var el = document.getElementById('qa-stamp');
+      function paint() {
+        el.textContent = window.innerWidth + '×' + window.innerHeight +
+          ' scrollW=' + document.documentElement.scrollWidth +
+          ' ' + (window.__QA_SCREEN || '');
+      }
+      paint();
+      window.addEventListener('resize', paint);
+      setInterval(paint, 500);
+    })();
+  </script>
 </body>
 </html>
