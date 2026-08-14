@@ -374,6 +374,12 @@ var Scenes = (function () {
 
   /* ---------- registry + render ---------- */
 
+  /* Actor and background registries. Both are plain lookup tables. New entries
+     can be added at run time with register()/registerBg(), so extra art files
+     (actors-person.js, actors-props.js, backgrounds2.js …) can grow the library
+     without this file being edited. Registered actors behave exactly like the
+     built-ins below: render() and sprite() find them through the same lookup
+     and hand them the same opts object (pose, flip, scale …). */
   var ACTORS = {
     fox: fox, crow: crow, wolf: wolf, lamb: lamb,
     tree: tree, grapes: grapes, cheese: cheese, fallingCheese: fallingCheese,
@@ -381,6 +387,74 @@ var Scenes = (function () {
   };
 
   var BGS = { forest: bgForest, river: bgRiver, plain: bgPlain };
+
+  /* Tight drawing bounds per actor, expressed in the actor's OWN local
+     coordinates — i.e. before the g(x,y,s,flip) placement transform that
+     render() applies. This is what lets sprite() emit a viewBox that hugs the
+     artwork, instead of the old trick of squeezing a whole 400x240 scene
+     (sky + ground included) into a square box (BUG-2). Numbers are measured by
+     hand from the path data above, with a couple of units of slack. */
+  var BOUNDS = {
+    fox:           { x: -58, y: -70,  w: 120, h: 78 },
+    crow:          { x: -46, y: -48,  w: 78,  h: 56 },
+    wolf:          { x: -56, y: -74,  w: 120, h: 80 },
+    lamb:          { x: -32, y: -46,  w: 62,  h: 54 },
+    tree:          { x: -62, y: -172, w: 124, h: 180 },
+    grapes:        { x: -26, y: -58,  w: 52,  h: 68 },
+    cheese:        { x: -20, y: -20,  w: 40,  h: 32 },
+    fallingCheese: { x: -20, y: -32,  w: 40,  h: 44 },
+    bush:          { x: -26, y: -26,  w: 52,  h: 32 },
+    voice:         { x: -26, y: -30,  w: 96,  h: 62 },
+    rose:          { x: -40, y: -42,  w: 76,  h: 66 },
+    castle:        { x: -52, y: -78,  w: 104, h: 96 }
+  };
+
+  /* generous fallback for actors registered without explicit bounds */
+  var DEFAULT_BOUNDS = { x: -60, y: -130, w: 120, h: 140 };
+
+  /* Own-property lookups. ACTORS/BGS/BOUNDS are object literals, so a bare
+     ACTORS[name] would cheerfully return inherited Object.prototype members
+     ('constructor', 'toString', 'valueOf' …) for a mistyped or hostile spec
+     item and then call them as if they were actor functions. hasOwnProperty
+     keeps the lookup to what we actually registered. */
+  function own(obj, name) {
+    return !!name && Object.prototype.hasOwnProperty.call(obj, name);
+  }
+
+  function actorFn(name) { return own(ACTORS, name) ? ACTORS[name] : null; }
+  function bgFn(name) { return own(BGS, name) ? BGS[name] : null; }
+  function boundsFor(name) { return own(BOUNDS, name) ? BOUNDS[name] : DEFAULT_BOUNDS; }
+
+  /* Public extension point: add an actor from another file.
+       Scenes.register('person', function (opts) { return '<...svg body...>'; },
+                       { x: -40, y: -120, w: 80, h: 130 });
+     `drawFn(opts)` must return SVG *body* markup (no <svg> wrapper) drawn in
+     local coordinates with the origin at the actor's ground point, exactly
+     like the built-ins. `bounds` is optional but strongly recommended, since
+     sprite() needs it to build a tight viewBox. Returns true when accepted. */
+  function register(name, drawFn, bounds) {
+    if (!name || typeof drawFn !== 'function') { return false; }
+    ACTORS[name] = drawFn;
+    if (bounds) { BOUNDS[name] = bounds; }
+    return true;
+  }
+
+  /* same, for full-scene backgrounds: drawFn() returns body markup covering
+     the 400x240 scene rectangle. */
+  function registerBg(name, drawFn) {
+    if (!name || typeof drawFn !== 'function') { return false; }
+    BGS[name] = drawFn;
+    return true;
+  }
+
+  /* introspection, used by tests/regression.html to sweep the whole library */
+  function keysOf(obj) {
+    var out = [], k;
+    for (k in obj) { if (Object.prototype.hasOwnProperty.call(obj, k)) { out.push(k); } }
+    return out;
+  }
+  function actorNames() { return keysOf(ACTORS); }
+  function bgNames() { return keysOf(BGS); }
 
   /* a small standalone castle sprite for the overworld boss node. Drawn around
      (0,0), roughly 90 wide × 80 tall. The map renderer scales/places it. */
@@ -412,12 +486,14 @@ var Scenes = (function () {
 
   function render(spec) {
     var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" role="img" preserveAspectRatio="xMidYMid meet">';
-    s += (BGS[spec.bg] || bgPlain)();
+    s += (bgFn(spec.bg) || bgPlain)();
     var i, it, fn;
     if (spec.items) {
       for (i = 0; i < spec.items.length; i++) {
         it = spec.items[i];
-        fn = ACTORS[it.t];
+        /* one lookup for built-in and registered actors alike; the whole spec
+           item is passed through as opts, so pose/flip/scale keep working. */
+        fn = actorFn(it.t);
         if (fn) { s += g(it.x, it.y, it.s || 1, !!it.flip, fn(it)); }
       }
     }
@@ -426,6 +502,102 @@ var Scenes = (function () {
     }
     s += '</svg>';
     return s;
+  }
+
+  /* ---------- single-actor sprite (BUG-2) ----------
+
+     Renders ONE actor on a transparent, tight viewBox: no sky, no ground, no
+     background rect of any kind. The old boss code faked this by rendering a
+     full {bg:'plain'} scene and forcing the 400x240 result into a 200x200 box,
+     which painted an opaque cream-and-earth rectangle over the middle of the
+     fight. A sprite is what canvas code actually wants.
+
+     name  actor key (built-in or registered)
+     opts  passed straight to the actor fn (pose, and flip handled here)
+     px    pixel width/height written onto the <svg> tag (default 200)
+     Returns an SVG *string*; wrap it with toImage() to get a canvas-drawable
+     Image. Because the viewBox is not square while the emitted box is, the
+     preserveAspectRatio="xMidYMid meet" letterbox is TRANSPARENT padding. */
+  function sprite(name, opts, px) {
+    var o = opts || {};
+    var size = px || 200;
+    var b = boundsFor(name);
+    var fn = actorFn(name);
+    var inner = fn ? fn(o) : '';
+    if (o.flip) {
+      /* mirror about the middle of the bounding box (x' = 2*cx - x) so the
+         artwork stays inside the same viewBox after flipping. */
+      var cx = b.x + b.w / 2;
+      inner = '<g transform="translate(' + (2 * cx) + ',0) scale(-1,1)">' + inner + '</g>';
+    }
+    return '<svg viewBox="' + b.x + ' ' + b.y + ' ' + b.w + ' ' + b.h + '"' +
+      ' width="' + size + '" height="' + size + '"' +
+      ' xmlns="http://www.w3.org/2000/svg" role="img"' +
+      ' preserveAspectRatio="xMidYMid meet">' + inner + '</svg>';
+  }
+
+  /* ---------- SVG -> Image (FIX-1a) ----------
+
+     THE BUG THIS EXISTS TO KILL: boss.js used to do
+         svg.replace('<svg ', '<svg width="80" height="80" ')
+     on a string that ALREADY carried width/height (Scenes.mascot emits its
+     own). The result had duplicate width/height attributes. A data:image/svg+xml
+     URL is parsed as strict XML, where a duplicate attribute is a FATAL
+     well-formedness error ("duplicate attribute"), so the Image silently
+     entered the broken state, and drawImage() on a broken image throws
+     InvalidStateError — which killed the boss animation loop.
+
+     sizeSvg() therefore STRIPS any existing width/height from the OPENING
+     <svg ...> tag before injecting the new pair. It touches the opening tag
+     only: nested elements in the body keep their own width/height. */
+  function sizeSvg(svg, px) {
+    var s = String(svg);
+    var open = s.indexOf('<svg');
+    if (open < 0) { return s; }              /* not an svg: leave it alone */
+    var close = s.indexOf('>', open);
+    if (close < 0) { return s; }
+    /* head = '<svg ...attrs...' with neither '>' nor a trailing '/' consumed */
+    var head = s.substring(open, close);
+    /* drop existing width=/height= attributes (single or double quoted).
+       The leading \s is what keeps 'stroke-width="2"' safe: there the name is
+       preceded by '-', not by whitespace. */
+    head = head.replace(/\s(width|height)\s*=\s*("[^"]*"|'[^']*')/gi, '');
+    head = head.replace(/^<svg/, '<svg width="' + px + '" height="' + px + '"');
+    return s.substring(0, open) + head + s.substring(close);
+  }
+
+  /* ?debug=boss (FIX-1a regression aid): this failure mode is silent by
+     construction — the browser reports nothing, the image just never decodes.
+     With the flag on, every Image built here screams into the console.
+     Evaluated once at load; wrapped in try/catch for non-browser hosts. */
+  var DEBUG_IMAGES = (function () {
+    try {
+      return typeof window !== 'undefined' && !!window.location &&
+        String(window.location.search).indexOf('debug=boss') >= 0;
+    } catch (e) { return false; }
+  })();
+
+  /* the ONE conversion used by game.js and boss.js for every SVG-to-canvas
+     image. Returns an HTMLImageElement; callers must still guard drawImage
+     with (img && img.complete && img.naturalWidth > 0), because .complete is
+     TRUE for a failed image and only naturalWidth reveals the truth. */
+  function toImage(svg, px) {
+    var sized = sizeSvg(svg, px);
+    var img = new Image();
+    if (DEBUG_IMAGES) {
+      /* handlers must be attached BEFORE .src is assigned, or a fast failure
+         can fire before we are listening. */
+      img.onerror = function () {
+        if (window.console) { console.error('[scenes] IMAGE FAILED TO DECODE, px=' + px, sized); }
+      };
+      img.onload = function () {
+        if (!img.naturalWidth && window.console) {
+          console.error('[scenes] image decoded with zero width, px=' + px, sized);
+        }
+      };
+    }
+    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(sized);
+    return img;
   }
 
   /* tiny standalone fox head used as the app mascot/logo */
@@ -453,5 +625,15 @@ var Scenes = (function () {
     return s;
   }
 
-  return { render: render, mascot: mascot, castle: castle, GROUND: GROUND };
+  return {
+    render: render, mascot: mascot, castle: castle, GROUND: GROUND,
+    /* sizing + canvas bridge (FIX-1a) */
+    sizeSvg: sizeSvg, toImage: toImage,
+    /* single-actor transparent sprite (BUG-2) */
+    sprite: sprite,
+    /* extension points for additional art files */
+    register: register, registerBg: registerBg,
+    actorNames: actorNames, bgNames: bgNames,
+    W: W, H: H
+  };
 })();

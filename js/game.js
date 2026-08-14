@@ -38,11 +38,12 @@ var Game = (function () {
   }
 
   /* ---------- fox sprite from the SVG mascot ---------- */
+  /* Scenes.toImage is the single SVG→Image conversion for the whole app: it
+     strips any width/height already present on the <svg> tag before writing
+     the new ones. Hand-rolled string surgery here is what produced duplicate
+     attributes (and therefore an undecodable image) in boss.js — see FIX-1a. */
   function makeFoxImage() {
-    var svg = Scenes.mascot(80);
-    var img = new Image();
-    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
-    return img;
+    return Scenes.toImage(Scenes.mascot(80), 80);
   }
 
   /* pre-render a vocab scene into an off-screen Image so it can be painted
@@ -51,12 +52,15 @@ var Game = (function () {
      height=60 letterboxes correctly. The letterbox fill is the same parchment
      cream as the game floor, so the icon blends in seamlessly. */
   function makeSceneImage(spec) {
-    var raw = Scenes.render(spec);
-    /* inject explicit pixel size into the <svg ...> opener */
-    var sized = raw.replace('<svg ', '<svg width="60" height="60" ');
-    var img = new Image();
-    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(sized);
-    return img;
+    return Scenes.toImage(Scenes.render(spec), 60);
+  }
+
+  /* FIX-1b: the ONLY safe test before drawImage(). HTMLImageElement.complete
+     is TRUE for an image that failed to load — only naturalWidth exposes the
+     "broken" state — and drawImage() on a broken image throws
+     InvalidStateError. Every drawImage in this file goes through this. */
+  function imgReady(img) {
+    return !!(img && img.complete && img.naturalWidth > 0);
   }
 
   /* ---------- helpers ---------- */
@@ -167,7 +171,7 @@ var Game = (function () {
     for (i = 0; i < items.length; i++) {
       var w = items[i].word;
       var sImg = sceneImgs[w.la];
-      if (sImg && sImg.complete && sImg.naturalWidth > 0) {
+      if (imgReady(sImg)) {
         /* 56px square centred on the item position */
         ctx.drawImage(sImg, items[i].x - 28, items[i].y - 28, 56, 56);
       } else if (w.emoji) {
@@ -176,7 +180,7 @@ var Game = (function () {
     }
 
     /* fox */
-    if (foxImg && foxImg.complete) {
+    if (imgReady(foxImg)) {
       ctx.drawImage(foxImg, fox.x - 40, H - 118, 80, 80);
     } else {
       ctx.font = '52px serif';
@@ -214,9 +218,19 @@ var Game = (function () {
     if (!running) { return; }
     var dt = Math.min(0.05, (t - lastTime) / 1000);
     lastTime = t;
-    update(dt);
-    draw();
+    update(dt);                       /* may call end() → stop() → running=false */
+    /* BUG-5(a): never reschedule after the game has ended, or stop() leaves a
+       dangling rAF id behind. */
+    if (!running) { return; }
+    /* FIX-1c: schedule the next frame BEFORE drawing, and swallow draw
+       exceptions. A throw inside draw() (e.g. drawImage on a broken image)
+       must never be able to kill the animation loop again. */
     raf = window.requestAnimationFrame(loop);
+    try {
+      draw();
+    } catch (e) {
+      if (window.console) { console.error('[ludus] draw failed, loop continues', e); }
+    }
   }
 
   /* ---------- lifecycle ---------- */

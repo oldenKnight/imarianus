@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="la">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>imarianus — regressiones</title>
+<!--
+  regression.html — framework-free browser regression harness (ES5).
+
+  Open this file directly in a browser (file:// works, no server needed) and
+  read the rows. Every check names the bug it guards, so a red row tells you
+  which fix has been undone.
+
+  Rule from the master plan: EVERY bug that gets fixed gets a case here that
+  would have caught it. This page must be green before any commit that touches
+  engine code.
+-->
+<style>
+  body { margin: 0; padding: 24px; background: #f6e8c9; color: #3a2417;
+         font-family: Palatino, Georgia, serif; }
+  h1 { margin: 0 0 4px; font-size: 26px; }
+  p.sub { margin: 0 0 18px; font-size: 14px; opacity: 0.75; }
+  #summary { font-size: 18px; font-weight: bold; padding: 10px 14px;
+             border-radius: 8px; margin-bottom: 16px; display: inline-block; }
+  .allpass { background: #7fb069; color: #16240f; }
+  .anyfail { background: #b33a2b; color: #fff2e8; }
+  table { border-collapse: collapse; width: 100%; max-width: 1100px; }
+  td { border-bottom: 1px solid rgba(58,36,23,0.18); padding: 7px 9px;
+       vertical-align: top; font-size: 14px; }
+  td.st { width: 62px; font-weight: bold; text-align: center; color: #fff2e8; }
+  td.st.pass { background: #7fb069; }
+  td.st.fail { background: #b33a2b; }
+  td.st.wait { background: #9c8a6a; }
+  td.bug { width: 92px; font-family: Menlo, Consolas, monospace; font-size: 12px;
+           opacity: 0.8; }
+  td.detail { font-family: Menlo, Consolas, monospace; font-size: 12px;
+              color: #7a3a2b; word-break: break-all; }
+</style>
+</head>
+<body>
+<h1>imarianus — regressiones</h1>
+<p class="sub">Framework-free checks. Green page = safe to commit.</p>
+<div id="summary" class="wait">currendo…</div>
+<table><tbody id="rows"></tbody></table>
+
+<!-- dependencies, in the same order index.html loads them.
+     scenes.js has no dependencies of its own; game.js and boss.js depend on
+     Scenes only (and on Game.beep being optional), so the three load cleanly
+     without data.js, storage.js or the DOM app shell. -->
+<script src="../js/scenes.js"></script>
+<script src="../js/game.js"></script>
+<script src="../js/boss.js"></script>
+
+<script>
+/* eslint-env browser */
+(function () {
+  'use strict';
+
+  /* ================= tiny test runner ================= */
+
+  var rowsEl = document.getElementById('rows');
+  var summaryEl = document.getElementById('summary');
+  var total = 0, failed = 0, pending = 0;
+
+  /* add a row; returns a setter so async checks can fill it in later */
+  function row(bug, name) {
+    total++;
+    var tr = document.createElement('tr');
+    var st = document.createElement('td');
+    st.className = 'st wait'; st.appendChild(document.createTextNode('…'));
+    var bg = document.createElement('td'); bg.className = 'bug';
+    bg.appendChild(document.createTextNode(bug));
+    var nm = document.createElement('td');
+    nm.appendChild(document.createTextNode(name));
+    var dt = document.createElement('td'); dt.className = 'detail';
+    tr.appendChild(st); tr.appendChild(bg); tr.appendChild(nm); tr.appendChild(dt);
+    rowsEl.appendChild(tr);
+    return function (ok, detail) {
+      st.className = 'st ' + (ok ? 'pass' : 'fail');
+      st.firstChild.nodeValue = ok ? 'PASS' : 'FAIL';
+      dt.appendChild(document.createTextNode(detail || ''));
+      if (!ok) { failed++; }
+    };
+  }
+
+  /* synchronous check: fn() returns null/'' when fine, or a failure message */
+  function check(bug, name, fn) {
+    var set = row(bug, name);
+    var msg;
+    try { msg = fn(); } catch (e) { msg = 'threw: ' + (e && e.message ? e.message : e); }
+    set(!msg, msg || 'ok');
+  }
+
+  /* asynchronous check: fn(done) calls done(msgOrNull) when finished */
+  function checkAsync(bug, name, fn) {
+    var set = row(bug, name);
+    pending++;
+    var settled = false;
+    function done(msg) {
+      if (settled) { return; }
+      settled = true;
+      set(!msg, msg || 'ok');
+      pending--;
+      finish();
+    }
+    try { fn(done); } catch (e) { done('threw: ' + (e && e.message ? e.message : e)); }
+  }
+
+  function finish() {
+    if (pending > 0) { return; }
+    summaryEl.className = failed ? 'anyfail' : 'allpass';
+    summaryEl.firstChild.nodeValue =
+      failed ? (failed + ' / ' + total + ' FAILED') : ('OMNIA BENE — ' + total + ' / ' + total + ' pass');
+  }
+
+  /* ================= helpers ================= */
+
+  var DATA_PREFIX = 'data:image/svg+xml;charset=utf-8,';
+
+  /* recover the exact string the browser was asked to parse. This is the real
+     bytes of the failing path, not a reconstruction of it. */
+  function svgFromImage(img) {
+    var src = String(img.src);
+    if (src.indexOf(DATA_PREFIX) !== 0) {
+      throw new Error('unexpected data URL prefix: ' + src.substring(0, 40));
+    }
+    return decodeURIComponent(src.substring(DATA_PREFIX.length));
+  }
+
+  /* returns a parsererror description, or null when the document is
+     well-formed. A data:image/svg+xml URL is parsed as STRICT XML by the
+     browser, which is why this mirrors the real decode path. */
+  function xmlError(str) {
+    var doc = new DOMParser().parseFromString(str, 'image/svg+xml');
+    var errs = doc.getElementsByTagName('parsererror');
+    if (errs && errs.length) {
+      return String(errs[0].textContent).replace(/\s+/g, ' ').substring(0, 140);
+    }
+    if (!doc.documentElement) { return 'no document element'; }
+    if (doc.documentElement.nodeName.toLowerCase() === 'parsererror') {
+      return String(doc.documentElement.textContent).replace(/\s+/g, ' ').substring(0, 140);
+    }
+    return null;
+  }
+
+  function openingTag(str) {
+    var a = str.indexOf('<svg');
+    var b = str.indexOf('>', a);
+    return (a < 0 || b < 0) ? '' : str.substring(a, b + 1);
+  }
+
+  function countAttr(tag, name) {
+    var m = tag.match(new RegExp('\\s' + name + '\\s*=', 'gi'));
+    return m ? m.length : 0;
+  }
+
+  /* the full FIX-1a contract for one produced string */
+  function assertSized(label, str) {
+    var err = xmlError(str);
+    if (err) { return label + ': NOT well-formed XML — ' + err; }
+    var tag = openingTag(str);
+    if (!tag) { return label + ': no opening <svg> tag'; }
+    var nw = countAttr(tag, 'width'), nh = countAttr(tag, 'height');
+    if (nw !== 1 || nh !== 1) {
+      return label + ': expected exactly 1 width + 1 height on the root, got ' +
+        nw + ' + ' + nh + ' — ' + tag.substring(0, 120);
+    }
+    return null;
+  }
+
+  /* ================= CHECK 1 =================
+     Guards BUG-1 / FIX-1a — the boss-fight freeze.
+     boss.js used to prepend width/height to an <svg ...> string that already
+     carried them (Scenes.mascot does). A duplicate attribute is a FATAL XML
+     well-formedness error, so the data: URL never decoded, the Image sat in
+     the "broken" state with .complete === true, and drawImage() threw
+     InvalidStateError inside draw() — killing the animation loop.
+     Every actor sprite, the mascot and a full scene must survive toImage(). */
+
+  check('BUG-1', 'toImage(Scenes.mascot(80), 80) is well-formed with one width/height',
+    function () {
+      /* the exact string that crashed the boss fight: mascot() emits its own
+         width/height, so this is the duplicate-attribute case itself. */
+      return assertSized('mascot', svgFromImage(Scenes.toImage(Scenes.mascot(80), 80)));
+    });
+
+  check('BUG-1', 'toImage() over EVERY actor sprite in the library',
+    function () {
+      var names = Scenes.actorNames(), i, msg;
+      if (!names.length) { return 'actor registry is empty'; }
+      for (i = 0; i < names.length; i++) {
+        /* sprite() already writes width/height, so toImage() must strip them */
+        msg = assertSized('actor ' + names[i],
+          svgFromImage(Scenes.toImage(Scenes.sprite(names[i], {}, 120), 64)));
+        if (msg) { return msg; }
+      }
+      return null;
+    });
+
+  check('BUG-1', 'toImage() over a full Scenes.render() scene (game.js path)',
+    function () {
+      var svg = Scenes.render({ bg: 'forest', items: [
+        { t: 'fox', x: 140, y: 210, s: 1 },
+        { t: 'tree', x: 300, y: 210, s: 1, grapes: true }
+      ], bubbles: [{ x: 200, y: 40, text: 'Ecce!', tail: 'left' }] });
+      return assertSized('scene', svgFromImage(Scenes.toImage(svg, 60)));
+    });
+
+  check('BUG-1', 'sizeSvg() is idempotent (re-sizing never duplicates attributes)',
+    function () {
+      /* the failure mode was a SECOND sizing pass over an already sized
+         string, so sizing twice must still yield exactly one pair. */
+      var once = Scenes.sizeSvg(Scenes.mascot(80), 40);
+      var twice = Scenes.sizeSvg(once, 90);
+      var msg = assertSized('sized twice', twice);
+      if (msg) { return msg; }
+      if (twice.indexOf('width="90"') < 0 || twice.indexOf('height="90"') < 0) {
+        return 'the last size did not win: ' + openingTag(twice).substring(0, 120);
+      }
+      return null;
+    });
+
+  check('BUG-1', 'sizeSvg() strips only the opening tag and spares stroke-width',
+    function () {
+      var src = '<svg width="9" height="9" viewBox="0 0 10 10" stroke-width="3">' +
+                '<rect width="10" height="10" stroke-width="2"/></svg>';
+      var out = Scenes.sizeSvg(src, 50);
+      var msg = assertSized('handmade', out);
+      if (msg) { return msg; }
+      if (out.indexOf('<rect width="10" height="10" stroke-width="2"/>') < 0) {
+        return 'the element body was damaged: ' + out;
+      }
+      if (openingTag(out).indexOf('stroke-width="3"') < 0) {
+        return 'stroke-width was eaten off the root: ' + openingTag(out);
+      }
+      return null;
+    });
+
+  /* ================= CHECK 2 =================
+     Guards BUG-2 — the wolf letterboxed in an opaque square.
+     makeWolfImage() used to render a whole {bg:'plain'} 400x240 scene and
+     squeeze it into 200x200, so the scene's sky and ground painted an opaque
+     rectangle across the middle of the arena. Scenes.sprite must draw the
+     actor ALONE on a transparent, tight viewBox. */
+
+  function fullSizeRect(str) {
+    var doc = new DOMParser().parseFromString(str, 'image/svg+xml');
+    var root = doc.documentElement;
+    var vb = String(root.getAttribute('viewBox') || '').split(/[\s,]+/);
+    var vbW = parseFloat(vb[2]), vbH = parseFloat(vb[3]);
+    var rects = doc.getElementsByTagName('rect');
+    var i, w, h;
+    for (i = 0; i < rects.length; i++) {
+      w = String(rects[i].getAttribute('width') || '0');
+      h = String(rects[i].getAttribute('height') || '0');
+      w = (w.indexOf('%') > 0) ? vbW * parseFloat(w) / 100 : parseFloat(w);
+      h = (h.indexOf('%') > 0) ? vbH * parseFloat(h) / 100 : parseFloat(h);
+      if (w >= vbW && h >= vbH) { return 'rect ' + w + 'x' + h + ' over viewBox ' + vbW + 'x' + vbH; }
+    }
+    return null;
+  }
+
+  check('BUG-2', "Scenes.sprite('wolf', {}, 200): well-formed, no background rect",
+    function () {
+      var svg = Scenes.sprite('wolf', {}, 200);
+      var msg = assertSized('wolf sprite', svg);
+      if (msg) { return msg; }
+      var bg = fullSizeRect(svg);
+      if (bg) { return 'sprite paints an opaque background: ' + bg; }
+      if (svg.indexOf('#f6e8c9') >= 0 || svg.indexOf('#b98a4e') >= 0) {
+        return 'sprite contains scene sky/ground colours — a background leaked in';
+      }
+      return null;
+    });
+
+  check('BUG-2', 'no actor sprite paints a full-viewBox background',
+    function () {
+      var names = Scenes.actorNames(), i, bg;
+      for (i = 0; i < names.length; i++) {
+        bg = fullSizeRect(Scenes.sprite(names[i], {}, 100));
+        if (bg) { return 'actor ' + names[i] + ' paints a background: ' + bg; }
+      }
+      return null;
+    });
+
+  check('BUG-2', 'sprite() passes opts through (pose changes the output)',
+    function () {
+      /* a pose that produced identical markup would mean opts are dropped */
+      if (Scenes.sprite('wolf', { pose: 'angry' }, 100) === Scenes.sprite('wolf', { pose: 'stand' }, 100)) {
+        return 'pose:"angry" and pose:"stand" render identically';
+      }
+      return null;
+    });
+
+  /* ================= CHECK 3 =================
+     Guards the register() extension point used by the art files
+     (actors-person.js, actors-props.js, backgrounds2.js). A registered actor
+     must behave exactly like a built-in inside Scenes.render, receiving the
+     spec item as its opts. */
+
+  check('API', 'register() round-trip: dummy actor renders inside a scene',
+    function () {
+      var seen = null;
+      var ok = Scenes.register('__dummy__', function (opts) {
+        seen = opts;                       /* opts must be the spec item */
+        return '<circle cx="0" cy="0" r="5" fill="#123456"/>';
+      }, { x: -6, y: -6, w: 12, h: 12 });
+      if (!ok) { return 'register() refused a valid actor'; }
+
+      var svg = Scenes.render({ bg: 'plain', items: [
+        { t: '__dummy__', x: 100, y: 200, s: 2, pose: 'testPose', flip: true }
+      ] });
+      if (svg.indexOf('#123456') < 0) { return 'registered actor did not render into the scene'; }
+      if (!seen || seen.pose !== 'testPose') { return 'opts were not passed through to the draw fn'; }
+      if (svg.indexOf('scale(-1,1)') < 0) { return 'flip was not applied to the registered actor'; }
+
+      var msg = xmlError(svg);
+      if (msg) { return 'scene with a registered actor is malformed: ' + msg; }
+
+      /* the registered actor must also work through sprite() + toImage() */
+      msg = assertSized('dummy sprite', svgFromImage(Scenes.toImage(Scenes.sprite('__dummy__', {}, 80), 80)));
+      if (msg) { return msg; }
+
+      /* registerBg likewise */
+      if (!Scenes.registerBg('__dummybg__', function () { return '<rect width="400" height="240" fill="#654321"/>'; })) {
+        return 'registerBg() refused a valid background';
+      }
+      if (Scenes.render({ bg: '__dummybg__', items: [] }).indexOf('#654321') < 0) {
+        return 'registered background did not render';
+      }
+      return null;
+    });
+
+  check('API', 'unknown / inherited actor names never reach a function call',
+    function () {
+      /* ACTORS is an object literal, so a naive ACTORS[name] lookup would
+         return Object.prototype members for these and call them as actors. */
+      var svg = Scenes.render({ bg: 'plain', items: [
+        { t: 'constructor', x: 10, y: 10 },
+        { t: 'toString', x: 20, y: 20 },
+        { t: 'nonexistentActor', x: 30, y: 30 }
+      ] });
+      return xmlError(svg) ? ('scene broke on inherited keys: ' + xmlError(svg)) : null;
+    });
+
+  /* ================= CHECK 4 =================
+     Guards BUG-5(b) — abort() must tear the fight down WITHOUT reporting a
+     result. It used to call end(false), so merely navigating away from the
+     boss screen fired cb.onEnd(false) and showed the "you lost" screen.
+     Also covers BUG-5(a): no frame may run after teardown. */
+
+  checkAsync('BUG-5', 'Boss.abort() tears down without firing onEnd', function (done) {
+    var canvas = document.createElement('canvas');
+    var words = [{ la: 'lupus', emoji: '🐺' }, { la: 'agnus', emoji: '🐑' }];
+    var ended = false;
+    Boss.start(canvas, { words: words, hp: 3, seconds: 30 }, {
+      onEnd: function () { ended = true; }
+    });
+    Boss.abort();
+    /* wait several frames: a stale rAF would land inside this window */
+    window.setTimeout(function () {
+      done(ended ? 'abort() fired onEnd — navigating away reports a defeat' : null);
+    }, 200);
+  });
+
+  /* ================= CHECK 5 =================
+     Guards FIX-1b — WHY the drawImage guard must test naturalWidth.
+     A broken image reports .complete === true; only naturalWidth === 0 gives
+     it away. Any future `if (img.complete)` guard is therefore still a crash
+     waiting to happen, and this row exists to say so out loud. */
+
+  checkAsync('BUG-1', 'a broken image still reports complete=true (naturalWidth is the only tell)',
+    function (done) {
+      /* deliberately malformed: <rect> is never closed, so the XML parser
+         rejects the document exactly as a duplicate attribute would. */
+      var bad = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10">' +
+                '<rect width="10" height="10" fill="#000"></svg>';
+      var img = Scenes.toImage(bad, 40);
+      function verdict() {
+        if (img.naturalWidth > 0) { return done('the malformed fixture decoded anyway — fixture is stale'); }
+        if (!img.complete) { return done('image never settled (slow environment?)'); }
+        return done(null);
+      }
+      img.onload = verdict;
+      img.onerror = verdict;
+      /* belt and braces: some engines fire neither handler for a failed
+         data: URL, but .complete still flips. */
+      window.setTimeout(verdict, 600);
+    });
+
+  finish();
+}());
+</script>
+</body>
+</html>
