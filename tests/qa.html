@@ -263,29 +263,51 @@
         return cfg;
       }
 
+      /* screen=probatio rewrites Regiō I's boss INTO a trial, in memory, the
+         moment its content file has registered. That matters: the harness used
+         to reach a trial by starting the Probatio engine itself, which meant
+         app.js's own probatio wiring was never exercised and the screen kept
+         the DUEL's header — a trial captioned "Lupum vince!". Everything the
+         screenshot shows now comes from app.js: the header string, the intro
+         glyph, and the choice of engine. Real Historia trials will arrive with
+         their own content; this keeps the route testable until they do. */
+      function asTrial(rid) {
+        var reg = window.CONTENT ? CONTENT.region('fabulae', rid) : null;
+        if (!reg || !reg.boss) { return; }
+        reg.boss.kind = 'probatio';
+        reg.boss.name = 'Silva';
+        /* 90 s and 9 hp so the phase cannot end under the camera */
+        reg.boss.phases = [
+          { type: window.__QA_PHASE || 'ordina', hp: 9, seconds: 90 }
+        ];
+      }
+
       if (target === 'boss' || target === 'probatio' || target === 'bossintro') {
+        var rid = window.__QA_REGION || 'r01';
         /* the boss node id is per-region content (b_r01, b_r02, …) */
-        var bossNode = '.map-node[data-id="b_' + (window.__QA_REGION || 'r01') + '"]';
+        var bossNode = '.map-node[data-id="b_' + rid + '"]';
         when('.door-fabulae', function (door) {
           tap(door);
           when(bossNode, function (node) {
+            /* the region's content file is registered by the time its map
+               node exists, so this is the first safe moment to retune it */
+            if (target === 'probatio') { asTrial(rid); }
             tap(node);
             /* screen=bossintro stops HERE: the intro screen is where the
                boss's own actor and challenge line are on show. */
             if (target === 'bossintro') { return; }
             when('#fight', function (btn) {
               tap(btn);
-              /* screen=boss with no &phase= runs the REAL three-phase fight;
-                 screen=probatio always needs a trial type, so it defaults. */
-              var want = window.__QA_PHASE ||
-                         (target === 'probatio' ? 'ordina' : '');
-              if (!want) { return; }
+              /* A trial now needs no help — app.js starts the right engine
+                 with the phase asTrial() wrote. screen=boss with no &phase=
+                 runs the REAL three-phase duel; with one, the duel engine is
+                 restarted on the same canvas with that single phase, which is
+                 the only way a headless shot can reach round II or III. */
+              if (target === 'probatio' || !window.__QA_PHASE) { return; }
               when('#bossgame', function (cv) {
-                var runner = (target === 'probatio') ? window.Probatio : window.Boss;
-                if (!runner) { return; }
-                /* 90 s and 9 hp so the phase cannot end under the camera */
-                runner.start(cv, bossConfig({
-                  phases: [{ type: want, hp: 9, seconds: 90 }]
+                if (!window.Boss) { return; }
+                Boss.start(cv, bossConfig({
+                  phases: [{ type: window.__QA_PHASE, hp: 9, seconds: 90 }]
                 }), { onEnd: function () {} });
               });
             });

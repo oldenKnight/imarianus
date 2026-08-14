@@ -266,6 +266,12 @@ var DATA = (function () {
     bossReady: 'Lupum vince!',
     bossReadyAny: 'Vince!',
     pugna: 'PUGNA',
+    /* A trial is not a fight. Historia and Aeneis end a liber with a probātiō,
+       so their boss screens are named and instructed rather than challenged
+       ("Probātiō: Arca Noe — ŌRDINĀ!"), and the button invites instead of
+       ordering an attack. See bossHeaderText() in app.js. */
+    probatioLabel: 'Probātiō',
+    incipe: 'INCIPE',
     quizTitle: 'Probātiō',
     gateLocked: 'Mox plūra…',
     vicisti: 'VĪCISTĪ!',

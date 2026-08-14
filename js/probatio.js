@@ -620,8 +620,9 @@ var Probatio = (function () {
       var at = this.at % this.pool.length;
       this.item = this.pool[at];
       this.at++;
+      /* rastered at 96, drawn at 76 — see the same note in clamor's nextItem */
       this.sceneImg = this.item.scene
-        ? env.sceneImage({ la: '__sententia__' + at, scene: this.item.scene })
+        ? env.sceneImage({ la: '__sententia__' + at, scene: this.item.scene }, 96)
         : null;
       opts = env.shuffled(this.item.options);
       this.cards = [];
@@ -672,12 +673,12 @@ var Probatio = (function () {
       for (i = 0; i < this.cards.length; i++) {
         env.drawTile(this.cards[i].word, this.cards[i].x, this.cards[i].y, 58);
       }
-      var x = 8, y = env.TOP + 2, w = env.W - 16, h = 72;
+      var x = 8, y = env.TOP + 2, w = env.W - 16, h = 92;
       env.drawBanner(x, y, w, h);
       var textX = x + 12, textW = w - 24;
       if (env.imgReady(this.sceneImg)) {
-        ctx.drawImage(this.sceneImg, x + 10, y + 8, 56, 56);
-        textX = x + 74; textW = w - 88;
+        ctx.drawImage(this.sceneImg, x + 10, y + 8, 76, 76);
+        textX = x + 94; textW = w - 108;
       }
       ctx.font = (this.item.verbum ? 'bold 26px' : '17px') + ' Palatino, Georgia, serif';
       ctx.textBaseline = 'middle';

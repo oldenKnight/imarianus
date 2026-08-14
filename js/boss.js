@@ -183,11 +183,16 @@ var Boss = (function () {
     var sceneCache = {};      /* word.la  → Image (60px scene thumbnail)       */
     var spriteCache = {};     /* name|pose|px → Image (transparent actor)      */
 
-    function sceneImage(word) {
+    /* `px` is the RASTER size, not the draw size. A 60 px image blown up to
+       fill a 76 px banner slot is the blur that made the clamor thumbnail
+       unreadable, so a caller that draws bigger must ask for bigger. The size
+       is part of the cache key or the first caller would fix it for everyone. */
+    function sceneImage(word, px) {
       if (!word) { return null; }
-      var key = word.la;
+      px = px || 60;
+      var key = word.la + '|' + px;
       if (Object.prototype.hasOwnProperty.call(sceneCache, key)) { return sceneCache[key]; }
-      var img = word.scene ? Scenes.toImage(Scenes.render(word.scene), 60) : null;
+      var img = word.scene ? Scenes.toImage(Scenes.render(word.scene), px) : null;
       sceneCache[key] = img;
       return img;
     }
@@ -470,12 +475,21 @@ var Boss = (function () {
       if (plan.length < 2) { return; }
       var n = plan.length, gap = 18, i, cx;
       var x0 = W / 2 - ((n - 1) * gap) / 2;
+      /* A dark pill behind the row. The pips share the top band with falling
+         tiles, and an umber diamond at 0.28 alpha over a bright parchment tile
+         vanished exactly when the learner wanted to check how far in they were.
+         Cream on its own dark ground reads at any backdrop. */
+      ctx.save();
+      ctx.fillStyle = 'rgba(43,28,22,0.72)';
+      roundRect(x0 - 13, BAR_Y - 3, (n - 1) * gap + 26, BAR_H + 6, 10);
+      ctx.fill();
+      ctx.restore();
       for (i = 0; i < n; i++) {
         cx = x0 + i * gap;
         ctx.save();
         ctx.translate(cx, BAR_Y + BAR_H / 2);
         ctx.rotate(Math.PI / 4);
-        ctx.fillStyle = (i < idx) ? '#e0a93e' : 'rgba(58,36,23,0.28)';
+        ctx.fillStyle = (i < idx) ? '#e0a93e' : 'rgba(246,232,201,0.60)';
         ctx.fillRect(-5, -5, 10, 10);
         if (i === idx) {
           ctx.strokeStyle = '#e0a93e';

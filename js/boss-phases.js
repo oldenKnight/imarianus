@@ -53,6 +53,93 @@
   }
   function lower(s) { return String(s).toLowerCase(); }
 
+  /* macrons off, so ONE stoplist entry covers 'nōn' and 'non' and the same
+     key matches a story token however the author spelled it. */
+  var MACRA = { 'ā': 'a', 'ē': 'e', 'ī': 'i', 'ō': 'o', 'ū': 'u', 'ȳ': 'y',
+                'ă': 'a', 'ĕ': 'e', 'ĭ': 'i', 'ŏ': 'o', 'ŭ': 'u' };
+  function plain(s) {
+    return lower(bare(s)).replace(/[āēīōūȳăĕĭŏŭ]/g, function (c) { return MACRA[c]; });
+  }
+
+  /* ------------------------------------------------------------
+     THE FUNCTION-WORD STOPLIST
+     A gap must be a CONTENT lexeme the learner can recover from a
+     picture. 'nōn' shipped a 🚫 and 'cūr' a ❓ — those are not
+     pictures of the words, they are symbols that have to be
+     TRANSLATED, which is the one habit this method refuses (see
+     docs/LATIN-STYLE). A function word can never be gapped, and
+     can never be offered as an option either.
+
+     Macron-free and matched through plain(). Grouped so a content
+     wave can extend the right row rather than appending blindly.
+     ------------------------------------------------------------ */
+  var FUNCTIO = {};
+  (function (rows) {
+    var i, j, w;
+    for (i = 0; i < rows.length; i++) {
+      w = rows[i].split(/\s+/);
+      for (j = 0; j < w.length; j++) { if (w[j]) { FUNCTIO[w[j]] = true; } }
+    }
+  }([
+    /* esse / posse / velle — the copulas and modals */
+    'sum es est sumus estis sunt eram eras erat eramus eratis erant ero eris ' +
+    'erit erimus eritis erunt fui fuisti fuit fuimus fuerunt esse fore sit ' +
+    'sint esset essent possum potes potest possumus potestis possunt poteram ' +
+    'poterat poterant potero poterit posse potuit volo vis vult volunt velle',
+    /* coordinators and particles */
+    'et sed aut atque ac nec neque vel que -que at autem enim nam namque ' +
+    'igitur ergo tamen quoque etiam itaque quidem vero tum deinde',
+    /* negation and affirmation */
+    'non ne haud nihil nil nemo numquam nusquam minime ita sic immo nondum',
+    /* interrogatives, relatives, subordinators */
+    'cur quis quid qui quae quod quem quam quos quas quorum quarum cuius cui ' +
+    'quo qua ubi unde quando quomodo quot quantus num an utrum quare quia ' +
+    'quoniam ut si nisi cum dum donec postquam antequam quamquam licet',
+    /* pronouns and determiners */
+    'hic haec hoc huius huic hunc hanc is ea id eius ei eum eam eos eas ' +
+    'eorum earum ille illa illud illum illam illi ipse ipsa ipsum iste ista ' +
+    'istud se sui sibi suus sua suum meus mea meum tuus tua tuum noster ' +
+    'nostra nostrum vester vestra ego tu nos vos mihi tibi nobis vobis me te',
+    /* prepositions */
+    'in ad ex e ab a cum de sub per pro sine inter ante post contra apud ' +
+    'trans super circum ob propter praeter intra extra erga coram',
+    /* adverbs of time, degree and manner — none of them picturable */
+    'iam nunc tunc semper saepe mox tandem statim iterum subito valde magis ' +
+    'maxime satis tam forte diu hodie heri cras ibi illic procul simul ' +
+    'primum denique ubique paene fere modo adhuc olim rursus item bene male ' +
+    'multum parum plus minus prius postea',
+    /* quantifiers and indefinites */
+    'omnis omne omnes omnia omnium multus multi multa aliquis aliquid ' +
+    'aliquando nullus nulla nullum alius alia aliud totus tota solus sola ' +
+    'ceteri cetera uterque neuter quisque'
+  ]));
+
+  /* A symbol is not a picture. These emoji stand FOR a word instead of
+     showing the thing, so a tile carrying one is a translation prompt. They
+     stay usable as vocabulary elsewhere; they just cannot carry a clāmor gap
+     or one of its options. */
+  var SYMBOLA = { '🚫': 1, '❓': 1, '❗': 1, '✅': 1, '❌': 1, '⭕': 1, '➕': 1,
+                  '➖': 1, '➡️': 1, '⬅️': 1, '⬆️': 1, '⬇️': 1, '🔁': 1, '🔢': 1,
+                  '❔': 1, '❕': 1, '‼️': 1, '⁉️': 1 };
+  function pictorial(word) {
+    if (!word) { return false; }
+    if (word.scene) { return true; }
+    if (!word.emoji) { return false; }
+    return !Object.prototype.hasOwnProperty.call(SYMBOLA, word.emoji);
+  }
+
+  function isFunctio(word) {
+    return !!word && Object.prototype.hasOwnProperty.call(FUNCTIO, plain(word.la));
+  }
+
+  /* the three classes a gap (or an option) may belong to. An author who
+     declares `pars: 'adverbium'` or 'coniunctio' is believed and excluded. */
+  var GAP_PARS = { nomen: 1, verbum: 1, adiectivum: 1 };
+  function contentWord(word) {
+    if (!pictorial(word) || isFunctio(word)) { return false; }
+    return Object.prototype.hasOwnProperty.call(GAP_PARS, parsOf(word));
+  }
+
   /* the trailing punctuation of a token, so a gap keeps the sentence's
      own full stop: 'ambulat.' → '____.' */
   function tail(token) {
@@ -75,20 +162,94 @@
     return 'nomen';
   }
 
-  /* pick `n` distractors: same part of speech first, anything else after,
-     never the answer and never a word already standing in the sentence. */
-  function distractors(env, answer, banned, n) {
+  /* ------------------------------------------------------------
+     DISTRACTORS
+     A distractor must be WRONG. It is not enough that it differs
+     from the answer: if it is grammatically and semantically
+     plausible in the gap, a learner who picks it has read the
+     sentence correctly and is punished for it, which teaches the
+     opposite of what the round is for.
+
+     Four filters, cheapest first:
+       · never the answer, never a word already standing in the
+         sentence (an option visible in the banner is not a choice);
+       · content words only — same test the gap itself must pass;
+       · SAME part of speech as the answer. Not "same first, others
+         after": a noun offered against a verb gap is eliminable
+         without reading the Latin, so it is not a distractor, it is
+         a hint;
+       · not attested in the gap's own position. `opts.ctx` knows the
+         gap's neighbours and the region's story bigrams, so a word
+         the region's own Latin puts next to those neighbours is
+         dropped. Cheap, and it kills most of the defensible-answer
+         cases outright.
+
+     opts = { n, banned, ctx, loose }. `loose` drops the same-POS
+     rule and is used ONLY by the no-sentence fallback, where the
+     prompt is a bare word and there is no syntax to be plausible in.
+     ------------------------------------------------------------ */
+  function distractors(env, answer, opts) {
+    opts = opts || {};
+    var n = opts.n || 2;
     var same = [], other = [], i, w, la;
     var want = parsOf(answer);
+    var answerLa = lower(bare(answer.la));
     for (i = 0; i < env.words.length; i++) {
       w = env.words[i];
       la = lower(bare(w.la));
-      if (la === lower(bare(answer.la))) { continue; }
-      if (banned && Object.prototype.hasOwnProperty.call(banned, la)) { continue; }
+      if (la === answerLa) { continue; }
+      if (opts.banned && Object.prototype.hasOwnProperty.call(opts.banned, la)) { continue; }
+      if (!contentWord(w)) { continue; }
+      if (opts.ctx && opts.ctx.rejects(w)) { continue; }
       if (parsOf(w) === want) { same.push(w); } else { other.push(w); }
     }
-    var pool = env.shuffled(same).concat(env.shuffled(other));
+    var pool = opts.loose
+      ? env.shuffled(same).concat(env.shuffled(other))
+      : env.shuffled(same);
     return pool.slice(0, n);
+  }
+
+  /* Every adjacent word pair in the region's story text, including the pages
+     the deriver itself skips: the corpus is "Latin this region has shown the
+     learner", not "Latin we chose to gap". */
+  function storyBigrams(env) {
+    var seen = {}, caps = env.capitula || [], ci, pi, si, ti;
+    var pages, page, sentences, tokens, a, b;
+    for (ci = 0; ci < caps.length; ci++) {
+      pages = (caps[ci] && caps[ci].story) || [];
+      for (pi = 0; pi < pages.length; pi++) {
+        page = pages[pi];
+        if (!page || !page.la) { continue; }
+        sentences = String(page.la).match(/[^.!?;]+[.!?;]*/g) || [];
+        for (si = 0; si < sentences.length; si++) {
+          tokens = sentences[si].replace(/^\s+|\s+$/g, '').split(/\s+/);
+          for (ti = 0; ti + 1 < tokens.length; ti++) {
+            a = plain(tokens[ti]);
+            b = plain(tokens[ti + 1]);
+            if (a && b) { seen[a + ' ' + b] = true; }
+          }
+        }
+      }
+    }
+    return seen;
+  }
+
+  /* the gap's neighbourhood: reject any word the corpus attests either AFTER
+     the left neighbour or BEFORE the right one. */
+  function gapContext(bigrams, tokens, ti) {
+    var L = (ti > 0) ? plain(tokens[ti - 1]) : '';
+    var R = (ti + 1 < tokens.length) ? plain(tokens[ti + 1]) : '';
+    return {
+      left: L,
+      right: R,
+      rejects: function (word) {
+        var d = plain(word.la);
+        if (!d) { return true; }
+        if (L && bigrams[L + ' ' + d]) { return true; }
+        if (R && bigrams[d + ' ' + R]) { return true; }
+        return false;
+      }
+    };
   }
 
   /* falling/drifting catchable: is the hero under it, at catch height? */
@@ -310,8 +471,9 @@
           if (w) { opts.push(w); }
         }
         if (opts.length < 2) {
-          opts = [answer].concat(distractors(env, answer, null, 2));
+          opts = [answer].concat(distractors(env, answer, { n: 2 }));
         }
+        if (opts.length < 2) { continue; }     /* nothing safe to offer */
         out.push({
           text: String(src.text).replace(/_{2,}/g, '____'),
           answer: answer,
@@ -323,8 +485,11 @@
     },
 
     fromCapitula: function (env) {
-      var out = [], ci, pi, cap, page, pages;
+      var out = [], ci, pi, page, pages;
       var caps = env.capitula || [];
+      /* built ONCE per derivation: the corpus is the whole region, and
+         rebuilding it per gap turned a linear pass into a quadratic one. */
+      var bigrams = storyBigrams(env);
       for (ci = 0; ci < caps.length; ci++) {
         pages = (caps[ci] && caps[ci].story) || [];
         for (pi = 0; pi < pages.length; pi++) {
@@ -332,16 +497,17 @@
           if (!page || !page.la) { continue; }
           /* direct speech: a cloze inside a quotation is usually ambiguous */
           if (/[“”"«»:]/.test(page.la)) { continue; }
-          this.harvest(env, page, out);
+          this.harvest(env, page, out, bigrams);
         }
       }
       return out;
     },
 
     /* pull every usable gap out of ONE story page */
-    harvest: function (env, page, out) {
+    harvest: function (env, page, out, bigrams) {
       var sentences = String(page.la).match(/[^.!?;]+[.!?;]*/g) || [];
-      var si, ti, wi, tokens, tok, key, word, banned, gapText, item;
+      var si, ti, wi, tokens, tok, key, word, banned, gapText, opts, item;
+      bigrams = bigrams || storyBigrams(env);
       for (si = 0; si < sentences.length; si++) {
         tokens = sentences[si].replace(/^\s+|\s+$/g, '').split(/\s+/);
         if (tokens.length < 3 || tokens.length > 9) { continue; }
@@ -358,16 +524,26 @@
             if (lower(bare(env.words[wi].la)) === key) { word = env.words[wi]; break; }
           }
           if (!word) { continue; }
+          /* THE GAP GATE: a picturable content lexeme, never a function word.
+             Gapping 'nōn' asked the learner to recognise a 🚫 as a negation —
+             a symbol to be translated, not a thing to be seen. */
+          if (!contentWord(word)) { continue; }
+          opts = distractors(env, word, {
+            n: 2, banned: banned, ctx: gapContext(bigrams, tokens, ti)
+          });
+          /* three lanes or nothing. Two cards is a coin toss, and a round the
+             learner can win by guessing measures nothing. */
+          if (opts.length < 2) { continue; }
           tok = tokens.slice();
           tok[ti] = '____' + tail(tokens[ti]);
           gapText = tok.join(' ');
           item = {
             text: gapText,
             answer: word,
-            options: [word].concat(distractors(env, word, banned, 2)),
+            options: [word].concat(opts),
             scene: page.scene || null
           };
-          if (item.options.length >= 2) { out.push(item); }
+          out.push(item);
         }
       }
     },
@@ -376,14 +552,20 @@
        WORD and the player catches its picture. Still Latin-only, still
        playable — it just teaches less. */
     fromVocab: function (env) {
-      var out = [], i, w;
+      var out = [], i, w, opts;
       for (i = 0; i < env.words.length; i++) {
         w = env.words[i];
+        if (!pictorial(w)) { continue; }
+        /* `loose`: the prompt here is a bare WORD, so there is no syntax for a
+           distractor to be plausible in and the same-POS rule would only
+           starve the round. The gap gate still applies to the answer. */
+        opts = distractors(env, w, { n: 2, loose: true });
+        if (opts.length < 2) { continue; }
         out.push({
           text: w.la,
           verbum: true,
           answer: w,
-          options: [w].concat(distractors(env, w, null, 2)),
+          options: [w].concat(opts),
           scene: null
         });
       }
@@ -400,8 +582,11 @@
       this.at++;
       /* keyed by the POOL INDEX, not by a counter: the cache must be reused
          when the pool cycles, or a long phase builds one Image per round. */
+      /* rastered at 96 and drawn at 76: the thumbnail is the comprehensible
+         input that turns the gapped line into a scene the learner recognises,
+         and at 56 px it was decoration nobody could read. */
       this.sceneImg = this.item.scene
-        ? env.sceneImage({ la: '__clamor__' + at, scene: this.item.scene })
+        ? env.sceneImage({ la: '__clamor__' + at, scene: this.item.scene }, 96)
         : null;
 
       opts = env.shuffled(this.item.options);
@@ -465,13 +650,13 @@
       }
 
       /* the shout: full-width banner, scene at the left, gap marked in gold */
-      var x = 8, y = env.TOP + 2, w = env.W - 16, h = 72;
+      var x = 8, y = env.TOP + 2, w = env.W - 16, h = 92;
       env.drawBanner(x, y, w, h);
       var textX = x + 12, textW = w - 24;
       if (env.imgReady(this.sceneImg)) {
-        ctx.drawImage(this.sceneImg, x + 10, y + 8, 56, 56);
-        textX = x + 74;
-        textW = w - 88;
+        ctx.drawImage(this.sceneImg, x + 10, y + 8, 76, 76);
+        textX = x + 94;
+        textW = w - 108;
       }
       ctx.font = (this.item.verbum ? 'bold 26px' : '17px') + ' Palatino, Georgia, serif';
       ctx.textBaseline = 'middle';

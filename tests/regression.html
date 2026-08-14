@@ -63,6 +63,14 @@
 <script src="../js/actors-person.js"></script>
 <script src="../js/actors-props.js"></script>
 <script src="../js/backgrounds2.js"></script>
+<!-- REAL content for the clamor derivation checks. A synthetic fixture can be
+     made to pass any rule you write for it; the question that matters is what
+     the deriver does to the Latin the learner is actually shown. The content
+     file registers itself with CONTENT the moment it is injected, and
+     CONTENT.region() is a plain registry read, so no manifest is needed. -->
+<script src="../js/data-core.js"></script>
+<script src="../js/content-loader.js"></script>
+<script src="../content/fabulae-r01.js"></script>
 
 <script>
 /* eslint-env browser */
@@ -877,6 +885,136 @@
         if (/[“”]/.test(it.text)) { quoted++; }
       }
       if (quoted) { return quoted + ' item(s) came from direct speech (must be skipped)'; }
+      return null;
+    });
+
+  /* ---- the clamor deriver, run over the REAL Regio I content ----
+     Everything below rebuilds the word pool and the bigram corpus from
+     content/fabulae-r01.js INDEPENDENTLY of js/boss-phases.js. That is the
+     point: a check that reuses the deriver's own helpers can only prove the
+     deriver agrees with itself. */
+  function r01() {
+    var reg = (window.CONTENT && CONTENT.region) ? CONTENT.region('fabulae', 'r01') : null;
+    if (!reg || !reg.capitula || !reg.capitula.length) { return null; }
+    var caps = reg.capitula, words = [], seen = {}, i, j, v;
+    for (i = 0; i < caps.length; i++) {
+      v = caps[i].vocab || [];
+      for (j = 0; j < v.length; j++) {
+        if ((v[j].emoji || v[j].scene) && !seen[v[j].la]) { seen[v[j].la] = true; words.push(v[j]); }
+      }
+    }
+    return {
+      words: words,
+      capitula: caps,
+      /* identity shuffle: the checks must not depend on the draw */
+      shuffled: function (a) { return a.slice(); }
+    };
+  }
+  /* macron-free, punctuation-free — the form both the stoplist and the
+     bigram keys are built on */
+  var MAC = { 'ā': 'a', 'ē': 'e', 'ī': 'i', 'ō': 'o', 'ū': 'u', 'ȳ': 'y' };
+  function flat(s) {
+    return String(s).toLowerCase()
+      .replace(/^[“”"«»(\[¿¡]+/, '').replace(/[.,;:!?“”"«»)\]]+$/, '')
+      .replace(/[āēīōūȳ]/g, function (c) { return MAC[c]; });
+  }
+  function r01Bigrams(env) {
+    var big = {}, caps = env.capitula, ci, pi, si, ti, pages, page, sent, tok;
+    for (ci = 0; ci < caps.length; ci++) {
+      pages = caps[ci].story || [];
+      for (pi = 0; pi < pages.length; pi++) {
+        page = pages[pi];
+        if (!page || !page.la) { continue; }
+        sent = String(page.la).match(/[^.!?;]+[.!?;]*/g) || [];
+        for (si = 0; si < sent.length; si++) {
+          tok = sent[si].replace(/^\s+|\s+$/g, '').split(/\s+/);
+          for (ti = 0; ti + 1 < tok.length; ti++) {
+            big[flat(tok[ti]) + ' ' + flat(tok[ti + 1])] = true;
+          }
+        }
+      }
+    }
+    return big;
+  }
+  /* where the gap sits in an item's own rendered text, and what stands
+     either side of it */
+  function gapSides(text) {
+    var t = String(text).split(/\s+/), gi = -1, i;
+    for (i = 0; i < t.length; i++) { if (t[i].indexOf('____') === 0) { gi = i; break; } }
+    if (gi < 0) { return null; }
+    return {
+      left: gi > 0 ? flat(t[gi - 1]) : '',
+      right: (gi + 1 < t.length) ? flat(t[gi + 1]) : ''
+    };
+  }
+
+  check('M3-BOSS', 'r01 clamor gaps are picturable CONTENT words, never function words',
+    function () {
+      /* The defect: 'Iterum capere ____ potest.' gapped on nōn, whose picture
+         is 🚫 — a symbol the learner has to TRANSLATE, which is the one habit
+         this method refuses. r01's vocabulary carries exactly two such
+         entries, so they are named here rather than re-deriving the stoplist:
+         a check that shares the stoplist cannot catch a hole in it. */
+      var env = r01();
+      if (!env) { return 'content/fabulae-r01.js did not register with CONTENT'; }
+      var BANNED = { 'non': 'nōn 🚫', 'cur': 'cūr ❓' };
+      var pool = Boss.PHASES.clamor.fromCapitula(env);
+      if (pool.length < 10) { return 'only ' + pool.length + ' items derived from r01 — the gates are too tight'; }
+      var i, j, it, key;
+      for (i = 0; i < pool.length; i++) {
+        it = pool[i];
+        key = flat(it.answer.la);
+        if (Object.prototype.hasOwnProperty.call(BANNED, key)) {
+          return 'gap on the function word ' + BANNED[key] + ': ' + it.text;
+        }
+        if (!it.answer.scene && !it.answer.emoji) {
+          return 'gap on a word with no picture at all: ' + it.answer.la;
+        }
+        if (it.options.length < 3) {
+          return 'item has ' + it.options.length + ' options, want 3: ' + it.text;
+        }
+        for (j = 0; j < it.options.length; j++) {
+          key = flat(it.options[j].la);
+          if (Object.prototype.hasOwnProperty.call(BANNED, key)) {
+            return 'the function word ' + BANNED[key] + ' was offered as an option: ' + it.text;
+          }
+        }
+      }
+      return null;
+    });
+
+  check('M3-BOSS', 'no r01 clamor distractor is attested in the gap\'s own context',
+    function () {
+      /* The defect: a distractor that is grammatically AND semantically
+         plausible in the gap is not a distractor — a learner who picks it has
+         read the Latin correctly and is marked wrong. "Sed ____ alta est."
+         (answer ūva) once offered vulpēs, and "Vulpēs in arbore sedet" is
+         perfectly good Latin the region itself shows the child.
+         Heuristic, deliberately conservative: reject any word the region's own
+         story text puts immediately after the gap's left neighbour or
+         immediately before its right one. */
+      var env = r01();
+      if (!env) { return 'content/fabulae-r01.js did not register with CONTENT'; }
+      var big = r01Bigrams(env);
+      var pool = Boss.PHASES.clamor.fromCapitula(env);
+      var i, j, it, sides, ans, d, bad = [];
+      for (i = 0; i < pool.length; i++) {
+        it = pool[i];
+        sides = gapSides(it.text);
+        if (!sides) { return 'item ' + i + ' has no gap: ' + it.text; }
+        ans = flat(it.answer.la);
+        for (j = 0; j < it.options.length; j++) {
+          d = flat(it.options[j].la);
+          if (d === ans) { continue; }
+          if ((sides.left && big[sides.left + ' ' + d]) ||
+              (sides.right && big[d + ' ' + sides.right])) {
+            bad.push('"' + it.text + '" offers ' + it.options[j].la);
+          }
+        }
+      }
+      if (bad.length) {
+        return bad.length + ' defensible distractor(s): ' + bad.slice(0, 3).join(' | ');
+      }
       return null;
     });
 

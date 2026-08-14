@@ -922,15 +922,45 @@
     return DATA.MAP_UI.bossReadyAny || DATA.MAP_UI.bossReady;
   }
 
+  /* the Latin title of a trial's round, straight off the phase implementation
+     so the header and the title card can never say different things. */
+  function probatioTitulus(type) {
+    var reg = (window.Probatio && Probatio.PHASES) ? Probatio.PHASES : null;
+    var p = (reg && type) ? reg[type] : null;
+    return (p && p.titulus) ? p.titulus : '';
+  }
+
+  /* The line above the canvas. A DUEL challenges — "Lupum vince!". A TRIAL
+     does not: there is nobody to defeat, and telling a child to conquer the
+     ark is both wrong and, in Genesis, tonally absurd (DESIGN §6). A probatio
+     is named and instructed instead: "Probātiō: Arca Noe — ŌRDINĀ!".
+     Content may override either with `boss.headerText`. */
+  function bossHeaderText() {
+    var b = (CUR.region && CUR.region.boss) || {};
+    if (b.headerText) { return b.headerText; }
+    if (b.kind !== 'probatio') { return bossVinceText(); }
+    var first = (b.phases && b.phases.length) ? b.phases[0] : null;
+    var titulus = first ? probatioTitulus(first.type) : '';
+    var label = DATA.MAP_UI.probatioLabel || 'Probātiō';
+    return label + (b.name ? ': ' + b.name : '') +
+           (titulus ? ' — ' + titulus + '!' : '!');
+  }
+
   function showBossIntro(nodeId) {
     renderTopbar(true);
     var boss = CUR.region.boss;
+    /* a duel is crowned and fought; a trial is a scroll to be undertaken.
+       Same screen, and the same two strings decide which it reads as. */
+    var trial = (boss.kind === 'probatio');
     var html =
       '<section class="boss-intro">' +
         '<figure class="scene">' + bossScene(bossPose('intro')) + '</figure>' +
-        '<h2>👑 ' + esc(boss.name) + '</h2>' +
-        '<p class="boss-tag">' + esc(bossVinceText()) + '</p>' +
-        '<button id="fight" class="btn primary" type="button">⚔ ' + esc(DATA.MAP_UI.pugna) + '</button>' +
+        '<h2>' + (trial ? '📜' : '👑') + ' ' + esc(boss.name) + '</h2>' +
+        '<p class="boss-tag">' + esc(bossHeaderText()) + '</p>' +
+        '<button id="fight" class="btn primary" type="button">' +
+          (trial ? '📜 ' : '⚔ ') +
+          esc(trial ? (DATA.MAP_UI.incipe || DATA.MAP_UI.pugna) : DATA.MAP_UI.pugna) +
+        '</button>' +
       '</section>';
     setScreen(html, 'boss-intro-screen');
     $('#fight').addEventListener('click', function () { runBossFight(nodeId); });
@@ -976,8 +1006,8 @@
     var trial = (boss.kind === 'probatio');
     var runner = trial && window.Probatio ? Probatio : Boss;
     var html = '<section class="boss-wrap">' +
-      '<p class="ask">' + esc(bossVinceText()) + ' ⬅ ➡</p>' +
-      '<canvas id="bossgame" aria-label="pugna"></canvas>' +
+      '<p class="ask">' + esc(bossHeaderText()) + ' ⬅ ➡</p>' +
+      '<canvas id="bossgame" aria-label="' + (trial ? 'probatio' : 'pugna') + '"></canvas>' +
       '</section>';
     setScreen(html, 'boss-screen');
     var cv = $('#bossgame');
