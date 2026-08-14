@@ -17,8 +17,27 @@
         qa.html?screen=fabula    story page + autoplay controls
         qa.html?screen=sonus     listen-and-pick-the-picture
         qa.html?screen=comple    complete-the-sentence
+        qa.html?screen=bossintro the boss intro card (actor + challenge)
+        qa.html?screen=boss      the M3 three-phase duel
+        qa.html?screen=probatio  the non-combat trial engine
+
+     Region knob (works with every screen above):
+        &region=r02              open the track at THAT region instead of
+                                 its first one — the app has no UI for
+                                 moving between regions yet, so this is the
+                                 only way to see Regiō II's Leō boss.
 
      Extra knobs:
+        &phase=caterva|clamor|fuga          (screen=boss)
+        &phase=ordina|transitus|sententia   (screen=probatio)
+                                 Restarts the engine on the same
+                                 canvas with ONE phase, so a
+                                 headless screenshot can reach a
+                                 phase it cannot play its way to.
+                                 Without it, screen=boss runs the
+                                 real three-phase fight (useful for
+                                 catching the interstitial card at
+                                 about t=0.6 s).
         &w=360                   nothing to do with layout; recorded
                                  in the title so a screenshot is
                                  self-identifying
@@ -46,6 +65,8 @@
       var q = location.search;
       window.__QA_SCREEN = (q.match(/screen=([a-z]+)/) || [])[1] || 'doors';
       window.__QA_SCROLL = /scroll=1/.test(q);
+      window.__QA_PHASE = (q.match(/phase=([a-z]+)/) || [])[1] || '';
+      window.__QA_REGION = (q.match(/region=([a-z0-9]+)/) || [])[1] || '';
 
       /* f1 finished, f2 in progress. A step is only reachable when the one
          before it is done, so unlock f2 UP TO whichever step was asked for —
@@ -57,17 +78,27 @@
       var upTo = (want < 0) ? 2 : want;        /* default: verba + fabula done */
       for (var i = 0; i < upTo; i++) { f2[ORDER[i]] = 1; }
 
+      var DONE = { verba: 1, fabula: 1, sonus: 1, ludus: 1, aenigmata: 1, corrige: 1, comple: 1 };
       var state = {
         name: 'Quintus', nickname: 'Quintus', avatar: 'fox',
         xp: 220, hearts: 4, maxHearts: 5,
         streak: 3, lastDay: new Date().toISOString().slice(0, 10),
         completed: {
-          f1: { verba: 1, fabula: 1, sonus: 1, ludus: 1, aenigmata: 1, corrige: 1, comple: 1 },
+          f1: DONE,
           f2: f2
         },
         bosses: {}, mapNode: 'f2',
         createdAt: 1700000000000
       };
+      /* The boss node only opens once EVERY capitulum of its region is done.
+         Both shipped regions are covered at once (r01 = f1–f3, r02 = f4–f6)
+         because this seed runs before the manifest is even parsed. */
+      if (window.__QA_SCREEN === 'boss' || window.__QA_SCREEN === 'probatio' ||
+          window.__QA_SCREEN === 'bossintro') {
+        state.completed = { f1: DONE, f2: DONE, f3: DONE,
+                            f4: DONE, f5: DONE, f6: DONE };
+        state.mapNode = 'b_' + (window.__QA_REGION || 'r01');
+      }
       /* the landing screen is the LOGGED-OUT route: no cached name, and a
          stub Api whose me() fails, which is exactly what a visitor with no
          session looks like to app.js. (api.js itself is never loaded here.) */
@@ -103,6 +134,8 @@
   <script src="js/auth-ui.js" defer></script>
   <script src="js/game.js" defer></script>
   <script src="js/boss.js" defer></script>
+  <script src="js/boss-phases.js" defer></script>
+  <script src="js/probatio.js" defer></script>
   <script src="js/map.js" defer></script>
   <script src="js/app.js" defer></script>
   <script>
@@ -111,6 +144,51 @@
        the harness survives content loading on a slow machine. */
     window.addEventListener('load', function () {
       var target = window.__QA_SCREEN;
+
+      /* &region=r02 — the app opens a track at its FIRST region and has no UI
+         yet for moving between regions, so a later region is unreachable by
+         clicking. CONTENT.manifest() hands back the live manifest object and
+         every lookup reads it fresh, so moving the wanted region to the front
+         of its track makes the door open there. QA-ONLY: it mutates nothing
+         on disk and nothing the app writes back. */
+      if (window.__QA_REGION && window.CONTENT && CONTENT.manifest) {
+        (function () {
+          var tracks = (CONTENT.manifest() || {}).tracks || [];
+          var i, j, regs;
+          for (i = 0; i < tracks.length; i++) {
+            regs = tracks[i].regions || [];
+            for (j = 0; j < regs.length; j++) {
+              if (regs[j].id === window.__QA_REGION) {
+                tracks[i].regions = [regs[j]].concat(
+                  regs.slice(0, j)).concat(regs.slice(j + 1));
+                return;
+              }
+            }
+          }
+        }());
+      }
+
+      /* Headless Chrome renders roughly one frame a second, so a canvas game
+         driven by requestAnimationFrame is still on its first frame when the
+         screenshot is taken. Both engines expose their frame source for this
+         (see js/boss.js); a 16 ms timer gives the harness a real fight to
+         photograph. Only the QA page does this — the app never does. */
+      (function () {
+        var engines = [window.Boss, window.Probatio], i;
+        for (i = 0; i < engines.length; i++) {
+          if (!engines[i] || !engines[i].setFrameSource) { continue; }
+          engines[i].setFrameSource(
+            function (fn) {
+              return window.setTimeout(function () {
+                fn((window.performance && window.performance.now)
+                  ? window.performance.now() : new Date().getTime());
+              }, 16);
+            },
+            function (id) { window.clearTimeout(id); }
+          );
+        }
+      }());
+
       if (target === 'doors' || target === 'landing') { return; }
 
       /* poll for a selector, then run fn(el) */
@@ -146,6 +224,73 @@
       }
       if (target === 'ordo') {
         when('.nav-ordo', tap);
+        return;
+      }
+
+      /* ---- M3: the boss duel and the probatio trials ----
+         Both live behind the boss node, so the route is the same; only what
+         we do once the canvas exists differs. `&phase=` restarts whichever
+         engine on the SAME canvas with a single phase, which is the only way
+         a headless screenshot can reach phase II or III of a fight it cannot
+         play. Everything it passes is what app.js passes in real life. */
+      function bossConfig(extra) {
+        var rid = window.__QA_REGION || 'r01';
+        var reg = window.CONTENT ? CONTENT.region('fabulae', rid) : null;
+        var boss = (reg && reg.boss) || {};
+        var words = [], seen = {}, i, j, v;
+        var caps = (reg && reg.capitula) || [];
+        for (i = 0; i < caps.length; i++) {
+          v = caps[i].vocab || [];
+          for (j = 0; j < v.length; j++) {
+            if ((v[j].emoji || v[j].scene) && !seen[v[j].la]) {
+              seen[v[j].la] = true;
+              words.push(v[j]);
+            }
+          }
+        }
+        var cfg = {
+          words: words, capitula: caps,
+          region: boss.progressId || 'region1',
+          regionIndex: (rid === 'r01') ? 0 : 1,
+          name: boss.name || 'Lupus',
+          actor: boss.actor || 'wolf',
+          actorPose: boss.fightPose || (boss.actor === 'leo' ? 'stand' : 'angry'),
+          avatar: 'fox'
+        };
+        for (var k in extra) {
+          if (Object.prototype.hasOwnProperty.call(extra, k)) { cfg[k] = extra[k]; }
+        }
+        return cfg;
+      }
+
+      if (target === 'boss' || target === 'probatio' || target === 'bossintro') {
+        /* the boss node id is per-region content (b_r01, b_r02, …) */
+        var bossNode = '.map-node[data-id="b_' + (window.__QA_REGION || 'r01') + '"]';
+        when('.door-fabulae', function (door) {
+          tap(door);
+          when(bossNode, function (node) {
+            tap(node);
+            /* screen=bossintro stops HERE: the intro screen is where the
+               boss's own actor and challenge line are on show. */
+            if (target === 'bossintro') { return; }
+            when('#fight', function (btn) {
+              tap(btn);
+              /* screen=boss with no &phase= runs the REAL three-phase fight;
+                 screen=probatio always needs a trial type, so it defaults. */
+              var want = window.__QA_PHASE ||
+                         (target === 'probatio' ? 'ordina' : '');
+              if (!want) { return; }
+              when('#bossgame', function (cv) {
+                var runner = (target === 'probatio') ? window.Probatio : window.Boss;
+                if (!runner) { return; }
+                /* 90 s and 9 hp so the phase cannot end under the camera */
+                runner.start(cv, bossConfig({
+                  phases: [{ type: want, hp: 9, seconds: 90 }]
+                }), { onEnd: function () {} });
+              });
+            });
+          });
+        });
         return;
       }
 

@@ -51,6 +51,11 @@
 <script src="../js/scenes.js"></script>
 <script src="../js/game.js"></script>
 <script src="../js/boss.js"></script>
+<!-- M3 phase engine: boss.js is the engine + registry, these two fill it.
+     Load order matters exactly as it does in index.html — boss-phases.js
+     calls Boss.registerPhase and probatio.js calls Boss.createEngine. -->
+<script src="../js/boss-phases.js"></script>
+<script src="../js/probatio.js"></script>
 <!-- M2 art files. They are pure registrations on top of scenes.js, so they
      load here for the same reason index.html loads them: the sweeps below
      must see the WHOLE actor library, not just the built-ins. A syntax
@@ -573,6 +578,351 @@
       return assertSized('nativity scene', svgFromImage(Scenes.toImage(svg, 200)));
     });
 
+  /* ================= CHECK 7 =================
+     Guards the M3 phase engine (js/boss.js + boss-phases.js + probatio.js).
+
+     The failure modes here are all SILENT by construction, which is why each
+     one gets its own row:
+       · a phase file with a syntax error simply does not register, and the
+         engine then falls back to the legacy fight — a three-phase duel that
+         quietly became a one-phase duel looks like a design change, not a bug;
+       · a phase transition that reports a result would end the whole fight
+         after round one and still show the victory screen;
+       · abort() firing onEnd is BUG-5(b) all over again, and phases give it a
+         second place to come back (mid-phase teardown). */
+
+  var WORDS = [
+    { la: 'lupus', emoji: '🐺' }, { la: 'agnus', emoji: '🐑' },
+    { la: 'aqua', emoji: '💧' }, { la: 'vulpēs', emoji: '🦊' },
+    { la: 'ūva', emoji: '🍇' }, { la: 'bibit', emoji: '🥤' }
+  ];
+  /* two story pages shaped exactly like content/fabulae-r01.js's */
+  var CAPS = [{
+    id: 'x1',
+    vocab: WORDS,
+    story: [
+      { la: 'Lupus aquam bibit.', scene: { bg: 'river', items: [] } },
+      { la: 'Lupus agnum videt.', scene: { bg: 'river', items: [] } },
+      { la: 'Lupus dīcit: “Cūr aquam turbās?”', scene: { bg: 'river', items: [] } }
+    ]
+  }];
+
+  check('M3-BOSS', 'the phase registry holds caterva, clamor and fuga',
+    function () {
+      if (!Boss.PHASES) { return 'Boss.PHASES missing — the engine did not load'; }
+      var need = ['caterva', 'clamor', 'fuga'], i, missing = [];
+      for (i = 0; i < need.length; i++) {
+        if (!Boss.PHASES[need[i]]) { missing.push(need[i]); }
+      }
+      if (missing.length) {
+        return 'js/boss-phases.js did not register: ' + missing.join(', ');
+      }
+      /* every phase must expose the full lifecycle or the engine will call
+         into undefined once per frame, inside the loop's try/catch */
+      for (i = 0; i < need.length; i++) {
+        var p = Boss.PHASES[need[i]];
+        if (typeof p.init !== 'function' || typeof p.update !== 'function' ||
+            typeof p.draw !== 'function' || typeof p.teardown !== 'function') {
+          return need[i] + ' does not implement init/update/draw/teardown';
+        }
+      }
+      return null;
+    });
+
+  check('M3-BOSS', 'registerPhase() refuses an incomplete implementation',
+    function () {
+      if (Boss.registerPhase('__bad__', { init: function () {} })) {
+        return 'a phase with no update/draw was accepted';
+      }
+      if (Boss.PHASES.__bad__) { return 'the bad phase reached the registry'; }
+      return null;
+    });
+
+  /* ---- these run ONE AT A TIME ----
+     Boss (and Probatio) are singletons with one rAF loop each, so two engine
+     tests running concurrently would clobber each other's fight — and the
+     second one's callbacks would be the ones the engine is holding. checkBoss
+     adds the row immediately (so the table keeps its reading order) but does
+     not run the body until the previous engine test has settled. */
+  /* Drive both engines from a TIMER instead of requestAnimationFrame.
+     Headless Chrome has no display to sync to and produces about one frame a
+     second, so an rAF-driven fight makes no measurable progress there and
+     every timing assertion below would hang instead of failing. The engine
+     exposes its frame source for exactly this reason (js/boss.js). In a real
+     browser this only makes the checks run at a fixed 16 ms step, which is
+     what a deterministic test wants anyway. */
+  (function installTimerFrames() {
+    var engines = [Boss];
+    if (window.Probatio) { engines.push(Probatio); }
+    var i;
+    for (i = 0; i < engines.length; i++) {
+      if (!engines[i].setFrameSource) { continue; }
+      engines[i].setFrameSource(
+        function (fn) {
+          return window.setTimeout(function () {
+            fn((window.performance && window.performance.now)
+              ? window.performance.now() : new Date().getTime());
+          }, 16);
+        },
+        function (id) { window.clearTimeout(id); }
+      );
+    }
+  }());
+
+  var engineQueue = [];
+  function checkBoss(bug, name, fn) {
+    var set = row(bug, name);
+    pending++;
+    engineQueue.push(function () {
+      var settled = false;
+      function done(msg) {
+        if (settled) { return; }
+        settled = true;
+        set(!msg, msg || 'ok');
+        pending--;
+        runEngineQueue();
+        finish();
+      }
+      try { fn(done); } catch (e) { done('threw: ' + (e && e.message ? e.message : e)); }
+    });
+  }
+  function runEngineQueue() {
+    var next = engineQueue.shift();
+    if (next) { next(); }
+  }
+
+  /* Poll until the engine is actually INSIDE a phase. A fixed delay does not
+     work here for two independent reasons: the 1.2 s title card sits in front
+     of every phase, and the engine's clock is driven by requestAnimationFrame
+     — which in a headless browser (and in a background tab) is throttled to a
+     handful of frames per second. The generous try count is what lets this
+     page be green both in a real browser and under
+        chrome --headless=new --screenshot=… --virtual-time-budget=90000
+     (the --screenshot is not optional: without a rendering pipeline headless
+     Chrome never fires rAF at all, and every animated check would hang). */
+  function whenPhase(type, fn, tries) {
+    tries = (tries === undefined) ? 400 : tries;
+    var p = Boss.PHASES[type];
+    if (p && p.env && Boss.state().phase === type && !Boss.state().interstitial) {
+      fn(p);
+      return;
+    }
+    if (tries <= 0) { fn(null); return; }
+    window.setTimeout(function () { whenPhase(type, fn, tries - 1); }, 60);
+  }
+
+  checkBoss('M3-BOSS', 'a LEGACY config (no phases) still starts and plays',
+    function (done) {
+      /* content/fabulae-r02.js and every pre-M3 caller pass {words,hp,seconds}
+         and nothing else. That must keep running the v1 fight. */
+      var cv = document.createElement('canvas');
+      var ended = false;
+      Boss.start(cv, { words: WORDS, hp: 3, seconds: 30 },
+        { onEnd: function () { ended = true; } });
+      window.setTimeout(function () {
+        var st = Boss.state();
+        Boss.abort();
+        if (ended) { return done('the legacy fight ended on its own'); }
+        if (!st.running) { return done('the legacy fight never started'); }
+        if (st.phase !== 'caterva') { return done('legacy phase is ' + st.phase + ', expected caterva'); }
+        if (st.phaseCount !== 1) { return done('legacy fight has ' + st.phaseCount + ' phases'); }
+        if (st.interstitial) { return done('a single-phase fight showed a title card'); }
+        if (st.hpMax !== 3) { return done('legacy hp pool is ' + st.hpMax + ', expected 3'); }
+        return done(null);
+      }, 300);
+    });
+
+  checkBoss('M3-BOSS', 'clearing a phase advances the duel and fires NO callback',
+    function (done) {
+      /* The bug this guards: clearing round one goes through the same code
+         path that ends the fight. If finishPhase() ever reported, the learner
+         would win the whole duel — victory screen and all — by landing the
+         two hits of round one. */
+      var cv = document.createElement('canvas');
+      var fired = false;
+      Boss.start(cv, {
+        words: WORDS, capitula: CAPS, region: 'regionTest',
+        phases: [
+          { type: 'caterva', hp: 1, seconds: 20 },
+          { type: 'clamor', hp: 3, seconds: 20 },
+          { type: 'fuga', hp: 3, seconds: 20 }
+        ]
+      }, { onEnd: function () { fired = true; } });
+
+      whenPhase('caterva', function (phase) {
+        if (!phase) { Boss.abort(); return done('phase I never started'); }
+        phase.env.damage(1);                   /* exactly its HP allotment */
+        /* the assertions are made on the frame of the transition itself, so
+           this row does not depend on how fast frames arrive */
+        var st = Boss.state();
+        Boss.abort();
+        if (fired) { return done('clearing phase I reported a result'); }
+        if (st.phase !== 'clamor') {
+          return done('after clearing phase I the engine is in ' + st.phase);
+        }
+        if (!st.interstitial) { return done('phase II started with no title card'); }
+        if (st.hpLeft !== st.hpMax - 1) {
+          return done('the HP pool did not carry across the transition: ' +
+            st.hpLeft + '/' + st.hpMax);
+        }
+        return done(null);
+      });
+    });
+
+  checkBoss('M3-BOSS', 'abort() during phase II fires NO callback (BUG-5b, phase edition)',
+    function (done) {
+      var cv = document.createElement('canvas');
+      var fired = false;
+      Boss.start(cv, {
+        words: WORDS, capitula: CAPS, region: 'regionTest',
+        phases: [
+          { type: 'caterva', hp: 1, seconds: 20 },
+          { type: 'clamor', hp: 3, seconds: 20 }
+        ]
+      }, { onEnd: function () { fired = true; } });
+
+      whenPhase('caterva', function (phase) {
+        if (!phase) { Boss.abort(); return done('phase I never started'); }
+        phase.env.damage(1);
+        whenPhase('clamor', function (p2) {
+          if (!p2) { Boss.abort(); return done('never reached phase II'); }
+          Boss.abort();                        /* the learner navigates away */
+          window.setTimeout(function () {
+            if (fired) { return done('abort() mid-phase reported a result'); }
+            if (Boss.state().running) { return done('the loop survived abort()'); }
+            return done(null);
+          }, 260);                             /* several frames of grace */
+        });
+      });
+    });
+
+  checkBoss('M3-BOSS', 'an engine with NO registered phase loses instead of granting a free win',
+    function (done) {
+      /* The silent failure this guards: js/boss-phases.js 404s, is blocked by
+         an extension, or dies on a syntax error. buildPlan() then has nothing
+         to schedule, and the pre-fix engine walked gotoPhase(0) → end(true) —
+         the learner got the victory screen, the region unlock and the XP for a
+         fight that never drew a frame. createEngine() gives us that exact
+         world: a virgin engine whose registry is empty. */
+      var virgin = Boss.createEngine({ label: 'no-phases', foe: true });
+      var cv = document.createElement('canvas');
+      virgin.start(cv, { words: WORDS, region: 'regionTest', hp: 6, seconds: 45 }, {
+        onEnd: function (won, p) {
+          if (won) { return done('an engine with an empty registry declared a WIN'); }
+          if (!p || p.region !== 'regionTest') { return done('no payload on the failure path'); }
+          if (p.phases.length) { return done('phases[] should be empty, got ' + p.phases.length); }
+          if (virgin.state().running) { return done('the loop is still running'); }
+          return done(null);
+        }
+      });
+      window.setTimeout(function () {
+        virgin.abort();
+        done('onEnd never fired — the fight hung with nothing to play');
+      }, 1500);
+    });
+
+  checkBoss('M3-BOSS', 'the result payload has the shape api/boss_result.php reads',
+    function (done) {
+      /* { region, ms, mistakes, phases:[{type, ms, mistakes, hpDealt}] } —
+         and NOTHING the server rejects outright (xp/level/score/…). */
+      var cv = document.createElement('canvas');
+      var FORBIDDEN = ['xp', 'XP', 'level', 'gradus', 'rating', 'granted', 'score'];
+      Boss.start(cv, {
+        words: WORDS, capitula: CAPS, region: 'regionTest',
+        phases: [{ type: 'caterva', hp: 99, seconds: 0.15 }]
+      }, {
+        onEnd: function (won, p) {
+          var i;
+          if (!p) { return done('onEnd got no payload'); }
+          if (p.region !== 'regionTest') { return done('region is ' + p.region); }
+          if (typeof p.ms !== 'number' || p.ms <= 0) { return done('ms is ' + p.ms); }
+          if (typeof p.mistakes !== 'number') { return done('mistakes is ' + p.mistakes); }
+          if (!p.phases || !p.phases.length) { return done('phases[] is empty'); }
+          for (i = 0; i < FORBIDDEN.length; i++) {
+            if (Object.prototype.hasOwnProperty.call(p, FORBIDDEN[i])) {
+              return done('payload carries a server-rejected field: ' + FORBIDDEN[i]);
+            }
+          }
+          var row = p.phases[0];
+          if (typeof row.type !== 'string' || typeof row.ms !== 'number' ||
+              typeof row.mistakes !== 'number' || typeof row.hpDealt !== 'number') {
+            return done('phase row shape is wrong: ' + JSON.stringify(row));
+          }
+          return done(null);
+        }
+      });
+      window.setTimeout(function () { Boss.abort(); done('the fight never ended'); }, 3000);
+    });
+
+  check('M3-BOSS', 'clamor derives gapped sentences from the story pages',
+    function () {
+      /* The pedagogical core (DESIGN §6). If derivation silently returns
+         nothing, clamor degrades to word→picture and nobody notices. */
+      var fake = {
+        words: WORDS, capitula: CAPS,
+        shuffled: function (a) { return a.slice(); }
+      };
+      var pool = Boss.PHASES.clamor.fromCapitula(fake);
+      if (!pool.length) { return 'no sentence was derived from the story pages'; }
+      var i, it, quoted = 0;
+      for (i = 0; i < pool.length; i++) {
+        it = pool[i];
+        if (it.text.indexOf('____') < 0) { return 'item ' + i + ' has no gap: ' + it.text; }
+        if (!it.answer || !it.options || it.options.length < 2) {
+          return 'item ' + i + ' has fewer than 2 options';
+        }
+        if (it.text.indexOf(it.answer.la) >= 0) {
+          return 'the answer is still visible in the gapped text: ' + it.text;
+        }
+        if (/[“”]/.test(it.text)) { quoted++; }
+      }
+      if (quoted) { return quoted + ' item(s) came from direct speech (must be skipped)'; }
+      return null;
+    });
+
+  check('M3-PROBATIO', 'Probatio mirrors the Boss API and registers its three trials',
+    function () {
+      if (!window.Probatio) { return 'js/probatio.js did not load'; }
+      var api = ['start', 'stop', 'abort', 'registerPhase', 'state'], i;
+      for (i = 0; i < api.length; i++) {
+        if (typeof Probatio[api[i]] !== 'function') {
+          return 'Probatio.' + api[i] + ' is not a function (Boss has it)';
+        }
+      }
+      if (!Probatio.PHASES) { return 'Probatio.PHASES missing'; }
+      var need = ['ordina', 'transitus', 'sententia'], missing = [];
+      for (i = 0; i < need.length; i++) {
+        if (!Probatio.PHASES[need[i]]) { missing.push(need[i]); }
+      }
+      if (missing.length) { return 'trial types missing: ' + missing.join(', '); }
+      /* the two registries must stay SEPARATE: a duel phase in a probatio (or
+         the reverse) is how a wolf ends up in Genesis. */
+      if (Probatio.PHASES.caterva) { return 'the boss registry leaked into Probatio'; }
+      if (Boss.PHASES.ordina) { return 'the probatio registry leaked into Boss'; }
+      return null;
+    });
+
+  checkBoss('M3-PROBATIO', 'a probatio runs on its own loop and pays the same payload',
+    function (done) {
+      var cv = document.createElement('canvas');
+      Probatio.start(cv, {
+        kind: 'probatio', words: WORDS, capitula: CAPS, region: 'liberTest',
+        phases: [{ type: 'ordina', hp: 99, seconds: 0.15 }]
+      }, {
+        onEnd: function (won, p) {
+          if (!p || p.region !== 'liberTest') { return done('payload region is wrong'); }
+          if (!p.phases.length || p.phases[0].type !== 'ordina') {
+            return done('phase row missing for ordina');
+          }
+          /* stopping the boss must not have stopped this, and vice versa */
+          if (Boss.state().running) { return done('the boss engine is running too'); }
+          return done(null);
+        }
+      });
+      window.setTimeout(function () { Probatio.abort(); done('the trial never ended'); }, 3000);
+    });
+
+  runEngineQueue();      /* start the serialized engine tests */
   finish();
 }());
 </script>
