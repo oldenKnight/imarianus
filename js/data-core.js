@@ -117,6 +117,18 @@ var DATA = (function () {
     }
     return g;
   }
+  /* Look a rung up by its key. The server sends only the KEY on public
+     boards ('tiro', 'auditor', …) and leaves the display string to the
+     client — these ids and thresholds are the same list as
+     rule_gradus_ladder() in server/lib/rules.php; keep them in step. */
+  function gradusByKey(key) {
+    var i;
+    for (i = 0; i < GRADUS.length; i++) {
+      if (GRADUS[i].id === key) { return GRADUS[i]; }
+    }
+    return null;
+  }
+
   /* xp still needed for the next gradus (0 when already at the top) */
   function gradusRemaining(xp) {
     var i;
@@ -216,6 +228,7 @@ var DATA = (function () {
     XP: XP,
     GRADUS: GRADUS,
     gradusFor: gradusFor,
+    gradusByKey: gradusByKey,
     gradusRemaining: gradusRemaining,
     TRACKS: TRACKS,
     trackById: trackById,

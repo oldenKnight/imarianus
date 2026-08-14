@@ -560,15 +560,24 @@
           '</span><span class="bxp">⭐ ' + S.xp + '</span></li>';
         return;
       }
-      var out = '', i, r, medal;
+      /* Row shape from server/api/board.php (M8):
+           { rank, nickname, avatar, value, gradus }
+         `value` is XP on the total/weekly boards — the unit is per board, so
+         it is read generically. NOTHING else is public by design (nickname +
+         avatar only), which is why no other field is touched here. */
+      var out = '', i, r, medal, rank, mine;
       for (i = 0; i < rows.length; i++) {
         r = rows[i];
-        medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1) + '.';
-        out += '<li class="' + (r.me ? 'me' : '') + (r.exemplum ? ' exemplum' : '') + '">' +
+        rank = r.rank || (i + 1);
+        medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank + '.';
+        mine = (r.me === true) || (r.nickname && (r.nickname === S.nickname ||
+                String(r.nickname).toLowerCase() === String(S.name).toLowerCase()));
+        out += '<li class="' + (mine ? 'me' : '') + (r.exemplum ? ' exemplum' : '') + '">' +
           '<span class="rank">' + medal + '</span>' +
           '<span class="bname">' + esc(r.nickname || r.name || '?') +
+            gradusTag(r.gradus) +
             (r.exemplum ? ' <em class="tag">exemplum</em>' : '') + '</span>' +
-          '<span class="bxp">⭐ ' + (r.xp || 0) + '</span></li>';
+          '<span class="bxp">⭐ ' + (typeof r.value === 'number' ? r.value : (r.xp || 0)) + '</span></li>';
       }
       el.innerHTML = out;
     });
@@ -584,6 +593,15 @@
         AuthUI.show(app, onAuthed);
       }
     });
+  }
+
+  /* The board sends a gradus KEY ('lector'); the Latin display string is the
+     client's business (server/lib/score.php says so explicitly). */
+  function gradusTag(g) {
+    if (!g) { return ''; }
+    var rung = DATA.gradusByKey(g.key || g);
+    if (!rung) { return ''; }
+    return ' <em class="tag">' + esc(rung.titulus) + '</em>';
   }
 
   /* Read the public board. PREFERRED PATH is Api.board(), which api.js gains
@@ -1867,6 +1885,9 @@
   function onAuthed(student, snapshot) {
     S = Storage.load();              /* start from the offline cache shell */
     S.name = student.nickname || student.displayName || '';
+    /* the PUBLIC identity, ASCII-only by server policy — kept separately so a
+       board row can be matched to "me" even when the display name differs */
+    S.nickname = student.nickname || '';
     S.avatar = student.avatar || 'fox';
     Storage.reconcile(S, snapshot);  /* server truth wins */
     offerLegacyImport(function () { showDoors(); });
