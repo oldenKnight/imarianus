@@ -1,0 +1,637 @@
+/* ============================================================
+   styles.css — MARIANE beta
+   Palette: Pompeiian fresco — deep umber wall, fresco red,
+   ochre gold, parchment cream. The illustrated scenes are the
+   bright panels on a dark wall, like panels in a triclinium.
+   ============================================================ */
+
+:root {
+  --wall: #2b1c16;          /* deep umber background */
+  --wall-soft: #3a2820;     /* raised surface */
+  --fresco: #b33a2b;        /* Pompeiian red */
+  --fresco-deep: #8e2c20;
+  --ochre: #e0a93e;         /* gold accent */
+  --cream: #f3e6d0;         /* main text */
+  --cream-dim: #c9b69a;
+  --green: #7fb069;         /* correct */
+  --ink: #3a2417;
+  --radius: 14px;
+  --serif: "Palatino Linotype", Palatino, "Iowan Old Style", Georgia, serif;
+  --sans: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--wall);
+  background-image:
+    radial-gradient(ellipse at 20% 0%, rgba(224, 169, 62, 0.06), transparent 50%),
+    radial-gradient(ellipse at 80% 100%, rgba(179, 58, 43, 0.08), transparent 55%);
+  color: var(--cream);
+  font-family: var(--sans);
+  min-height: 100vh;
+  line-height: 1.45;
+}
+
+/* ---------- top bar ---------- */
+
+#topbar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  gap: 0.4rem;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem 0.6rem;
+  background: rgba(43, 28, 22, 0.92);
+  border-bottom: 2px solid var(--fresco-deep);
+}
+
+#topbar:empty { display: none; }
+
+.chip {
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+  background: var(--wall-soft);
+  border: 1px solid rgba(224, 169, 62, 0.35);
+  color: var(--cream);
+}
+
+button.chip { cursor: pointer; font-size: 1.05rem; }
+button.chip:active { transform: scale(0.94); }
+
+.hearts { letter-spacing: -1px; }
+
+/* the topbar back arrow sits leftmost: same chip styling, just a hint
+   of a different accent so it reads as "navigation" rather than "stat". */
+.chip.nav-back { border-color: var(--ochre); font-weight: bold; }
+
+/* small SVG thumbnails inside option buttons (verba check, refill) and
+   memory cards. The .scn-thumb wrapper enforces a consistent square box. */
+.scn-thumb {
+  display: inline-block;
+  width: 64px;
+  height: 64px;
+  vertical-align: middle;
+  overflow: hidden;
+  border-radius: 6px;
+}
+.scn-thumb svg { display: block; width: 100%; height: 100%; }
+.emoji-opt .scn-thumb { width: 72px; height: 72px; }
+.mem-card.pic .scn-thumb { width: 56px; height: 56px; }
+
+/* row that pairs the in-card RETRŌ button with the PERGE button in Fābula */
+.nav-row {
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-top: 0.6rem;
+}
+.nav-row .btn.ghost.small:disabled { opacity: 0.35; cursor: default; }
+
+/* ---------- shared layout ---------- */
+
+.screen {
+  max-width: 540px;
+  margin: 0 auto;
+  padding: 1rem 1rem 3rem;
+}
+
+h1, h2, h3 { font-family: var(--serif); }
+
+.btn {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-weight: bold;
+  letter-spacing: 0.06em;
+  color: var(--cream);
+  background: var(--fresco);
+  border: 0;
+  border-bottom: 4px solid var(--fresco-deep);
+  border-radius: var(--radius);
+  padding: 0.75rem 2rem;
+  cursor: pointer;
+  display: inline-block;
+}
+.btn:active { transform: translateY(2px); border-bottom-width: 2px; }
+.btn.primary { background: var(--fresco); }
+.btn.ghost {
+  background: transparent;
+  border: 1px solid var(--cream-dim);
+  color: var(--cream-dim);
+  font-size: 0.85rem;
+  padding: 0.4rem 1rem;
+}
+.btn.small { font-size: 0.8rem; }
+
+.btn:focus-visible, .opt:focus-visible, .node:focus-visible,
+.word:focus-visible, .mem-card:focus-visible, .chip:focus-visible {
+  outline: 3px solid var(--ochre);
+  outline-offset: 2px;
+}
+
+/* ---------- splash ---------- */
+
+.splash {
+  text-align: center;
+  padding-top: 2.5rem;
+}
+.splash h1 {
+  font-size: 2.6rem;
+  letter-spacing: 0.18em;
+  margin: 0.4rem 0 0;
+  color: var(--ochre);
+}
+.splash .tagline {
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--cream-dim);
+  margin: 0.2rem 0 1.6rem;
+}
+.mascot { margin: 0; }
+.big-salve { font-family: var(--serif); font-size: 1.7rem; margin: 0.4rem 0 1rem; }
+.splash label { display: block; margin-bottom: 0.5rem; color: var(--cream-dim); }
+.splash input {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  text-align: center;
+  background: var(--wall-soft);
+  color: var(--cream);
+  border: 2px solid var(--ochre);
+  border-radius: var(--radius);
+  padding: 0.55rem 0.8rem;
+  width: min(280px, 80%);
+  margin-bottom: 1.2rem;
+}
+
+/* ---------- home: fable path ---------- */
+
+.home-head h2 { font-size: 1.5rem; margin: 0.4rem 0 1rem; }
+
+.fable-block {
+  background: var(--wall-soft);
+  border: 1px solid rgba(224, 169, 62, 0.25);
+  border-left: 5px solid var(--fresco);
+  border-radius: var(--radius);
+  padding: 0.8rem 1rem 1rem;
+  margin-bottom: 1.1rem;
+}
+.fable-block.locked { opacity: 0.55; border-left-color: var(--cream-dim); }
+.fable-block h3 {
+  margin: 0 0 0.7rem;
+  font-size: 1.25rem;
+  color: var(--ochre);
+}
+.fnum {
+  display: inline-block;
+  background: var(--fresco);
+  color: var(--cream);
+  border-radius: 6px;
+  padding: 0 0.5rem;
+  margin-right: 0.3rem;
+  font-size: 1rem;
+}
+.ficon { font-size: 1rem; }
+.crown { font-size: 1.1rem; }
+.soon { font-family: var(--sans); font-size: 0.85rem; color: var(--cream-dim); font-style: italic; }
+
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  width: 74px;
+  padding: 0.5rem 0.2rem 0.4rem;
+  border-radius: var(--radius);
+  border: 2px solid transparent;
+  background: var(--wall);
+  color: var(--cream);
+  cursor: pointer;
+  font-family: var(--sans);
+}
+.node-icon { font-size: 1.5rem; }
+.node-label { font-size: 0.7rem; letter-spacing: 0.03em; }
+.node.open { border-color: var(--ochre); }
+.node.open:active { transform: scale(0.95); }
+.node.done { border-color: var(--green); opacity: 0.9; }
+.node.done .node-icon { color: var(--green); }
+.node.shut { opacity: 0.45; cursor: default; }
+
+/* ---------- step screens ---------- */
+
+.step-head { text-align: center; margin-bottom: 0.6rem; }
+.step-head .step-ic { font-size: 1.6rem; }
+.step-head h2 { margin: 0.1rem 0 0; font-size: 1.6rem; color: var(--ochre); }
+.step-head .step-fab { margin: 0; font-family: var(--serif); font-style: italic; color: var(--cream-dim); }
+
+.scene {
+  margin: 0.6rem auto;
+  max-width: 440px;
+  border: 6px solid var(--fresco-deep);
+  border-radius: 10px;
+  box-shadow: 0 0 0 3px var(--ochre), 0 8px 22px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+  background: #f6e8c9;
+}
+.scene svg { display: block; width: 100%; height: auto; }
+.scene.small { max-width: 300px; }
+
+.ask {
+  text-align: center;
+  color: var(--cream-dim);
+  font-size: 0.95rem;
+  margin: 0.3rem 0;
+}
+
+.card-progress, .refill-progress {
+  text-align: center;
+  color: var(--cream-dim);
+  font-size: 0.85rem;
+  margin: 0.7rem 0 0.4rem;
+}
+
+/* vocab */
+.vocab-card { text-align: center; }
+.vocab-emoji { font-size: 5rem; margin: 1rem 0 0.5rem; }
+.vocab-word {
+  font-family: var(--serif);
+  font-size: 2.2rem;
+  font-weight: bold;
+  color: var(--ochre);
+  margin: 0.3rem 0 0.6rem;
+}
+.quickcheck { text-align: center; }
+.prompt-word {
+  font-family: var(--serif);
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--ochre);
+  text-align: center;
+  margin: 0.8rem 0;
+}
+
+/* story */
+.story-page { text-align: center; }
+.story-text {
+  font-family: var(--serif);
+  font-size: 1.45rem;
+  line-height: 1.5;
+  margin: 0.9rem 0.4rem 0.5rem;
+}
+.margo {
+  list-style: none;
+  margin: 0.4rem auto 0.6rem;
+  padding: 0.5rem 0.9rem;
+  max-width: 380px;
+  text-align: left;
+  background: var(--wall-soft);
+  border-left: 3px solid var(--ochre);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-size: 0.95rem;
+}
+.margo li { margin: 0.15rem 0; }
+.margo strong { color: var(--ochre); font-family: var(--serif); }
+.margo em { color: var(--cream-dim); }
+.g-emoji { margin: 0 0.2rem; }
+
+/* options */
+.opt-row {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 0.8rem 0;
+}
+.opt {
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  background: var(--wall-soft);
+  color: var(--cream);
+  border: 2px solid var(--ochre);
+  border-radius: var(--radius);
+  padding: 0.55rem 1.1rem;
+  cursor: pointer;
+  min-width: 72px;
+}
+.opt:active { transform: scale(0.95); }
+.opt:disabled { opacity: 0.35; border-color: var(--cream-dim); cursor: default; }
+.emoji-opt { font-size: 2.4rem; padding: 0.5rem 1rem; }
+
+/* sentences */
+.sentence {
+  font-family: var(--serif);
+  font-size: 1.45rem;
+  text-align: center;
+  margin: 0.8rem 0.3rem;
+}
+.word {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  background: transparent;
+  color: var(--cream);
+  border: 0;
+  border-bottom: 2px dashed var(--cream-dim);
+  padding: 0.1rem 0.25rem;
+  cursor: pointer;
+}
+.word:disabled { opacity: 0.4; text-decoration: line-through; cursor: default; }
+.word.found { color: var(--fresco); border-bottom: 2px solid var(--fresco); font-weight: bold; }
+.word.fixed { color: var(--green); border-bottom: 2px solid var(--green); font-weight: bold; }
+.blank {
+  color: var(--ochre);
+  border-bottom: 2px solid var(--ochre);
+  padding: 0 0.4rem;
+  margin: 0 0.2rem;
+}
+.blank.filled { color: var(--green); border-color: var(--green); font-weight: bold; }
+
+/* memory */
+.mem-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.55rem;
+  max-width: 420px;
+  margin: 0.8rem auto;
+}
+.mem-card {
+  aspect-ratio: 3 / 2.6;
+  min-height: 64px;
+  border-radius: 10px;
+  border: 2px solid var(--ochre);
+  background: var(--fresco);
+  background-image: radial-gradient(circle at 50% 45%, rgba(243, 230, 208, 0.18) 0 30%, transparent 32%);
+  cursor: pointer;
+  color: var(--cream);
+}
+.mem-card.flip { background: var(--wall-soft); }
+.mem-card.hit { border-color: var(--green); background: rgba(127, 176, 105, 0.18); cursor: default; }
+.mem-card .face { font-size: 1.05rem; font-family: var(--serif); word-break: break-word; }
+.mem-card.pic .face { font-size: 1.7rem; }
+
+/* scramble */
+.built {
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  text-align: center;
+  min-height: 2rem;
+  color: var(--ochre);
+  border-bottom: 2px solid var(--wall-soft);
+  max-width: 420px;
+  margin: 0.6rem auto;
+  padding-bottom: 0.3rem;
+}
+.chip-row {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 0.6rem;
+}
+
+/* ludus */
+.ludus-wrap { text-align: center; }
+#game {
+  width: 100%;
+  max-width: 480px;
+  border: 6px solid var(--fresco-deep);
+  border-radius: 10px;
+  box-shadow: 0 0 0 3px var(--ochre), 0 8px 22px rgba(0, 0, 0, 0.45);
+  touch-action: none;
+}
+
+/* finis / refill */
+.finis { text-align: center; padding-top: 2rem; }
+.euge {
+  font-family: var(--serif);
+  font-size: 2.2rem;
+  font-weight: bold;
+  color: var(--ochre);
+  margin: 0.5rem 0;
+}
+.bonus { font-size: 1.4rem; color: var(--green); font-family: var(--serif); }
+.hearts-big { font-size: 2rem; letter-spacing: 0.2rem; }
+.refill { text-align: center; }
+.refill h2 { color: var(--fresco); font-size: 1.3rem; }
+
+/* leaderboard */
+.ordo h2 { text-align: center; color: var(--ochre); }
+.board { list-style: none; margin: 1rem 0; padding: 0; }
+.board li {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  background: var(--wall-soft);
+  border: 1px solid rgba(224, 169, 62, 0.2);
+  border-radius: var(--radius);
+  padding: 0.55rem 0.9rem;
+  margin-bottom: 0.5rem;
+  font-family: var(--serif);
+  font-size: 1.15rem;
+}
+.board li.me { border: 2px solid var(--ochre); background: rgba(224, 169, 62, 0.12); }
+.board .rank { width: 2.2rem; text-align: center; }
+.board .bname { flex: 1; }
+.board .bxp { color: var(--ochre); }
+.ordo { text-align: center; }
+
+/* toast feedback */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 1.6rem;
+  transform: translateX(-50%) translateY(20px);
+  opacity: 0;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-weight: bold;
+  padding: 0.55rem 1.5rem;
+  border-radius: 999px;
+  z-index: 10;
+  pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.toast.ok { background: var(--green); color: var(--ink); }
+.toast.bad { background: var(--fresco); color: var(--cream); }
+
+@media (prefers-reduced-motion: reduce) {
+  .toast { transition: none; }
+  .btn:active, .opt:active, .node.open:active, button.chip:active { transform: none; }
+}
+
+@media (max-width: 380px) {
+  .steps { gap: 0.35rem; }
+  .node { width: 64px; }
+  .story-text, .sentence { font-size: 1.25rem; }
+}
+
+/* speak button */
+.speak {
+  font-size: 1.1rem;
+  background: var(--wall-soft);
+  border: 1px solid var(--ochre);
+  border-radius: 999px;
+  padding: 0.15rem 0.45rem;
+  cursor: pointer;
+  vertical-align: middle;
+}
+.speak:active { transform: scale(0.9); }
+
+/* ============================================================
+   PRŌVINCIA (overworld map), BOSS, and MEMORY-METER styles
+   ============================================================ */
+
+/* --- map toggle chip --- */
+.chip.nav-map { border-color: var(--green); }
+
+/* --- the overworld screen --- */
+.provincia { padding: 0.4rem 0 1.2rem; }
+.prov-head { text-align: center; margin-bottom: 0.5rem; }
+.prov-head h2 { margin: 0.2rem 0 0; color: var(--ochre); font-size: 1.5rem; }
+.prov-sub { margin: 0.1rem 0 0; color: var(--cream-dim); font-size: 0.85rem; }
+
+/* the green field is framed like a window into another world */
+.map-frame {
+  margin: 0.6rem auto 0.9rem;
+  max-width: 460px;
+  border: 4px solid var(--fresco-deep);
+  border-radius: var(--radius);
+  box-shadow: 0 0 0 3px var(--ochre), 0 8px 22px rgba(0,0,0,0.35);
+  overflow: hidden;
+  background: #7ec850;
+  line-height: 0;          /* kill inline-svg gap */
+}
+.map-frame svg.worldmap { width: 100%; height: auto; display: block; }
+
+/* nodes get a gentle hover/press lift; the fox "walks" via transition */
+/* IMPORTANT: never put a CSS `transform` on these SVG <g> elements — a CSS
+   transform overrides the SVG transform="translate(x,y)" ATTRIBUTE that
+   positions them, which would teleport nodes to the top-left corner AND break
+   clicks (the element moves out from under the pointer between mousedown and
+   mouseup, so no click fires). Press feedback uses opacity, which is safe. */
+.map-node[style*="pointer"] { cursor: pointer; }
+.map-node[style*="pointer"]:active { opacity: 0.75; }
+/* the fox avatar sits ON TOP of the node it stands on; let taps pass through
+   to the node beneath it instead of being swallowed by the fox group. */
+.map-fox { pointer-events: none; }
+
+.map-screen .btn.primary, .provincia .btn.primary {
+  display: block;
+  margin: 0 auto;
+}
+
+/* --- boss intro --- */
+.boss-intro { text-align: center; padding-top: 0.5rem; }
+.boss-intro h2 { color: var(--fresco); margin: 0.4rem 0 0.2rem; font-size: 1.7rem; }
+.boss-tag { color: var(--cream-dim); margin: 0 0 1rem; font-style: italic; }
+
+/* --- boss fight canvas --- */
+.boss-wrap { text-align: center; }
+.boss-wrap .ask { color: var(--ochre); margin: 0.3rem 0 0.5rem; }
+#bossgame {
+  width: 100%;
+  max-width: 480px;
+  height: auto;
+  border: 3px solid var(--fresco-deep);
+  border-radius: var(--radius);
+  box-shadow: 0 0 0 2px var(--ochre);
+  touch-action: none;       /* let us own the touch-drag */
+  background: #f6e8c9;
+}
+
+/* --- memory meters (counter + soft clock) --- */
+.mem-meters {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  margin: 0.2rem 0 0.7rem;
+}
+.mem-meter {
+  font-size: 1rem;
+  color: var(--cream);
+  background: var(--wall-soft);
+  border-radius: 999px;
+  padding: 0.15rem 0.6rem;
+  min-width: 3.2rem;
+  text-align: center;
+}
+.mem-clock {
+  display: inline-block;
+  width: 120px;
+  height: 12px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid var(--wall-soft);
+}
+.mem-clock-bar {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--ochre);
+  border-radius: 999px;
+  transition: width 0.2s linear, background 0.3s ease;
+}
+.mem-clock-bar.low { background: var(--fresco); }
+
+/* ============================================================
+   AUTH screen (login / register)
+   ============================================================ */
+.auth { max-width: 380px; margin: 0 auto; padding: 1.2rem 0 2rem; }
+.auth-head { text-align: center; margin-bottom: 1rem; }
+.auth-logo { margin: 0 auto 0.3rem; line-height: 0; }
+.auth-head h1 { margin: 0; color: var(--ochre); letter-spacing: 0.08em; font-size: 1.8rem; }
+.auth-sub { margin: 0.1rem 0 0; color: var(--cream-dim); font-family: var(--serif); font-style: italic; }
+
+.auth-form { display: flex; flex-direction: column; gap: 0.7rem; }
+.auth-form h2 { margin: 0 0 0.2rem; color: var(--cream); font-size: 1.25rem; text-align: center; }
+.auth-field { display: flex; flex-direction: column; gap: 0.2rem; font-size: 0.85rem; color: var(--cream-dim); }
+.auth-field input {
+  font-size: 1rem;
+  padding: 0.55rem 0.7rem;
+  border-radius: 10px;
+  border: 2px solid var(--wall-soft);
+  background: var(--wall-soft);
+  color: var(--cream);
+}
+.auth-field input:focus { outline: 3px solid var(--ochre); outline-offset: 1px; border-color: var(--ochre); }
+
+.auth-check { display: flex; align-items: center; gap: 0.45rem; font-size: 0.85rem; color: var(--cream-dim); }
+.auth-check input { width: 18px; height: 18px; }
+
+.avatar-row { border: 0; padding: 0; margin: 0.2rem 0; }
+.avatar-row legend { font-size: 0.85rem; color: var(--cream-dim); padding: 0; margin-bottom: 0.3rem; }
+.avatar-opt {
+  background: var(--wall-soft);
+  border: 2px solid transparent;
+  border-radius: 12px;
+  padding: 0.25rem;
+  margin-right: 0.4rem;
+  cursor: pointer;
+  line-height: 0;
+}
+.avatar-opt.sel { border-color: var(--ochre); }
+
+.auth-err { color: var(--fresco); min-height: 1.1em; margin: 0; font-size: 0.85rem; text-align: center; }
+.auth-switch { text-align: center; font-size: 0.85rem; color: var(--cream-dim); margin: 0.3rem 0 0; }
+.linklike {
+  background: none; border: 0; color: var(--ochre);
+  text-decoration: underline; cursor: pointer; font: inherit; padding: 0;
+}
+.ordo-actions { display: flex; justify-content: center; margin-top: 0.8rem; }

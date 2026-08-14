@@ -1,0 +1,16 @@
+DirectoryIndex index.html
+
+Options -Indexes
+
+RewriteEngine On
+
+RewriteRule ^server/lib/ - [F,L]
+RewriteRule ^server/admin_seed\.php$ - [F,L]
+
+<FilesMatch "^(config|db)\.php$">
+    Require all denied
+</FilesMatch>
+
+<FilesMatch "\.(sql|md|log|ini)$">
+    Require all denied
+</FilesMatch>
