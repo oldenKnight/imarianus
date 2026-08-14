@@ -505,18 +505,49 @@ h1, h2, h3 { font-family: var(--serif); }
 .prov-head h2 { margin: 0.2rem 0 0; color: var(--ochre); font-size: 1.5rem; }
 .prov-sub { margin: 0.1rem 0 0; color: var(--cream-dim); font-size: 0.85rem; }
 
-/* the green field is framed like a window into another world */
+/* The board is framed like a carved panel hung on the wall. The frame is a
+   fixed viewport; the board itself is TALLER than it and pans vertically. */
 .map-frame {
   margin: 0.6rem auto 0.9rem;
   max-width: 460px;
   border: 4px solid var(--fresco-deep);
   border-radius: var(--radius);
-  box-shadow: 0 0 0 3px var(--ochre), 0 8px 22px rgba(0,0,0,0.35);
+  box-shadow: 0 0 0 3px var(--ochre), 0 8px 22px rgba(0, 0, 0, 0.45);
   overflow: hidden;
-  background: #7ec850;
+  background: #2b1c16;
   line-height: 0;          /* kill inline-svg gap */
 }
+/* the pannable viewport: native scroll gives touch momentum for free, and
+   map.js adds mouse drag + parallax on top of it. */
+.map-view {
+  height: 62vh;
+  min-height: 360px;
+  max-height: 640px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  scrollbar-width: none;          /* the board is the interface, not a scrollbar */
+}
+.map-view::-webkit-scrollbar { width: 0; height: 0; }
+.map-view:focus-visible { outline: 3px solid var(--ochre); outline-offset: -3px; }
 .map-frame svg.worldmap { width: 100%; height: auto; display: block; }
+
+/* the ring under the tile the learner is standing on */
+.mm-glow {
+  opacity: 0.9;
+  animation: mm-pulse 1.9s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+@keyframes mm-pulse {
+  0%   { opacity: 0.25; transform: scale(0.9); }
+  50%  { opacity: 0.95; transform: scale(1.04); }
+  100% { opacity: 0.25; transform: scale(0.9); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mm-glow { animation: none; opacity: 0.85; }
+}
 
 /* nodes get a gentle hover/press lift; the fox "walks" via transition */
 /* IMPORTANT: never put a CSS `transform` on these SVG <g> elements — a CSS
