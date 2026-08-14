@@ -62,6 +62,14 @@ var Api = (function () {
   function bossQuiz(region, answers, cb) {
     request('POST', 'boss_quiz.php', { region: region, answers: answers }, cb);
   }
+  /* The M3 phase engine's result payload:
+       { region, ms, mistakes, phases:[{type, ms, mistakes, hpDealt}] }
+     It is a MEASUREMENT, never a reward — api/boss_result.php rejects a body
+     carrying xp/level/score outright. The callback is optional because the
+     record board is a bonus: a failed post must never block the boss quiz. */
+  function bossResult(payload, cb) {
+    request('POST', 'boss_result.php', payload, cb || function () {});
+  }
   function sync(partial, cb) {
     request('POST', 'sync.php', partial, cb || function () {});
   }
@@ -70,6 +78,6 @@ var Api = (function () {
     setCsrf: setCsrf, getCsrf: getCsrf,
     me: me, login: login, register: register, logout: logout,
     completeStep: completeStep, bossFight: bossFight,
-    bossQuiz: bossQuiz, sync: sync
+    bossQuiz: bossQuiz, bossResult: bossResult, sync: sync
   };
 })();

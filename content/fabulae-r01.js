@@ -384,9 +384,26 @@
       progressId: 'region1',
       name: 'Lupus',              /* the wolf villain doubles as the boss */
       actor: 'wolf',
+      /* hp + seconds are the LEGACY single-phase tuning. They are kept
+         because (a) the server's rule set and its minimum-plausible-duration
+         floor were derived from them, and (b) a client that has not loaded
+         js/boss-phases.js still has to be able to run this fight. When
+         `phases` is present the engine uses it and ignores these two. */
       hp: 6,                      /* correct catches needed to defeat */
       seconds: 45,                /* soft+hard timer for the fight */
       pos: { x: 0.66, y: 0.16 },
+      /* M3 three-phase duel (brief §4, DESIGN §6). Total HP 6 = the old
+         single-phase pool, so the fight is the same LENGTH, not longer:
+           I  CATERVA  catch the named picture      — vocabulary
+           II CLĀMOR   fill the gap in the sentence — syntax (the core)
+           III FUGA    dodge the charge, still read — recall under pressure
+         The clāmor sentences are DERIVED from the story pages of f1–f3
+         (see js/boss-phases.js); no extra authoring is needed here. */
+      phases: [
+        { type: 'caterva', hp: 2, seconds: 22 },
+        { type: 'clamor',  hp: 2, seconds: 28 },
+        { type: 'fuga',    hp: 2, seconds: 20 }
+      ],
       /* quiz: 5 cumulative questions, word → pick the image. Pulled across
          all three fables (one each from f1/f2/f3 + two extra). */
       quiz: [

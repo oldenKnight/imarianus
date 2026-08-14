@@ -209,6 +209,9 @@
   function stopAllGames() {
     if (window.Game && Game.stop) { Game.stop(); }
     if (window.Boss && Boss.stop) { Boss.stop(); }
+    /* the probatio engine is a SECOND engine instance with its own rAF id, so
+       stopping the boss does not stop it (M3). */
+    if (window.Probatio && Probatio.stop) { Probatio.stop(); }
   }
 
   /* Timers a screen owns (the fabula autoplay clock). Leaving the screen must
@@ -864,14 +867,69 @@
 
   /* =================== BOSS: intro → timed fight → quiz =================== */
 
+  /* ---- the boss is DATA, not the wolf ----
+     Regiō I's boss is Lupus; Regiō II's is a Leō, and the Historia/Aeneis
+     trials have no beast at all. Every screen that draws the enemy or names
+     the challenge therefore reads the REGION'S OWN boss config. The wolf
+     survives only as the last-resort fallback, for a config that names an
+     actor the art library does not have (a missing art file must degrade to
+     the wrong animal, never to a blank frame). */
+  function bossActor() {
+    var b = (CUR.region && CUR.region.boss) || {};
+    var want = b.actor || 'wolf';
+    var names = (window.Scenes && Scenes.actorNames) ? Scenes.actorNames() : [];
+    var i;
+    for (i = 0; i < names.length; i++) { if (names[i] === want) { return want; } }
+    if (window.console && b.actor) {
+      console.warn('[app] boss actor "' + b.actor + '" is not in the art library');
+    }
+    return 'wolf';
+  }
+
+  /* one illustrated frame of the boss, for the intro and the defeat screen.
+     Content may override every choice (bg / sceneY / sceneScale / pose);
+     the defaults are what made Regiō I look right. */
+  function bossScene(pose) {
+    var b = (CUR.region && CUR.region.boss) || {};
+    var actor = bossActor();
+    var bg = b.bg || (actor === 'wolf' ? 'river' : 'plain');
+    /* the river bank is above the ground line — an actor placed on the ground
+       in a river scene is standing in the water. */
+    var y = (typeof b.sceneY === 'number') ? b.sceneY
+          : (bg === 'river' ? 155 : Scenes.GROUND);
+    var s = (typeof b.sceneScale === 'number') ? b.sceneScale
+          : (actor === 'wolf' ? 1.3 : 1.0);
+    return Scenes.render({ bg: bg, items: [{ t: actor, x: 200, y: y, pose: pose, s: s }] });
+  }
+  /* the dramatic pose for the intro, and the sprite pose for the fight
+     itself. 'leap' and 'angry' are wolf-only poses; every other actor
+     degrades to 'stand', so the fallback is chosen per actor family. */
+  function bossPose(kind) {
+    var b = (CUR.region && CUR.region.boss) || {};
+    var wolf = (bossActor() === 'wolf');
+    if (kind === 'fight') { return b.fightPose || (wolf ? 'angry' : 'stand'); }
+    if (kind === 'lost') { return b.calmPose || 'stand'; }
+    return b.pose || (wolf ? 'leap' : 'run');
+  }
+  /* "Lupum vince!" is the RIGHT line for a wolf and the wrong one for a lion.
+     Content supplies its own accusative (`vinceText: 'Leōnem vince!'`); the
+     generic fallback carries no object at all, because a Latin accusative
+     cannot be derived from a nominative safely. */
+  function bossVinceText() {
+    var b = (CUR.region && CUR.region.boss) || {};
+    if (b.vinceText) { return b.vinceText; }
+    if (bossActor() === 'wolf') { return DATA.MAP_UI.bossReady; }
+    return DATA.MAP_UI.bossReadyAny || DATA.MAP_UI.bossReady;
+  }
+
   function showBossIntro(nodeId) {
     renderTopbar(true);
     var boss = CUR.region.boss;
     var html =
       '<section class="boss-intro">' +
-        '<figure class="scene">' + Scenes.render({ bg: 'river', items: [{ t: 'wolf', x: 200, y: 150, pose: 'leap', s: 1.3 }] }) + '</figure>' +
+        '<figure class="scene">' + bossScene(bossPose('intro')) + '</figure>' +
         '<h2>👑 ' + esc(boss.name) + '</h2>' +
-        '<p class="boss-tag">' + esc(DATA.MAP_UI.bossReady) + '</p>' +
+        '<p class="boss-tag">' + esc(bossVinceText()) + '</p>' +
         '<button id="fight" class="btn primary" type="button">⚔ ' + esc(DATA.MAP_UI.pugna) + '</button>' +
       '</section>';
     setScreen(html, 'boss-intro-screen');
@@ -893,20 +951,55 @@
     return words;
   }
 
+  /* how far into its track this region sits: the ONE difficulty input the
+     phase engine scales everything else from (DESIGN §6). */
+  function regionIndex() {
+    var list = CONTENT.regionEntries(CUR.trackId) || [], i;
+    for (i = 0; i < list.length; i++) {
+      if (list[i].id === CUR.regionId) { return i; }
+    }
+    return 0;
+  }
+
   /* SWAP POINT: replace this one function's body to drop in a platformer boss.
-     It must call onWin()/onLose() to keep the unlock flow intact. */
+     It must call onWin()/onLose() to keep the unlock flow intact.
+
+     M3: the fight itself is now a PHASE ENGINE (js/boss.js) driven by the
+     content file's `boss.phases`. This function's job shrank to three things:
+     build the config, pick the engine, and forward the result payload. A boss
+     declared `kind: 'probatio'` runs the non-combat trial engine instead —
+     same contract, same payload, one field. */
   function runBossFight(nodeId) {
     renderTopbar(true);
     var boss = CUR.region.boss;
     var regionKey = regionProgressId();
+    var trial = (boss.kind === 'probatio');
+    var runner = trial && window.Probatio ? Probatio : Boss;
     var html = '<section class="boss-wrap">' +
-      '<p class="ask">' + esc(DATA.MAP_UI.bossReady) + ' ⬅ ➡</p>' +
+      '<p class="ask">' + esc(bossVinceText()) + ' ⬅ ➡</p>' +
       '<canvas id="bossgame" aria-label="pugna"></canvas>' +
       '</section>';
     setScreen(html, 'boss-screen');
     var cv = $('#bossgame');
-    Boss.start(cv, { words: bossWords(), hp: boss.hp, seconds: boss.seconds }, {
-      onEnd: function (won) {
+    runner.start(cv, {
+      words: bossWords(),
+      /* the whole region's capitula: clamor and sententia derive their gapped
+         sentences from the story pages (see js/boss-phases.js) */
+      capitula: caps(),
+      phases: boss.phases,          /* absent ⇒ the legacy single-phase fight */
+      hp: boss.hp,                  /* legacy tuning, still honoured */
+      seconds: boss.seconds,
+      region: regionKey,            /* copied verbatim into the result payload */
+      regionIndex: regionIndex(),
+      name: boss.name,
+      actor: bossActor(),           /* validated against the art library */
+      actorPose: bossPose('fight'),
+      kind: boss.kind,
+      avatar: S.avatar,
+      clamor: boss.clamor,          /* optional hand-authored sentence items */
+      sententiae: boss.sententiae
+    }, {
+      onEnd: function (won, payload) {
         if (won) {
           /* optimistic mirror update */
           if (!S.bosses[regionKey]) { S.bosses[regionKey] = {}; }
@@ -914,6 +1007,7 @@
           save();
           /* server records the fight + grants fight XP once, then we proceed */
           if (typeof Api !== 'undefined') {
+            postBossResult(payload);
             Api.bossFight(regionKey, function (err, data) {
               if (!err && data && data.snapshot) {
                 Storage.reconcile(S, data.snapshot);
@@ -930,6 +1024,28 @@
         }
       }
     });
+  }
+
+  /* The richer M3 payload goes to the NEW endpoint, in ADDITION to the
+     unchanged boss_fight.php call above — the old contract is what unlocks the
+     region, this one only feeds the records board (brief §7). Both grant the
+     first-clear XP through the same once-only event marker, so posting both is
+     idempotent. Fire-and-forget: a records board that is down must never stop
+     a learner reaching the quiz. Feature-detected because api.js may be an
+     older copy (or the QA harness's stub). */
+  function postBossResult(payload) {
+    if (!payload || !payload.region) { return; }
+    if (typeof Api === 'undefined' || !Api.bossResult) { return; }
+    try {
+      Api.bossResult({
+        region: payload.region,
+        ms: payload.ms,
+        mistakes: payload.mistakes,
+        phases: payload.phases
+      }, function () { /* records are a bonus; errors are not the learner's */ });
+    } catch (e) {
+      if (window.console) { console.warn('[app] boss result not posted', e); }
+    }
   }
 
   /* the 5-question cumulative quiz that finishes the boss */
@@ -1038,7 +1154,7 @@
         '<figure class="mascot">' + Scenes.mascot(96) + '</figure>';
     } else {
       html += '<p class="euge">' + esc(DATA.MAP_UI.victus) + '</p>' +
-        '<figure class="scene small">' + Scenes.render({ bg: 'river', items: [{ t: 'wolf', x: 200, y: 150, pose: 'stand' }] }) + '</figure>';
+        '<figure class="scene small">' + bossScene(bossPose('lost')) + '</figure>';
     }
     html += '<button id="back-map" class="btn primary" type="button">🗺️ ' + esc(DATA.MAP_UI.provincia) + '</button>' +
       '</section>';

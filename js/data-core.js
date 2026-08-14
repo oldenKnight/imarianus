@@ -257,7 +257,14 @@ var DATA = (function () {
   var MAP_UI = {
     titulus: 'Prōvincia',
     bossLocked: 'Perfice omnēs fābulās prīmum!',
+    /* Regiō I's boss IS a wolf, so this line is right there and wrong
+       everywhere else. A region whose boss is not Lupus supplies its own
+       accusative in content (`boss.vinceText: 'Leōnem vince!'`); when it does
+       not, app.js falls back to bossReadyAny, which carries no object —
+       a Latin accusative cannot be derived from a nominative safely, and a
+       child must never be told to defeat the wrong animal. */
     bossReady: 'Lupum vince!',
+    bossReadyAny: 'Vince!',
     pugna: 'PUGNA',
     quizTitle: 'Probātiō',
     gateLocked: 'Mox plūra…',
