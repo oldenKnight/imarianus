@@ -175,6 +175,7 @@ no ablative beyond the `in silvā / in arbore / in agrō` locative and the
 | lexeme | how |
 |---|---|
 | -que (cicādaque) | nova ➕, `g: = et cicāda` — the S2 enclitic, taught as a word-final `=` synonym |
+| ad | **FUNCTION** — nova ➡️ on `Cicāda ad formīcam ambulat`. Regiō I used `ad` as bare CONTEXT (f3), but the pilot ruling requires the direction arrow at first use, so this is the gloss of record. Free everywhere after |
 | habitat · discēdit · ēsurit · ambulat · sedet · cantat · venit · videt · clāmat · dīcit · pulchra · semper · timet · fābula · docet · iam · iuvat | **FREE** (R1 or f4) |
 
 ### f6 Gallīna et Ōva Aurea — vocab cards (8)

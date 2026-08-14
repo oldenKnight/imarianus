@@ -530,7 +530,11 @@
         /* ADDED (3/3): a second direct-speech beat, and the page that
            pre-teaches iuvat — the mōrāle may contain NO new word
            (AUTHORING-BRIEF), and the exemplar's mōrāle introduces it. */
-        { la: 'Leō fremit: “Mūs rēte rōdit! Mūs leōnem iuvat!”', scene: SC.f4_fremit,
+        /* clāmat, not fremit: fremit is the TRAPPED lion's roar of rage
+           (pages f4_rete / the vocab gloss 'leō clāmat'). Here the lion is
+           free and grateful, so the same verb would teach the wrong colour
+           of the word. clāmat is f3-taught and carries no anger. */
+        { la: 'Leō clāmat: “Mūs rēte rōdit! Mūs leōnem iuvat!”', scene: SC.f4_fremit,
           nova: [{ w: 'iuvat', e: '🤝', g: 'leōnem līberat' }] },
 
         { la: 'Leō et mūs iam amīcī sunt.', scene: SC.f4_amici,
@@ -670,7 +674,12 @@
         { la: 'Aestās discēdit; hiems venit. In agrō frūmentum nōn est.', scene: SC.f5_hiems,
           nova: [{ w: 'hiems', e: '❄', g: '↔ aestās' }] },
 
-        { la: 'Cicāda ēsurit. Cicāda ad formīcam ambulat.', scene: SC.f5_esurit },
+        /* 'ad' + acc is a receptive fixed pattern from S2, but only WHEN it
+           is glossed at first use with a direction arrow (AUTHORING-BRIEF,
+           pilot rulings). Regiō I shipped it as bare context; this is the
+           first place it gets its arrow. */
+        { la: 'Cicāda ēsurit. Cicāda ad formīcam ambulat.', scene: SC.f5_esurit,
+          nova: [{ w: 'ad', e: '➡️' }] },
 
         { la: 'Cicāda clāmat: “Hiems venit! Cicāda ēsurit!”', scene: SC.f5_clamat },
 
