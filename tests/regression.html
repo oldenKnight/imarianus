@@ -51,6 +51,13 @@
 <script src="../js/scenes.js"></script>
 <script src="../js/game.js"></script>
 <script src="../js/boss.js"></script>
+<!-- M2 art files. They are pure registrations on top of scenes.js, so they
+     load here for the same reason index.html loads them: the sweeps below
+     must see the WHOLE actor library, not just the built-ins. A syntax
+     error in any of them shows up as a missing actor in CHECK 6. -->
+<script src="../js/actors-person.js"></script>
+<script src="../js/actors-props.js"></script>
+<script src="../js/backgrounds2.js"></script>
 
 <script>
 /* eslint-env browser */
@@ -387,6 +394,145 @@
       /* belt and braces: some engines fire neither handler for a failed
          data: URL, but .complete still flips. */
       window.setTimeout(verdict, 600);
+    });
+
+  /* ================= CHECK 6 =================
+     Guards the M2 art library (actors-person.js, actors-props.js,
+     backgrounds2.js). These files are ~90 registrations of hand-written
+     SVG path data, and the failure modes are silent: a stray quote makes
+     a malformed sprite that decodes to nothing, a missed bounds entry
+     makes sprite() fall back to a generic box that crops the artwork, and
+     a syntax error anywhere in a file drops EVERY actor it registers
+     without a single console message reaching the game.
+
+     That last one is not hypothetical: an unterminated block comment in
+     actors-person.js during M2 removed 'person' and 'crowdGroup' from the
+     library, and the only symptom was empty cells in the gallery. */
+
+  /* the exact DEFAULT_BOUNDS literal in scenes.js. A sprite whose viewBox
+     equals it did NOT bring its own bounds. (An actor that legitimately
+     measured to this box would be a false positive — none does, and the
+     row names the actor so it takes seconds to confirm.) */
+  var FALLBACK_VIEWBOX = '-60 -130 120 140';
+
+  function viewBoxOf(svg) {
+    var m = /viewBox="([^"]+)"/.exec(String(svg));
+    return m ? m[1].replace(/\s+/g, ' ') : '';
+  }
+
+  check('M2-ART', 'the three art files all loaded (a syntax error drops a whole file silently)',
+    function () {
+      var need = ['person', 'crowdGroup', 'leo', 'ark', 'ship', 'murusAquae'];
+      var have = {}, names = Scenes.actorNames(), i, missing = [];
+      for (i = 0; i < names.length; i++) { have[names[i]] = true; }
+      for (i = 0; i < need.length; i++) { if (!have[need[i]]) { missing.push(need[i]); } }
+      if (missing.length) { return 'missing actors: ' + missing.join(', '); }
+      var bgs = Scenes.bgNames().join(' ');
+      if (bgs.indexOf('stabulum') < 0 || bgs.indexOf('stormSea') < 0) {
+        return 'backgrounds2.js did not register: ' + bgs;
+      }
+      return null;
+    });
+
+  check('M2-ART', 'EVERY registered actor produces a well-formed sprite',
+    function () {
+      var names = Scenes.actorNames(), i, msg;
+      for (i = 0; i < names.length; i++) {
+        if (names[i].indexOf('__') === 0) { continue; }   /* test fixtures */
+        msg = assertSized('sprite ' + names[i], Scenes.sprite(names[i], {}, 140));
+        if (msg) { return msg; }
+      }
+      return null;
+    });
+
+  check('M2-ART', 'EVERY registered actor carries its own bounds (no DEFAULT_BOUNDS hits)',
+    function () {
+      var names = Scenes.actorNames(), i, vb, bad = [];
+      for (i = 0; i < names.length; i++) {
+        if (names[i].indexOf('__') === 0) { continue; }
+        vb = viewBoxOf(Scenes.sprite(names[i], {}, 100));
+        if (!vb) { return 'actor ' + names[i] + ' produced a sprite with no viewBox'; }
+        if (vb === FALLBACK_VIEWBOX) { bad.push(names[i]); }
+      }
+      if (bad.length) {
+        return bad.length + ' actor(s) registered without bounds, so sprite() crops them ' +
+          'with the generic fallback box: ' + bad.join(', ');
+      }
+      return null;
+    });
+
+  check('M2-ART', 'EVERY registered background renders a well-formed scene',
+    function () {
+      var bgs = Scenes.bgNames(), i, svg, err;
+      for (i = 0; i < bgs.length; i++) {
+        if (bgs[i].indexOf('__') === 0) { continue; }
+        svg = Scenes.render({ bg: bgs[i], items: [] });
+        err = xmlError(svg);
+        if (err) { return 'background ' + bgs[i] + ' is malformed: ' + err; }
+        if (svg.indexOf('NaN') >= 0 || svg.indexOf('undefined') >= 0) {
+          return 'background ' + bgs[i] + ' emitted NaN/undefined into its path data';
+        }
+      }
+      return null;
+    });
+
+  check('M2-ART', 'every person role and pose renders without NaN in its path data',
+    function () {
+      /* NaN in a path is the classic arithmetic-typo signature: the browser
+         drops the whole path silently and a limb just disappears. */
+      var roles = ['patriarch', 'shepherd', 'king', 'queen', 'soldier', 'priest',
+        'child', 'woman', 'man', 'crowd', 'angel'];
+      var poses = ['stand', 'walk', 'kneel', 'arms-up', 'point', 'sit', 'sleep', 'carry'];
+      var r, p, svg, msg;
+      for (r = 0; r < roles.length; r++) {
+        for (p = 0; p < poses.length; p++) {
+          svg = Scenes.sprite('person', { role: roles[r], pose: poses[p] }, 120);
+          if (svg.indexOf('NaN') >= 0 || svg.indexOf('undefined') >= 0) {
+            return 'person ' + roles[r] + '/' + poses[p] + ' emitted NaN/undefined';
+          }
+          msg = assertSized('person ' + roles[r] + '/' + poses[p], svg);
+          if (msg) { return msg; }
+        }
+      }
+      return null;
+    });
+
+  check('M2-ART', 'animal poses (walk/lie/eat/run) stay well-formed on the shared cores',
+    function () {
+      var animals = ['leo', 'ursus', 'canis', 'feles', 'asinus', 'equus', 'bos', 'cervus',
+        'hircus', 'haedus', 'camelus', 'lepus', 'mus'];
+      var birds = ['aquila', 'columba', 'gallina', 'pavo', 'grus', 'ciconia'];
+      var poses = ['stand', 'walk', 'lie', 'eat', 'run'];
+      var i, p, svg, msg;
+      for (i = 0; i < animals.length; i++) {
+        for (p = 0; p < poses.length; p++) {
+          svg = Scenes.sprite(animals[i], { pose: poses[p] }, 120);
+          if (svg.indexOf('NaN') >= 0) { return animals[i] + '/' + poses[p] + ' emitted NaN'; }
+          msg = assertSized(animals[i] + '/' + poses[p], svg);
+          if (msg) { return msg; }
+        }
+      }
+      for (i = 0; i < birds.length; i++) {
+        svg = Scenes.sprite(birds[i], { pose: 'fly' }, 120);
+        if (svg.indexOf('NaN') >= 0) { return birds[i] + '/fly emitted NaN'; }
+        msg = assertSized(birds[i] + '/fly', svg);
+        if (msg) { return msg; }
+      }
+      return null;
+    });
+
+  check('M2-ART', 'art actors survive a full scene render + toImage (the game path)',
+    function () {
+      /* one composed scene from tests/art-gallery.html, through the same
+         SVG-to-Image bridge game.js and boss.js use. */
+      var svg = Scenes.render({ bg: 'stabulum', items: [
+        { t: 'praesepe', x: 200, y: 214, infans: true },
+        { t: 'person', x: 152, y: 216, s: 0.82, role: 'woman', pose: 'kneel', halo: true },
+        { t: 'person', x: 254, y: 216, s: 0.86, role: 'man', staff: true, flip: true },
+        { t: 'bos', x: 368, y: 216, s: 0.62, flip: true, pose: 'lie' },
+        { t: 'star', x: 340, y: 118, s: 0.62, comet: true }
+      ] });
+      return assertSized('nativity scene', svgFromImage(Scenes.toImage(svg, 200)));
     });
 
   finish();

@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="la">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>imarianus — pinacothēca (art gallery)</title>
+<!--
+  art-gallery.html — the human critic's review page for the M2 art set.
+
+  It renders EVERY registered actor (each pose and major variant), every
+  background, and eight composed scenes that exercise the taste rules in
+  DESIGN §8. The composed scenes double as the acceptance test: if a
+  story in CURRICULUM cannot be staged from what is registered here, the
+  actor set is not finished.
+
+  Open via the dev server:  node scripts/dev-server.js 8125
+                            http://localhost:8125/tests/art-gallery.html
+-->
+<style>
+  :root {
+    --bg: #2b1c16; --panel: #3a2820; --line: #6b4f3d;
+    --cream: #f6e8c9; --gold: #e0a93e; --tile: #f6e8c9;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 22px 22px 80px; background: var(--bg); color: var(--cream);
+         font-family: Palatino, Georgia, serif; }
+  h1 { margin: 0 0 2px; font-size: 30px; letter-spacing: 2px; text-transform: uppercase;
+       color: var(--gold); }
+  p.sub { margin: 0 0 18px; opacity: .75; font-size: 14px; }
+  h2 { margin: 34px 0 10px; font-size: 20px; letter-spacing: 3px; text-transform: uppercase;
+       border-bottom: 2px solid var(--line); padding-bottom: 6px; color: var(--gold); }
+  h3 { margin: 20px 0 6px; font-size: 15px; letter-spacing: 1px; opacity: .85; font-weight: normal; }
+  .grid { display: grid; gap: 12px;
+          grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)); }
+  .grid.wide { grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); }
+  .cell { background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
+          padding: 6px; text-align: center; }
+  .cell .art { background: var(--tile); border-radius: 5px; display: block; width: 100%;
+               aspect-ratio: 1 / 1; overflow: hidden; }
+  .grid.wide .cell .art { aspect-ratio: 5 / 3; }
+  .cell .art svg { width: 100%; height: 100%; display: block; }
+  .cell .lab { font-size: 11.5px; margin-top: 5px; line-height: 1.25; word-break: break-word; }
+  .cell .lab b { color: var(--gold); font-weight: normal; letter-spacing: .5px; }
+  .cell .lab i { opacity: .65; font-style: normal; }
+  .bar { position: sticky; top: 0; background: var(--bg); padding: 8px 0 10px; z-index: 5;
+         border-bottom: 1px solid var(--line); margin-bottom: 8px; font-size: 13px; }
+  .bar label { margin-right: 16px; cursor: pointer; }
+  .warn { background: #b33a2b; color: #fff2e8; padding: 8px 12px; border-radius: 6px;
+          display: inline-block; margin: 6px 0; font-size: 14px; }
+  .ok { background: #7fb069; color: #16240f; padding: 8px 12px; border-radius: 6px;
+        display: inline-block; margin: 6px 0; font-size: 14px; }
+</style>
+</head>
+<body>
+<h1>Pinacothēca</h1>
+<p class="sub">M2 art review — every actor, prop, background and eight composed scenes.</p>
+<div class="bar">
+  <label><input type="checkbox" id="tileDark"> tile on dark ground</label>
+  <label><input type="checkbox" id="showBox"> show sprite bounding box</label>
+  <span id="counts"></span>
+</div>
+<div id="out"></div>
+
+<script src="../js/scenes.js"></script>
+<script src="../js/actors-person.js"></script>
+<script src="../js/actors-props.js"></script>
+<script src="../js/backgrounds2.js"></script>
+
+<script>
+/* eslint-env browser */
+(function () {
+  'use strict';
+
+  var out = document.getElementById('out');
+  var shown = {};          /* actor names already displayed, for the sweep */
+
+  function el(tag, cls, html) {
+    var e = document.createElement(tag);
+    if (cls) { e.className = cls; }
+    if (html) { e.innerHTML = html; }
+    return e;
+  }
+  function h2(t) { out.appendChild(el('h2', null, t)); }
+  function h3(t) { out.appendChild(el('h3', null, t)); }
+  function grid(wide) {
+    var g = el('div', 'grid' + (wide ? ' wide' : ''));
+    out.appendChild(g);
+    return g;
+  }
+
+  /* one actor cell, drawn through Scenes.sprite so the gallery exercises
+     the same cropping path the game uses (and exposes bad bounds). */
+  function cell(g, name, opts, label) {
+    var c = el('div', 'cell');
+    var art = el('div', 'art');
+    art.innerHTML = Scenes.sprite(name, opts || {}, 260);
+    c.appendChild(art);
+    c.appendChild(el('div', 'lab', '<b>' + name + '</b>' + (label ? '<br><i>' + label + '</i>' : '')));
+    g.appendChild(c);
+    shown[name] = true;
+  }
+
+  /* a full 400x240 scene cell */
+  function sceneCell(g, spec, label) {
+    var c = el('div', 'cell');
+    var art = el('div', 'art');
+    art.innerHTML = Scenes.render(spec);
+    c.appendChild(art);
+    c.appendChild(el('div', 'lab', '<b>' + label + '</b>'));
+    g.appendChild(c);
+  }
+
+  /* ================= 1. PERSON ================= */
+  h2('Persōnae — roles');
+  var roles = ['patriarch', 'shepherd', 'king', 'queen', 'soldier', 'priest',
+    'child', 'woman', 'man', 'crowd', 'angel'];
+  var g = grid(), i, j;
+  for (i = 0; i < roles.length; i++) {
+    cell(g, 'person', { role: roles[i] }, roles[i]);
+  }
+
+  h3('poses (role: man, then a few in character)');
+  g = grid();
+  var poses = ['stand', 'walk', 'kneel', 'arms-up', 'point', 'sit', 'sleep', 'carry'];
+  for (i = 0; i < poses.length; i++) {
+    cell(g, 'person', { role: 'man', pose: poses[i] }, 'man · ' + poses[i]);
+  }
+  for (i = 0; i < poses.length; i++) {
+    cell(g, 'person', { role: 'woman', pose: poses[i] }, 'woman · ' + poses[i]);
+  }
+  cell(g, 'person', { role: 'patriarch', pose: 'arms-up', staff: true }, 'Moyses · arms-up + staff');
+  cell(g, 'person', { role: 'shepherd', pose: 'walk' }, 'shepherd · walk + crook');
+  cell(g, 'person', { role: 'king', pose: 'sit' }, 'king · sit (on a throne)');
+  cell(g, 'person', { role: 'soldier', pose: 'walk' }, 'soldier · walk');
+  cell(g, 'person', { role: 'angel', pose: 'point' }, 'angel · point');
+  cell(g, 'person', { role: 'child', pose: 'walk' }, 'child · walk');
+  cell(g, 'person', { role: 'man', pose: 'carry', carryRole: 'patriarch' }, 'carry · Aenēās + Anchīsēs');
+
+  h3('overrides: beard, hair, veil, skin, props, halo, stripes');
+  g = grid();
+  cell(g, 'person', { role: 'man', beard: 'none', hair: 'short' }, 'beard none');
+  cell(g, 'person', { role: 'man', beard: 'short' }, 'beard short');
+  cell(g, 'person', { role: 'man', beard: 'long', beardColor: '#a89c8a' }, 'beard long, grey');
+  cell(g, 'person', { role: 'man', hair: 'bald', beard: 'long' }, 'bald + long beard');
+  cell(g, 'person', { role: 'woman', veil: true, veilColor: '#4d6c8a' }, 'veil (indigo) — Maria');
+  cell(g, 'person', { role: 'woman', veil: false, hair: 'long' }, 'woman, no veil');
+  cell(g, 'person', { role: 'man', skin: 'pale' }, 'skin pale');
+  cell(g, 'person', { role: 'man', skin: 'mid' }, 'skin mid');
+  cell(g, 'person', { role: 'man', skin: 'deep' }, 'skin deep');
+  cell(g, 'person', { role: 'man', staff: true }, 'staff');
+  cell(g, 'person', { role: 'shepherd', staff: true, crook: true }, 'crook');
+  cell(g, 'person', { role: 'man', crown: true, robeColor: '#8e4257' }, 'crown');
+  cell(g, 'person', { role: 'man', helmet: true, shortTunic: true }, 'helmet');
+  cell(g, 'person', { role: 'soldier', spear: true, shield: true }, 'spear + shield');
+  cell(g, 'person', { role: 'child', sling: true }, 'sling — Dāvīd');
+  cell(g, 'person', { role: 'man', halo: true, beard: 'short' }, 'halo');
+  cell(g, 'person', { role: 'angel', wings: true, halo: true }, 'wings + halo');
+  cell(g, 'person', { role: 'child', stripes: true, k: 0.8 }, 'stripes — Ioseph');
+  cell(g, 'person', { role: 'man', robeColor: '#4d6c8a', mantleColor: '#e0a93e' }, 'robe/mantle override');
+  cell(g, 'person', { role: 'man', mantleColor: false }, 'no mantle');
+
+  h2('Turba — crowdGroup');
+  g = grid();
+  cell(g, 'crowdGroup', { n: 3 }, 'n = 3');
+  cell(g, 'crowdGroup', { n: 4 }, 'n = 4');
+  cell(g, 'crowdGroup', { n: 5 }, 'n = 5');
+
+  /* ================= 2. ANIMALS ================= */
+  h2('Animālia');
+  var quads = ['leo', 'ursus', 'canis', 'feles', 'asinus', 'equus', 'bos', 'cervus',
+    'hircus', 'haedus', 'camelus', 'lepus', 'mus'];
+  g = grid();
+  for (i = 0; i < quads.length; i++) { cell(g, quads[i], {}, 'stand'); }
+
+  h3('poses on the quadruped core');
+  g = grid();
+  cell(g, 'leo', { pose: 'lie' }, 'leō aegrōtus (lie)');
+  cell(g, 'leo', { pose: 'walk' }, 'walk');
+  cell(g, 'cervus', { pose: 'eat' }, 'cervus ad fontem (eat/drink)');
+  cell(g, 'bos', { pose: 'eat' }, 'graze');
+  cell(g, 'equus', { pose: 'run' }, 'run');
+  cell(g, 'canis', { pose: 'walk' }, 'walk');
+  cell(g, 'asinus', { onus: true }, 'asinus + onus (sal)');
+  cell(g, 'camelus', { pose: 'walk' }, 'camelus walk');
+  cell(g, 'hircus', { pose: 'lie' }, 'lie');
+
+  h3('avēs');
+  var birds = ['aquila', 'columba', 'gallina', 'pavo', 'grus', 'ciconia'];
+  g = grid();
+  for (i = 0; i < birds.length; i++) { cell(g, birds[i], {}, 'stand'); }
+  cell(g, 'aquila', { pose: 'fly' }, 'fly');
+  cell(g, 'columba', { pose: 'fly', ramus: true }, 'fly + olive branch');
+  cell(g, 'gallina', { pose: 'peck' }, 'peck');
+  cell(g, 'ciconia', { pose: 'fly' }, 'fly');
+
+  h3('minora');
+  g = grid();
+  cell(g, 'formica', {}, '');
+  cell(g, 'cicada', {}, '');
+  cell(g, 'locusta', {}, '');
+  cell(g, 'rana', {}, '');
+  cell(g, 'rana', { inflata: true }, 'inflāta (Rāna et Bōs)');
+  cell(g, 'testudo', {}, '');
+  cell(g, 'testudo', { pose: 'hide' }, 'in shell');
+  cell(g, 'piscis', {}, '');
+  cell(g, 'grex', {}, 'three lambs');
+
+  /* ================= 3. PROPS ================= */
+  h2('Rēs — props');
+  g = grid();
+  var props = ['ark', 'tent', 'altar', 'tabulae', 'crown', 'well', 'serpent', 'star',
+    'fire', 'cityWall', 'mountain', 'ship', 'woodenHorse', 'swordShield', 'amphora',
+    'temple', 'throne', 'palmTree', 'fiscella', 'scala', 'arcaFoederis', 'grapevine',
+    'quercus', 'harundo', 'urna', 'umbra', 'columna', 'praesepe', 'mensa', 'patina',
+    'rete', 'truncus', 'fascis', 'frumentum', 'pellis', 'turris', 'pyramis',
+    'rubusArdens', 'vitulusAureus', 'ramusAureus', 'arborFructus', 'crux', 'sepulcrum',
+    'fons', 'sol', 'ventus', 'ovumAureum', 'murusAquae'];
+  for (i = 0; i < props.length; i++) { cell(g, props[i], {}, ''); }
+
+  h3('prop variants');
+  g = grid();
+  cell(g, 'ark', { dove: true }, 'ark + columba');
+  cell(g, 'altar', { flame: false }, 'altar, no flame');
+  cell(g, 'altar', { smoke: true }, 'altar + smoke');
+  cell(g, 'fire', { pyre: true }, 'rogus procul (pyre glow)');
+  cell(g, 'star', { comet: true }, 'stella magōrum');
+  cell(g, 'cityWall', { open: true }, 'gate open');
+  cell(g, 'mountain', { cloud: true }, 'Sinai, cloud-capped');
+  cell(g, 'ship', { oars: true, sail: 'full' }, 'oars + full sail');
+  cell(g, 'ship', { oars: true, sail: 'furled' }, 'furled sail');
+  cell(g, 'ship', { sail: false }, 'mast only');
+  cell(g, 'serpent', { apple: true }, 'serpēns + pōmum');
+  cell(g, 'urna', { lapilli: true, high: true }, 'urna + lapillī');
+  cell(g, 'harundo', { bend: true }, 'harundō bending');
+  cell(g, 'pellis', { kind: 'leonis' }, 'pellis leōnis');
+  cell(g, 'praesepe', { infans: true }, 'praesēpe + īnfāns');
+  cell(g, 'crux', { glow: true }, 'crux + light');
+  cell(g, 'sepulcrum', { open: false }, 'sepulcrum clausum');
+  cell(g, 'swordShield', { single: true }, 'scūtum sōlum');
+  cell(g, 'patina', { food: true }, 'patina plēna');
+  cell(g, 'umbra', { w: 46, h: 10, opacity: 0.3 }, 'umbra (reflection helper)');
+  cell(g, 'murusAquae', { floor: 150 }, 'wall + dry sea bed');
+  cell(g, 'scala', { glow: false }, 'scala, no glow');
+  cell(g, 'testudo', { pose: 'hide' }, 'testūdō in shell');
+
+  /* ================= 4. BACKGROUNDS ================= */
+  h2('Scaenae — backgrounds');
+  g = grid(true);
+  var bgs = Scenes.bgNames();
+  for (i = 0; i < bgs.length; i++) {
+    if (bgs[i].indexOf('__') === 0) { continue; }
+    sceneCell(g, { bg: bgs[i], items: [] }, bgs[i]);
+  }
+
+  /* ================= 5. COMPOSED SCENES (DESIGN §8) ================= */
+  h2('Tabulae — eight composed scenes');
+  g = grid(true);
+
+  /* (a) Noah's ark, the animals boarding */
+  sceneCell(g, { bg: 'desert', items: [
+    { t: 'ark', x: 148, y: 208, s: 0.92, dove: true },
+    { t: 'person', x: 40, y: 214, s: 0.8, role: 'patriarch', pose: 'point' },
+    { t: 'grex', x: 258, y: 214, s: 0.62, flip: true },
+    { t: 'camelus', x: 330, y: 216, s: 0.6, flip: true, pose: 'walk' },
+    { t: 'leo', x: 388, y: 218, s: 0.56, flip: true, pose: 'walk' },
+    { t: 'columba', x: 96, y: 120, s: 0.5, pose: 'fly', ramus: true }
+  ], bubbles: [{ x: 62, y: 42, w: 96, h: 34, text: 'Venīte!', tail: 'left', fs: 17 }] },
+    '(a) Arca Noe — animālia intrant');
+
+  /* (b) Moses before the parted sea */
+  sceneCell(g, { bg: 'sea', items: [
+    { t: 'murusAquae', x: 92, y: 212, s: 0.9, floor: 150 },
+    { t: 'murusAquae', x: 322, y: 212, s: 0.9, flip: true, floor: 150 },
+    { t: 'person', x: 200, y: 224, s: 0.92, role: 'patriarch', pose: 'arms-up', staff: true },
+    { t: 'crowdGroup', x: 292, y: 228, s: 0.52 }
+  ] }, '(b) Trānsitus Maris Rubrī — arms-up + two walls of water');
+
+  /* (c) the Nativity in the stable */
+  sceneCell(g, { bg: 'stabulum', items: [
+    { t: 'bos', x: 368, y: 216, s: 0.62, flip: true, pose: 'lie' },
+    { t: 'asinus', x: 46, y: 216, s: 0.58 },
+    { t: 'praesepe', x: 200, y: 214, s: 1, infans: true },
+    { t: 'person', x: 152, y: 216, s: 0.82, role: 'woman', pose: 'kneel',
+      veilColor: '#4d6c8a', robeColor: '#c9663c', halo: true },
+    { t: 'person', x: 254, y: 216, s: 0.86, role: 'man', pose: 'stand', staff: true,
+      beard: 'long', beardColor: '#7a4a26', flip: true },
+    { t: 'star', x: 340, y: 118, s: 0.62, comet: true }
+  ] }, '(c) Nātīvitās in stabulō');
+
+  /* (d) Aeneas carrying Anchises out of Troy */
+  sceneCell(g, { bg: 'troy', items: [
+    { t: 'columna', x: 42, y: 216, s: 0.8, broken: true },
+    { t: 'person', x: 196, y: 220, s: 1.02, role: 'man', pose: 'carry',
+      carryRole: 'patriarch', robeColor: '#c9663c' },
+    { t: 'person', x: 252, y: 220, s: 0.86, role: 'child', pose: 'walk' },
+    { t: 'crowdGroup', x: 340, y: 214, s: 0.46 }
+  ] }, '(d) Fuga Aenēae — Anchīsēs umerīs');
+
+  /* (e) the wooden horse before the wall */
+  sceneCell(g, { bg: 'plain', items: [
+    { t: 'cityWall', x: 306, y: 210, s: 0.92 },
+    { t: 'woodenHorse', x: 132, y: 208, s: 0.95 },
+    { t: 'crowdGroup', x: 44, y: 212, s: 0.5 }
+  ], bubbles: [{ x: 200, y: 34, w: 150, h: 34, text: 'Equus ligneus', tail: 'left', fs: 17 }] },
+    '(e) Equus ligneus ante mūrōs');
+
+  /* (f) David and Goliath — bloodless */
+  sceneCell(g, { bg: 'mountain', items: [
+    { t: 'person', x: 116, y: 214, s: 1.15, role: 'child', sling: true, pose: 'stand' },
+    { t: 'person', x: 300, y: 214, s: 1.22, role: 'soldier', pose: 'stand', flip: true },
+    { t: 'umbra', x: 118, y: 214, s: 0.7 },
+    { t: 'umbra', x: 300, y: 214, s: 1 }
+  ], bubbles: [{ x: 196, y: 44, w: 120, h: 34, text: 'Nōlī timēre', tail: 'left', fs: 16 }] },
+    '(f) Dāvīd et Goliāth — sine cruōre');
+
+  /* (g) Dido and Aeneas indoors, at a dignified distance */
+  sceneCell(g, { bg: 'interior', items: [
+    { t: 'throne', x: 140, y: 210, s: 0.9 },
+    { t: 'person', x: 140, y: 199, s: 0.9, role: 'queen', pose: 'sit' },
+    { t: 'person', x: 268, y: 212, s: 0.95, role: 'man', pose: 'point',
+      robeColor: '#c9663c', mantleColor: '#7a4a26', flip: true },
+    { t: 'amphora', x: 352, y: 210, s: 0.7 }
+  ], bubbles: [{ x: 214, y: 46, w: 132, h: 34, text: 'Nārrā mihi', tail: 'right', fs: 16 }] },
+    '(g) Dīdō et Aenēās — dignified distance');
+
+  /* (h) Jacob's ladder */
+  sceneCell(g, { bg: 'nightSky', items: [
+    { t: 'scala', x: 214, y: 212, s: 1.06 },
+    { t: 'person', x: 84, y: 216, s: 0.92, role: 'man', pose: 'sleep' },
+    { t: 'person', x: 176, y: 132, s: 0.42, role: 'angel', pose: 'walk' },
+    { t: 'person', x: 246, y: 96, s: 0.34, role: 'angel', pose: 'arms-up' },
+    { t: 'person', x: 190, y: 62, s: 0.28, role: 'angel', pose: 'stand', flip: true }
+  ] }, '(h) Scāla Iacōb');
+
+  /* ================= 6. THE OLDER ACTORS =================
+     The M1 actors from js/scenes.js, shown last and deliberately: the M2
+     set has to look like it came from the same hand as these. Stroke
+     weights, the ink used for eyes and the warmth of the palette are all
+     judged against this row. */
+  h2('Priōra — the actors already in scenes.js (style reference)');
+  g = grid();
+  var older = ['fox', 'crow', 'wolf', 'lamb', 'tree', 'grapes', 'cheese',
+    'fallingCheese', 'bush', 'voice', 'rose', 'castle'];
+  for (i = 0; i < older.length; i++) { cell(g, older[i], {}, 'M1'); }
+
+  /* ================= 7. SWEEP ================= */
+  h2('Sweep — anything registered but not shown above');
+  var names = Scenes.actorNames(), missing = [];
+  for (i = 0; i < names.length; i++) {
+    if (!shown[names[i]] && names[i].indexOf('__') !== 0) { missing.push(names[i]); }
+  }
+  if (missing.length) {
+    out.appendChild(el('div', 'warn', missing.length + ' actor(s) not in the review grid — added below'));
+    g = grid();
+    for (i = 0; i < missing.length; i++) { cell(g, missing[i], {}, 'swept'); }
+  } else {
+    out.appendChild(el('div', 'ok', 'every registered actor appears above'));
+  }
+
+  document.getElementById('counts').appendChild(document.createTextNode(
+    '  ·  ' + names.length + ' actors, ' + Scenes.bgNames().length + ' backgrounds'));
+
+  /* ---- viewing aids ---- */
+  document.getElementById('tileDark').onclick = function () {
+    document.documentElement.style.setProperty('--tile', this.checked ? '#4a3328' : '#f6e8c9');
+  };
+  document.getElementById('showBox').onclick = function () {
+    var on = this.checked, svgs = out.getElementsByTagName('svg'), k;
+    for (k = 0; k < svgs.length; k++) {
+      svgs[k].style.outline = on ? '1px dashed rgba(179,58,43,.6)' : '';
+      svgs[k].style.outlineOffset = '-1px';
+    }
+  };
+}());
+</script>
+</body>
+</html>
