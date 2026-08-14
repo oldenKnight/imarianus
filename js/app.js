@@ -1,10 +1,17 @@
 /* ============================================================
    app.js — UI router + gamification + exercise engines (ES5)
-   Screens: splash → home (fable path) → step screens.
-   Steps per fable: verba, fabula, ludus, aenigmata, corrige,
-   comple. XP +10 per correct, +20 step bonus. 5 hearts; at 0
+   Screens: landing (logged out) → three doors → map → capitulum
+            → step screens.
+   Steps per capitulum come from the CONTENT pipeline as DATA
+   (default: verba, fabula, sonus, ludus, aenigmata, corrige,
+   comple). XP +10 per correct, +20 step bonus. 5 hearts; at 0
    the learner restores them by reviewing vocabulary (never a
    paywall, always more input — that is the pedagogy).
+
+   M4 note: content no longer lives in a global DATA.fables. The
+   app holds a CURRENT CONTEXT (track + region) whose content file
+   was injected on demand by content-loader.js. Every former
+   `DATA.fables[fi]` is now `capAt(fi)` inside that context.
    ============================================================ */
 (function () {
   'use strict';
@@ -13,8 +20,23 @@
   var app;               /* #app container */
   var topbarShowBack = false; /* whether topbar currently shows the back arrow */
   var UI = DATA.UI;
-  var STEPS = DATA.STEPS;
   var ICONS = DATA.STEP_ICONS;
+
+  /* ---- current content context ----
+     Which track/region the learner is inside. Set by openTrack()/openRegion()
+     once content-loader has the region object in memory. Everything below
+     reads capitula through caps()/capAt() so a second track is config, not a
+     rewrite. */
+  var CUR = { trackId: null, regionId: null, region: null };
+
+  function caps() { return (CUR.region && CUR.region.capitula) ? CUR.region.capitula : []; }
+  function capAt(fi) { return caps()[fi]; }
+  /* the step list of one capitulum — data, not code (DESIGN §4) */
+  function stepsOf(fi) { return CONTENT.steps(CUR.region, capAt(fi)); }
+  /* the region key used for boss progress rows on the server (frozen ids) */
+  function regionProgressId() {
+    return CUR.region ? (CUR.region.progressId || CUR.region.id) : '';
+  }
 
   /* =================== utils =================== */
 
@@ -85,13 +107,32 @@
     return first;
   }
 
+  /* LOCAL-ONLY completions.
+     A step the server does not know yet (today: 'sonus', until the server's
+     manifest loader ships in parallel) cannot live in S.completed, because
+     Storage.reconcile() replaces `completed` wholesale with the server
+     snapshot and the mark would vanish on the next reload — re-locking the
+     next step. reconcile() only touches a fixed set of keys, so an extra key
+     on S survives it and still gets written to the offline cache. */
+  function markLocalStep(fid, step) {
+    if (!S.localSteps) { S.localSteps = {}; }
+    if (!S.localSteps[fid]) { S.localSteps[fid] = {}; }
+    S.localSteps[fid][step] = true;
+    save();
+  }
+  function isLocalStep(fid, step) {
+    return !!(S.localSteps && S.localSteps[fid] && S.localSteps[fid][step]);
+  }
+
   function isStepDone(fid, step) {
-    return !!(S.completed[fid] && S.completed[fid][step]);
+    if (S.completed[fid] && S.completed[fid][step]) { return true; }
+    return isLocalStep(fid, step);
   }
   function fableDone(fi) {
-    var f = DATA.fables[fi], i;
-    for (i = 0; i < STEPS.length; i++) {
-      if (!isStepDone(f.id, STEPS[i])) { return false; }
+    var f = capAt(fi), st = stepsOf(fi), i;
+    if (!f) { return false; }
+    for (i = 0; i < st.length; i++) {
+      if (!isStepDone(f.id, st[i])) { return false; }
     }
     return true;
   }
@@ -101,7 +142,8 @@
   function stepUnlocked(fi, si) {
     if (!fableUnlocked(fi)) { return false; }
     if (si === 0) { return true; }
-    return isStepDone(DATA.fables[fi].id, STEPS[si - 1]);
+    var st = stepsOf(fi);
+    return isStepDone(capAt(fi).id, st[si - 1]);
   }
 
   /* =================== chrome =================== */
@@ -202,7 +244,7 @@
       if (!v) { inp.focus(); return; }
       S.name = v;
       save();
-      showHome();
+      openTrack('fabulae', function () { showHome(); });
     }
     $('#go').addEventListener('click', go);
     inp.addEventListener('keydown', function (e) { if (e.keyCode === 13) { go(); } });
@@ -211,37 +253,50 @@
 
   /* =================== home: the fable path =================== */
 
+  /* the cursus: every capitulum of the current region with its step row.
+     Reached from the map (a node opens its own block) and from the topbar. */
   function showHome() {
     renderTopbar(false);
     var html = '<header class="home-head">' +
       '<h2>' + esc(UI.salve) + ', <span id="uname"></span>!</h2></header>';
     html += '<nav class="path" aria-label="cursus">';
-    var fi, si, f, cls, icon, done, unlocked;
-    for (fi = 0; fi < DATA.fables.length; fi++) {
-      f = DATA.fables[fi];
-      unlocked = fableUnlocked(fi);
-      html += '<section class="fable-block' + (unlocked ? '' : ' locked') + '">' +
-        '<h3><span class="fnum">' + ['I', 'II', 'III'][fi] + '</span> ' + esc(f.titulus) + ' <span class="ficon">' + f.icon + '</span>' +
-        (fableDone(fi) ? ' <span class="crown">👑</span>' : '') + '</h3>' +
-        '<ol class="steps">';
-      for (si = 0; si < STEPS.length; si++) {
-        done = isStepDone(f.id, STEPS[si]);
-        cls = done ? 'done' : (stepUnlocked(fi, si) ? 'open' : 'shut');
-        icon = done ? '✔' : (cls === 'shut' ? '🔒' : ICONS[STEPS[si]]);
-        html += '<li><button type="button" class="node ' + cls + '" data-f="' + fi + '" data-s="' + si + '"' +
-          (cls === 'shut' ? ' disabled' : '') + '>' +
-          '<span class="node-icon">' + icon + '</span>' +
-          '<span class="node-label">' + esc(UI[STEPS[si]]) + '</span>' +
-          '</button></li>';
-      }
-      html += '</ol></section>';
+    var fi;
+    for (fi = 0; fi < caps().length; fi++) {
+      html += capitulumBlock(fi);
     }
-    /* stubbed future languages */
-    html += '<section class="fable-block locked future">' +
-      '<h3>🇬🇧 English · 🇪🇸 Español <span class="soon">' + esc(UI.proximamente) + '</span></h3></section>';
     html += '</nav>';
     setScreen(html, 'home-screen');
     $('#uname').textContent = S.name;
+    bindStepButtons();
+  }
+
+  /* one capitulum card: title + its step row. Shared by the cursus and by the
+     single-capitulum screen the map opens. */
+  function capitulumBlock(fi) {
+    var f = capAt(fi);
+    var st = stepsOf(fi);
+    var unlocked = fableUnlocked(fi);
+    var html = '<section class="fable-block' + (unlocked ? '' : ' locked') + '">' +
+      '<h3><span class="fnum">' + esc(f.numerus || (fi + 1)) + '</span> ' + esc(f.titulus) +
+      ' <span class="ficon">' + (f.icon || '') + '</span>' +
+      (fableDone(fi) ? ' <span class="crown">👑</span>' : '') + '</h3>' +
+      '<ol class="steps">';
+    var si, done, cls, icon;
+    for (si = 0; si < st.length; si++) {
+      done = isStepDone(f.id, st[si]);
+      cls = done ? 'done' : (stepUnlocked(fi, si) ? 'open' : 'shut');
+      icon = done ? '✔' : (cls === 'shut' ? '🔒' : ICONS[st[si]]);
+      html += '<li><button type="button" class="node ' + cls + '" data-f="' + fi + '" data-s="' + si + '"' +
+        (cls === 'shut' ? ' disabled' : '') + '>' +
+        '<span class="node-icon">' + icon + '</span>' +
+        '<span class="node-label">' + esc(UI[st[si]] || st[si]) + '</span>' +
+        '</button></li>';
+    }
+    html += '</ol></section>';
+    return html;
+  }
+
+  function bindStepButtons() {
     $all('.node.open, .node.done').forEach(function (btn) {
       btn.addEventListener('click', function () {
         var fi2 = parseInt(btn.getAttribute('data-f'), 10);
@@ -251,28 +306,78 @@
     });
   }
 
+  /* the screen a map node opens: one capitulum, its seven steps, back to map */
+  function showCapitulum(fi) {
+    renderTopbar(false);
+    var f = capAt(fi);
+    if (!f) { showMap(); return; }
+    S.mapNode = f.id; save();
+    var done = fableDone(fi);
+    var html = '<header class="home-head"><h2>' + esc(CUR.region.titulus) + '</h2></header>' +
+      capitulumBlock(fi) +
+      '<div class="cap-actions">' +
+        (done ? '' : '<button id="go-on" class="btn primary" type="button">' + esc(UI.perge) + ' ▶</button>') +
+        '<button id="to-map" class="btn ghost small" type="button">🗺️ ' + esc(DATA.MAP_UI.provincia) + '</button>' +
+      '</div>';
+    setScreen(html, 'home-screen');
+    bindStepButtons();
+    /* one tap continues at the first step that is not finished yet */
+    if (!done) {
+      $('#go-on').addEventListener('click', function () { startStep(fi, firstOpenStep(fi)); });
+    }
+    $('#to-map').addEventListener('click', showMap);
+  }
+
+  /* where PERGE goes after a step: back to the capitulum the learner is in */
+  function afterStep(fi) {
+    if (typeof fi === 'number' && capAt(fi)) { showCapitulum(fi); } else { showMap(); }
+  }
+
   /* =================== leaderboard =================== */
 
+  /* THE FAKE BOARD IS GONE. data.js used to ship six hardcoded "students"
+     (Marcus 340, Iūlia 285 …) and sort the learner against them — precisely
+     the complaint the owner raised (brief §7). The board is now real: it asks
+     api/board.php and, when there is nothing to show yet, says so in Latin
+     instead of inventing rivals. */
   function showOrdo() {
     renderTopbar(false);
-    var rows = DATA.BOTS.slice();
-    rows.push({ name: S.name, xp: S.xp, me: true });
-    rows.sort(function (a, b) { return b.xp - a.xp; });
-    var html = '<section class="ordo"><h2>🏆 ' + esc(UI.ordo) + '</h2><ol class="board">';
-    var i, medal;
-    for (i = 0; i < rows.length; i++) {
-      medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1) + '.';
-      html += '<li class="' + (rows[i].me ? 'me' : '') + '">' +
-        '<span class="rank">' + medal + '</span>' +
-        '<span class="bname">' + esc(rows[i].name) + (rows[i].me ? ' 🦊' : '') + '</span>' +
-        '<span class="bxp">⭐ ' + rows[i].xp + '</span></li>';
-    }
-    html += '</ol>' +
+    var g = DATA.gradusFor(S.xp);
+    var need = DATA.gradusRemaining(S.xp);
+    var html = '<section class="ordo">' +
+      '<h2>🏆 ' + esc(UI.ordo) + '</h2>' +
+      '<p class="gradus-line"><span class="gradus-name">' + esc(g.titulus) + '</span>' +
+        ' · ⭐ ' + S.xp + (need ? ' <span class="gradus-next">(+' + need + ')</span>' : '') + '</p>' +
+      '<ol class="board" id="board"><li class="board-wait"><span class="bname">…</span></li></ol>' +
       '<div class="ordo-actions">' +
         '<button id="logout" class="btn ghost small" type="button">⎋ exī (logout)</button>' +
       '</div>' +
       '</section>';
     setScreen(html, 'ordo-screen');
+
+    fetchBoard(function (err, rows) {
+      var el = $('#board');
+      if (!el) { return; }
+      if (err || !rows || !rows.length) {
+        /* no endpoint yet, or nobody on the board: an honest empty state */
+        el.innerHTML = '<li class="board-empty"><span class="bname">' +
+          esc(UI.tabulaVacua) + '</span></li>' +
+          '<li class="me"><span class="rank">·</span><span class="bname">' + esc(S.name) +
+          '</span><span class="bxp">⭐ ' + S.xp + '</span></li>';
+        return;
+      }
+      var out = '', i, r, medal;
+      for (i = 0; i < rows.length; i++) {
+        r = rows[i];
+        medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1) + '.';
+        out += '<li class="' + (r.me ? 'me' : '') + (r.exemplum ? ' exemplum' : '') + '">' +
+          '<span class="rank">' + medal + '</span>' +
+          '<span class="bname">' + esc(r.nickname || r.name || '?') +
+            (r.exemplum ? ' <em class="tag">exemplum</em>' : '') + '</span>' +
+          '<span class="bxp">⭐ ' + (r.xp || 0) + '</span></li>';
+      }
+      el.innerHTML = out;
+    });
     $('#logout').addEventListener('click', function () {
       if (!window.confirm('Exīre? (log out)')) { return; }
       if (typeof Api !== 'undefined') {
@@ -287,97 +392,172 @@
     });
   }
 
+  /* Read the public board. PREFERRED PATH is Api.board(), which api.js gains
+     with the rest of the v2 endpoints (brief §7, milestone M8, owned by the
+     server agent). Until that method exists we ask the endpoint directly so
+     this screen becomes real the moment board.php lands — and degrades to the
+     "tabula vacua" state, never to invented rivals, when it does not.
+     MIGRATE: delete the XHR branch once Api.board exists. */
+  function fetchBoard(cb) {
+    if (typeof Api !== 'undefined' && Api.board) { Api.board('total', cb); return; }
+    if (!window.XMLHttpRequest) { cb({ error: 'no_xhr' }, null); return; }
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'server/api/board.php?id=total', true);
+    xhr.withCredentials = true;
+    xhr.setRequestHeader('Accept', 'application/json');
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState !== 4) { return; }
+      var data = null;
+      try { data = JSON.parse(xhr.responseText); } catch (e) { data = null; }
+      if (xhr.status < 200 || xhr.status >= 300 || !data) {
+        cb({ status: xhr.status }, null);
+        return;
+      }
+      /* accept the shapes the endpoint might use; rows carry nickname + xp
+         ONLY (nickname-only rule, brief §7) */
+      var rows = data.rows || data.board || (data.length ? data : []);
+      cb(null, rows);
+    };
+    xhr.send(null);
+  }
+
   /* =================== PRŌVINCIA: the overworld map =================== */
 
-  /* a region is "fables done" when every spine fable in it is fully complete */
-  function regionFablesDone(region) {
+  /* a region's spine is done when every capitulum in it is fully complete */
+  function regionCapsDone() {
     var i;
-    for (i = 0; i < region.fables.length; i++) {
-      var fi = fableIndexById(region.fables[i]);
-      if (fi < 0 || !fableDone(fi)) { return false; }
+    for (i = 0; i < caps().length; i++) {
+      if (!fableDone(i)) { return false; }
     }
-    return true;
+    return caps().length > 0;
   }
-  function fableIndexById(id) {
+  function capIndexById(id) {
     var i;
-    for (i = 0; i < DATA.fables.length; i++) {
-      if (DATA.fables[i].id === id) { return i; }
+    for (i = 0; i < caps().length; i++) {
+      if (caps()[i].id === id) { return i; }
     }
     return -1;
   }
-  function regionById(id) {
-    var i;
-    for (i = 0; i < DATA.REGIONS.length; i++) {
-      if (DATA.REGIONS[i].id === id) { return DATA.REGIONS[i]; }
-    }
-    return null;
-  }
-  /* boss fully cleared = fight won AND quiz passed */
-  function bossCleared(regionId) {
-    var b = S.bosses[regionId];
+  /* boss fully cleared = fight won AND quiz passed (keyed by the FROZEN
+     progress id, not the content id — see content/README.md §5) */
+  function bossCleared() {
+    var b = S.bosses[regionProgressId()];
     return !!(b && b.fight && b.quiz);
   }
+  function bossNodeId() {
+    return (CUR.region && CUR.region.boss) ? CUR.region.boss.id : 'boss';
+  }
 
-  /* compute the click-state of each map node from progress */
+  /* Compute the map model from the region config + progress.
+     Node positions stay 0..1 FRACTIONS (DESIGN §3) so one layout serves
+     every screen width and any region length. */
   function mapModel() {
-    var nodes = [];
-    var i;
-    for (i = 0; i < DATA.MAP.nodes.length; i++) {
-      var src = DATA.MAP.nodes[i];
-      var n = {
-        id: src.id, kind: src.kind, x: src.x, y: src.y,
-        label: src.label, links: src.links, state: 'shut'
-      };
-      if (src.kind === 'fable') {
-        var fi = fableIndexById(src.fable);
-        n.state = fableDone(fi) ? 'done' : (fableUnlocked(fi) ? 'open' : 'shut');
-      } else if (src.kind === 'boss') {
-        var reg = regionById(src.region);
-        if (bossCleared(src.region)) { n.state = 'done'; }
-        else if (reg && regionFablesDone(reg)) { n.state = 'open'; }
-        else { n.state = 'shut'; }
-      } else { /* gate */
-        n.state = 'shut';
-      }
-      nodes.push(n);
+    var nodes = [], i, f, st;
+    var list = caps();
+    for (i = 0; i < list.length; i++) {
+      f = list[i];
+      st = fableDone(i) ? 'done' : (fableUnlocked(i) ? 'open' : 'shut');
+      nodes.push({
+        id: f.id,
+        kind: 'fable',
+        x: (f.pos && f.pos.x) || 0.5,
+        y: (f.pos && f.pos.y) || (0.9 - i * 0.2),
+        label: f.numerus || String(i + 1),
+        titulus: f.titulus,
+        icon: f.icon,
+        links: (i + 1 < list.length) ? [list[i + 1].id] : [bossNodeId()],
+        state: st
+      });
     }
-    return { nodes: nodes, foxNode: S.mapNode || 'f1' };
+    if (CUR.region && CUR.region.boss) {
+      var b = CUR.region.boss;
+      nodes.push({
+        id: b.id,
+        kind: 'boss',
+        x: (b.pos && b.pos.x) || 0.5,
+        y: (b.pos && b.pos.y) || 0.12,
+        label: '👑',
+        titulus: b.name,
+        links: [],
+        state: bossCleared() ? 'done' : (regionCapsDone() ? 'open' : 'shut')
+      });
+    }
+    /* the mascot stands on the saved node when it still exists here, else on
+       the first unfinished capitulum (a learner arriving from another track
+       must not see the fox on a node that isn't on this map). */
+    var here = S.mapNode, found = false;
+    for (i = 0; i < nodes.length; i++) { if (nodes[i].id === here) { found = true; } }
+    if (!found) {
+      here = nodes.length ? nodes[0].id : '';
+      for (i = 0; i < list.length; i++) {
+        if (!fableDone(i)) { here = list[i].id; break; }
+      }
+    }
+    return {
+      nodes: nodes,
+      foxNode: here,
+      track: CUR.trackId,
+      titulus: CUR.region ? CUR.region.titulus : '',
+      avatar: S.avatar || 'fox'
+    };
   }
 
   function showMap() {
+    if (!CUR.region) { openTrack(CUR.trackId || 'fabulae', showMap); return; }
     renderTopbar(false);
     var model = mapModel();
     var html =
       '<section class="provincia">' +
-        '<header class="prov-head"><h2>🗺️ ' + esc(DATA.MAP_UI.provincia) + '</h2>' +
-        '<p class="prov-sub">' + esc(DATA.MAP_UI.cursus) + ' ↔ ' + esc(DATA.MAP_UI.provincia) + '</p></header>' +
+        '<header class="prov-head"><h2>' + esc(model.titulus || DATA.MAP_UI.provincia) + '</h2>' +
+        '<p class="prov-sub">' + esc(trackTitle()) + '</p></header>' +
         '<div class="map-frame">' + WorldMap.render(model) + '</div>' +
-        '<button id="to-cursus" class="btn primary" type="button">📜 ' + esc(DATA.MAP_UI.cursus) + '</button>' +
       '</section>';
     setScreen(html, 'map-screen');
     WorldMap.bind($('.map-frame'), model, {
       onNode: function (id, kind) {
         if (kind === 'fable') {
-          /* move the fox there, then open the spine fable at its first
-             unfinished step (or verba if all done) */
           S.mapNode = id; save();
-          var fi = fableIndexById(id);
-          var si = firstOpenStep(fi);
-          startStep(fi, si);
+          showCapitulum(capIndexById(id));
         } else if (kind === 'boss') {
           S.mapNode = id; save();
           showBossIntro(id);
         }
       }
     });
-    $('#to-cursus').addEventListener('click', showHome);
   }
 
-  /* first not-yet-done step index in a fable (for jumping in from the map) */
+  function trackTitle() {
+    var t = DATA.trackById(CUR.trackId);
+    return t ? t.titulus : '';
+  }
+
+  /* A door whose track has no region yet opens THIS instead of nothing:
+     the real plan from docs/CURRICULUM.md, so "coming soon" reads as a
+     promise with contents rather than an empty room. */
+  function showMox(trackId) {
+    renderTopbar(false);
+    var t = DATA.trackById(trackId) || { titulus: '', mox: [] };
+    var list = '', i;
+    for (i = 0; i < (t.mox || []).length; i++) {
+      list += '<li>' + esc(t.mox[i]) + '</li>';
+    }
+    var html = '<section class="mox">' +
+      '<p class="mox-kicker">' + esc(t.titulus) + '</p>' +
+      '<h2>' + esc(UI.moxTitulus) + '</h2>' +
+      '<p class="mox-sub">' + esc(UI.moxSub) + '</p>' +
+      '<p class="mox-lead">' + esc(UI.moxLibri) + '</p>' +
+      '<ol class="mox-list">' + list + '</ol>' +
+      '<button id="mox-back" class="btn primary" type="button">' + esc(UI.domus) + '</button>' +
+      '</section>';
+    setScreen(html, 'mox-screen');
+    $('#mox-back').addEventListener('click', showHome);
+  }
+
+  /* first not-yet-done step index in a capitulum (for jumping in) */
   function firstOpenStep(fi) {
-    var f = DATA.fables[fi], i;
-    for (i = 0; i < STEPS.length; i++) {
-      if (!isStepDone(f.id, STEPS[i])) { return i; }
+    var f = capAt(fi), st = stepsOf(fi), i;
+    for (i = 0; i < st.length; i++) {
+      if (!isStepDone(f.id, st[i])) { return i; }
     }
     return 0;
   }
@@ -386,9 +566,7 @@
 
   function showBossIntro(nodeId) {
     renderTopbar(true);
-    var node = mapNodeById(nodeId);
-    var region = regionById(node.region);
-    var boss = region.boss;
+    var boss = CUR.region.boss;
     var html =
       '<section class="boss-intro">' +
         '<figure class="scene">' + Scenes.render({ bg: 'river', items: [{ t: 'wolf', x: 200, y: 150, pose: 'leap', s: 1.3 }] }) + '</figure>' +
@@ -400,20 +578,11 @@
     $('#fight').addEventListener('click', function () { runBossFight(nodeId); });
   }
 
-  function mapNodeById(id) {
-    var i;
-    for (i = 0; i < DATA.MAP.nodes.length; i++) {
-      if (DATA.MAP.nodes[i].id === id) { return DATA.MAP.nodes[i]; }
-    }
-    return null;
-  }
-
-  /* build the boss word pool from the region's fables (reuse their ludus art) */
-  function bossWords(region) {
-    var words = [], seen = {}, i, j;
-    for (i = 0; i < region.fables.length; i++) {
-      var fi = fableIndexById(region.fables[i]);
-      var vocab = DATA.fables[fi].vocab;
+  /* build the boss word pool from the region's capitula (reuse their art) */
+  function bossWords() {
+    var words = [], seen = {}, i, j, vocab;
+    for (i = 0; i < caps().length; i++) {
+      vocab = caps()[i].vocab || [];
       for (j = 0; j < vocab.length; j++) {
         if (hasVisual(vocab[j]) && !seen[vocab[j].la]) {
           seen[vocab[j].la] = true;
@@ -428,25 +597,24 @@
      It must call onWin()/onLose() to keep the unlock flow intact. */
   function runBossFight(nodeId) {
     renderTopbar(true);
-    var node = mapNodeById(nodeId);
-    var region = regionById(node.region);
-    var boss = region.boss;
+    var boss = CUR.region.boss;
+    var regionKey = regionProgressId();
     var html = '<section class="boss-wrap">' +
       '<p class="ask">' + esc(DATA.MAP_UI.bossReady) + ' ⬅ ➡</p>' +
       '<canvas id="bossgame" aria-label="pugna"></canvas>' +
       '</section>';
     setScreen(html, 'boss-screen');
     var cv = $('#bossgame');
-    Boss.start(cv, { words: bossWords(region), hp: boss.hp, seconds: boss.seconds }, {
+    Boss.start(cv, { words: bossWords(), hp: boss.hp, seconds: boss.seconds }, {
       onEnd: function (won) {
         if (won) {
           /* optimistic mirror update */
-          if (!S.bosses[region.id]) { S.bosses[region.id] = {}; }
-          S.bosses[region.id].fight = true;
+          if (!S.bosses[regionKey]) { S.bosses[regionKey] = {}; }
+          S.bosses[regionKey].fight = true;
           save();
           /* server records the fight + grants fight XP once, then we proceed */
           if (typeof Api !== 'undefined') {
-            Api.bossFight(region.id, function (err, data) {
+            Api.bossFight(regionKey, function (err, data) {
               if (!err && data && data.snapshot) {
                 Storage.reconcile(S, data.snapshot);
                 renderTopbar();
@@ -454,7 +622,7 @@
               runBossQuiz(nodeId);
             });
           } else {
-            addXP(30);
+            addXP(DATA.XP.bossFight);
             runBossQuiz(nodeId);
           }
         } else {
@@ -467,11 +635,10 @@
   /* the 5-question cumulative quiz that finishes the boss */
   function runBossQuiz(nodeId) {
     renderTopbar(true);
-    var node = mapNodeById(nodeId);
-    var region = regionById(node.region);
-    var quiz = region.boss.quiz.slice();
+    var regionKey = regionProgressId();
+    var quiz = CUR.region.boss.quiz.slice();
     /* resolve each quiz entry to a vocab item (with its visual) */
-    var pool = bossWords(region);
+    var pool = bossWords();
     function findWord(la) {
       var i;
       for (i = 0; i < pool.length; i++) { if (pool[i].la === la) { return pool[i]; } }
@@ -490,7 +657,7 @@
       /* the SERVER is authoritative on pass/fail: it holds the answer key and
          grants quiz XP. We submit the collected answers and reconcile. */
       if (typeof Api !== 'undefined') {
-        Api.bossQuiz(region.id, answers, function (err, data) {
+        Api.bossQuiz(regionKey, answers, function (err, data) {
           if (!err && data) {
             if (data.snapshot) { Storage.reconcile(S, data.snapshot); renderTopbar(); }
             showBossResult(nodeId, !!data.passed);
@@ -500,16 +667,16 @@
              isn't blocked; server will reconcile on next load. */
           var passedLocal = (wrong <= 1);
           if (passedLocal) {
-            if (!S.bosses[region.id]) { S.bosses[region.id] = {}; }
-            S.bosses[region.id].quiz = true; save();
+            if (!S.bosses[regionKey]) { S.bosses[regionKey] = {}; }
+            S.bosses[regionKey].quiz = true; save();
           }
           showBossResult(nodeId, passedLocal);
         });
       } else {
         var passed = (wrong <= 1);
         if (passed) {
-          if (!S.bosses[region.id]) { S.bosses[region.id] = {}; }
-          S.bosses[region.id].quiz = true; save();
+          if (!S.bosses[regionKey]) { S.bosses[regionKey] = {}; }
+          S.bosses[regionKey].quiz = true; save();
         }
         showBossResult(nodeId, passed);
       }
@@ -559,9 +726,7 @@
 
   function showBossResult(nodeId, won) {
     renderTopbar(false);
-    var node = mapNodeById(nodeId);
-    var region = regionById(node.region);
-    var fullyClear = bossCleared(region.id);
+    var fullyClear = bossCleared();
     var html = '<section class="finis">';
     if (won && fullyClear) {
       html += '<p class="euge">' + esc(DATA.MAP_UI.vicisti) + ' 👑</p>' +
@@ -583,49 +748,75 @@
 
   /* =================== step dispatcher =================== */
 
+  /* The engine iterates the capitulum's step list as DATA: a step id is
+     looked up in this registry, so a track can drop or add steps in content
+     without touching the router (DESIGN §4). */
+  var RUNNERS = {};
+
   function startStep(fi, si) {
     Game.stop();
-    var step = STEPS[si];
+    var step = stepsOf(fi)[si];
+    if (!step) { afterStep(fi); return; }
     if (S.hearts <= 0 && step !== 'verba') { showRefill(fi); return; }
-    if (step === 'verba') { runVerba(fi); }
-    else if (step === 'fabula') { runFabula(fi); }
-    else if (step === 'ludus') { runLudus(fi); }
-    else if (step === 'aenigmata') { runAenigmata(fi); }
-    else if (step === 'corrige') { runCorrige(fi); }
-    else if (step === 'comple') { runComple(fi); }
+    var run = RUNNERS[step];
+    if (!run) {
+      /* unknown step id in content: skip it rather than dead-ending a lesson */
+      if (window.console) { console.warn('[app] no runner for step "' + step + '"'); }
+      afterStep(fi);
+      return;
+    }
+    run(fi);
   }
 
   function stepHeader(fi, step) {
-    var f = DATA.fables[fi];
+    var f = capAt(fi);
     return '<header class="step-head"><span class="step-ic">' + ICONS[step] + '</span>' +
-      '<h2>' + esc(UI[step]) + '</h2><p class="step-fab">' + esc(f.titulus) + '</p></header>';
+      '<h2>' + esc(UI[step] || step) + '</h2><p class="step-fab">' + esc(f.titulus) + '</p></header>';
   }
 
-  function finishStep(fi, step, bonusXP, extraHTML) {
-    var f = DATA.fables[fi];
+  /* Finish a step: optimistic local mark, then the authoritative server call.
+     `opts.noXP` marks the step complete WITHOUT claiming XP — used when the
+     server does not know the step id yet (see the 'sonus' fallback below). */
+  function finishStep(fi, step, bonusXP, extraHTML, opts) {
+    var f = capAt(fi);
+    opts = opts || {};
     /* optimistic local update so the UI is instant... */
     var first = completeStep(f.id, step);
-    if (first && bonusXP) { addXP(bonusXP); }
+    if (first && bonusXP && !opts.noXP) { addXP(bonusXP); }
     /* ...then tell the server, which is authoritative. It grants XP only on a
        genuine first completion (idempotent), enforces prerequisites, and hands
        back the true snapshot we reconcile into the mirror. */
-    if (typeof Api !== 'undefined') {
+    if (typeof Api !== 'undefined' && !opts.noPost) {
       Api.completeStep(f.id, step, (bonusXP || 0), function (err, data) {
         if (!err && data && data.snapshot) {
           Storage.reconcile(S, data.snapshot);
           renderTopbar();
+          return;
+        }
+        /* FEATURE DETECT (M4 ↔ M8 handshake): a 422 invalid_step means this
+           server build predates the step (today: 'sonus'; its manifest loader
+           ships in parallel). Keep the step locally complete so the lesson
+           flow is not blocked, and claim NO XP — the server stays the only
+           source of XP. Once the server learns the step, the next completion
+           posts normally and the server grants it then. */
+        if (err && err.status === 422 && err.data && err.data.error === 'invalid_step') {
+          markLocalStep(f.id, step);
+          if (window.console) {
+            console.info('[app] server does not know step "' + step + '" yet; marked locally, no XP');
+          }
         }
       });
     }
+    if (opts.local) { markLocalStep(f.id, step); }
     var html = '<section class="finis">' +
       '<p class="euge">' + esc(UI.euge) + ' 🎉</p>' +
-      '<figure class="mascot">' + Scenes.mascot(96) + '</figure>' +
-      (bonusXP && first ? '<p class="bonus">+' + bonusXP + ' ⭐</p>' : '') +
+      '<figure class="mascot">' + Scenes.mascot(96, S.avatar) + '</figure>' +
+      (bonusXP && first && !opts.noXP ? '<p class="bonus">+' + bonusXP + ' ⭐</p>' : '') +
       (extraHTML || '') +
       '<button id="cont" class="btn primary" type="button">' + esc(UI.perge) + ' ▶</button>' +
       '</section>';
     setScreen(html, 'finis-screen');
-    $('#cont').addEventListener('click', showHome);
+    $('#cont').addEventListener('click', function () { afterStep(fi); });
   }
 
   function heartsOut(fi) {
@@ -636,17 +827,17 @@
   /* hearts refill: review vocabulary (more input, never a wall) */
   function showRefill(fi) {
     renderTopbar(true);
-    var f = DATA.fables[fi];
+    var f = capAt(fi);
     var pool = [];
     var i;
     for (i = 0; i < f.vocab.length; i++) {
       if (hasVisual(f.vocab[i])) { pool.push(f.vocab[i]); }
     }
-    /* recycle earlier fables' vocab too */
+    /* recycle earlier capitula's vocab too */
     var j, k;
     for (j = 0; j < fi; j++) {
-      for (k = 0; k < DATA.fables[j].vocab.length; k++) {
-        if (hasVisual(DATA.fables[j].vocab[k])) { pool.push(DATA.fables[j].vocab[k]); }
+      for (k = 0; k < capAt(j).vocab.length; k++) {
+        if (hasVisual(capAt(j).vocab[k])) { pool.push(capAt(j).vocab[k]); }
       }
     }
     var quiz = shuffle(pool).slice(0, 5);
@@ -661,7 +852,7 @@
           '<p class="hearts-big">❤️❤️❤️❤️❤️</p>' +
           '<button id="cont" class="btn primary" type="button">' + esc(UI.perge) + ' ▶</button></section>';
         setScreen(html, 'finis-screen');
-        $('#cont').addEventListener('click', showHome);
+        $('#cont').addEventListener('click', function () { afterStep(fi); });
         return;
       }
       var q = quiz[idx];
@@ -696,7 +887,7 @@
 
   function runVerba(fi) {
     renderTopbar(true);
-    var f = DATA.fables[fi];
+    var f = capAt(fi);
     var i = 0;
 
     function card() {
@@ -771,7 +962,7 @@
 
   function runFabula(fi) {
     renderTopbar(true);
-    var f = DATA.fables[fi];
+    var f = capAt(fi);
     var i = 0;
 
     function page() {
@@ -816,7 +1007,7 @@
 
   function runLudus(fi) {
     renderTopbar(true);
-    var f = DATA.fables[fi];
+    var f = capAt(fi);
     var html = stepHeader(fi, 'ludus') +
       '<section class="ludus-wrap">' +
       '<p class="ask">' + esc(UI.cape) + ' ⬅ ➡</p>' +
@@ -845,7 +1036,10 @@
 
   function runAenigmata(fi) {
     renderTopbar(true);
-    var f = DATA.fables[fi];
+    var f = capAt(fi);
+    /* items: the author's override when present, else generated from the
+       capitulum's vocab + story by the pipeline (content-loader.js). */
+    var AE = CONTENT.aenigmata(f);
 
     /* --- phase 1: memory pairs ---
        EXPLOIT FIX: the old version paid +10 XP on every match with no penalty
@@ -859,12 +1053,12 @@
            quick solve pays full; a brute-forced one pays almost nothing.
        No hearts are ever lost here. */
     function memory() {
-      var pairCount = f.aenigmata.pairs.length;
+      var pairCount = AE.pairs.length;
       var cards = [];
       var i;
       for (i = 0; i < pairCount; i++) {
-        cards.push({ k: i, face: f.aenigmata.pairs[i].la, kind: 'word' });
-        cards.push({ k: i, face: visualFor(f.aenigmata.pairs[i]), kind: 'pic' });
+        cards.push({ k: i, face: AE.pairs[i].la, kind: 'word' });
+        cards.push({ k: i, face: visualFor(AE.pairs[i]), kind: 'pic' });
       }
       cards = shuffle(cards);
 
@@ -981,12 +1175,12 @@
       if (memoryXP && memoryXP > 0) { addXP(memoryXP); }
       var qi = 0;
       function ask() {
-        if (qi >= f.aenigmata.scrambles.length) {
+        if (qi >= AE.scrambles.length) {
           finishStep(fi, 'aenigmata', 20,
             memoryPerfect ? '<p class="bonus">🧠 ' + esc(UI.memoriaPerfecta) + '</p>' : '');
           return;
         }
-        var item = f.aenigmata.scrambles[qi];
+        var item = AE.scrambles[qi];
         var words = item.la.split(' ');
         var chips = shuffle(words);
         if (chips.join(' ') === words.join(' ') && words.length > 1) { chips = chips.reverse(); }
@@ -1002,7 +1196,7 @@
         for (i = 0; i < chips.length; i++) {
           html += '<button type="button" class="opt chip-word" data-w="' + esc(chips[i]) + '">' + esc(chips[i]) + '</button>';
         }
-        html += '</div><p class="card-progress">' + (qi + 1) + ' / ' + f.aenigmata.scrambles.length + '</p></section>';
+        html += '</div><p class="card-progress">' + (qi + 1) + ' / ' + AE.scrambles.length + '</p></section>';
         setScreen(html, 'aenigmata-screen');
 
         $all('.chip-word').forEach(function (b) {
@@ -1036,15 +1230,16 @@
 
   function runCorrige(fi) {
     renderTopbar(true);
-    var f = DATA.fables[fi];
+    var f = capAt(fi);
+    var ITEMS = CONTENT.corrige(f);
     var qi = 0;
 
     function ask() {
-      if (qi >= f.corrige.length) {
+      if (qi >= ITEMS.length) {
         finishStep(fi, 'corrige', 20);
         return;
       }
-      var q = f.corrige[qi];
+      var q = ITEMS[qi];
       var html = stepHeader(fi, 'corrige') +
         '<section class="corrige">' +
         '<p class="ask">' + esc(UI.tange) + ' 👆</p>' +
@@ -1055,7 +1250,7 @@
         html += '<button type="button" class="word" data-i="' + i + '">' + esc(q.words[i]) + '</button> ';
       }
       html += '</p><div class="opt-row" id="fixes" hidden></div>' +
-        '<p class="card-progress">' + (qi + 1) + ' / ' + f.corrige.length + '</p></section>';
+        '<p class="card-progress">' + (qi + 1) + ' / ' + ITEMS.length + '</p></section>';
       setScreen(html, 'corrige-screen');
 
       $all('.word').forEach(function (b) {
@@ -1107,70 +1302,189 @@
     ask();
   }
 
-  /* =================== COMPLĒ: fill the blank =================== */
+  /* =================== COMPLĒ: complete the sentence ===================
+     ORDER IS FREE (DESIGN §4, LATIN-STYLE §2). The learner taps words into
+     the blanks; the validator in content-loader.js accepts ANY order of the
+     chosen words unless the item declares a constraint (a preposition must
+     stay glued to its noun, an enclitic -que cannot open the sequence…).
+     Teaching one fixed order would teach a lie about Latin.
+     Tapping a filled blank takes the word back out. */
 
   function runComple(fi) {
     renderTopbar(true);
-    var f = DATA.fables[fi];
+    var f = capAt(fi);
+    var ITEMS = CONTENT.comple(f);
     var qi = 0;
 
     function ask() {
-      if (qi >= f.comple.length) {
-        /* finishing the last step of the last fable = grand finale */
-        var lastFable = (fi === DATA.fables.length - 1);
-        finishStep(fi, 'comple', 20,
-          lastFable && allDoneAfter(fi) ? '<p class="bonus">👑 ' + esc(UI.finis) + ' 👑</p>' : '');
+      if (qi >= ITEMS.length) {
+        /* finishing the last step of the last capitulum = grand finale */
+        var lastCap = (fi === caps().length - 1);
+        finishStep(fi, 'comple', DATA.XP.stepBonus,
+          lastCap && allDoneAfter(fi) ? '<p class="bonus">👑 ' + esc(UI.finis) + ' 👑</p>' : '');
         return;
       }
-      var q = f.comple[qi];
-      var parts = q.text.split('___');
+      var q = ITEMS[qi];
+      var parts = String(q.text).split('___');
+      var slots = parts.length - 1;              /* how many blanks to fill */
+      var filled = [];                           /* words tapped, in tap order */
+
+      /* sentence with one <span class="blank"> per ___ */
+      var sent = '', i;
+      for (i = 0; i < parts.length; i++) {
+        sent += '<span>' + esc(parts[i]) + '</span>';
+        if (i < slots) {
+          sent += '<button type="button" class="blank slot" data-slot="' + i + '">___</button>';
+        }
+      }
+
       var html = stepHeader(fi, 'comple') +
         '<section class="comple">' +
         '<figure class="scene">' + Scenes.render(q.scene) + '</figure>' +
-        '<p class="sentence"><span>' + esc(parts[0]) + '</span><span class="blank" id="blank">___</span><span>' + esc(parts[1] || '') + '</span></p>' +
-        '<div class="opt-row">';
+        '<p class="ask">' + esc(UI.compleAsk) + '</p>' +
+        '<p class="sentence">' + sent + '</p>' +
+        '<div class="opt-row" id="chips">';
       var opts = shuffle(q.options.map(function (o, oi) { return { o: o, oi: oi }; }));
-      var i;
       for (i = 0; i < opts.length; i++) {
-        html += '<button type="button" class="opt" data-oi="' + opts[i].oi + '">' + esc(opts[i].o) + '</button>';
+        html += '<button type="button" class="opt chip-word" data-oi="' + opts[i].oi +
+          '" data-w="' + esc(opts[i].o) + '">' + esc(opts[i].o) + '</button>';
       }
-      html += '</div><p class="card-progress">' + (qi + 1) + ' / ' + f.comple.length + '</p></section>';
+      html += '</div><p class="card-progress">' + (qi + 1) + ' / ' + ITEMS.length + '</p></section>';
       setScreen(html, 'comple-screen');
 
-      $all('.opt').forEach(function (b) {
-        b.addEventListener('click', function () {
-          var oi = parseInt(b.getAttribute('data-oi'), 10);
-          if (oi === q.correct) {
-            $('#blank').textContent = q.options[q.correct];
-            $('#blank').className = 'blank filled';
-            toast(true);
-            addXP(10);
-            qi++;
-            window.setTimeout(ask, 650);
+      var slotEls = $all('.slot');
+      var chipEls = $all('.chip-word');
+
+      function paint() {
+        var k;
+        for (k = 0; k < slotEls.length; k++) {
+          if (k < filled.length) {
+            slotEls[k].textContent = filled[k].w;
+            slotEls[k].className = 'blank slot taken';
           } else {
-            toast(false);
-            b.disabled = true;
-            if (!loseHeart()) { heartsOut(fi); }
+            slotEls[k].textContent = '___';
+            slotEls[k].className = 'blank slot';
           }
+        }
+      }
+
+      function judge() {
+        var words = filled.map(function (x) { return x.w; });
+        if (CONTENT.checkComple(q, words)) {
+          for (var k = 0; k < slotEls.length; k++) { slotEls[k].className = 'blank slot filled'; }
+          toast(true);
+          addXP(DATA.XP.perCorrect);
+          qi++;
+          window.setTimeout(ask, 650);
+          return;
+        }
+        toast(false);
+        if (!loseHeart()) { heartsOut(fi); return; }
+        /* wrong combination: hand every word back and let them try again */
+        window.setTimeout(function () {
+          var k;
+          for (k = 0; k < filled.length; k++) { filled[k].el.disabled = false; }
+          filled = [];
+          paint();
+        }, 700);
+      }
+
+      chipEls.forEach(function (b) {
+        b.addEventListener('click', function () {
+          if (b.disabled || filled.length >= slots) { return; }
+          b.disabled = true;
+          filled.push({ w: b.getAttribute('data-w'), el: b });
+          paint();
+          if (filled.length === slots) { window.setTimeout(judge, 200); }
+        });
+      });
+
+      /* tap a filled blank to take that word back (only before judging) */
+      slotEls.forEach(function (el) {
+        el.addEventListener('click', function () {
+          var k = parseInt(el.getAttribute('data-slot'), 10);
+          if (k >= filled.length || filled.length === slots) { return; }
+          filled[k].el.disabled = false;
+          filled.splice(k, 1);
+          paint();
         });
       });
     }
 
+    /* every OTHER capitulum done, and every step of this one but comple */
     function allDoneAfter(fi2) {
       var i;
-      for (i = 0; i < DATA.fables.length; i++) {
+      for (i = 0; i < caps().length; i++) {
         if (i === fi2) { continue; }
         if (!fableDone(i)) { return false; }
       }
-      /* current fable: comple is being completed now; check the rest */
-      var f2 = DATA.fables[fi2], j;
-      for (j = 0; j < STEPS.length - 1; j++) {
-        if (!isStepDone(f2.id, STEPS[j])) { return false; }
+      var f2 = capAt(fi2), st = stepsOf(fi2), j;
+      for (j = 0; j < st.length; j++) {
+        if (st[j] === 'comple') { continue; }
+        if (!isStepDone(f2.id, st[j])) { return false; }
       }
       return true;
     }
 
     ask();
+  }
+
+  /* =================== step registry ===================
+     Filled after every runner is defined; startStep() looks step ids up here
+     so the step LIST can come from content without touching the router. */
+  RUNNERS.verba = runVerba;
+  RUNNERS.fabula = runFabula;
+  RUNNERS.ludus = runLudus;
+  RUNNERS.aenigmata = runAenigmata;
+  RUNNERS.corrige = runCorrige;
+  RUNNERS.comple = runComple;
+
+  /* =================== track / region navigation =================== */
+
+  /* Open a region: make sure its content file is in memory (content-loader
+     injects the <script> exactly once), point CUR at it, then run `then`.
+     A missing/broken content file must never leave the learner on a blank
+     screen — we say so in Latin and offer the way back. */
+  function openRegion(trackId, regionId, then) {
+    var have = CONTENT.region(trackId, regionId);
+    if (have) {
+      CUR.trackId = trackId; CUR.regionId = regionId; CUR.region = have;
+      then();
+      return;
+    }
+    showLoading();
+    CONTENT.loadRegion(trackId, regionId, function (err, reg) {
+      if (err || !reg) {
+        if (window.console) { console.error('[app] region load failed', err); }
+        showContentError();
+        return;
+      }
+      CUR.trackId = trackId; CUR.regionId = regionId; CUR.region = reg;
+      then();
+    });
+  }
+
+  /* Open a track at its first region. Tracks with no region yet (Historia,
+     Aeneis) show the "MOX — in fabricā" screen instead of a dead door. */
+  function openTrack(trackId, then) {
+    var regionId = CONTENT.firstRegionId(trackId);
+    if (!regionId) { showMox(trackId); return; }
+    openRegion(trackId, regionId, then || function () { showMap(); });
+  }
+
+  function showLoading() {
+    setScreen('<section class="splash"><figure class="mascot">' +
+      Scenes.mascot(120, S && S.avatar) + '</figure><p class="tagline">…</p></section>',
+      'loading-screen');
+  }
+
+  function showContentError() {
+    renderTopbar(false);
+    setScreen('<section class="finis">' +
+      '<p class="euge">' + esc(DATA.MAP_UI.gateLocked) + '</p>' +
+      '<button id="back" class="btn primary" type="button">' + esc(UI.domus) + '</button>' +
+      '</section>', 'finis-screen');
+    $('#back').addEventListener('click', showHome);
   }
 
   /* =================== boot =================== */
@@ -1182,7 +1496,9 @@
     S.name = student.nickname || student.displayName || '';
     S.avatar = student.avatar || 'fox';
     Storage.reconcile(S, snapshot);  /* server truth wins */
-    offerLegacyImport(function () { showHome(); });
+    offerLegacyImport(function () {
+      openTrack('fabulae', function () { showHome(); });
+    });
   }
 
   /* one-time: if an old local-only save exists with progress the server doesn't
@@ -1225,12 +1541,12 @@
     S = Storage.load();
     /* loading shell while we ask the server who we are */
     $('#topbar').innerHTML = '';
-    setScreen('<section class="splash"><figure class="mascot">' +
-      Scenes.mascot(120) + '</figure><p class="tagline">…</p></section>', 'loading-screen');
+    showLoading();
 
     if (typeof Api === 'undefined') {
       /* no backend present (e.g. opened as bare files): fall back to local-only */
-      if (S.name) { showHome(); } else { AuthUI.show(app, onAuthed); }
+      if (S.name) { openTrack('fabulae', function () { showHome(); }); }
+      else { showSplash(); }
       return;
     }
     /* try an existing session / remember-me cookie */

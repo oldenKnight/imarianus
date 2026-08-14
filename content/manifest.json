@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "tracks": [
+    {
+      "id": "fabulae",
+      "regions": [
+        { "id": "r01", "capitula": ["f1", "f2", "f3"], "boss": "b_r01" }
+      ]
+    },
+    { "id": "historia", "regions": [] },
+    { "id": "aeneis", "regions": [] }
+  ],
+  "steps": ["verba", "fabula", "ludus", "aenigmata", "corrige", "comple"]
+}
