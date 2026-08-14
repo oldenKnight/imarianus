@@ -593,7 +593,9 @@ var Probatio = (function () {
                      (env.config && env.config.sententiae) || null;
       var pool = [];
       if (authored && authored.length && clamor) {
-        pool = clamor.fromAuthored(env, authored);
+        /* the label only names the phase in fromAuthored's validation
+           warnings, so a content author is told WHICH list to fix */
+        pool = clamor.fromAuthored(env, authored, 'SENTENTIA');
       }
       if (!pool.length && clamor) { pool = clamor.fromCapitula(env); }
       if (!pool.length && clamor) { pool = clamor.fromVocab(env); }

@@ -234,8 +234,35 @@
     return seen;
   }
 
+  /* ------------------------------------------------------------
+     AUTHORED-ITEM DIAGNOSTICS
+     From wave 3 hand-authored clāmor/sententia items are BINDING
+     (docs/AUTHORING-BRIEF §"Boss clamor/sententia items"), which
+     makes them the primary path — and the primary path must not be
+     the only unchecked one. So authored items go through the same
+     gates the deriver does, but the verdict is different: an author
+     wrote the item on purpose, so a bad one is REPORTED, not
+     silently overruled. It stays playable unless it cannot be
+     played at all.
+     ------------------------------------------------------------ */
+  function authorWarn(env, kind, text, problem, dropped) {
+    if (!window.console || !console.warn) { return; }
+    var region = (env && env.config && env.config.region) ? env.config.region : '?';
+    console.warn('[boss-phases] AUTHORED ' + kind + ' ITEM' +
+      (dropped ? ' DROPPED' : '') + ' — ' + region + ': ' + problem +
+      ' Item: "' + text + '"' + (dropped ? '' : ' (kept — fix the content)'));
+  }
+
   /* the gap's neighbourhood: reject any word the corpus attests either AFTER
      the left neighbour or BEFORE the right one. */
+  function contextFromText(bigrams, text) {
+    var tokens = String(text).replace(/^\s+|\s+$/g, '').split(/\s+/), i;
+    for (i = 0; i < tokens.length; i++) {
+      if (tokens[i].indexOf('____') === 0) { return gapContext(bigrams, tokens, i); }
+    }
+    return null;                       /* no gap marker — nothing to sit beside */
+  }
+
   function gapContext(bigrams, tokens, ti) {
     var L = (ti > 0) ? plain(tokens[ti - 1]) : '';
     var R = (ti + 1 < tokens.length) ? plain(tokens[ti + 1]) : '';
@@ -451,9 +478,24 @@
     },
 
     /* authored: { text: 'Vulpēs in silvā ___.', answer: 'ambulat',
-                   options: ['ambulat','sedet','cadit'], scene: SC.f1_walk } */
-    fromAuthored: function (env, list) {
-      var out = [], i, j, src, answer, opts, w;
+                   options: ['ambulat','sedet','cadit'], scene: SC.f1_walk }
+
+       Every item is validated against the same three gates the deriver uses
+       (stoplist, symbol-emoji denylist, part-of-speech set) plus same-POS and
+       gap-context checks on its distractors. A violation is a LOUD warning
+       naming the region, the item and the gate that failed — the author is
+       told, not overruled. Only two things drop an item, because only they
+       make it unplayable rather than merely bad:
+         · the answer does not resolve to a picturable vocab word, so there is
+           no correct card to catch;
+         · the gap word is a function word or has no real picture, so the
+           right answer cannot be recognised from its tile — which is the
+           whole mechanic.
+       `kind` only labels the warnings (CLĀMOR / SENTENTIA). */
+    fromAuthored: function (env, list, kind) {
+      var out = [], i, j, src, answer, opts, w, text, ctx, hasAnswer, pars;
+      var bigrams = storyBigrams(env);
+      kind = kind || 'CLĀMOR';
       function find(la) {
         var k;
         for (k = 0; k < env.words.length; k++) {
@@ -463,19 +505,86 @@
       }
       for (i = 0; i < list.length; i++) {
         src = list[i];
+        text = String(src.text).replace(/_{2,}/g, '____');
         answer = find(src.answer);
-        if (!answer) { continue; }               /* no picture ⇒ unplayable */
+
+        /* ---- drop 1: no correct card exists ---- */
+        if (!answer) {
+          authorWarn(env, kind, text, 'answer "' + src.answer +
+            '" is not a vocabulary word with a picture in this region.', true);
+          continue;
+        }
+        /* ---- drop 2: the gap cannot be recognised from a picture ---- */
+        if (isFunctio(answer)) {
+          authorWarn(env, kind, text, 'gap word "' + answer.la +
+            '" is a function word (stoplist); a gap must be a picturable ' +
+            'content lexeme.', true);
+          continue;
+        }
+        if (!pictorial(answer)) {
+          authorWarn(env, kind, text, 'gap word "' + answer.la +
+            '" has no real picture — a symbol standing for the word is a ' +
+            'translation prompt, not comprehensible input.', true);
+          continue;
+        }
+        /* ---- warn only: the gap is picturable but the wrong class ---- */
+        pars = parsOf(answer);
+        if (!Object.prototype.hasOwnProperty.call(GAP_PARS, pars)) {
+          authorWarn(env, kind, text, 'gap word "' + answer.la +
+            '" is declared pars "' + pars + '"; a gap should be a nomen, ' +
+            'verbum or adiectivum.', false);
+        }
+
         opts = [];
+        hasAnswer = false;
         for (j = 0; j < (src.options || []).length; j++) {
           w = find(src.options[j]);
-          if (w) { opts.push(w); }
+          if (!w) {
+            authorWarn(env, kind, text, 'option "' + src.options[j] +
+              '" is not a vocabulary word with a picture and was skipped.', false);
+            continue;
+          }
+          if (lower(bare(w.la)) === lower(bare(answer.la))) { hasAnswer = true; }
+          opts.push(w);
+        }
+        /* the answer has to BE one of the cards, or the round is unwinnable */
+        if (opts.length && !hasAnswer) {
+          authorWarn(env, kind, text, 'the answer "' + answer.la +
+            '" was not among the options, so the round could not be won; ' +
+            'it has been added.', false);
+          opts = [answer].concat(opts);
         }
         if (opts.length < 2) {
           opts = [answer].concat(distractors(env, answer, { n: 2 }));
         }
-        if (opts.length < 2) { continue; }     /* nothing safe to offer */
+        if (opts.length < 2) {
+          authorWarn(env, kind, text,
+            'no safe distractor could be found for it.', true);
+          continue;
+        }
+
+        /* ---- warn only: distractors that are not really wrong ---- */
+        ctx = contextFromText(bigrams, text);
+        for (j = 0; j < opts.length; j++) {
+          w = opts[j];
+          if (lower(bare(w.la)) === lower(bare(answer.la))) { continue; }
+          if (isFunctio(w) || !pictorial(w)) {
+            authorWarn(env, kind, text, 'distractor "' + w.la +
+              '" is a function word or has no real picture.', false);
+          } else if (parsOf(w) !== pars) {
+            authorWarn(env, kind, text, 'distractor "' + w.la + '" is a ' +
+              parsOf(w) + ' against a ' + pars + ' gap, so it can be ruled ' +
+              'out without reading the Latin.', false);
+          }
+          if (ctx && ctx.rejects(w)) {
+            authorWarn(env, kind, text, 'distractor "' + w.la +
+              '" is attested in the gap\'s own context; a learner who picks ' +
+              'it has read the Latin correctly.', false);
+          }
+        }
+
         out.push({
-          text: String(src.text).replace(/_{2,}/g, '____'),
+          text: text,
           answer: answer,
           options: opts,
           scene: src.scene || null

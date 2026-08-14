@@ -1018,6 +1018,75 @@
       return null;
     });
 
+  check('M3-BOSS', 'a bad HAND-AUTHORED item warns loudly and drops only when unplayable',
+    function () {
+      /* Hand-authored items are binding from wave 3 (AUTHORING-BRIEF), which
+         makes them the primary path — and the primary path must not be the
+         only unchecked one. Two deliberately bad items:
+           A. gapped on 'nōn' (🚫)     — unplayable, must DROP;
+           B. gapped on 'ūva', offering 'vulpēs' as a distractor. r01's own
+              Latin says "Sed ūva alta est" and "Vulpēs ... alta", so
+              "Sed vulpēs alta est" is defensible — must WARN and stay.
+         An author who wrote an item on purpose gets told, not overruled. */
+      var env = r01();
+      if (!env) { return 'content/fabulae-r01.js did not register with CONTENT'; }
+      env.config = { region: 'regionTest' };
+
+      var warnings = [];
+      var realWarn = window.console ? console.warn : null;
+      var pool;
+      if (window.console) {
+        console.warn = function (m) { warnings.push(String(m)); };
+      }
+      try {
+        pool = Boss.PHASES.clamor.fromAuthored(env, [
+          { text: 'Iterum capere ___ potest.', answer: 'nōn',
+            options: ['nōn', 'ūva', 'arbor'] },
+          { text: 'Sed ___ alta est.', answer: 'ūva',
+            options: ['ūva', 'vulpēs', 'arbor'] }
+        ]);
+      } finally {
+        if (window.console && realWarn) { console.warn = realWarn; }
+      }
+
+      /* ---- the drop ---- */
+      if (pool.length !== 1) {
+        return 'expected 1 surviving item, got ' + pool.length;
+      }
+      if (flat(pool[0].answer.la) !== 'uva') {
+        return 'the wrong item survived: gap is ' + pool[0].answer.la;
+      }
+
+      /* ---- the warnings ---- */
+      function found(re) {
+        var i;
+        for (i = 0; i < warnings.length; i++) { if (re.test(warnings[i])) { return warnings[i]; } }
+        return null;
+      }
+      var drop = found(/DROPPED[\s\S]*function word/);
+      if (!drop) {
+        return 'no DROPPED + "function word" warning; got: ' + (warnings.join(' || ') || '(silence)');
+      }
+      if (drop.indexOf('nōn') < 0) { return 'the drop warning does not name the gap word: ' + drop; }
+      if (drop.indexOf('regionTest') < 0) { return 'the drop warning does not name the region: ' + drop; }
+      if (drop.indexOf('Iterum capere ____ potest.') < 0) {
+        return 'the drop warning does not quote the item: ' + drop;
+      }
+
+      var ctx = found(/attested in the gap/);
+      if (!ctx) {
+        return 'no gap-context warning for vulpēs; got: ' + (warnings.join(' || ') || '(silence)');
+      }
+      if (ctx.indexOf('vulpēs') < 0) { return 'the context warning names the wrong word: ' + ctx; }
+      if (ctx.indexOf('kept') < 0) { return 'a warn-only violation must say it was kept: ' + ctx; }
+
+      /* the kept item must still be PLAYABLE — the author is not overruled */
+      if (pool[0].options.length !== 3) {
+        return 'the kept item lost its options: ' + pool[0].options.length;
+      }
+      return null;
+    });
+
   check('M3-PROBATIO', 'Probatio mirrors the Boss API and registers its three trials',
     function () {
       if (!window.Probatio) { return 'js/probatio.js did not load'; }
