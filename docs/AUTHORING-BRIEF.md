@@ -68,7 +68,10 @@ New lexemes (8): leō, mūs, dormit, currit, capit, rēte, rōdit, līber.
         scene: SC.l_viri },
       { la: 'Leō in rētī iacet et fremit.',
         scene: SC.l_rete,
-        nova: [ { w: 'rēte', e: '🕸', g: 'rēte virōrum' } ] },
+        nova: [ { w: 'rēte', e: '🕸', g: 'virī rēte tenent' } ] },
+      /* ^ gloss corrected: the first draft glossed 'rēte virōrum' — a GENITIVE,
+         stage S3, inside an S2 capitulum. The pilot agent caught it. Glosses
+         obey the ladder exactly like body text. */
       { la: 'Mūs leōnem audit, venit, rēte rōdit!',
         scene: SC.l_rodit,
         nova: [ { w: 'rōdit', e: '🦷' } ] },
@@ -94,7 +97,41 @@ Correspondingly the shipped page 8 must read: 'Rēte leōnem tenet! Leō fremit.
 — same meaning, stage-legal, and the moral of this note: WHEN THE LADDER AND
 GOOD LATIN COLLIDE, CHANGE THE SENTENCE, NEVER THE GRAMMAR.
 
-## Assignment protocol
+## Lexeme cap, clarified (supersedes the bare "≤8" where they conflicted)
+
+The ≤8 cap counts PICTURED/GLOSSED CONTENT LEXEMES (nouns, verbs, adjectives
+that get a vocab card or scene gloss). High-frequency FUNCTION words and
+copula forms (et, sed, nōn, iam, enim, -que, quoque, ūnus, est/sunt, ecce,
+posteā, semper, hic-there adverbs) are FREE but MUST carry a nova gloss at
+first appearance and a ledger entry marked FUNCTION. Basic size/quality
+adjectives (magnus, parvus, laetus, trīstis) count toward the 8 unless already
+taught. Total new types per capitulum (content + function) should stay ≤16.
+The golden exemplar's own overflow is the cautionary tale here — the pilot
+counted it honestly; hold the cap the way f5/f6 of R2 do.
+
+Note also (pilot rulings, now binding): 'ad' + accusative joins 'in' + ablative
+as a receptive fixed pattern available from S2 WHEN glossed at first use with a
+direction arrow; season/time idioms ('Aestās est') are free; emoji outside the
+long-established core set may render as tofu — prefer scene cards, and if you
+use an emoji, verify it renders (🪙 does not; 🥇 does).
+
+## Registration protocol (collision safety — binding from wave 2 on)
+
+Content agents DO NOT edit content/manifest.js, content/manifest.json, or
+server/lib/rules.php (waves run in parallel in ONE working tree; concurrent
+edits to shared files corrupt each other). Instead: own your content file(s)
+and your track ledger, and write ONE registration snippet per region to
+content/_pending/<region>.reg.json:
+
+    { "track": "fabulae", "region": "r03", "titulus": "Rīvus",
+      "capitula": ["f7","f8","f9"], "boss": "b_r03",
+      "quizKey": [ { "q": "canis", "correct": 0 }, ... ],
+      "xp": { "step": 10, "boss": 40 } }
+
+A dedicated integrator applies all pending snippets to the manifest twins and
+rules.php between waves, then deletes the snippet. Your region will not be
+loadable until integration — verify your content by filtering the manifest in
+a scratch harness (the R2 pilot's report documents the DOMContentLoaded trick).
 
 You will be given: track, region/liber ids, the CURRICULUM line, and which
 manifest entries to add. Deliver: content file, both manifest entries, ledger
