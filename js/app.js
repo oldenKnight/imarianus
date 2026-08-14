@@ -189,11 +189,11 @@
       '<span class="chip stat hearts">' + hearts + '</span>' +
       '<span class="chip stat">⭐ ' + S.xp + '</span>' +
       '<button class="chip nav-ordo" type="button" aria-label="' + UI.ordo + '">🏆</button>';
-    $('.nav-home', bar).addEventListener('click', function () { stopAllGames(); showHome(); });
+    $('.nav-home', bar).addEventListener('click', function () { stopAllGames(); showDoors(); });
     $('.nav-map', bar).addEventListener('click', function () { stopAllGames(); showMap(); });
     $('.nav-ordo', bar).addEventListener('click', function () { stopAllGames(); showOrdo(); });
     if (topbarShowBack) {
-      $('.nav-back', bar).addEventListener('click', function () { stopAllGames(); showHome(); });
+      $('.nav-back', bar).addEventListener('click', function () { stopAllGames(); showMap(); });
     }
   }
 
@@ -222,6 +222,177 @@
     }, 1100);
   }
 
+  /* =================== track art (DESIGN §2) ===================
+     Fabulae uses the existing fox mascot from scenes.js. The ark and the
+     ship have no actors yet (they arrive with the M2 art subsystem), so
+     they are drawn here from primitives — deliberately simple, flat and in
+     the fresco palette, and easy to swap for real actors later: replace the
+     body of artArca()/artNavis() and every door and hero band follows. */
+
+  var ART = {
+    wood: '#7a4a26', woodDk: '#5a3419', woodLt: '#9a6238',
+    gold: '#e0a93e', goldDk: '#a87a24',
+    cream: '#f3e6d0', ink: '#3a2417',
+    sail: '#f0dcb4', sea: '#5d8db3', seaDk: '#3f6e93'
+  };
+
+  /* Noah's ark: hull + deckhouse + dove. Placeholder for actors-props.js. */
+  function artArca(w) {
+    var s = '<svg viewBox="0 0 160 120" width="' + w + '" height="' + Math.round(w * 0.75) +
+      '" role="img" aria-label="arca">';
+    s += '<path d="M14,62 h132 l-16,34 a10,10 0 0 1 -8,5 H38 a10,10 0 0 1 -8,-5 Z" fill="' + ART.wood + '"/>';
+    s += '<path d="M14,62 h132 l-4,9 H18 Z" fill="' + ART.woodDk + '"/>';
+    s += '<rect x="44" y="30" width="72" height="32" rx="4" fill="' + ART.woodLt + '"/>';
+    s += '<path d="M38,30 h84 l-10,-14 H48 Z" fill="' + ART.goldDk + '"/>';
+    s += '<rect x="56" y="40" width="14" height="14" rx="2" fill="' + ART.ink + '" opacity="0.55"/>';
+    s += '<rect x="90" y="40" width="14" height="14" rx="2" fill="' + ART.ink + '" opacity="0.55"/>';
+    /* dove with an olive twig */
+    s += '<g transform="translate(120,18)">' +
+         '<ellipse cx="0" cy="0" rx="9" ry="6" fill="' + ART.cream + '"/>' +
+         '<path d="M-2,-2 q7,-8 12,-2 q-6,4 -12,2 Z" fill="#ffffff"/>' +
+         '<circle cx="8" cy="-3" r="3.4" fill="' + ART.cream + '"/>' +
+         '<path d="M11,-3 l5,1 l-5,1 Z" fill="' + ART.gold + '"/>' +
+         '<path d="M-9,1 l-8,3" stroke="#6f8f3f" stroke-width="2" stroke-linecap="round"/>' +
+         '</g>';
+    s += '</svg>';
+    return s;
+  }
+
+  /* Aeneas' ship: hull, mast, square sail, two waves. */
+  function artNavis(w) {
+    var s = '<svg viewBox="0 0 160 120" width="' + w + '" height="' + Math.round(w * 0.75) +
+      '" role="img" aria-label="nāvis">';
+    s += '<path d="M18,74 h124 l-14,22 H32 Z" fill="' + ART.wood + '"/>';
+    s += '<path d="M18,74 h124 l-3,6 H21 Z" fill="' + ART.woodDk + '"/>';
+    s += '<path d="M140,74 q14,-10 8,-22 q-10,8 -14,18 Z" fill="' + ART.woodLt + '"/>';
+    s += '<rect x="76" y="14" width="5" height="60" rx="2" fill="' + ART.woodDk + '"/>';
+    s += '<path d="M78,20 h44 l-8,22 h-36 Z" fill="' + ART.sail + '"/>';
+    s += '<path d="M78,20 h-40 l8,22 h32 Z" fill="' + ART.cream + '"/>';
+    s += '<path d="M60,26 h56" stroke="' + ART.goldDk + '" stroke-width="2" opacity="0.55"/>';
+    s += '<path d="M6,102 q12,-7 24,0 q12,7 24,0 q12,-7 24,0 q12,7 24,0 q12,-7 24,0" ' +
+         'stroke="' + ART.sea + '" stroke-width="4" fill="none" stroke-linecap="round"/>';
+    s += '<path d="M6,112 q12,-7 24,0 q12,7 24,0 q12,-7 24,0 q12,7 24,0 q12,-7 24,0" ' +
+         'stroke="' + ART.seaDk + '" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.8"/>';
+    s += '</svg>';
+    return s;
+  }
+
+  /* art for one track id, sized to fit a door or a hero panel */
+  function trackArt(trackId, w) {
+    if (trackId === 'historia') { return artArca(w); }
+    if (trackId === 'aeneis') { return artNavis(w); }
+    return Scenes.mascot(Math.round(w * 0.62), 'fox');
+  }
+
+  /* small laurel wreath around a word — the AENEIS "PRŌVECTĪS" badge.
+     It is a HINT, never a lock: the owner's rule is free choice. */
+  function laurelBadge(text) {
+    var s = '<span class="laurel"><svg viewBox="0 0 120 40" width="110" height="36" aria-hidden="true">';
+    s += '<path d="M28,32 q-16,-6 -18,-22 q14,2 20,12" fill="none" stroke="' + ART.gold +
+         '" stroke-width="2.5" stroke-linecap="round"/>';
+    s += '<path d="M92,32 q16,-6 18,-22 q-14,2 -20,12" fill="none" stroke="' + ART.gold +
+         '" stroke-width="2.5" stroke-linecap="round"/>';
+    var i, y;
+    for (i = 0; i < 4; i++) {
+      y = 10 + i * 6;
+      s += '<ellipse cx="' + (14 + i * 3.5) + '" cy="' + y + '" rx="4.5" ry="2.4" fill="' + ART.gold +
+           '" transform="rotate(' + (-40 + i * 12) + ' ' + (14 + i * 3.5) + ' ' + y + ')" opacity="0.9"/>';
+      s += '<ellipse cx="' + (106 - i * 3.5) + '" cy="' + y + '" rx="4.5" ry="2.4" fill="' + ART.gold +
+           '" transform="rotate(' + (40 - i * 12) + ' ' + (106 - i * 3.5) + ' ' + y + ')" opacity="0.9"/>';
+    }
+    s += '</svg><span class="laurel-text">' + esc(text) + '</span></span>';
+    return s;
+  }
+
+  /* one carved arch door: SVG frame + track art, wrapped in a button */
+  function doorSvg(track) {
+    var s = '<svg class="door-svg" viewBox="0 0 200 240" preserveAspectRatio="xMidYMid meet" aria-hidden="true">';
+    /* stone surround */
+    s += '<path d="M8,236 V104 A92,92 0 0 1 192,104 V236 Z" fill="' + ART.woodDk + '"/>';
+    /* inner door leaf */
+    s += '<path d="M22,232 V106 A78,78 0 0 1 178,106 V232 Z" fill="' + ART.wood + '"/>';
+    /* plank lines */
+    s += '<path d="M100,30 V232 M62,44 V232 M138,44 V232" stroke="' + ART.woodDk +
+         '" stroke-width="2" opacity="0.55"/>';
+    /* gold arch rim + keystone */
+    s += '<path d="M22,110 A78,78 0 0 1 178,110" fill="none" stroke="' + ART.gold + '" stroke-width="3"/>';
+    s += '<path d="M92,30 h16 l5,14 h-26 Z" fill="' + ART.gold + '"/>';
+    /* bevel highlight down the left jamb */
+    s += '<path d="M22,232 V106 A78,78 0 0 1 46,50" fill="none" stroke="' + ART.woodLt +
+         '" stroke-width="3" opacity="0.7"/>';
+    s += '</svg>';
+    return s;
+  }
+
+  function doorButton(track, i) {
+    return '<button type="button" class="door door-' + esc(track.id) + '" data-track="' + esc(track.id) + '">' +
+      '<span class="door-frame">' + doorSvg(track) +
+        '<span class="door-art">' + trackArt(track.id, 96) + '</span>' +
+      '</span>' +
+      '<span class="door-label">' +
+        '<span class="door-titulus">' + esc(track.titulus) + '</span>' +
+        '<span class="door-sub">' + esc(track.subtitulus) + '</span>' +
+        (track.badge ? laurelBadge(track.badge) : '') +
+      '</span></button>';
+  }
+
+  /* =================== HOME: the three doors =================== */
+
+  function showDoors() {
+    renderTopbar(false);
+    var html = '<section class="doors-screen">' +
+      '<header class="doors-head"><h2>' + esc(UI.salve) + ', <span id="uname"></span>!</h2>' +
+      '<p class="doors-sub">' + esc(UI.eligePortam) + '</p></header>' +
+      '<div class="doors">';
+    var i;
+    for (i = 0; i < DATA.TRACKS.length; i++) { html += doorButton(DATA.TRACKS[i], i); }
+    html += '</div></section>';
+    setScreen(html, 'doors-screen-wrap');
+    $('#uname').textContent = S.name;
+    $all('.door').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var id = b.getAttribute('data-track');
+        /* a door is NEVER locked (owner's rule). A track with no region yet
+           opens the MOX screen; a track with content opens its map. */
+        openTrack(id, function () { showMap(); });
+      });
+    });
+  }
+
+  /* =================== LANDING (logged out) =================== */
+
+  function showLanding() {
+    $('#topbar').innerHTML = '';
+    var html = '<section class="landing">' +
+      '<header class="landing-head">' +
+        '<h1>' + esc(UI.appName) + '</h1>' +
+        '<p class="tagline">' + esc(UI.tagline) + '</p>' +
+      '</header>' +
+      '<div class="hero-band" aria-hidden="true">' +
+        '<span class="hero-panel">' + Scenes.render({ bg: 'forest', items: [{ t: 'fox', x: 200, y: 210 }] }) + '</span>' +
+        '<span class="hero-panel hero-art">' + artArca(150) + '</span>' +
+        '<span class="hero-panel hero-art">' + artNavis(150) + '</span>' +
+      '</div>' +
+      '<p class="pitch">' + esc(UI.pitch) + '</p>' +
+      '<p class="pitch-sub">' + esc(UI.pitchSub) + '</p>' +
+      '<p class="pitch-three">' + esc(UI.pitchThree) + '</p>' +
+      '<div class="landing-actions">' +
+        '<button id="go-login" class="btn primary" type="button">' + esc(UI.intra) + '</button>' +
+        '<button id="go-register" class="btn ghost" type="button">' + esc(UI.incipe) + ' ▶</button>' +
+      '</div>' +
+      '</section>';
+    setScreen(html, 'landing-screen');
+    $('#go-login').addEventListener('click', function () { AuthUI.show(app, onAuthed); });
+    $('#go-register').addEventListener('click', function () {
+      /* auth-ui.js owns that screen and exposes only show() (= login mode);
+         its own "crea ratiōnem" link switches to register, so INCIPE lands
+         the visitor there by following it. */
+      AuthUI.show(app, onAuthed);
+      var toReg = $('#to-register');
+      if (toReg) { toReg.click(); }
+    });
+  }
+
   /* =================== splash =================== */
 
   function showSplash() {
@@ -244,7 +415,7 @@
       if (!v) { inp.focus(); return; }
       S.name = v;
       save();
-      openTrack('fabulae', function () { showHome(); });
+      showDoors();
     }
     $('#go').addEventListener('click', go);
     inp.addEventListener('keydown', function (e) { if (e.keyCode === 13) { go(); } });
@@ -511,6 +682,9 @@
         '<header class="prov-head"><h2>' + esc(model.titulus || DATA.MAP_UI.provincia) + '</h2>' +
         '<p class="prov-sub">' + esc(trackTitle()) + '</p></header>' +
         '<div class="map-frame">' + WorldMap.render(model) + '</div>' +
+        '<div class="cap-actions">' +
+          '<button id="to-cursus" class="btn ghost small" type="button">📜 ' + esc(DATA.MAP_UI.cursus) + '</button>' +
+        '</div>' +
       '</section>';
     setScreen(html, 'map-screen');
     WorldMap.bind($('.map-frame'), model, {
@@ -524,6 +698,7 @@
         }
       }
     });
+    $('#to-cursus').addEventListener('click', showHome);
   }
 
   function trackTitle() {
@@ -550,7 +725,7 @@
       '<button id="mox-back" class="btn primary" type="button">' + esc(UI.domus) + '</button>' +
       '</section>';
     setScreen(html, 'mox-screen');
-    $('#mox-back').addEventListener('click', showHome);
+    $('#mox-back').addEventListener('click', showDoors);
   }
 
   /* first not-yet-done step index in a capitulum (for jumping in) */
@@ -1484,7 +1659,7 @@
       '<p class="euge">' + esc(DATA.MAP_UI.gateLocked) + '</p>' +
       '<button id="back" class="btn primary" type="button">' + esc(UI.domus) + '</button>' +
       '</section>', 'finis-screen');
-    $('#back').addEventListener('click', showHome);
+    $('#back').addEventListener('click', showDoors);
   }
 
   /* =================== boot =================== */
@@ -1496,9 +1671,7 @@
     S.name = student.nickname || student.displayName || '';
     S.avatar = student.avatar || 'fox';
     Storage.reconcile(S, snapshot);  /* server truth wins */
-    offerLegacyImport(function () {
-      openTrack('fabulae', function () { showHome(); });
-    });
+    offerLegacyImport(function () { showDoors(); });
   }
 
   /* one-time: if an old local-only save exists with progress the server doesn't
@@ -1545,7 +1718,7 @@
 
     if (typeof Api === 'undefined') {
       /* no backend present (e.g. opened as bare files): fall back to local-only */
-      if (S.name) { openTrack('fabulae', function () { showHome(); }); }
+      if (S.name) { showDoors(); }
       else { showSplash(); }
       return;
     }
@@ -1555,7 +1728,7 @@
         Api.setCsrf(data.csrf);
         onAuthed(data.student, data.snapshot);
       } else {
-        AuthUI.show(app, onAuthed);
+        showLanding();
       }
     });
   }
