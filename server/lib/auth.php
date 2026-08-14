@@ -52,6 +52,38 @@ function require_student() {
   return $id;
 }
 
+/* ============================================================
+   Teacher sessions (M8 groundwork for the M9 dashboard)
+   ------------------------------------------------------------
+   A teacher is a DIFFERENT subject type, not a student with a flag, so it
+   gets its own session key. The two never mix: an endpoint asks for
+   require_student() or require_teacher(), never "whoever is logged in".
+   auth_identities already carries subject_type='teacher' rows (created by
+   admin_seed.php), so no schema change is needed here either.
+   ============================================================ */
+
+/* The current teacher id, or null. */
+function current_teacher_id() {
+  return isset($_SESSION['tid']) ? (int) $_SESSION['tid'] : null;
+}
+
+/* Bind the session to a teacher (after a successful teacher login). */
+function login_teacher_session($teacherId) {
+  session_regenerate_id(true);   // fixation defence, same as the student path
+  $_SESSION['tid'] = (int) $teacherId;
+  unset($_SESSION['sid']);       // never hold both roles in one session
+}
+
+/* Require an authenticated teacher or 401. Returns the id.
+   Deliberately NO remember-me fallback: teacher sessions are the
+   higher-privilege ones (a roster is other people's children) and they end
+   when the browser closes. */
+function require_teacher() {
+  $id = current_teacher_id();
+  if (!$id) { json_error('unauthenticated', 401); }
+  return $id;
+}
+
 /* ---- CSRF ---- */
 function csrf_token() {
   return isset($_SESSION['csrf']) ? $_SESSION['csrf'] : '';

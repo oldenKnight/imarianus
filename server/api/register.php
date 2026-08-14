@@ -28,6 +28,9 @@ if (strlen($password) < 6) {
   json_error('password_too_short', 422);
 }
 if ($displayName === '') { $displayName = $username; }
+// Did they actually pick a public nickname, or are we about to invent one?
+// (v2 — this decides whether they go on the public board; see below.)
+$nicknameChosen = ($nickname !== '');
 if ($nickname === '') { $nickname = $displayName; }
 $avatar = preg_replace('/[^a-z0-9_\-]/i', '', $avatar);
 if ($avatar === '') { $avatar = 'fox'; }
@@ -75,6 +78,24 @@ try {
 } catch (PDOException $e) {
   $pdo->rollBack();
   json_error('register_failed', 500, APP_DEBUG ? array('detail' => $e->getMessage()) : array());
+}
+
+/* ---- v2: claim the public nickname, IF one was explicitly chosen ----
+   students.nickname_lc is the unique key behind the public board and the
+   /u/<nickname> profile. It is claimed here ONLY when the registrant typed
+   a nickname of their own; when `nickname` merely defaulted to the display
+   name above, nickname_lc stays NULL and the student is simply not public
+   yet — going public is a deliberate act (api/nickname.php), not a side
+   effect of signing up. UPDATE IGNORE: a nickname already taken leaves the
+   column NULL instead of failing a registration that has already
+   committed. Guarded because schema_v2.sql may not be imported yet. */
+if ($nicknameChosen && rule_nickname_is_valid($nickname) && !rule_nickname_is_blacklisted($nickname)) {
+  try {
+    $pdo->prepare('UPDATE IGNORE students SET nickname_lc = ? WHERE id = ?')
+        ->execute(array(strtolower($nickname), $studentId));
+  } catch (PDOException $e) {
+    error_log('imarianus: nickname_lc claim skipped at register: ' . $e->getMessage());
+  }
 }
 
 /* ---- log them straight in ---- */
