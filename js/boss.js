@@ -1,359 +1,934 @@
 /* ============================================================
-   boss.js — BOSS FIGHT v1: "Lupum vince!" (ES5, Canvas 2D)
-   A timed fight against the wolf. The target Latin word shows at
-   the top; matching images fall; the fox catches the right ones
-   to land hits and drain the wolf's HP. Catching a WRONG image
-   lets the wolf bite back (the player loses time, not hearts).
-   Win = HP to zero before the clock runs out.
+   boss.js — BOSS ENGINE (ES5, Canvas 2D) · M3 phase engine
+   ------------------------------------------------------------
+   WHAT THIS FILE IS NOW
+   The boss fight is no longer one hard-coded minigame. It is a
+   small ENGINE plus a REGISTRY of phase types (brief §4,
+   DESIGN §6). The engine owns everything the whole duel shares:
 
-   SWAP NOTE: this module exposes the SAME lifecycle as Game
-   (start / stop / abort) so a future 2D platformer boss can
-   replace it by writing a new module and changing ONE dispatch
-   line in app.js (runBossFight). Nothing else needs to change.
+       canvas / ctx / layout        the master clock and the
+       input (arrows + pointer X)   result payload
+       the hero the player steers   the HP pool
+       the foe sprite               the HUD (bars + phase pips)
+       the interstitial "roar"      the sprite caches
+
+   A PHASE owns only its own game: it gets an `env` handle and
+   implements four methods.
+
+       Boss.registerPhase('caterva', {
+         titulus: 'CATERVA',           // shown on the title card
+         init: function (env, cfg) {}, // cfg = the content's phase entry
+         update: function (dt) {},     // seconds since last frame
+         draw: function () {},         // paint the play field
+         backdrop: function () {},     // OPTIONAL: replaces the default sky
+         teardown: function () {}      // drop references, stop sounds
+       });
+
+   The three Fabulae phases live in js/boss-phases.js. The
+   non-combat PROBATIO trials (Historia Sacra, Aeneis) live in
+   js/probatio.js and run on a SECOND INSTANCE of this same
+   engine, built with Boss.createEngine({foe:false}) — which is
+   why the engine is a factory and not a singleton.
+
+   CONFIG (from content/<track>-<region>.js, see content/README §4)
+       {
+         words:     [vocab items with emoji/scene]  (required)
+         region:    'region1'      progress id, copied into the payload
+         regionIndex: 0            difficulty scaling input
+         capitula:  [...]          story pages, for clamor's sentences
+         name:      'Lupus', actor: 'wolf'
+         phases:    [{type,hp,seconds,...}, ...]
+         hp: 6, seconds: 45        LEGACY: used when `phases` is absent
+       }
+
+   BACKWARD COMPATIBILITY: a config with NO `phases` field runs one
+   caterva phase with the ORIGINAL v1 tuning. content/fabulae-r02.js
+   and any older caller therefore keeps working untouched.
+
+   RESULT PAYLOAD (brief §4/§7, consumed by api/boss_result.php)
+       { region, ms, mistakes, phases: [{type, ms, mistakes, hpDealt}] }
+   handed to onEnd(won, payload) as the SECOND argument, so the old
+   onEnd(won) callers keep working.
+
+   SWAP NOTE: start / stop / abort are unchanged, so app.js's single
+   dispatch line (runBossFight) is still the only swap point.
    ============================================================ */
 var Boss = (function () {
   'use strict';
 
-  var canvas, ctx, raf = null, running = false;
-  var W = 480, H = 460;
-  var fox, items, words, target, lastTime, spawnTimer, speed;
-  var hp, hpMax, timeLeft, timeMax;
-  /* BUG-4: a wrong catch now costs the player a recorded mistake as well as
-     time. Kept in module state because the phase engine (plan §4) and the
-     leaderboard (plan §7) both consume it as part of the result payload
-     { region, ms, mistakes, phases[] }. startedAt feeds the `ms` field. */
-  var mistakes = 0, startedAt = 0;
-  var cb = {};
-  var foxImg = null, wolfImg = null;
-  var sceneImgs = {};
-  var flash = null;          /* {color, t} feedback overlay */
-  var wolfHurt = 0;          /* >0 = wolf shows a hit shake/flash */
-  var GROUND_OFFSET = 40;
-
-  /* ---------- audio (reuse Game's beep if present) ---------- */
-  function beep(freq, dur, type) {
-    if (window.Game && Game.beep) { Game.beep(freq, dur, type); }
-  }
-
-  /* ---------- sprites from the SVG actors ---------- */
-  /* FIX-1a: the local svgToImage() that used to live here blindly prepended
-     width/height to the '<svg ' opener. Scenes.mascot() already emits its own
-     pair, so the fox sprite came out with DUPLICATE attributes — a fatal XML
-     well-formedness error in a data:image/svg+xml URL. The image never
-     decoded, drawImage() threw InvalidStateError, and the loop died. All SVG
-     sizing now goes through Scenes.toImage, which strips before it injects. */
-  function makeFoxImage() {
-    return Scenes.toImage(Scenes.mascot(80), 80);
-  }
-
-  /* BUG-2: the wolf used to be a whole {bg:'plain'} 400x240 scene crushed into
-     a 200px square, so its sky and ground painted an opaque rectangle across
-     the middle of the arena. Scenes.sprite draws the actor alone on a tight,
-     fully transparent viewBox. */
-  function makeWolfImage() {
-    return Scenes.toImage(Scenes.sprite('wolf', { pose: 'angry' }, 200), 200);
-  }
-
-  function makeSceneImage(spec) {
-    return Scenes.toImage(Scenes.render(spec), 60);
-  }
+  /* ================= helpers shared by every engine instance ================= */
 
   /* FIX-1b: the ONLY safe test before drawImage(). .complete is TRUE for a
-     failed image; only naturalWidth reveals the broken state, and drawImage on
-     a broken image throws. Every drawImage in this file goes through this. */
+     FAILED image; only naturalWidth reveals the broken state, and drawImage on
+     a broken image throws InvalidStateError. Every drawImage goes through it. */
   function imgReady(img) {
     return !!(img && img.complete && img.naturalWidth > 0);
   }
 
-  /* ---------- helpers ---------- */
-  function pickTarget() {
-    target = words[Math.floor(Math.random() * words.length)];
-  }
-  function spawnItem() {
-    /* BUG-4 (partial): 50% of spawns being the target made the fight
-       degenerate — holding one direction won it. 35% is the smallest change
-       that removes the degenerate case; the real rebalance belongs to the
-       three-phase engine (plan §4), which owns difficulty as a whole. */
-    var w = (Math.random() < 0.35) ? target : words[Math.floor(Math.random() * words.length)];
-    items.push({
-      word: w,
-      x: 30 + Math.random() * (W - 60),
-      y: -30,
-      vy: speed * (0.85 + Math.random() * 0.5)
-    });
+  /* one clock source for both the frame delta and the elapsed-time metric */
+  function now() {
+    return (window.performance && window.performance.now)
+      ? window.performance.now() : new Date().getTime();
   }
 
-  /* ---------- input (mirrors Game) ---------- */
-  var keys = {};
-  function onKeyDown(e) { keys[e.keyCode] = true; if (e.keyCode === 37 || e.keyCode === 39) { e.preventDefault(); } }
-  function onKeyUp(e) { keys[e.keyCode] = false; }
-  var pointerX = null;
-  function canvasX(clientX) {
-    var r = canvas.getBoundingClientRect();
-    return (clientX - r.left) * (W / r.width);
+  /* reuse the ludus beeper when it is loaded; silence is an acceptable
+     degradation, never an error. */
+  function beep(freq, dur, type) {
+    if (window.Game && Game.beep) { Game.beep(freq, dur, type); }
   }
-  function onMouseMove(e) { pointerX = canvasX(e.clientX); }
-  function onTouchMove(e) {
-    if (e.touches && e.touches.length) {
-      pointerX = canvasX(e.touches[0].clientX);
-      e.preventDefault();
+
+  var ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
+
+  function shuffled(arr) {
+    var a = arr.slice(), i, j, t;
+    for (i = a.length - 1; i > 0; i--) {
+      j = Math.floor(Math.random() * (i + 1));
+      t = a[i]; a[i] = a[j]; a[j] = t;
     }
+    return a;
   }
 
-  /* ---------- loop ---------- */
-  function update(dt) {
-    /* clock */
-    timeLeft -= dt;
-    if (timeLeft <= 0) { timeLeft = 0; end(false); return; }
+  /* ============================================================
+     createEngine(opts) — one independent fight engine.
 
-    /* fox movement */
-    var v = 330;
-    if (keys[37]) { fox.x -= v * dt; pointerX = null; }
-    if (keys[39]) { fox.x += v * dt; pointerX = null; }
-    if (pointerX !== null) {
-      var d = pointerX - fox.x;
-      fox.x += Math.max(-v * dt, Math.min(v * dt, d));
+     opts.label    'boss' | 'probatio' — only used in console messages
+     opts.foe      true  = there is an enemy: sprite in mid-arena, an HP bar
+                           labelled with opts.foeIcon, and a ROARING
+                           interstitial (shake + growl).
+                   false = a trial: no enemy sprite, the right-hand bar is a
+                           "tasks remaining" meter and the interstitial is a
+                           calm title card. This is the whole difference
+                           between a Fabulae duel and a Historia probatio.
+     opts.foeIcon  glyph drawn beside the right-hand bar
+     opts.heroActor which mascot the player steers (default: the app mascot)
+     ============================================================ */
+  function createEngine(engineOpts) {
+    engineOpts = engineOpts || {};
+    var LABEL = engineOpts.label || 'boss';
+    var HAS_FOE = engineOpts.foe !== false;
+    /* The HUD glyph beside the right-hand bar. It is a CROWN, not a wolf:
+       Regiō II's boss is a Leō and Regiō V's is the wolf again, so the icon
+       has to mean "the boss" rather than name one animal. A fight may still
+       override it with cfg.hudIcon. */
+    var FOE_ICON = engineOpts.foeIcon || (HAS_FOE ? '👑' : '📜');
+
+    /* ---------- the frame source ----------
+       The loop is driven by requestAnimationFrame, which is the right clock
+       for a game: it syncs to the display and stops in a hidden tab.
+
+       It is, however, unusable from a test runner. Headless Chrome has no
+       display to sync to and produces roughly ONE frame per second, so an
+       rAF-driven fight makes no measurable progress there — every timing
+       assertion in tests/regression.html would hang rather than fail, which
+       is the worst possible outcome for a regression page.
+
+       So the pair is swappable. Production never touches it; the harness
+       installs a setTimeout-based source and gets a deterministic loop. */
+    var reqFrame = function (fn) { return window.requestAnimationFrame(fn); };
+    var cancelFrame = function (id) { window.cancelAnimationFrame(id); };
+    function setFrameSource(request, cancel) {
+      reqFrame = request || function (fn) { return window.requestAnimationFrame(fn); };
+      cancelFrame = cancel || function (id) { window.cancelAnimationFrame(id); };
     }
-    fox.x = Math.max(35, Math.min(W - 35, fox.x));
 
-    /* spawn */
-    spawnTimer -= dt;
-    if (spawnTimer <= 0 && items.length < 4) {
-      spawnItem();
-      spawnTimer = 0.75 + Math.random() * 0.45;
-    }
+    /* ---------- the phase registry ---------- */
+    var PHASES = {};
 
-    /* items */
-    var catchY = H - GROUND_OFFSET - 55;
-    var i, it;
-    for (i = items.length - 1; i >= 0; i--) {
-      it = items[i];
-      it.y += it.vy * dt;
-      if (it.y > catchY && it.y < catchY + 60 && Math.abs(it.x - fox.x) < 42) {
-        if (it.word.la === target.la) {
-          /* hit the wolf */
-          hp = Math.max(0, hp - 1);
-          wolfHurt = 0.4;
-          speed += 6;
-          flash = { color: 'rgba(127,176,105,0.30)', t: 0.28 };
-          beep(660, 0.12, 'sine'); beep(880, 0.16, 'sine');
-          if (cb.onHit) { cb.onHit(hp, hpMax); }
-          pickTarget();
-          if (hp <= 0) { items.splice(i, 1); end(true); return; }
-        } else {
-          /* wolf bites back: lose time, flash red, no heart cost */
-          mistakes++;                                   /* BUG-4: recorded for the result payload */
-          timeLeft = Math.max(0, timeLeft - 3);
-          flash = { color: 'rgba(179,58,43,0.38)', t: 0.32 };
-          beep(150, 0.28, 'square');
-          if (cb.onMiss) { cb.onMiss(); }
-        }
-        items.splice(i, 1);
-        continue;
+    /* registerPhase(type, impl) → true when the implementation is usable.
+       The three method checks are not ceremony: a phase missing draw() would
+       otherwise fail once per frame inside the loop's try/catch, i.e. it would
+       "work" as an invisible phase that can never be cleared. */
+    function registerPhase(type, phaseImpl) {
+      if (!type || !phaseImpl) { return false; }
+      if (typeof phaseImpl.init !== 'function' ||
+          typeof phaseImpl.update !== 'function' ||
+          typeof phaseImpl.draw !== 'function') {
+        if (window.console) { console.error('[' + LABEL + '] bad phase ' + type); }
+        return false;
       }
-      if (it.y > H + 30) { items.splice(i, 1); }
+      PHASES[type] = phaseImpl;
+      return true;
     }
 
-    if (flash) { flash.t -= dt; if (flash.t <= 0) { flash = null; } }
-    if (wolfHurt > 0) { wolfHurt -= dt; if (wolfHurt < 0) { wolfHurt = 0; } }
-  }
+    /* ---------- geometry (one canvas size, scaled by CSS) ---------- */
+    var W = 480, H = 460;
+    var GROUND = 40;                 /* height of the earth band at the foot */
+    var BAR_Y = 8, BAR_H = 16;       /* the HUD bars live in the very top band */
+    var TOP = 30;                    /* phases may draw their banner from here */
+    var FIELD = 252;                 /* top of the play field                  */
+    var CATCH = H - GROUND - 55;     /* y where the hero can catch an item     */
+    var HERO_Y = H - GROUND - 78;    /* top of the 80px hero sprite            */
+    var FOE_TOP = 96, FOE_SIZE = 152;
 
-  function draw() {
-    /* sky + ground (fresco tones, matching ludus) */
-    ctx.fillStyle = '#f6e8c9';
-    ctx.fillRect(0, 0, W, H);
-    ctx.fillStyle = '#b98a4e';
-    ctx.fillRect(0, H - GROUND_OFFSET, W, GROUND_OFFSET);
-    ctx.fillStyle = '#8d9c52';
-    ctx.fillRect(0, H - GROUND_OFFSET - 6, W, 8);
+    /* ---------- run state ---------- */
+    var canvas = null, ctx = null, raf = null, running = false;
+    var cfg = null, cb = {};
+    var plan = [];            /* normalised phase configs                     */
+    var idx = -1;             /* index of the phase currently running         */
+    var impl = null;          /* its implementation object (null = none)      */
+    var pending = 0;          /* phase index waiting behind an interstitial   */
+    var log = [];             /* result rows, one per phase attempted         */
+    var hpMax = 0, hpLeft = 0, phaseHp = 0, phaseHpDealt = 0;
+    var mistakes = 0, phaseMistakes = 0;
+    var startedAt = 0, phaseStartedAt = 0;
+    var timeLeft = 0, timeMax = 0;
+    var lastTime = 0;
+    var inter = 0, interMax = 0, interTitle = '', interSub = '';
+    var flash = null;         /* {color, t} full-canvas feedback tint          */
+    var foeHurt = 0;          /* >0 = the foe shakes and dims                  */
+    var env = null;
 
-    /* the wolf boss, up top, with a hit shake */
-    if (imgReady(wolfImg)) {
-      var shake = (wolfHurt > 0) ? (Math.random() * 8 - 4) : 0;
+    /* ---------- sprites ---------- */
+    var heroImg = null, foeImg = null;
+    var sceneCache = {};      /* word.la  → Image (60px scene thumbnail)       */
+    var spriteCache = {};     /* name|pose|px → Image (transparent actor)      */
+
+    function sceneImage(word) {
+      if (!word) { return null; }
+      var key = word.la;
+      if (Object.prototype.hasOwnProperty.call(sceneCache, key)) { return sceneCache[key]; }
+      var img = word.scene ? Scenes.toImage(Scenes.render(word.scene), 60) : null;
+      sceneCache[key] = img;
+      return img;
+    }
+
+    /* a transparent single-actor sprite, cached. BUG-2: never a whole scene
+       squeezed into a square — that painted an opaque sky over the arena. */
+    function actorImage(name, opts, px) {
+      opts = opts || {};
+      px = px || 160;
+      var key = name + '|' + (opts.pose || '') + '|' + (opts.role || '') + '|' +
+                (opts.flip ? 'f' : '') + '|' + px;
+      if (Object.prototype.hasOwnProperty.call(spriteCache, key)) { return spriteCache[key]; }
+      var img = null;
+      try { img = Scenes.toImage(Scenes.sprite(name, opts, px), px); } catch (e) { img = null; }
+      spriteCache[key] = img;
+      return img;
+    }
+
+    /* ---------- input (keyboard arrows + pointer/touch X) ----------
+       Touch is the PRIMARY input for the owner's students (brief §4), so the
+       pointer wins whenever it moves and the keys take over the moment one is
+       pressed. Both are captured by the engine, never by a phase. */
+    var keys = {};
+    var pointerX = null;
+    var hero = { x: W / 2, speed: 330, hidden: false };
+
+    function onKeyDown(e) {
+      keys[e.keyCode] = true;
+      if (e.keyCode === 37 || e.keyCode === 39) { e.preventDefault(); }
+    }
+    function onKeyUp(e) { keys[e.keyCode] = false; }
+    function canvasX(clientX) {
+      var r = canvas.getBoundingClientRect();
+      return (clientX - r.left) * (W / r.width);
+    }
+    function onMouseMove(e) { pointerX = canvasX(e.clientX); }
+    function onTouchMove(e) {
+      if (e.touches && e.touches.length) {
+        pointerX = canvasX(e.touches[0].clientX);
+        e.preventDefault();
+      }
+    }
+
+    function moveHero(dt) {
+      var v = hero.speed;
+      if (keys[37]) { hero.x -= v * dt; pointerX = null; }
+      if (keys[39]) { hero.x += v * dt; pointerX = null; }
+      if (pointerX !== null) {
+        var d = pointerX - hero.x;
+        hero.x += Math.max(-v * dt, Math.min(v * dt, d));
+      }
+      hero.x = Math.max(35, Math.min(W - 35, hero.x));
+    }
+
+    /* ---------- the foe (owned here, ANIMATED by phases) ----------
+       A phase that wants the wolf to charge (fuga) writes foe.x / foe.y /
+       foe.scale and the engine keeps drawing it. Keeping the sprite itself in
+       the engine is what lets every phase share one cached image and one
+       hit-flash convention. */
+    var foe = {
+      x: W / 2, y: FOE_TOP, size: FOE_SIZE, scale: 1, hidden: false, flip: false
+    };
+    function resetFoe() {
+      foe.x = W / 2; foe.y = FOE_TOP; foe.size = FOE_SIZE;
+      foe.scale = 1; foe.hidden = false; foe.flip = false;
+    }
+
+    /* ============================================================
+       the env handed to every phase
+       ============================================================ */
+    function buildEnv() {
+      return {
+        /* canvas + geometry */
+        ctx: ctx, W: W, H: H,
+        GROUND: GROUND, TOP: TOP, FIELD: FIELD, CATCH: CATCH, HERO_Y: HERO_Y,
+
+        /* content */
+        words: [],            /* vocab items that actually have a picture */
+        capitula: [],         /* the region's capitula, for clamor sentences */
+        config: null,         /* the whole boss config, for authored items */
+        regionIndex: 0,       /* difficulty scaling input (0 = first region) */
+
+        /* the player */
+        hero: hero,
+        foe: foe,
+
+        /* effects the phases are allowed to cause */
+        damage: damage,
+        addMistake: addMistake,
+        penalty: penalty,
+        flash: doFlash,
+        playSfx: playSfx,
+        speak: speak,
+
+        /* drawing helpers so every phase looks like the same game */
+        imgReady: imgReady,
+        sceneImage: sceneImage,
+        actorImage: actorImage,
+        roundRect: roundRect,
+        drawTile: drawTile,
+        drawBanner: drawBanner,
+        wrapText: wrapText,
+        shuffled: shuffled,
+
+        /* read-only clock, for phases that want to show their own countdown */
+        timeLeft: function () { return timeLeft; },
+        timeMax: function () { return timeMax; }
+      };
+    }
+
+    /* ---------- effects ---------- */
+
+    /* deal n damage to the shared HP pool. When the CURRENT PHASE's allotment
+       is exhausted the phase is over — the pool keeps draining across phases
+       (brief §4), so a phase never "heals" the foe back up. */
+    function damage(n) {
+      n = n || 1;
+      hpLeft = Math.max(0, hpLeft - n);
+      phaseHp -= n;
+      phaseHpDealt += n;
+      foeHurt = 0.4;
+      doFlash('rgba(127,176,105,0.30)', 0.28);
+      playSfx('hit');
+      if (cb.onHit) { cb.onHit(hpLeft, hpMax); }
+      if (phaseHp <= 0) { finishPhase(true); }
+    }
+
+    function addMistake(n) {
+      n = (typeof n === 'number') ? n : 1;
+      mistakes += n;
+      phaseMistakes += n;
+      if (cb.onMiss) { cb.onMiss(); }
+    }
+
+    /* take seconds off the phase clock. The clock check in update() turns a
+       clock that reaches zero into a defeat on the NEXT frame, so a penalty
+       never ends a phase from inside a phase's own update(). */
+    function penalty(seconds) {
+      timeLeft = Math.max(0, timeLeft - (seconds || 0));
+    }
+
+    function doFlash(color, t) { flash = { color: color, t: t || 0.3 }; }
+
+    /* one named sound vocabulary for every phase, so a new phase cannot
+       invent its own idea of what "wrong" sounds like. */
+    function playSfx(name) {
+      if (name === 'hit') { beep(660, 0.12, 'sine'); beep(880, 0.16, 'sine'); }
+      else if (name === 'miss') { beep(150, 0.28, 'square'); }
+      else if (name === 'roar') { beep(110, 0.42, 'sawtooth'); beep(80, 0.5, 'square'); }
+      else if (name === 'dodge') { beep(420, 0.09, 'triangle'); }
+      else if (name === 'tick') { beep(520, 0.06, 'sine'); }
+      else if (name === 'win') { beep(660, 0.12, 'sine'); beep(990, 0.22, 'sine'); }
+    }
+
+    /* TTS is optional everywhere in this app (DESIGN §5): a browser without
+       speech support must never block a phase. */
+    function speak(text) {
+      if (window.Tts && Tts.available && Tts.available()) {
+        try { Tts.speak(text); } catch (e) { /* speech is decoration */ }
+      }
+    }
+
+    /* ============================================================
+       drawing helpers
+       ============================================================ */
+
+    function roundRect(x, y, w, h, r) {
+      if (w < 2 * r) { r = w / 2; }
+      if (h < 2 * r) { r = h / 2; }
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.arcTo(x + w, y, x + w, y + h, r);
+      ctx.arcTo(x + w, y + h, x, y + h, r);
+      ctx.arcTo(x, y + h, x, y, r);
+      ctx.arcTo(x, y, x + w, y, r);
+      ctx.closePath();
+    }
+
+    /* a drifting/falling item: parchment tile + the word's picture. Every
+       phase draws its catchables through this, which is what makes caterva,
+       clamor and fuga read as three rounds of ONE game. */
+    function drawTile(word, cx, cy, size, opts) {
+      opts = opts || {};
+      var half = size / 2;
       ctx.save();
-      if (wolfHurt > 0) { ctx.globalAlpha = 0.7; }
-      ctx.drawImage(wolfImg, W / 2 - 90 + shake, 58, 180, 180);
+      ctx.fillStyle = opts.bg || 'rgba(246,232,201,0.94)';
+      roundRect(cx - half, cy - half, size, size, 10);
+      ctx.fill();
+      ctx.strokeStyle = opts.border || 'rgba(58,36,23,0.55)';
+      ctx.lineWidth = opts.lineWidth || 2;
+      roundRect(cx - half, cy - half, size, size, 10);
+      ctx.stroke();
+      var img = sceneImage(word);
+      var pad = 4;
+      if (imgReady(img)) {
+        ctx.drawImage(img, cx - half + pad, cy - half + pad, size - 2 * pad, size - 2 * pad);
+      } else if (word && word.emoji) {
+        ctx.font = Math.round(size * 0.62) + 'px serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = '#3a2417';
+        ctx.fillText(word.emoji, cx, cy + 1);
+      } else if (word && word.la) {
+        ctx.font = 'bold 14px Palatino, Georgia, serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = '#3a2417';
+        ctx.fillText(word.la, cx, cy);
+      }
+      /* opts.label writes the word on a strip under the picture. Only phases
+         where the word is the QUESTION may use it (ordina sorts a named
+         thing); in caterva/clamor/fuga the word IS the answer, so a label
+         there would hand the round to the player. */
+      if (opts.label && word && word.la) {
+        ctx.font = 'bold 13px Palatino, Georgia, serif';
+        var tw = ctx.measureText(word.la).width + 12;
+        ctx.fillStyle = 'rgba(58,36,23,0.88)';
+        roundRect(cx - tw / 2, cy + half - 2, tw, 20, 6);
+        ctx.fill();
+        ctx.fillStyle = '#f6e8c9';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(word.la, cx, cy + half + 8);
+      }
       ctx.restore();
     }
 
-    /* falling items */
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    var i;
-    for (i = 0; i < items.length; i++) {
-      var w = items[i].word;
-      var sImg = sceneImgs[w.la];
-      if (imgReady(sImg)) {
-        ctx.drawImage(sImg, items[i].x - 28, items[i].y - 28, 56, 56);
-      } else if (w.emoji) {
-        ctx.font = '38px serif';
-        ctx.fillText(w.emoji, items[i].x, items[i].y);
+    /* the dark banner every phase writes its prompt into */
+    function drawBanner(x, y, w, h) {
+      ctx.fillStyle = 'rgba(58,36,23,0.90)';
+      roundRect(x, y, w, h, 12);
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(224,169,62,0.55)';
+      ctx.lineWidth = 2;
+      roundRect(x + 3, y + 3, w - 6, h - 6, 9);
+      ctx.stroke();
+    }
+
+    /* greedy word wrap against a pixel width; the caller has already set the
+       font. Returns an array of lines. Latin sentences are short, so a greedy
+       fit is indistinguishable from a good one here. */
+    function wrapText(text, maxW) {
+      var words = String(text).split(/\s+/);
+      var lines = [], line = '', i, test;
+      for (i = 0; i < words.length; i++) {
+        test = line ? (line + ' ' + words[i]) : words[i];
+        if (ctx.measureText(test).width > maxW && line) {
+          lines.push(line);
+          line = words[i];
+        } else {
+          line = test;
+        }
+      }
+      if (line) { lines.push(line); }
+      return lines;
+    }
+
+    /* a labelled progress bar; `fill` is 0..1 of the coloured portion.
+       BUG-3: BOTH bars DRAIN, so a shrinking bar always means "this side is
+       losing". The old wolf bar was filled with (1 - hp/hpMax) and therefore
+       read as the wolf healing while the player hit him. */
+    function drawBar(x, y, w, h, fill, color, icon) {
+      ctx.font = '16px serif';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#3a2417';        /* explicit: the icon sits on pale sky */
+      ctx.fillText(icon, x - 2, y + h / 2);
+      var bx = x + 22, bw = w - 22;
+      ctx.fillStyle = 'rgba(58,36,23,0.25)';
+      roundRect(bx, y, bw, h, 7); ctx.fill();
+      ctx.fillStyle = color;
+      var fw = Math.max(0, Math.min(bw, bw * fill));
+      if (fw > 0) { roundRect(bx, y, fw, h, 7); ctx.fill(); }
+      ctx.textAlign = 'center';
+    }
+
+    /* one small diamond per phase, so the learner can see how long the duel
+       is and where they are in it. Filled = cleared, gold ring = current. */
+    function drawPips() {
+      if (plan.length < 2) { return; }
+      var n = plan.length, gap = 18, i, cx;
+      var x0 = W / 2 - ((n - 1) * gap) / 2;
+      for (i = 0; i < n; i++) {
+        cx = x0 + i * gap;
+        ctx.save();
+        ctx.translate(cx, BAR_Y + BAR_H / 2);
+        ctx.rotate(Math.PI / 4);
+        ctx.fillStyle = (i < idx) ? '#e0a93e' : 'rgba(58,36,23,0.28)';
+        ctx.fillRect(-5, -5, 10, 10);
+        if (i === idx) {
+          ctx.strokeStyle = '#e0a93e';
+          ctx.lineWidth = 2;
+          ctx.strokeRect(-6.5, -6.5, 13, 13);
+        }
+        ctx.restore();
       }
     }
 
-    /* fox */
-    if (imgReady(foxImg)) {
-      ctx.drawImage(foxImg, fox.x - 40, H - GROUND_OFFSET - 78, 80, 80);
-    } else {
-      ctx.font = '52px serif';
-      ctx.fillText('🦊', fox.x, H - GROUND_OFFSET - 35);
-    }
-
-    /* target word banner, centred in the top band (x 130..350) */
-    ctx.fillStyle = 'rgba(58,36,23,0.88)';
-    roundRect(W / 2 - 110, 10, 220, 46, 12);
-    ctx.fill();
-    ctx.fillStyle = '#f6e8c9';
-    ctx.font = 'bold 24px Palatino, Georgia, serif';
-    ctx.fillText(target.la, W / 2, 34);
-
-    /* BUG-3: both HUD bars now live in the top band, flanking the banner,
-       instead of being drawn at y=250 across the middle of the play area.
-       BOTH bars DRAIN, so the whole HUD reads the same way: a shrinking bar
-       always means "this side is losing". The left bar is the player's
-       resource (time left, amber, red when nearly out); the right bar is the
-       wolf's remaining HP. The old wolf bar was filled with (1 - hp/hpMax),
-       which GREW as the player hit him — it read as the wolf healing. */
-    var tFrac = timeLeft / timeMax;
-    var tCol = (tFrac < 0.25) ? '#b33a2b' : '#e0a93e';
-    drawBar(10, 24, 112, 16, tFrac, tCol, '⏱');                    /* player, top-left  */
-    drawBar(W - 122, 24, 112, 16, hp / hpMax, '#b33a2b', '🐺');    /* wolf,   top-right */
-
-    if (flash) {
-      ctx.fillStyle = flash.color;
+    function paintDefaultBackdrop() {
+      ctx.fillStyle = '#f6e8c9';
       ctx.fillRect(0, 0, W, H);
-    }
-  }
-
-  /* a labelled progress bar; `fill` is 0..1 of the coloured portion */
-  function drawBar(x, y, w, h, fill, color, icon) {
-    ctx.font = '16px serif';
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'middle';
-    /* explicit ink colour: the icon is drawn over the pale sky, and without
-       this it inherits whatever fillStyle the banner text left behind. */
-    ctx.fillStyle = '#3a2417';
-    ctx.fillText(icon, x - 2, y + h / 2);
-    var bx = x + 22, bw = w - 22;
-    ctx.fillStyle = 'rgba(58,36,23,0.25)';
-    roundRect(bx, y, bw, h, 7); ctx.fill();
-    ctx.fillStyle = color;
-    var fw = Math.max(0, Math.min(bw, bw * fill));
-    if (fw > 0) { roundRect(bx, y, fw, h, 7); ctx.fill(); }
-    ctx.textAlign = 'center';
-  }
-
-  function roundRect(x, y, w, h, r) {
-    if (w < 2 * r) { r = w / 2; }
-    if (h < 2 * r) { r = h / 2; }
-    ctx.beginPath();
-    ctx.moveTo(x + r, y);
-    ctx.arcTo(x + w, y, x + w, y + h, r);
-    ctx.arcTo(x + w, y + h, x, y + h, r);
-    ctx.arcTo(x, y + h, x, y, r);
-    ctx.arcTo(x, y, x + w, y, r);
-    ctx.closePath();
-  }
-
-  function loop(t) {
-    if (!running) { return; }
-    var dt = Math.min(0.05, (t - lastTime) / 1000);
-    lastTime = t;
-    update(dt);                       /* may call end() → stop() → running=false */
-    /* BUG-5(a): the old code rescheduled unconditionally, so a fight that had
-       just ended left a live rAF id behind, one frame past its own teardown. */
-    if (!running) { return; }
-    /* FIX-1c: schedule the NEXT frame BEFORE drawing, and swallow anything
-       draw() throws. This is the change that makes the freeze impossible to
-       repeat: previously the rAF call sat AFTER draw(), so the first
-       InvalidStateError from a broken image ended the fight silently. */
-    raf = window.requestAnimationFrame(loop);
-    try {
-      draw();
-    } catch (e) {
-      if (window.console) { console.error('[boss] draw failed, loop continues', e); }
-    }
-  }
-
-  /* ---------- lifecycle (mirrors Game) ---------- */
-  function start(canvasEl, config, callbacks) {
-    canvas = canvasEl;
-    ctx = canvas.getContext('2d');
-    canvas.width = W;
-    canvas.height = H;
-    words = config.words;
-    hpMax = config.hp || 6;
-    hp = hpMax;
-    timeMax = config.seconds || 45;
-    timeLeft = timeMax;
-    speed = 80;
-    items = [];
-    spawnTimer = 0.4;
-    fox = { x: W / 2 };
-    cb = callbacks || {};
-    pointerX = null;
-    mistakes = 0;
-    startedAt = now();
-    pickTarget();
-
-    foxImg = makeFoxImage();
-    wolfImg = makeWolfImage();
-    sceneImgs = {};
-    var wi;
-    for (wi = 0; wi < words.length; wi++) {
-      if (words[wi].scene) { sceneImgs[words[wi].la] = makeSceneImage(words[wi].scene); }
+      ctx.fillStyle = '#b98a4e';
+      ctx.fillRect(0, H - GROUND, W, GROUND);
+      ctx.fillStyle = '#8d9c52';
+      ctx.fillRect(0, H - GROUND - 6, W, 8);
     }
 
-    document.addEventListener('keydown', onKeyDown);
-    document.addEventListener('keyup', onKeyUp);
-    canvas.addEventListener('mousemove', onMouseMove);
-    canvas.addEventListener('touchmove', onTouchMove);
-    canvas.addEventListener('touchstart', onTouchMove);
-
-    running = true;
-    lastTime = now();
-    raf = window.requestAnimationFrame(loop);
-  }
-
-  /* one clock source for both the frame delta and the elapsed-time metric */
-  function now() {
-    return window.performance ? window.performance.now() : new Date().getTime();
-  }
-
-  /* The seed of the plan §4/§7 result payload { region, ms, mistakes,
-     phases[] }. The region and the phase breakdown belong to the caller and to
-     the phase engine; the fight itself only knows these two numbers. Passed as
-     a SECOND argument so the existing onEnd(won) callers keep working. */
-  function result() {
-    return { ms: Math.round(now() - startedAt), mistakes: mistakes };
-  }
-
-  function end(won) {
-    var payload = result();   /* snapshot before stop() so timing is exact */
-    stop();
-    if (cb.onEnd) { cb.onEnd(won, payload); }
-  }
-
-  function stop() {
-    running = false;
-    if (raf) { window.cancelAnimationFrame(raf); raf = null; }
-    document.removeEventListener('keydown', onKeyDown);
-    document.removeEventListener('keyup', onKeyUp);
-    if (canvas) {
-      canvas.removeEventListener('mousemove', onMouseMove);
-      canvas.removeEventListener('touchmove', onTouchMove);
-      canvas.removeEventListener('touchstart', onTouchMove);
+    function drawFoe() {
+      if (!HAS_FOE || foe.hidden || !imgReady(foeImg)) { return; }
+      var s = foe.size * foe.scale;
+      var shake = (foeHurt > 0) ? (Math.random() * 8 - 4) : 0;
+      ctx.save();
+      if (foeHurt > 0) { ctx.globalAlpha = 0.7; }
+      if (foe.flip) {
+        ctx.translate(foe.x + shake, 0);
+        ctx.scale(-1, 1);
+        ctx.drawImage(foeImg, -s / 2, foe.y, s, s);
+      } else {
+        ctx.drawImage(foeImg, foe.x - s / 2 + shake, foe.y, s, s);
+      }
+      ctx.restore();
     }
+
+    function drawHero() {
+      if (hero.hidden) { return; }
+      if (imgReady(heroImg)) {
+        ctx.drawImage(heroImg, hero.x - 40, HERO_Y, 80, 80);
+      } else {
+        ctx.font = '52px serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('🦊', hero.x, HERO_Y + 45);
+      }
+    }
+
+    function drawHud() {
+      var tFrac = timeMax ? (timeLeft / timeMax) : 0;
+      var tCol = (tFrac < 0.25) ? '#b33a2b' : '#e0a93e';
+      drawBar(8, BAR_Y, 118, BAR_H, tFrac, tCol, '⏱');
+      drawBar(W - 126, BAR_Y, 118, BAR_H, hpMax ? (hpLeft / hpMax) : 0,
+              HAS_FOE ? '#b33a2b' : '#7fb069',
+              (cfg && cfg.hudIcon) ? cfg.hudIcon : FOE_ICON);
+      drawPips();
+    }
+
+    /* the interstitial: a roar (or, for a probatio, a calm breath) between
+       phases so the player is not punished for the switch (brief §4). */
+    function drawInterstitial() {
+      var k = interMax ? (inter / interMax) : 0;        /* 1 → 0 across the card */
+      var appear = Math.min(1, (1 - k) * 4);            /* quick fade in */
+      var leave = Math.min(1, k * 4);                   /* quick fade out */
+      var a = Math.min(appear, leave);
+      ctx.save();
+      ctx.globalAlpha = 0.55 * a;
+      ctx.fillStyle = '#2b1c16';
+      ctx.fillRect(0, 0, W, H);
+      ctx.globalAlpha = a;
+      var bw = 300, bh = 92, bx = W / 2 - bw / 2, by = H / 2 - bh / 2;
+      drawBanner(bx, by, bw, bh);
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#e0a93e';
+      ctx.font = 'bold 26px Palatino, Georgia, serif';
+      ctx.fillText(interTitle, W / 2, by + 38);
+      if (interSub) {
+        ctx.fillStyle = '#f6e8c9';
+        ctx.font = '15px Palatino, Georgia, serif';
+        ctx.fillText(interSub, W / 2, by + 66);
+      }
+      ctx.restore();
+    }
+
+    /* ============================================================
+       the loop
+       ============================================================ */
+
+    function update(dt) {
+      if (foeHurt > 0) { foeHurt = Math.max(0, foeHurt - dt); }
+      if (flash) { flash.t -= dt; if (flash.t <= 0) { flash = null; } }
+
+      /* interstitial: no clock, no input, no phase (brief §4) */
+      if (inter > 0) {
+        inter -= dt;
+        if (HAS_FOE) {
+          /* the roar: the foe lunges a little towards the player and back */
+          var k = interMax ? (1 - inter / interMax) : 1;
+          foe.scale = 1 + 0.12 * Math.sin(Math.PI * Math.min(1, Math.max(0, k)));
+        }
+        if (inter <= 0) {
+          inter = 0;
+          resetFoe();
+          beginPhase(pending);
+        }
+        return;
+      }
+
+      if (!impl) { return; }
+
+      timeLeft -= dt;
+      if (timeLeft <= 0) {
+        timeLeft = 0;
+        finishPhase(false);
+        return;
+      }
+
+      moveHero(dt);
+      impl.update(dt);
+    }
+
+    function draw() {
+      if (impl && typeof impl.backdrop === 'function') { impl.backdrop(); }
+      else { paintDefaultBackdrop(); }
+
+      drawFoe();
+      if (impl) { impl.draw(); }
+      drawHero();
+      drawHud();
+
+      if (flash) {
+        ctx.fillStyle = flash.color;
+        ctx.fillRect(0, 0, W, H);
+      }
+      if (inter > 0) { drawInterstitial(); }
+    }
+
+    function loop(t) {
+      if (!running) { return; }
+      var dt = Math.min(0.05, (t - lastTime) / 1000);
+      lastTime = t;
+      update(dt);                     /* may call end() → stop() → running=false */
+      /* BUG-5(a): never reschedule after teardown, or stop() leaves a dangling
+         rAF id behind — harmless in v1, a real bug now that phases swap. */
+      if (!running) { return; }
+      /* FIX-1c: schedule the NEXT frame BEFORE drawing, and swallow anything
+         draw() throws. This is what makes the v1 freeze impossible to repeat:
+         previously the rAF call sat AFTER draw(), so the first InvalidStateError
+         from a broken image ended the fight silently. */
+      raf = reqFrame(loop);
+      try {
+        draw();
+      } catch (e) {
+        if (window.console) { console.error('[' + LABEL + '] draw failed, loop continues', e); }
+      }
+    }
+
+    /* ============================================================
+       phase sequencing
+       ============================================================ */
+
+    /* Turn the config into a list of {type, hp, seconds, ...} entries.
+       No `phases` field  →  ONE caterva with the v1 tuning (legacy:true), so
+       every pre-M3 content file and caller keeps working unchanged. */
+    function buildPlan(config) {
+      var out = [], i, p;
+      if (config.phases && config.phases.length) {
+        for (i = 0; i < config.phases.length; i++) {
+          p = config.phases[i];
+          if (!p || !p.type) { continue; }
+          if (!Object.prototype.hasOwnProperty.call(PHASES, p.type)) {
+            if (window.console) {
+              console.warn('[' + LABEL + '] unknown phase type "' + p.type + '" — skipped');
+            }
+            continue;
+          }
+          out.push({
+            type: p.type,
+            hp: p.hp || 2,
+            seconds: p.seconds || 25,
+            legacy: false,
+            data: p                     /* the raw entry, for phase-specific keys */
+          });
+        }
+      }
+      /* The fallback is only a fallback if it can actually be played. Pushing
+         an unregistered 'caterva' here is what used to turn a missing
+         js/boss-phases.js into a phase whose impl is undefined — see the
+         guard in start(). */
+      if (!out.length && Object.prototype.hasOwnProperty.call(PHASES, 'caterva')) {
+        out.push({
+          type: 'caterva',
+          hp: config.hp || 6,
+          seconds: config.seconds || 45,
+          legacy: true,                 /* v1 tuning; see boss-phases.js */
+          data: {}
+        });
+      }
+      return out;
+    }
+
+    function phaseTitle(i) {
+      var t = plan[i] && plan[i].type;
+      var p = t ? PHASES[t] : null;
+      var name = (p && p.titulus) ? p.titulus : String(t || '').toUpperCase();
+      return (ROMAN[i] || String(i + 1)) + ' — ' + name;
+    }
+
+    /* close the running phase, write its result row, then move on (or end) */
+    function finishPhase(cleared) {
+      if (impl) {
+        if (typeof impl.teardown === 'function') {
+          try { impl.teardown(); } catch (e) {
+            if (window.console) { console.error('[' + LABEL + '] teardown threw', e); }
+          }
+        }
+        impl = null;
+      }
+      resetFoe();
+      hero.hidden = false;
+      if (idx >= 0 && plan[idx]) {
+        log.push({
+          type: plan[idx].type,
+          ms: Math.round(now() - phaseStartedAt),
+          mistakes: phaseMistakes,
+          hpDealt: phaseHpDealt
+        });
+      }
+      if (!cleared) { end(false); return; }
+      gotoPhase(idx + 1);
+    }
+
+    function gotoPhase(i) {
+      if (i >= plan.length) { end(true); return; }
+      pending = i;
+      idx = i;
+      if (plan.length > 1) {
+        /* a single-phase fight (legacy config) gets no card: it would only be
+           a 1.2 s delay in front of the exact game v1 shipped. */
+        interTitle = phaseTitle(i);
+        interSub = cfg.name || '';
+        interMax = 1.2;
+        inter = interMax;
+        /* a duel ROARS between rounds; a trial simply turns the page. Same
+           1.2 s of input lockout either way — the pause is there so nobody is
+           punished for the switch, not for drama. */
+        playSfx(HAS_FOE ? 'roar' : 'tick');
+        if (HAS_FOE) { foeHurt = 0.35; }
+      } else {
+        beginPhase(i);
+      }
+    }
+
+    function beginPhase(i) {
+      var entry = plan[i];
+      idx = i;
+      impl = PHASES[entry.type];
+      /* buildPlan() filters unregistered types, so reaching here with no
+         implementation means the registry was emptied AFTER the plan was
+         built. Losing is the only safe answer: a phase that cannot run has
+         not been beaten. */
+      if (!impl) {
+        if (window.console) {
+          console.error('[' + LABEL + '] phase "' + entry.type + '" is not registered');
+        }
+        finishPhase(false);
+        return;
+      }
+      phaseHp = entry.hp;
+      phaseHpDealt = 0;
+      phaseMistakes = 0;
+      phaseStartedAt = now();
+      timeMax = entry.seconds;
+      timeLeft = timeMax;
+      hero.x = W / 2;
+      hero.hidden = false;
+      pointerX = null;
+      resetFoe();
+      try {
+        impl.init(env, entry);
+      } catch (e) {
+        /* a phase that cannot start must not hang the fight: log it, skip it,
+           and let the learner keep playing the rest of the duel. */
+        if (window.console) { console.error('[' + LABEL + '] phase ' + entry.type + ' init threw', e); }
+        impl = null;
+        finishPhase(true);
+      }
+    }
+
+    /* ============================================================
+       lifecycle
+       ============================================================ */
+
+    function start(canvasEl, config, callbacks) {
+      stop();                       /* a second start() must not leave two loops */
+      canvas = canvasEl;
+      ctx = canvas.getContext('2d');
+      canvas.width = W;
+      canvas.height = H;
+      cfg = config || {};
+      cb = callbacks || {};
+
+      /* only words with a picture can be drawn on a tile; a word without one
+         would spawn a blank catchable, which is unplayable rather than hard. */
+      var pool = [], i, list = cfg.words || [];
+      for (i = 0; i < list.length; i++) {
+        if (list[i] && (list[i].emoji || list[i].scene)) { pool.push(list[i]); }
+      }
+
+      plan = buildPlan(cfg);
+      /* A duel with nothing to run must LOSE, not win. Without this guard the
+         missing-phase-file case (js/boss-phases.js 404s, is blocked, or is
+         killed by a syntax error) walked straight through gotoPhase(0) into
+         end(true) and handed out a free region unlock — the worst kind of
+         silent failure, because nothing looks broken: the learner is simply
+         given the victory screen. */
+      if (!plan.length) {
+        if (window.console) {
+          console.error('[' + LABEL + '] no phase is registered — is js/boss-phases.js loaded?');
+        }
+        running = false;
+        hpMax = 0; hpLeft = 0;
+        mistakes = 0;
+        log = [];
+        idx = -1;
+        startedAt = now();
+        if (cb.onEnd) { cb.onEnd(false, result()); }
+        return;
+      }
+      hpMax = 0;
+      for (i = 0; i < plan.length; i++) { hpMax += plan[i].hp; }
+      hpLeft = hpMax;
+      mistakes = 0;
+      log = [];
+      idx = -1;
+      impl = null;
+      inter = 0;
+      flash = null;
+      foeHurt = 0;
+      keys = {};
+      pointerX = null;
+      hero.x = W / 2;
+      hero.hidden = false;
+      resetFoe();
+      sceneCache = {};
+      spriteCache = {};
+      startedAt = now();
+
+      heroImg = Scenes.toImage(Scenes.mascot(80, cfg.avatar), 80);
+      /* the foe is whatever the region says it is. 'angry' is a wolf-only
+         pose, so the caller passes the pose that suits its own actor
+         (app.js: bossPose('fight')); everything else degrades to 'stand'. */
+      foeImg = HAS_FOE
+        ? actorImage(cfg.actor || 'wolf', { pose: cfg.actorPose || 'angry' }, 200)
+        : null;
+
+      env = buildEnv();
+      env.words = pool;
+      env.capitula = cfg.capitula || [];
+      env.config = cfg;
+      env.regionIndex = cfg.regionIndex || 0;
+
+      document.addEventListener('keydown', onKeyDown);
+      document.addEventListener('keyup', onKeyUp);
+      canvas.addEventListener('mousemove', onMouseMove);
+      canvas.addEventListener('touchmove', onTouchMove);
+      canvas.addEventListener('touchstart', onTouchMove);
+
+      running = true;
+      lastTime = now();
+      gotoPhase(0);
+      raf = reqFrame(loop);
+    }
+
+    /* the plan §4/§7 payload. The region comes from the caller (it is a
+       database key, not something the fight can know); the phase breakdown is
+       exactly the rows finishPhase() wrote. */
+    function result() {
+      return {
+        region: cfg && cfg.region ? cfg.region : '',
+        ms: Math.round(now() - startedAt),
+        mistakes: mistakes,
+        phases: log.slice()
+      };
+    }
+
+    function end(won) {
+      var payload = result();     /* snapshot before stop() so timing is exact */
+      stop();
+      if (won) { playSfx('win'); }
+      if (cb.onEnd) { cb.onEnd(won, payload); }
+    }
+
+    function stop() {
+      if (impl && typeof impl.teardown === 'function') {
+        try { impl.teardown(); } catch (e) { /* teardown must never block stop */ }
+      }
+      impl = null;
+      running = false;
+      if (raf) { cancelFrame(raf); raf = null; }
+      document.removeEventListener('keydown', onKeyDown);
+      document.removeEventListener('keyup', onKeyUp);
+      if (canvas) {
+        canvas.removeEventListener('mousemove', onMouseMove);
+        canvas.removeEventListener('touchmove', onTouchMove);
+        canvas.removeEventListener('touchstart', onTouchMove);
+      }
+    }
+
+    /* BUG-5(b): abort() tears the fight down WITHOUT reporting a result. It
+       used to call end(false), so merely navigating away popped the "you lost"
+       screen and booked a defeat the player never fought. Losing is decided by
+       the clock or by HP, never by leaving. */
+    function abort() { stop(); }
+
+    /* ---- introspection, for tests/regression.html and ?debug ---- */
+    function state() {
+      return {
+        running: running,
+        phase: (idx >= 0 && plan[idx]) ? plan[idx].type : null,
+        phaseIndex: idx,
+        phaseCount: plan.length,
+        interstitial: inter > 0,
+        hpLeft: hpLeft, hpMax: hpMax,
+        mistakes: mistakes,
+        timeLeft: timeLeft
+      };
+    }
+
+    return {
+      start: start, stop: stop, abort: abort,
+      registerPhase: registerPhase, PHASES: PHASES,
+      state: state, setFrameSource: setFrameSource, imgReady: imgReady
+    };
   }
 
-  /* BUG-5(b): abort() must tear the fight down WITHOUT reporting a result.
-     It used to call end(false), which fires cb.onEnd(false) — so merely
-     navigating away from the boss screen could pop the "you lost" screen and,
-     worse, book a defeat the player never fought. Losing is decided by the
-     clock or by HP, never by leaving. (app.js currently navigates away via
-     Boss.stop(), which behaves identically; abort() is the explicit,
-     self-documenting name for the same teardown.) */
-  function abort() { stop(); }
+  /* the Fabulae duel engine — the one app.js has always talked to.
+     No foeIcon: the default crown means "the boss", which is right for the
+     wolf, the lion and every beast after them. */
+  var duel = createEngine({ label: 'boss', foe: true });
 
-  return { start: start, stop: stop, abort: abort };
+  return {
+    start: duel.start,
+    stop: duel.stop,
+    abort: duel.abort,
+    registerPhase: duel.registerPhase,
+    PHASES: duel.PHASES,
+    state: duel.state,
+    /* test/QA seam only — see the frame-source comment inside createEngine */
+    setFrameSource: duel.setFrameSource,
+    /* js/probatio.js builds its own instance from this factory: same engine,
+       no foe, calm interstitials. */
+    createEngine: createEngine,
+    imgReady: imgReady
+  };
 })();

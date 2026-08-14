@@ -36,6 +36,12 @@
   <script src="js/auth-ui.js" defer></script>
   <script src="js/game.js" defer></script>
   <script src="js/boss.js" defer></script>
+  <!-- M3 phase engine. boss.js is the ENGINE and the registry; boss-phases.js
+       fills the registry with the Fabulae duel rounds (caterva/clamor/fuga)
+       and must therefore load after it. It is REQUIRED, not optional: with no
+       phase registered the engine has nothing to play, and it reports a LOSS
+       rather than handing out a free unlock (see the guard in Boss.start). -->
+  <script src="js/boss-phases.js" defer></script>
   <script src="js/map.js" defer></script>
   <script src="js/app.js" defer></script>
 </head>
