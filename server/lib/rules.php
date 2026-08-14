@@ -112,7 +112,7 @@ function rule_manifest_is_shaped($m) {
 
 /* ---- built-in fallbacks (what shipped before the manifest) ---- */
 function rule_fables_builtin() {
-  return array('f1', 'f2', 'f3');
+  return array('f1', 'f2', 'f3', 'f4', 'f5', 'f6');
 }
 function rule_steps_builtin() {
   return array('verba', 'fabula', 'ludus', 'aenigmata', 'corrige', 'comple');
@@ -256,6 +256,30 @@ function rule_regions_builtin() {
         array('q' => 'ūva',    'a' => 'ūva'),
         array('q' => 'aqua',   'a' => 'aqua')
       )
+    ),
+    /* Regiō II · Ager (content id r02). Unlike region1 this one was BORN
+       with the manifest, so its built-in id IS its manifest id and it
+       needs no entry in rule_region_aliases(): rule_regions() finds
+       $out['r02'] already present, keeps the rewards and the answer key
+       below, and takes only membership from content/manifest.json. */
+    'r02' => array(
+      'fables' => array('f4', 'f5', 'f6'),
+      'track'  => 'fabulae',
+      'boss'   => 'b_r02',
+      'fight_xp' => 30,
+      'quiz_xp_each' => 10,
+      'quiz_pass_max_wrong' => 1,   // <=1 wrong of 5 passes
+      // ANSWER KEY: must mirror the boss.quiz `la` values in
+      // content/fabulae-r02.js. Word -> pick the image, so the answer is
+      // the same word; stored explicitly so grading never depends on the
+      // order the client happened to draw the options in.
+      'quiz' => array(
+        array('q' => 'leō',     'a' => 'leō'),
+        array('q' => 'formīca', 'a' => 'formīca'),
+        array('q' => 'gallīna', 'a' => 'gallīna'),
+        array('q' => 'rēte',    'a' => 'rēte'),
+        array('q' => 'ōvum',    'a' => 'ōvum')
+      )
     )
   );
 }
@@ -361,7 +385,10 @@ function rule_boss_min_ms($regionId) {
   $map = array(
     // region1 = the three-phase Lupus duel (25 s + 30 s + 20 s of phases);
     // even a perfect run cannot finish the three phases under ~20 s.
-    'region1' => 20000
+    'region1' => 20000,
+    // r02 = the Leō duel, tuned identically to region1 (hp 6 / 45 s),
+    // so the same floor applies.
+    'r02' => 20000
   );
   // A renamed region keeps its tuning (see rule_region_aliases).
   $aliases = rule_region_aliases();

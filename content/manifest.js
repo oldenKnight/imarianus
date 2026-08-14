@@ -23,7 +23,8 @@ var CONTENT_MANIFEST = {
     {
       "id": "fabulae",
       "regions": [
-        { "id": "r01", "capitula": ["f1", "f2", "f3"], "boss": "b_r01" }
+        { "id": "r01", "capitula": ["f1", "f2", "f3"], "boss": "b_r01" },
+        { "id": "r02", "capitula": ["f4", "f5", "f6"], "boss": "b_r02" }
       ]
     },
     { "id": "historia", "regions": [] },
