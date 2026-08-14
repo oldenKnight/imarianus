@@ -203,11 +203,34 @@
     if (window.Boss && Boss.stop) { Boss.stop(); }
   }
 
+  /* Timers a screen owns (the fabula autoplay clock). Leaving the screen must
+     kill them, or a page turn fires after the learner has navigated away. */
+  var screenTimers = [];
+  function registerTimer(id) { screenTimers.push(id); }
+  function clearScreenTimers() {
+    var i;
+    for (i = 0; i < screenTimers.length; i++) { window.clearInterval(screenTimers[i]); }
+    screenTimers = [];
+  }
+
   function setScreen(html, cls) {
+    /* every navigation passes through here, so this is the one place that has
+       to stop the previous screen's clock and its voice */
+    clearScreenTimers();
+    Tts.stop();
     app.className = 'screen ' + (cls || '');
     app.innerHTML = html;
     window.scrollTo(0, 0);
   }
+
+  /* Does the learner want the voice on? Kept on S (so it survives
+     Storage.reconcile, which only overwrites server-owned keys) and defaults
+     to ON — hearing the language is the point of the method. */
+  function ttsWanted() {
+    if (!Tts.available()) { return false; }
+    return S.ttsOff !== true;
+  }
+  function setTtsWanted(on) { S.ttsOff = !on; save(); }
 
   function toast(ok, text) {
     var t = document.createElement('aside');
@@ -872,8 +895,8 @@
       }
       html += '</div><p class="card-progress">' + (qi + 1) + ' / ' + items.length + '</p></section>';
       setScreen(html, 'boss-quiz-screen');
-      AudioLA.speak(q.la);
-      $('#say').addEventListener('click', function () { AudioLA.speak(q.la); });
+      Tts.speak(q.la);
+      $('#say').addEventListener('click', function () { Tts.speak(q.la); });
       $all('.emoji-opt').forEach(function (b) {
         b.addEventListener('click', function () {
           if (b.disabled) { return; }
@@ -955,6 +978,10 @@
   function finishStep(fi, step, bonusXP, extraHTML, opts) {
     var f = capAt(fi);
     opts = opts || {};
+    /* A step this server build has already rejected (see the 422 handler
+       below) never claims XP again: showing "+20 ⭐" that the next reconcile
+       silently takes away is worse than showing nothing. */
+    if (S.unknownSteps && S.unknownSteps[step]) { opts.noXP = true; opts.local = true; }
     /* optimistic local update so the UI is instant... */
     var first = completeStep(f.id, step);
     if (first && bonusXP && !opts.noXP) { addXP(bonusXP); }
@@ -964,6 +991,9 @@
     if (typeof Api !== 'undefined' && !opts.noPost) {
       Api.completeStep(f.id, step, (bonusXP || 0), function (err, data) {
         if (!err && data && data.snapshot) {
+          /* the server accepted the step: if it had rejected it before, it has
+             now learned it (its manifest loader shipped), so stop suppressing */
+          if (S.unknownSteps && S.unknownSteps[step]) { delete S.unknownSteps[step]; }
           Storage.reconcile(S, data.snapshot);
           renderTopbar();
           return;
@@ -976,6 +1006,17 @@
            posts normally and the server grants it then. */
         if (err && err.status === 422 && err.data && err.data.error === 'invalid_step') {
           markLocalStep(f.id, step);
+          if (!S.unknownSteps) { S.unknownSteps = {}; }
+          S.unknownSteps[step] = true;
+          /* take back the optimistic XP we just showed: the server never
+             granted it, and it is the only authority on XP */
+          if (first && bonusXP && !opts.noXP) {
+            S.xp = Math.max(0, S.xp - bonusXP);
+            var bonusEl = $('.finis .bonus');
+            if (bonusEl && bonusEl.parentNode) { bonusEl.parentNode.removeChild(bonusEl); }
+          }
+          save();
+          renderTopbar();
           if (window.console) {
             console.info('[app] server does not know step "' + step + '" yet; marked locally, no XP');
           }
@@ -1079,9 +1120,9 @@
         '<button id="next" class="btn primary" type="button">' + esc(UI.perge) + ' ▶</button>' +
         '</section>';
       setScreen(html, 'verba-screen');
-      AudioLA.speak(v.la);
-      $('#say').addEventListener('click', function () { AudioLA.speak(v.la); });
-      $('#next').addEventListener('click', function () { i++; AudioLA.stop(); card(); });
+      Tts.speak(v.la);
+      $('#say').addEventListener('click', function () { Tts.speak(v.la); });
+      $('#next').addEventListener('click', function () { i++; Tts.stop(); card(); });
     }
 
     /* quick check: word → pick the matching image */
@@ -1111,8 +1152,8 @@
         }
         html += '</div><p class="card-progress">' + (qi + 1) + ' / ' + quiz.length + '</p></section>';
         setScreen(html, 'verba-screen');
-        AudioLA.speak(q.la);
-        $('#say').addEventListener('click', function () { AudioLA.speak(q.la); });
+        Tts.speak(q.la);
+        $('#say').addEventListener('click', function () { Tts.speak(q.la); });
         $all('.emoji-opt').forEach(function (b) {
           b.addEventListener('click', function () {
             if (b.getAttribute('data-la') === q.la) {
@@ -1135,14 +1176,35 @@
 
   /* =================== FĀBULA: illustrated reading =================== */
 
+  /* AUTOPLAY (DESIGN §4, brief §5): the story turns its own pages. The dwell
+     is proportional to how much there is to read, TTS reads the page aloud
+     when it is available, and the reader can always pause or step by hand.
+     Timing constants live here so they are tunable in one place. */
+  var FABULA_BASE_MS = 1500;      /* fixed pause per page */
+  var FABULA_PER_WORD_MS = 420;   /* + this much per word */
+  var FABULA_MIN_MS = 2600;
+  var FABULA_MAX_MS = 11000;
+
+  function dwellFor(text) {
+    var words = String(text).replace(/^\s+|\s+$/g, '').split(/\s+/).length;
+    var ms = FABULA_BASE_MS + words * FABULA_PER_WORD_MS;
+    return Math.max(FABULA_MIN_MS, Math.min(FABULA_MAX_MS, ms));
+  }
+
   function runFabula(fi) {
     renderTopbar(true);
     var f = capAt(fi);
     var i = 0;
+    /* `playing` persists across pages; `token` invalidates the timers of a
+       page we have left (setScreen also clears them — belt and braces). */
+    var playing = true;
+    var token = 0;
 
     function page() {
+      token++;
+      var mine = token;
       if (i >= f.story.length) {
-        finishStep(fi, 'fabula', 20);
+        finishStep(fi, 'fabula', DATA.XP.stepBonus);
         return;
       }
       var line = f.story[i];
@@ -1157,25 +1219,160 @@
          going all the way to home. Disabled (greyed) on the first page. */
       var backBtn = '<button id="prev" class="btn ghost small" type="button"' +
         (i === 0 ? ' disabled' : '') + '>◀ ' + esc(UI.retro) + '</button>';
+      var soundOn = ttsWanted();
       var html = stepHeader(fi, 'fabula') +
         '<article class="story-page">' +
         '<figure class="scene">' + Scenes.render(line.scene) + '</figure>' +
-        '<p class="story-text">' + esc(line.la) + ' <button type="button" id="say" class="speak" aria-label="audi">🔊</button></p>' +
+        '<p class="story-text">' + esc(line.la) +
+          ' <button type="button" id="say" class="speak" aria-label="audī">🔊</button></p>' +
         (glosses ? '<ul class="margo">' + glosses + '</ul>' : '') +
+        '<div class="auto-row">' +
+          '<button id="playpause" class="chip" type="button" aria-label="' +
+            esc(playing ? UI.pausa : UI.curre) + '">' + (playing ? '⏸' : '▶') + '</button>' +
+          '<span class="auto-bar"><span class="auto-bar-fill" id="autofill"></span></span>' +
+          '<button id="mute" class="chip" type="button" aria-label="vōx">' +
+            (soundOn ? '🔊' : '🔇') + '</button>' +
+        '</div>' +
         '<p class="card-progress">' + (i + 1) + ' / ' + f.story.length + '</p>' +
         '<div class="nav-row">' + backBtn +
           '<button id="next" class="btn primary" type="button">' + esc(UI.perge) + ' ▶</button>' +
         '</div>' +
         '</article>';
       setScreen(html, 'fabula-screen');
-      AudioLA.speak(line.la);
-      $('#say').addEventListener('click', function () { AudioLA.speak(line.la); });
-      $('#next').addEventListener('click', function () { i++; AudioLA.stop(); page(); });
+
+      var spoken = line.ttsText || line.la;
+      var speechDone = false;
+      /* the page advances when BOTH the dwell has elapsed and the voice has
+         finished — whichever is later — so a long sentence is never cut off */
+      function maybeAdvance() {
+        if (mine !== token || !playing) { return; }
+        if (!dwellDone || (soundOn && !speechDone)) { return; }
+        i++;
+        page();
+      }
+      var dwellDone = false;
+
+      if (soundOn) {
+        Tts.speak(spoken, { onEnd: function () { speechDone = true; maybeAdvance(); } });
+      } else {
+        speechDone = true;
+      }
+
+      /* progress bar for the dwell, so the reader can see a page is about to
+         turn instead of being surprised by it */
+      var total = dwellFor(line.la);
+      var started = nowMs();
+      var fill = $('#autofill');
+      var tick = window.setInterval(function () {
+        if (mine !== token) { window.clearInterval(tick); return; }
+        if (!playing) { return; }
+        var frac = Math.min(1, (nowMs() - started) / total);
+        if (fill) { fill.style.width = (frac * 100) + '%'; }
+        if (frac >= 1) {
+          window.clearInterval(tick);
+          dwellDone = true;
+          maybeAdvance();
+        }
+      }, 120);
+      registerTimer(tick);
+
+      function stopHere() { playing = false; }
+
+      $('#say').addEventListener('click', function () { Tts.speak(spoken); });
+      $('#playpause').addEventListener('click', function () {
+        playing = !playing;
+        var b = $('#playpause');
+        b.textContent = playing ? '⏸' : '▶';
+        b.setAttribute('aria-label', playing ? UI.pausa : UI.curre);
+        if (!playing) { Tts.stop(); }
+        else {
+          /* resuming restarts this page's clock from now */
+          started = nowMs();
+          dwellDone = false;
+        }
+      });
+      $('#mute').addEventListener('click', function () {
+        setTtsWanted(!ttsWanted());
+        Tts.stop();
+        page();                 /* re-render this page with the new setting */
+      });
+      /* MANUAL CONTROLS ALWAYS WIN: stepping by hand stops the autoplay so
+         the reader is not fighting the timer. */
+      $('#next').addEventListener('click', function () { stopHere(); Tts.stop(); i++; page(); });
       if (i > 0) {
-        $('#prev').addEventListener('click', function () { i--; AudioLA.stop(); page(); });
+        $('#prev').addEventListener('click', function () { stopHere(); Tts.stop(); i--; page(); });
       }
     }
     page();
+  }
+
+  /* =================== SONUS: hear it, pick the picture =================== */
+
+  /* Never a "speaker icon vs text" exercise — audio → IMAGE only (DESIGN §4).
+     Without speech support the step passes with a visible notice and costs
+     nothing: a browser limitation must not read as the learner's failure. */
+  function runSonus(fi) {
+    renderTopbar(true);
+    var f = capAt(fi);
+    var items = CONTENT.sonus(f);
+
+    if (!Tts.available() || !items.length) {
+      var html = stepHeader(fi, 'sonus') +
+        '<section class="sine-sono">' +
+          '<p class="mute-glyph">🔇</p>' +
+          '<p class="notice">' + esc(UI.sineSono) + '</p>' +
+          '<button id="skip" class="btn primary" type="button">' + esc(UI.sineSonoPerge) + ' ▶</button>' +
+        '</section>';
+      setScreen(html, 'sonus-screen');
+      $('#skip').addEventListener('click', function () {
+        /* complete, but claim NO xp for a step that was not actually done */
+        finishStep(fi, 'sonus', 0,
+          '<p class="notice small">' + esc(UI.sineSono) + '</p>', { noXP: true });
+      });
+      return;
+    }
+
+    var qi = 0;
+    function ask() {
+      if (qi >= items.length) {
+        finishStep(fi, 'sonus', DATA.XP.stepBonus);
+        return;
+      }
+      var q = items[qi];
+      var opts = shuffle(q.options.slice());
+      var html = stepHeader(fi, 'sonus') +
+        '<section class="sonus">' +
+        '<p class="ask">' + esc(UI.audiEtElige) + '</p>' +
+        '<button type="button" id="say" class="big-speak" aria-label="' + esc(UI.audiIterum) + '">🔊</button>' +
+        '<div class="opt-row">';
+      var i;
+      for (i = 0; i < opts.length; i++) {
+        html += '<button type="button" class="opt emoji-opt" data-la="' + esc(opts[i].la) + '">' +
+          visualFor(opts[i]) + '</button>';
+      }
+      html += '</div><p class="card-progress">' + (qi + 1) + ' / ' + items.length + '</p></section>';
+      setScreen(html, 'sonus-screen');
+
+      var spoken = q.ttsText || q.la;
+      Tts.speak(spoken);
+      $('#say').addEventListener('click', function () { Tts.speak(spoken); });
+      $all('.emoji-opt').forEach(function (b) {
+        b.addEventListener('click', function () {
+          if (b.disabled) { return; }
+          if (b.getAttribute('data-la') === (q.answer ? q.answer.la : q.la)) {
+            toast(true);
+            addXP(DATA.XP.perCorrect);
+            qi++;
+            window.setTimeout(ask, 450);
+          } else {
+            toast(false);
+            b.disabled = true;
+            if (!loseHeart()) { heartsOut(fi); }
+          }
+        });
+      });
+    }
+    ask();
   }
 
   /* =================== LŪDUS: canvas game =================== */
@@ -1609,6 +1806,7 @@
      so the step LIST can come from content without touching the router. */
   RUNNERS.verba = runVerba;
   RUNNERS.fabula = runFabula;
+  RUNNERS.sonus = runSonus;
   RUNNERS.ludus = runLudus;
   RUNNERS.aenigmata = runAenigmata;
   RUNNERS.corrige = runCorrige;

@@ -29,5 +29,5 @@ var CONTENT_MANIFEST = {
     { "id": "historia", "regions": [] },
     { "id": "aeneis", "regions": [] }
   ],
-  "steps": ["verba", "fabula", "ludus", "aenigmata", "corrige", "comple"]
+  "steps": ["verba", "fabula", "sonus", "ludus", "aenigmata", "corrige", "comple"]
 };

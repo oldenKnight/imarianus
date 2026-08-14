@@ -131,7 +131,7 @@ var DATA = (function () {
      override it with its own `steps` array, so a track can vary the
      lesson shape without an engine change. Step IDS ARE FROZEN — the
      server's step_completions rows key on these exact strings. */
-  var STEPS = ['verba', 'fabula', 'ludus', 'aenigmata', 'corrige', 'comple'];
+  var STEPS = ['verba', 'fabula', 'sonus', 'ludus', 'aenigmata', 'corrige', 'comple'];
   var STEP_ICONS = {
     verba: '🖼️', fabula: '📜', sonus: '🔊', ludus: '🕹️',
     aenigmata: '🧩', corrige: '✏️', comple: '✍️'
