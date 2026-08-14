@@ -428,6 +428,45 @@
 
   /* =================== LANDING (logged out) =================== */
 
+  /* DESIGN §2 asks the landing for a preview band of what a lesson is. Rather
+     than ship a screenshot that goes stale, the three cards render the REAL
+     art the steps use: a vocabulary card, a story panel, and the minigame.
+     Latin-only captions, like everything a learner reads. */
+  function lessonPreview() {
+    var verba = hasActor('fox')
+      ? Scenes.sprite('fox', {}, 120)
+      : Scenes.mascot(96, 'fox');
+    var fabula = Scenes.render({
+      bg: 'forest',
+      items: [{ t: 'tree', x: 300, y: 210, grapes: true }, { t: 'fox', x: 140, y: 210, pose: 'walk' }]
+    });
+    /* a two-second mock of the LŪDUS canvas: the mascot below, one word
+       falling towards it */
+    var ludus = '<svg viewBox="0 0 200 150" role="img" aria-label="lūdus">' +
+      '<rect width="200" height="150" rx="8" fill="#f6e8c9"/>' +
+      '<g transform="translate(58,26)">' +
+        '<rect x="0" y="0" width="84" height="30" rx="8" fill="' + ART.wood + '"/>' +
+        '<text x="42" y="21" text-anchor="middle" font-family="Palatino, Georgia, serif" ' +
+          'font-size="17" fill="' + ART.cream + '">ūva</text>' +
+      '</g>' +
+      '<path d="M100,62 v16 m0,0 l-6,-7 m6,7 l6,-7" stroke="' + ART.goldDk +
+        '" stroke-width="3" fill="none" stroke-linecap="round"/>' +
+      '<g transform="translate(72,86)">' + Scenes.mascot(56, 'fox') + '</g>' +
+      '</svg>';
+
+    function card(art, label) {
+      return '<figure class="prev-card"><span class="prev-art">' + art + '</span>' +
+        '<figcaption>' + esc(label) + '</figcaption></figure>';
+    }
+    return '<section class="preview" aria-label="' + esc(UI.pitchSteps) + '">' +
+      '<p class="preview-lead">' + esc(UI.pitchSteps) + '</p>' +
+      '<div class="preview-row">' +
+        card(verba, UI.verba) +
+        card(fabula, UI.fabula) +
+        card(ludus, UI.ludus) +
+      '</div></section>';
+  }
+
   function showLanding() {
     $('#topbar').innerHTML = '';
     var html = '<section class="landing">' +
@@ -447,6 +486,7 @@
         '<button id="go-login" class="btn primary" type="button">' + esc(UI.intra) + '</button>' +
         '<button id="go-register" class="btn ghost" type="button">' + esc(UI.incipe) + ' ▶</button>' +
       '</div>' +
+      lessonPreview() +
       '</section>';
     setScreen(html, 'landing-screen');
     $('#go-login').addEventListener('click', function () { AuthUI.show(app, onAuthed); });

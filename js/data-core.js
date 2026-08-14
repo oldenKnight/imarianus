@@ -66,6 +66,7 @@ var DATA = (function () {
     pitch: 'Linguam Latīnam disce legendō.',
     pitchSub: 'Imāginēs docent — nūlla alia lingua.',
     pitchThree: 'Trēs viae: fābulae, historia sacra, Aenēis.',
+    pitchSteps: 'Sīc discēs:',   /* caption over the lesson preview band */
 
     /* --- three doors (logged in home) --- */
     eligePortam: 'Ēlige portam!',
