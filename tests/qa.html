@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<!-- ============================================================
+     tests/qa.html — headless visual-QA harness (NOT deployed)
+     Loads the real app WITHOUT js/api.js, so app.js takes its
+     local-only branch (no backend needed). An inline script seeds
+     localStorage BEFORE storage.js runs, then auto-navigates to
+     the screen named in the query string, e.g.:
+        qa.html?screen=doors
+        qa.html?screen=map
+        qa.html?screen=cap          (capitulum step list, f1)
+        qa.html?screen=verba        (first step running)
+     Screenshot with:
+        chrome --headless=new --screenshot=out.png \
+               --window-size=375,812 --virtual-time-budget=8000 URL
+     ============================================================ -->
+<html lang="la">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>QA — MARIANE</title>
+  <base href="/">
+  <link rel="stylesheet" href="css/styles.css">
+  <script>
+    /* seed BEFORE storage.js loads: a mid-progress student */
+    (function () {
+      var q = location.search;
+      var state = {
+        name: 'Quintus', xp: 220, hearts: 4, maxHearts: 5,
+        streak: 3, lastDay: new Date().toISOString().slice(0, 10),
+        completed: { f1: { verba: 1, fabula: 1, sonus: 1, ludus: 1, aenigmata: 1, corrige: 1, comple: 1 },
+                     f2: { verba: 1, fabula: 1 } },
+        bosses: {}, mapNode: 'f2',
+        createdAt: 1700000000000
+      };
+      try { localStorage.setItem('mariane_cache_v2', JSON.stringify(state)); } catch (e) {}
+      window.__QA_SCREEN = (q.match(/screen=([a-z]+)/) || [])[1] || 'doors';
+    })();
+  </script>
+  <script src="js/storage.js" defer></script>
+  <!-- js/api.js deliberately ABSENT: forces the local-only branch -->
+  <script src="js/audio.js" defer></script>
+  <script src="js/tts.js" defer></script>
+  <script src="js/scenes.js" defer></script>
+  <script src="js/actors-person.js" defer></script>
+  <script src="js/actors-props.js" defer></script>
+  <script src="js/backgrounds2.js" defer></script>
+  <script src="js/data-core.js" defer></script>
+  <script src="content/manifest.js" defer></script>
+  <script src="js/content-loader.js" defer></script>
+  <script src="js/auth-ui.js" defer></script>
+  <script src="js/game.js" defer></script>
+  <script src="js/boss.js" defer></script>
+  <script src="js/map.js" defer></script>
+  <script src="js/app.js" defer></script>
+  <script>
+    /* auto-navigate by clicking through the real UI after init */
+    window.addEventListener('load', function () {
+      function click(sel) {
+        var el = document.querySelector(sel);
+        if (el) { el.click(); return true; }
+        return false;
+      }
+      var target = window.__QA_SCREEN;
+      var t = 400;
+      if (target === 'doors') { return; }
+      setTimeout(function () { click('.door-fabulae'); }, t);          /* -> map */
+      if (target === 'map') { return; }
+      setTimeout(function () {
+        /* current node on the map (f2) */
+        if (!click('[data-node="f2"]')) { click('[data-node="f1"]'); }
+      }, t + 500);
+      if (target === 'cap') { return; }
+      setTimeout(function () {
+        /* first step button on the capitulum screen */
+        var b = document.querySelector('.steps button, .step-list button, button[data-step]');
+        if (b) { b.click(); }
+      }, t + 1000);
+    });
+  </script>
+</head>
+<body>
+  <header id="topbar"></header>
+  <main id="app" class="screen">
+    <noscript><p>Ad lūdendum, JavaScript necessārium est.</p></noscript>
+  </main>
+</body>
+</html>
