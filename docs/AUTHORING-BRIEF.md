@@ -133,6 +133,17 @@ rules.php between waves, then deletes the snippet. Your region will not be
 loadable until integration — verify your content by filtering the manifest in
 a scratch harness (the R2 pilot's report documents the DOMContentLoaded trick).
 
+## Boss clamor/sententia items — hand-author them (binding from wave 3 on)
+
+The engine can derive clamor/sententia items from story pages, but derivation
+is a FALLBACK. Every region/liber ships hand-authored `boss.clamor` (duels) or
+sententia-phase `items` (probationes): 4-6 items, the gap always a picturable
+content lexeme (never a function word), 3 options with same-POS distractors
+clearly wrong in the pictured context, `scene` on every item. The M3 report's
+config reference documents the exact fields.
+
+## Assignment protocol
+
 You will be given: track, region/liber ids, the CURRICULUM line, and which
 manifest entries to add. Deliver: content file, both manifest entries, ledger
 append, and a report listing every new lexeme, every scene actor used, any
