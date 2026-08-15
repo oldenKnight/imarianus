@@ -664,3 +664,192 @@ salit, posteā videt.`
 Everything above, plus the R1–R5 seed. Regiō VII inherits: `fēlēs mēnsa urbs`
 `rūsticus urbānus praesēpe stabulum prohibet puteus hircus manet prīmum`, and
 the **imperfect** and the pronouns **`is` / `hic` / `ille`** as constructions.
+
+---
+
+## Regiō VII · LĪTUS (S7) — `content/fabulae-r07.js`
+
+**THE STAGE'S GRAMMAR IS THE PAYLOAD, NOT THE WORD LIST.** S7 is the perfect,
+and Regiō VI's own file header set the terms this region pays out on: the
+imperfect is NOT a narrative past, so R6 kept the narrative present and spent
+the imperfect on background only. R7 moves the narrative onto the **perfect**
+and leaves the imperfect exactly where R6 put it —
+
+| tense | job | cue |
+|---|---|---|
+| imperfect | the background that was going on | `ōlim`, `cotīdiē` |
+| perfect | the event that happened in it | `subitō`, `tum`, `tandem`, `posteā` |
+
+Five rulings are recorded in the file header. The two that bind later authors:
+**no new verb is ever introduced in the perfect** (every `-it`/`-ērunt` here is
+built on a verb R1–R6 taught with a picture), and **every perfect is glossed
+against the present the learner already has** — `{ w: 'vīdit', g: 'iam videt;
+subitō vīdit' }`, which is R6's imperfect gloss shape one tense later.
+
+**FORMS DELIBERATELY NOT USED AS PERFECTS** (file header, ruling 4), because
+their perfect is spelled like their present and a form that does not show the
+tense teaches nothing: `bibit`, `ascendit`. Where the story wanted one, the
+SENTENCE was changed, never the grammar — f19's "the crow drank" became
+`Cornīx aquam bibere potuit!` (which also puts `potuit` against R6 f18's
+`poterat` on the same verb) and "the water rose" stayed `aqua ascendēbat`,
+an imperfect, because the rising IS a process. The one place a MACRON alone
+separates the tenses — `venit`/`vēnit`, `invenit`/`invēnit` — is used twice and
+only with both forms printed in the gloss, so the macron is being taught there
+rather than relied on.
+
+### f19 Cornīx et Urna — vocab cards (8), FOUR new content lexemes
+
+| lexeme | how |
+|---|---|
+| cornīx | vocab card, scene `v_cornix`; nova 🐦, `g: cornīx = corvus; cornīx nigra est`. 14 uses. **SEE THE DEPARTURE NOTE BELOW** |
+| lapillus | vocab card, scene `v_lapillus`; nova ⚪, `g: lapillus parvus est; lapillī in agrō iacent`. 5 uses. Drawn with `umbra` (the generic ellipse R3 taught as the dog's reflection) at `w/h/color/opacity` — no new art |
+| iacit | vocab card, scene `v_iacit`; nova (as `iēcit`) 🕰⬇, `g: lapillus ex rōstrō in urnam cadit: cornīx iacit`. 3 uses |
+| plēnus | vocab card, scene `v_plenus` — the SAME jar twice, one full and one not, so the card teaches the quality and not the jar (the R6 `v_rusticus` device). nova 🏺💧, `g: urna plēna: aqua ad ōs urnae; urna nōn plēna: aqua īnfrā`. 4 uses |
+| urna | **FREE** (f11), scene `v_urna` — drawn `water:false`, i.e. the vessel and not its water, so it never competes with `aqua`'s 💧 |
+| aqua | **FREE** (f3), emoji 💧 |
+| arbor | **FREE** (f1), scene `v_arbor` |
+| bibit | **FREE** (f3), scene `v_bibit`. Held out of SONUS/AENIGMATA — the card is a crow AT the jar |
+
+f19 — perfect forms glossed (morphology, not lexemes; the underlying verbs are
+all FREE): `vīdit · volāvit · clāmāvit · cēpit · iēcit · cecidērunt · fuit ·
+potuit · invēnit`. Function words, marked FUNCTION: `subitō` (nova 💨, `g: nōn
+diū: subitō`) · `tum` (nova ➡🕰, `g: prīmum, tum, posteā`) · `tandem` (nova ➜,
+`g: nōn prīmum, sed post multa: tandem`).
+
+**RECORDED CALL — `subitō` is used 2× in the f19 story, not 3.** It is a
+FUNCTION word (AUTHORING-BRIEF's cap language exempts these from the ≤8 count),
+and the learner meets it twice more inside the capitulum's own hand-authored
+CORRIGE[0] and COMPLĒ[0], both of which keep `Subitō` in the item text on
+purpose (ruling 3: the tense cue must be on screen or the exercise is a
+coin-flip). Four encounters in the capitulum, two of them in the story. Same
+shape as R5's recorded call on `sōlus`. `tum` is 4× and `tandem` 3×.
+
+**ONE DEPARTURE FROM THE CURRICULUM LINE, FLAGGED FOR LINE-AUDIT.**
+CURRICULUM §1 names this fable `Cornīx et Urna` and the **title is kept**, but
+the bird is drawn by the SAME actor (`crow`) that R1 f2 taught as `corvus`.
+Rather than silently rename a picture the learner owns, `cornīx` is introduced
+with a **synonym gloss** — `cornīx = corvus` — which LATIN-STYLE §2 lists as a
+sanctioned Latin-only gloss device, and the two words are **never offered
+against each other** in SONUS, AENIGMATA, CORRIGE, COMPLĒ or the boss. The two
+cards are also different pictures: R1's `v_corvus` is the actor in its DEFAULT
+pose, which draws the cāseus in its beak, and every crow in R7 is posed `sad`
+or `sing` so that no cheese ever appears. *The alternative — retitling the
+fable `Corvus et Urna` — was considered and rejected as an author's edit to the
+authoritative content map. Fable's call.*
+
+**ART NOTE WORTH INHERITING:** `urna` already takes `water:false`, `high:true`
+and `lapilli:true` (js/actors-props.js) — the jar, its water level and the
+pebbles in it are one prop with options, and f19 is drawn entirely with them.
+**The option key is ASCII `lapilli`, not `lapillī`**; this file's first draft
+used the macron, and because a mis-keyed option is simply an unread property,
+every jar looked correct and every jar was empty. The harness caught it.
+
+### f20 Leō Senex et Vulpēs — vocab cards (8), TWO new carded lexemes
+
+| lexeme | how |
+|---|---|
+| aegrōtus | vocab card, scene `v_aegrotus` — TWO lions in one frame, one standing and one lying, so the card teaches the STATE and not the animal. nova 😓, `g: aegrōtus leō nōn currit; aegrōtus leō iacet`. 4 uses. `pose:'aegrotus'` is a real option on the quadruped core, so no new art |
+| vestīgium | vocab card, scene `v_vestigium`; nova 🐾, `g: ubi cervus ambulat, ibi vestīgia sunt`. 4 uses. Drawn with `umbra` like `lapillus` |
+| leō · vulpēs · cervus · lepus · asinus · mōns | **FREE** (f4/f1/f9/f10/f15/f10). `v_mons` is the mountain EMPTY — the R6 `v_urbs` device |
+
+f20 — perfect forms glossed: `fuit · iacuit · vīdērunt · vēnit · discessit ·
+vēnērunt · stetit · respondit · dīxit · mānsit`. **The plural perfect is taught
+on one page with the singular beside it** — p5 `Cervus et lepus leōnem
+aegrōtum vīdērunt`, `g: ūnus vīdit; multī vīdērunt` — the same one-frame-two-
+forms device R6 used for `hic ↔ ille`.
+
+**GLOSS-ONLY, NO CARD** (the treatment R5 gave `sōlus`), and all four are held
+out of SONUS, AENIGMATA and the boss because none of them can be drawn:
+`senex` (nova 🕰🦁, `g: leō senex est: leō iam nōn celer est`; 3 uses — the
+library has no aged lion) · `callidus` (nova 🦊💭, `g: vulpēs callida est:
+vulpēs prīmum videt, posteā ambulat`; 3 uses, and R7 f21's mōrāle recycles it,
+which is the "again within the next two capitula" pass) · `nēmō` (FUNCTION,
+nova 0️⃣, `g: nēmō = nōn ūnus`) · `prōcul` (FUNCTION, nova ↔; 2 uses in the
+story plus COMPLĒ[4] — **recorded call**, same shape as R5's `saepe`).
+
+`terra` was cut from a late draft: it had been glossed and then used exactly
+once, which is the defect this ledger exists to catch. The sentence now reads
+`Multa vestīgia ad montem erant.`
+
+**MISSING ART, REPORTED, NOT WORKED AROUND:** there is **no cave, den or
+`spēlunca`** in the library. The lion therefore lies ON bgMountain and the fox
+stands `prōcul`; nothing is lost, because what the fable needs is a place
+animals go to and do not come back from, and the six tracks carry that.
+
+**B-RATING (DESIGN §8):** nothing is eaten on the page **or in the words**.
+Every sentence about a missing animal says only that it did not come back —
+`nōn discessit`, `nēmō discessit` — which is the fable's own discretion and not
+a softening of it; the pictures obey the same rule, and an animal that has gone
+in is simply ABSENT from the next frame.
+
+### f21 Asinus et Sal — vocab cards (8), TWO new carded lexemes
+
+| lexeme | how |
+|---|---|
+| lāna | vocab card, scene `v_lana`, drawn with the `pellis` prop (which IS a fleece: white, woolly, three tufts). nova 🐑, `g: lāna alba et mollis est; lāna aquam capit`. 4 uses |
+| gravis | vocab card, scene `v_gravis` — the same beast laden and unladen in one frame, so the card teaches the quality and not the donkey. nova ⬇⚪, `g: onus grave est: asinus tardus et fessus est`. 5 uses |
+| asinus · onus · rīvus · dominus · aqua · portat | **FREE** (f15/f15/f7/f15/f3/f15). `v_rivus` is the water EMPTY |
+
+f21 — perfect forms glossed: `vēnit · cecidit · cēpit · mānsit · ambulāvit ·
+fuit · posuit · portāvit · rīsit · stetit`. Imperfects: `habēbat · portābat`.
+`levis` is gloss-only (nova ⬆, `g: leve ↔ grave; onus leve est: asinus nōn
+fessus est`; 5 uses). `valdē` was cut from a late draft for the `terra` reason.
+
+**MISSING ART AND THE SUBSTITUTION THE ASSIGNMENT AUTHORISED.** There is no
+`spongia` in the library. The assignment's own line — *"'spongia'? check
+registry — if absent use 'lāna' wool with grex-adjacent art or STOP-report"* —
+is taken: the second load is **`lāna`**, drawn with `pellis`. Wool that soaks
+up water and grows heavier is the fable's mechanism exactly, and it is true.
+
+**`sal` HAS NO CARD** and is TAUGHT BY GLOSS ONLY (nova ⚪, `g: sal in onere
+est; sal in aquā nōn manet`; 3 uses), held out of SONUS, AENIGMATA and the
+boss. It cannot be drawn — the library has no salt, no sack and no white heap —
+and the fable survives it because what the learner must understand is not what
+salt LOOKS like but what it DOES in water, which the story states twice and the
+pictures show as a change of weight. Treatment precedent: R5's `sōlus`.
+
+**`sal` IS ALSO A GENDER TRAP** (masculine in classical prose, neuter in some
+singular uses) and **no adjective is ever predicated of it here**: the sentence
+that wanted "the salt was heavy" says `onus grave erat` instead, on the neuter
+noun R5 taught. Later authors: do not write `sal gravis` or `sal grave`.
+
+**THE LOAD LOOKS THE SAME BOTH TIMES**, and that is the fable rather than a
+defect: `onus` is the pack the quadruped core draws on its own back and it has
+no variants. The donkey cannot tell the two loads apart either, and the learner
+is told what is in the pack, in Latin, on the page, both times.
+
+**B-RATING (DESIGN §8):** the donkey does not drown and is not beaten. He
+struggles, cannot climb out, calls — and the `dominus` of R5 f15 comes and
+carries him out, the humane ending R6 f18 gave the goat in the well.
+
+### Boss b_r07 · Vulpēs Callida
+
+Ordinary duel tuning (hp 6 / 70 phase-seconds, 22+28+20), because she is NOT
+the wolf — CURRICULUM §1 gives him R1, R5, R9 and the R12 finale. The learner's
+own mascot returns as a playful rival; tone is mischief, not menace.
+
+Hand-authored clāmor, five items, all three capitula represented. **Every frame
+is in the perfect** — the gap stays a picturable noun (the brief's rule) and the
+target grammar does its work in the words around it, so the learner reads a
+perfect five times under time pressure. `sal`, `senex`, `callidus` and
+`aegrōtus` are absent from the item list on purpose: the first three have no
+card, and `aegrōtus`'s card is two lions, which would compete with the `leō`
+tile beside it.
+
+**A SHARED-PICTURE DEFECT THE HARNESS CAUGHT LATE, and the rule it yields:**
+`lapillus` and `vestīgium` are different pictures inside their own capitula,
+where nothing else looks like either — but **the boss quiz is the one screen
+that draws cards from all three capitula at once**, and at 96 px tile size two
+sets of small marks on the same cream field are one picture. Measured, not
+guessed. `lapillus` gave its quiz slot to `urna`. Both cards were also enlarged
+for the tile: the story's stone (w 14) and track (w 11) arrive at 7 px and 5 px
+respectively, so the CARDS use w 21–36 stones, clustered and pale, against
+w 24 tracks, staggered and dark. **Later authors: a vocabulary card is sized
+for the SONUS tile, not for the page.**
+
+### Words a later region may now treat as FREE
+
+Everything above, plus the R1–R6 seed. Regiō VIII inherits: `cornīx lapillus`
+`iacit plēnus aegrōtus vestīgium senex callidus lāna gravis levis sal` `subitō`
+`tum tandem nēmō prōcul`, and the **perfect** — including the 3rd person plural
+`-ērunt` — as a construction, with the imperfect's background role intact.
