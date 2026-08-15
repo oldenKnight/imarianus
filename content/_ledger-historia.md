@@ -282,6 +282,167 @@ and the function words `iterum · ūnus`, plus the plural morphology of
 
 ---
 
+## Liber III · ABRAHAM (S3) — `content/historia-l3.js`
+
+Stage ceiling: everything above, **plus** the genitive and the dative
+sg/pl. Still no free ablative (only the receptive locative `in` + abl and
+the `in`/`ad` + acc of direction), no imperative, no vocative, no
+pronouns, no perfect, no infinitive.
+
+The genitive and the dative are this liber's target and are introduced the
+way Regiō III introduces them in FĀBULAE: **pictured before they are
+asserted**, and always on a MARKED, unmistakable ending first
+(`Abrahae`, `Deō`, `pāstōribus`, `camēlīs`, `ovium`) — never on a form a
+learner could read as a nominative plural.
+
+### Name forms verified in the Clementine text before use
+
+| name | forms used | Vulgate warrant |
+|---|---|---|
+| Abraham | nom./acc. `Abraham`, gen./dat. `Abrahae` | acc. "ad Abraham" (17,9); dat. "nuntiatum est Abrahæ" (22,20); gen. "filii Abrahæ" (25,12) |
+| Sara | nom. `Sara`, acc. `Saram`, gen./dat. `Sarae` | 21,1 "Visitavit Dominus Saram"; 24,67 "tabernaculum Saræ matris suæ" |
+| Lot | **INDECLINABLE** — `Lot` in every case | nom. 13,5; acc. 13,8 "ad Lot"; the Clementine never inflects it, so `grex Lot` is a genitive and `Abraham Lot terram dat` a dative |
+| Isaac | **INDECLINABLE** | nom. 21,5; acc. 25,19 "genuit Isaac"; **dat. 24,4 "uxorem filio meo Isaac"**; gen. 28,13 "Deus Isaac" |
+| Rebecca | nom. `Rebecca`, acc. `Rebeccam`, gen./dat. `Rebeccae` | 24,15 nom.; 25,20 "duxit uxorem Rebeccam"; 24,29 "frater Rebeccæ" |
+
+### h11 Vocātiō Abrahae · fons Gn 12, 1–9 — content lexemes (8)
+
+| lexeme | how |
+|---|---|
+| Abraham | vocab card, scene `v_abraham` (person `patriarch`); nova 👤. See the ABRAM note in the omissions register |
+| Sara | vocab card, scene `v_sara` (person `woman`); nova 👤 |
+| Lot | vocab card, scene `v_lot` (person `man`); nova 👤. Second nova on the h12 page `Lot → grex Lot`, where the indeclinable genitive is glossed |
+| tabernāculum (tabernāculō) | vocab card, scene `v_tabernaculum` (`tent`); nova ⛺, `g: Abraham in tabernāculō dormit`. The Vulgate's own word, Gn 12,8 "tetendit ibi tabernaculum suum" |
+| camēlus (camēlī, camēlōs, camēlīs) | vocab card, scene `v_camelus`; nova 🐫, `g: camēlus animal est`. Gn 12,16 "fueruntque ei … cameli" |
+| grex (gregem, gregēs, grege) | vocab card, scene `v_grex` (the `grex` actor = the flock); nova 🐑, `g: grex: multa animālia` |
+| ambulat (ambulant) | vocab card, scene `v_ambulat`; nova 🚶, `g: exit et ambulat` |
+| mōnstrat | vocab card, scene `v_monstrat`; nova `👉🌍`. The Vulgate's own verb, Gn 12,1 "terram quam monstrabo tibi" |
+
+### h11 — morphology and function words
+
+| form | how |
+|---|---|
+| **Abrahae** (gen./dat.) | nova `👤➡`, `g: Abraham → mulier Abrahae`, on the page whose picture is the pair standing together. **THE FIRST GENITIVE OF THE TRACK** |
+| **frātris** (gen.) | nova `👥➡`, `g: frāter → fīlius frātris` — `frāter` is FREE from h5 |
+| **Deō** (dat.) | nova `➡✨`, `g: Deus → Abraham Deō dōnum dat`, on the altar page. **THE FIRST DATIVE OF THE TRACK** |
+| ad + accusative | nova `➡📍`, `g: ad terram: Abraham ambulat, et ecce terra`. The direction pattern the pilot ruling makes available from S2 when glossed with an arrow (h5 already ships `in` + acc). Free after h11 | FUNCTION |
+| **Egredere dē terrā tuā** | **FIXED VULGATE FORMULA** (Gn 12,1), the ONE in this capitulum — the `Fiat lūx` mechanism of h1. nova `⛺➡🌍` with the Latin gloss `Abraham exit et ambulat`; the picture (tent behind, road ahead) is the second gloss. Never parsed, never translated: the imperative, `dē` + abl and the possessive `tuā` are none of them on the S3 ladder and are asked for nowhere. Quoted, so the generators skip the page by design |
+
+### h12 Abraham et Lot · fons Gn 13 — content lexemes (6)
+
+Six, not eight: this capitulum's real load is the genitive plural
+(`gregēs ovium`) and the dative plural (`terra pāstōribus parva est`), and
+a fuller vocabulary would have buried them.
+
+| lexeme | how |
+|---|---|
+| ovis (ovem, ovēs, ovium) | vocab card, scene `v_ovis` — the `lamb` actor, ONE sheep, deliberately a different picture from `v_grex`'s three; nova 🐑, `g: grex: multae ovēs` |
+| pāstor (pāstōrēs, pāstōribus) | vocab card, scene `v_pastor` (person `shepherd`); nova `👤🐑`, `g: pāstor gregem custōdit` (custōdit is h4) |
+| bōs (bovem, bovēs) | vocab card, scene `v_bos`; nova 🐂 + morphology `bōs, bovem, bovēs`. Gn 13,5 "et armenta" |
+| magnus (magna, magnī, magnum) | vocab card, scene `v_magnus`; nova ⬆ |
+| parvus (parva) | vocab card, scene `v_parvus`; nova ⬇, `g: ↔ magna` |
+| manet | vocab card, scene `v_manet`; nova ⛺, `g: ↔ discēdit` (discēdit is h10) |
+
+### h12 — morphology and the fixed formula
+
+| form | how |
+|---|---|
+| **ovium** (gen. pl.) | nova `🐑🐑➡`, `g: ovēs → gregēs ovium`, on a picture of three flocks |
+| **pāstōribus** (dat. pl.) | nova `➡👥`, `g: pāstōrēs → terra pāstōribus parva est` |
+| **Lot** as genitive | nova `👤➡🐑`, `g: Lot → grex Lot`. The indeclinable name in an oblique case, glossed exactly like a marked ending |
+| **Frātrēs sumus** | **FIXED VULGATE FORMULA** (Gn 13,8 "fratres enim sumus"), the ONE in this capitulum. nova `👥🤝` with the Latin gloss `Abraham et Lot frātrēs sunt`; the picture is two men and nothing else. The first person plural is not on the ladder and is asked for nowhere |
+
+### h13 Prōmissum Deī · fons Gn 15, 1–6 — content lexemes (5)
+
+| lexeme | how |
+|---|---|
+| stēlla (stēllae, stēllās) | vocab card, scene `v_stella`; nova ⭐, `g: ūna stēlla, multae stēllae`. **The picture is the `nightSky` background's own painted stars, never the `star` ACTOR** — that actor is the radiance of God in this track (h1 onward) and lending it a second meaning would have broken the one convention the whole track rests on |
+| nox (nocte) | vocab card, scene `v_nox`; nova 🌙, `g: nox: sōl nōn est` + `nox → in nocte` |
+| senex | vocab card, scene `v_senex`; nova 👴, `g: senex vir: Noe quoque senex est`. Common gender, used of Sara as well as Abraham |
+| numerat | vocab card, scene `v_numerat`; nova `1️⃣2️⃣3️⃣`, `g: ūnus, et ūnus, et ūnus: Abraham numerat` |
+| crēdit | vocab card, scene `v_credit`; nova 🙏, `g: Deus dīcit; Abraham audit et nōn timet`. **Takes the DATIVE** — Gn 15,6 "Credidit Abram Deo", the sentence the liber turns on |
+
+### h13 — function words and the fixed formula
+
+| lexeme | how |
+|---|---|
+| sīc | nova `⭐➡👥`, `g: stēllae multae; fīliī multī` | FUNCTION. Chosen over `sīcut`, which would have needed its own gloss for no gain; see the h13 note in the omissions register for the future-tense problem it solves |
+| **Numerā stēllās** | **FIXED VULGATE FORMULA** (Gn 15,5 "numera stellas, si potes"), the ONE in this capitulum. nova `⭐1️⃣2️⃣3️⃣` with the Latin gloss `Abraham stēllās videt et numerat`; the sky full of stars is the picture. The imperative is not on the S3 ladder, is never parsed and is asked for nowhere |
+
+### h14 Isaac nāscitur · fons Gn 21, 1–8 — content lexemes (8)
+
+| lexeme | how |
+|---|---|
+| Isaac | vocab card, scene `v_isaac` (person `child`); nova 👶. **INDECLINABLE** (see the name table) |
+| puer (puerum, puerī, puerō) | vocab card, scene `v_puer`; nova 👶, `g: puer parvus est; nōn est vir` |
+| māter | vocab card, scene `v_mater`; nova `👤👶`, `g: Sara puerum habet: Sara māter est` |
+| pater (patrem, patrī) | vocab card, scene `v_pater`; nova `👤👶`, `g: Abraham pater puerī est` |
+| nōmen | vocab card, scene `v_nomen`; nova `💬👶`, `g: Adam nōmen hominis est` (Adam and homō are h1–h2) |
+| habet | vocab card, scene `v_habet`; nova 👐, `g: Abraham camēlōs habet; Sara puerum habet` |
+| rīdet (rīdent) | vocab card, scene `v_ridet`; nova 😄, `g: laetus homō rīdet`. Gn 21,6 "Risum fecit mihi Deus" |
+| laetus (laeta, laetī) | vocab card, scene `v_laetus`; nova 😄, `g: ↔ īrātus` (īrātus is h5) |
+
+### h14 — morphology
+
+| form | how |
+|---|---|
+| **puerī** (gen.) | nova `👶➡`, `g: puer → nōmen puerī` |
+| **Sarae** (gen.) | nova `👤➡`, `g: Sara → fīlius Sarae` |
+
+### h15 Sacrificium Isaac · fons Gn 22, 1–19 — content lexemes (4)
+
+Four only, and deliberately: the summit of the liber is carried by
+vocabulary the learner already owns, so that nothing stands between the
+child and the story.
+
+| lexeme | how |
+|---|---|
+| pāret | vocab card, scene `v_paret`; nova `🙇➡✨`, `g: Deus dīcit; Abraham audit et Deō pāret`. **Takes the DATIVE.** It renders Gn 22,12's "nunc cognovi quod times Deum": `timet` was glossed 😨 in h4 and would have carried fear where the Latin carries reverence |
+| ascendit (ascendunt) | vocab card, scene `v_ascendit`; nova `⛰⬆`, `g: ↔ dēscendunt` (dēscendit is h10) |
+| amat | vocab card, scene `v_amat`; nova 💛, `g: pater fīlium amat`. Gn 22,2 "quem diligis" |
+| benedīcit | vocab card, scene `v_benedicit`; nova `✨👤`, `g: Deus dīcit: bonum est`. **Takes the DATIVE** — Gn 22,17 "benedicam tibi" |
+
+### h15 — the one fixed formula
+
+| lexeme | how |
+|---|---|
+| **Abraham!** | **FIXED VULGATE NAME-CALL** (Gn 22,1.11 "Abraham, Abraham"), the ONE in this capitulum. The vocative is S5 — but `Abraham` is INDECLINABLE in the Clementine text, so its vocative is identical to its nominative and the page shows the learner no form he has not already read. It is registered here as a formula rather than as grammar: no other vocative appears in the liber, and none is asked for. Quoted, so the generators skip the page |
+
+### h16 Rebecca ad puteum · fons Gn 24 — content lexemes (7)
+
+| lexeme | how |
+|---|---|
+| Rebecca (Rebeccam, Rebeccae) | vocab card, scene `v_rebecca`; nova 👤 |
+| puteus (puteum, puteō, puteī) | vocab card, scene `v_puteus` (the `well` actor); nova `⛲💧`, `g: aqua puteī bona est` |
+| servus (servum, servō) | vocab card, scene `v_servus`; nova 👤, `g: servus virō labōrat` (labōrat is h4; the gloss is itself a dative) |
+| urna (urnam, urnā) | vocab card, scene `v_urna`; nova 🏺, `g: in urnā aqua est`. Stands for the Vulgate's *hydria* (24,15) — a synonym, not a different thing, exactly as `urbs` stands for *civitas* in h10 |
+| uxor (uxōrem) | vocab card, scene `v_uxor`; nova `👤👤`, `g: Sara uxor Abrahae est` |
+| bibit (bibunt) | vocab card, scene `v_bibit`; nova 💧, `g: aquam bibit` |
+| quaerit | vocab card, scene `v_quaerit`; nova 👀, `g: nōn videt: quaerit` |
+
+### h16 — morphology
+
+| form | how |
+|---|---|
+| **camēlīs** (dat. pl.) | nova `➡🐫🐫`, `g: camēlī → Rebecca camēlīs aquam dat`. THE showcase of the capitulum, in the Vulgate's own words (Gn 24,19–20 "camelis tuis hauriam aquam … haustam omnibus camelis dedit") |
+| **puteī** (gen.) | nova `⛲➡`, `g: puteus → aqua puteī` |
+| **Isaac** as dative | unglossed by design: the form is identical to the nominative the learner met in h14, and the sentence `Servus Isaac uxōrem quaerit` is Gn 24,4's own ("uxorem filio meo Isaac") |
+
+### Words a later liber may treat as FREE after Liber III
+
+Everything in Librī I–II, plus
+`Abraham · Sara · Lot · tabernāculum · camēlus · grex · ambulat ·`
+`mōnstrat · ovis · pāstor · bōs · magnus · parvus · manet · stēlla · nox ·`
+`senex · numerat · crēdit · Isaac · puer · māter · pater · nōmen · habet ·`
+`rīdet · laetus · pāret · ascendit · amat · benedīcit · Rebecca · puteus ·`
+`servus · urna · uxor · bibit · quaerit`
+and the function words `ad` (+ acc) and `sīc`, plus the case morphology
+of `Abrahae · Sarae · Rebeccae · puerī · puteī · frātris · ovium` (gen.)
+and `Deō · servō · puerō · patrī · pāstōribus · camēlīs` (dat.), and the
+indeclinable names `Lot · Isaac` in every case.
+
+---
+
 ## Omissions register (fidelity — "simplify by OMISSION only")
 
 Everything told in these ten capitula agrees with the Clementine Vulgate. What
@@ -315,6 +476,43 @@ is **not** told, and why:
 | Gn 11,3 | bricks and bitumen | `later` has no actor (see h10 above) |
 | Gn 11,9 | the naming of Babel | the name is explained by a pun no picture can carry; the capitulum's TITLE keeps Babel |
 
+### Liber III · ABRAHAM (Gn 12–24)
+
+| fons | omitted | reason |
+|---|---|---|
+| **Gn 12–16 passim · Gn 17,5** | **the name ABRAM and its change to Abraham** | The patriarch carries his Vulgate name `Abraham` from the first page. Two reasons, in this order: (1) Gn 17's covenant sign is circumcision, which this liber may not tell (DESIGN §8), so the chapter cannot be opened at all; (2) teaching a name and then replacing it would spend the S3 genitive budget on a lexical accident. Nothing is contradicted — the Clementine itself calls the same man Abraham from 17,5 on, and every catechetical retelling (including the Epitome, which declines *Abrahamus* throughout) does the same. **The name change is not told, not alluded to, and not denied.** Liber IV keeps the parallel discipline for `Iacob → Israēl`, which IS told, because Gn 32,28 is a naming and nothing else |
+| Gn 12,2–3 | the blessing of all the nations | unsayable at S3 (future, and "in te benedicentur" is a passive) |
+| **Gn 12,10–20** | **Egypt; Sarai taken into Pharaoh's house** | DESIGN §8. Omitted in full; only 12,16's camels survive, as camels |
+| Gn 12,6.8 · 13,3.18 | Sichem, Bethel, Hai, Mambre, Hebron, Chanaan | place-names with no picture value at S3 |
+| Gn 13,7b | the Chanaanite and the Pherezite in the land | genealogy of peoples |
+| **Gn 13,13 · Gn 19 entire** | **Sodom: its wickedness, its destruction, Lot's flight, his wife** | DESIGN §8, the liber's hardest editorial call and the one the assignment left open. Taken as OMIT IN FULL, not as a one-page exit: h12's last picture of Lot is a man walking toward a city with his flock, and this liber never returns to him, so no continuity is broken and no city is ever destroyed, threatened or renamed. Nothing false is said because nothing at all is said |
+| Gn 13,16 | "semen tuum sicut pulverem terræ" | the same promise arrives four pages later as the STARS (Gn 15,5), which the `nightSky` background already paints; two similes would have been one too many |
+| Gn 14 entire | the war of the kings; Melchisedech | battle (DESIGN §8) and a figure who needs the priesthood to mean anything |
+| Gn 15,2–3 | Eliezer of Damascus, the heir | a name with no picture value; the childlessness is told as `fīlius Abrahae nōn est` |
+| **Gn 15,5b** | **"Sic ERIT semen tuum"** | THE FUTURE IS ILLEGAL AT S3 and an approximation would have been worse than a cut. `fīliī Abrahae sunt sīcut stēllae` was rejected outright: it asserts as a present fact the very thing the chapter says Abraham does not yet have. The page therefore says exactly what the picture says — **`Ecce stēllae! Sīc fīliī Abrahae.`** — a verbless comparison, which is idiomatic Latin and is the Vulgate's own clause minus its verb, so it adds nothing and denies nothing. The promise itself is carried by the dative (`Deus Abrahae fīliōs prōmittit`), the device h9 already uses for the covenant |
+| Gn 15,7–21 | the divided animals, the smoking furnace, the four hundred years, the list of nations | none of it tellable at S3, and the vision is not children's imagery |
+| Gn 16 entire | Agar, Ismael | DESIGN §8 |
+| Gn 17 entire | the covenant of circumcision | DESIGN §8 |
+| Gn 18,1–15 | the three men at Mambre; Sara's laugh behind the tent | the laughter is kept where Gn 21,6 puts it; the theophany of the three needs the Trinity to mean anything and is not told at S3 |
+| Gn 18,16–33 | Abraham's intercession for Sodom | see the Sodom row |
+| Gn 20 entire | Abimelech and Sara | DESIGN §8, the same ground as 12,10–20 |
+| Gn 21,4 | circumcision on the eighth day | DESIGN §8 |
+| Gn 21,6–7 | Sara's own words | first person, not on the S3 ladder; her laughter is told as `Sara rīdet` |
+| Gn 21,8 | the great feast at the weaning | lexeme cap: a `convīvium` card would have cost the eighth slot for a page the picture of the laughing family already carries |
+| Gn 21,9–21 | Agar and Ismael sent away | DESIGN §8 |
+| **Gn 22,6b** | **"ipse vero portabat in manibus ignem et gladium"** | DESIGN §8. The sword is omitted absolutely; the fire goes with it, because the altar's own flame carries it two pages later and a child holding fire is the wrong picture. Isaac still carries the wood, which is the verse's other half and its beauty |
+| **Gn 22,9b–10** | **the binding of Isaac; the hand and the knife** | DESIGN §8, the hardest page of the liber and the one the whole capitulum is built to avoid needing. There is NO frame in h15 containing a weapon, a bound child, or a hand raised over a child, and no sentence in which Isaac is in danger. The angel's call arrives before anything could be raised — which is exactly the order Gn 22 gives once its instruments are left out |
+| Gn 22,7 | "ubi est victima holocausti?" → `Ubi est ovis?` | SIMPLIFICATION, registered: Isaac's question is asked about the animal the chapter itself supplies four verses later. Nothing is denied; `victima` and `holocaustum` are simply never introduced |
+| Gn 22,12 | "nunc cognovi quod times Deum" → `Abraham Deō pāret` | `timet` carries the 😨 of h4 and would have made reverence into fear. `pāret` + dative says what the verse means and is the liber's own grammar target |
+| **Gn 22,13** | **`arietem` → `ovem`** | **MISSING ART**: there is no `aries` actor in the library. The animal is drawn with `lamb`/`grex` and named `ovis` — a sheep, which a ram is. The word `aries` appears nowhere, so nothing false is shown or said. Art addendum requested: a horned `aries` |
+| Gn 22,15–18 | the angel's second call, the oath, the sand of the sea | the blessing survives as `Deus Abrahae benedīcit`; the rest is future and simile |
+| Gn 22,20–24 · 24,24.29b.50 | Nachor, Melcha, Bathuel, Laban's household | genealogy. **Laban is deliberately held back for Liber IV**, where he acts |
+| Gn 23 entire | Sara's death and the cave of Machpelah | this liber never tells a death; Gn 24,67's "lenitus est dolor" is cut with it |
+| Gn 24,2–9 | the oath sworn on the thigh | not describable for children, and not needed |
+| Gn 24,12–14 · 34–49 | the servant's prayer and his retelling of it | first person throughout, and the retelling is a repetition a picture book does not need |
+| Gn 24,22 | the weights of the gold ornaments | numbers |
+| Gn 24,15 | `hydriam` → `urnam` | synonym substitution, registered: the same object under a word the art library owns (`urna`), exactly as `urbs` stands for *civitas* in h10 |
+
 ## Additions register (what is on the page but not in Gn)
 
 | where | addition | justification |
@@ -322,3 +520,9 @@ is **not** told, and why:
 | h5 (Gn 4,3–5) | **altars** under the two offerings, one alight | Gn 4 says only "munera" and "obtulit". The altars are the traditional iconography and the only way to picture an offering; the fire that rises on one and not the other renders "respexit Dominus ad Abel … ad Cain non respexit", which has no S1 verb. Nothing is asserted in the text beyond `dōnum ārdet` / `dōnum nōn ārdet` |
 | h5 | `Abel` staged with a flock (`grex`) | Gn 4,2 "Abel pastor ovium" — pictured, not named (`ovis` is not a lexeme) |
 | h2, h3, h4 | Adam and Eva **robed in every frame** | DESIGN §8. Pre-fall the Vulgate says they were naked (2,25); this file simply never shows or says it, which is omission, not contradiction |
+| h11 (Gn 12,7–8) | the **altar alight** on the call page | Gn 12,7–8 says "ædificavit ibi altare Domino" twice and never says what was offered. The flame is the same traditional iconography h5 already registered, and the text asserts only `Abraham Deō dōnum dat` |
+| h11, h12 | Abraham's household staged with `tent`, `grex` and `camelus` in frames Gn 12–13 do not itemise | Gn 12,16 ("oves et boves … et cameli"), 12,8 ("tabernaculum suum") and 13,5 ("greges ovium, et armenta, et tabernacula") supply every one of these; the pictures distribute across the pages what the verses list in a heap |
+| h12 (Gn 13,7) | the quarrel drawn as **two shouting shepherds and nothing else** | "facta est rixa inter pastores" has no S3 verb and no child-safe picture beyond raised voices. No gesture, no contact, no weapon |
+| h13, h19 | the **stars of the sky are the `nightSky` background's own painted stars**, never the `star` actor | the `star` actor is the radiance of God in this track from h1 on. Using it for `stēlla` would have given one symbol two meanings; the background paints nineteen real stars, so the word is genuinely pictured |
+| h15 (Gn 22,9) | the altar built but **unlit until the ram is given** | `flame: false` on every altar frame before Gn 22,13, `flame: true` after. Gn 22 puts the fire in Abraham's hand at v. 6 (omitted, DESIGN §8); this ordering says nothing the chapter denies and keeps the summit free of fire until it is an offering |
+| h16 (Gn 24,22) | the servant's gift shown as a **gesture, not as jewellery** | there is no ornament actor; `Servus Rebeccae dōnum dat` is the verse's own act with its object left to the picture |

@@ -1,0 +1,64 @@
+{
+  "_note": [
+    "Registration snippet — AUTHORING-BRIEF 'Registration protocol'. Content",
+    "agents do not touch content/manifest.js, content/manifest.json or",
+    "server/lib/rules.php; the integrator applies this and deletes the file.",
+    "",
+    "l3 is a HISTORIA liber with a PROBĀTIŌ (kind: 'probatio', boss id b_l3),",
+    "so its numbers mirror the l2 block already in rules.php, not a fabulae",
+    "duel: one gentle phase, generous clock, no combat.",
+    "",
+    "Legacy single-phase tuning in the content file is hp 5 / 50 s; the real",
+    "phase is sententia hp 5 / 55 s. bossMinMs 15000 matches the floor the",
+    "integrator applied to l2 (a trial must not be beatable by mashing, but",
+    "it must not punish a child who reads the sentence either).",
+    "",
+    "quizKey carries three keys per row on purpose, exactly as r03/r04 do:",
+    "rules.php stores {q, a} — the question word and the vocab key that must",
+    "be picked — so grading never depends on the order the client drew the",
+    "options in; `correct` is always 0 against the boss.quiz order in",
+    "content/historia-l3.js. For a word -> pick-the-image quiz the answer IS",
+    "the question word.",
+    "",
+    "l3 is a NEW region: its content id IS its progressId, so it needs no",
+    "entry in rule_region_aliases() (same as l2).",
+    "",
+    "NOTE FOR THE INTEGRATOR: l3 has SIX capitula (h11..h16) but FIVE quiz",
+    "questions, as every shipped region does. h15's own cards are all verbs,",
+    "so h15 is represented in the sententia phase instead of the quiz; every",
+    "capitulum appears in one or the other."
+  ],
+
+  "track": "historia",
+  "region": "l3",
+  "titulus": "Abraham",
+  "ladder": "S3",
+  "progressId": "l3",
+  "capitula": ["h11", "h12", "h13", "h14", "h15", "h16"],
+  "boss": "b_l3",
+
+  "quizKey": [
+    { "q": "camēlus", "a": "camēlus", "correct": 0, "from": "h11" },
+    { "q": "ovis",    "a": "ovis",    "correct": 0, "from": "h12" },
+    { "q": "stēlla",  "a": "stēlla",  "correct": 0, "from": "h13" },
+    { "q": "puer",    "a": "puer",    "correct": 0, "from": "h14" },
+    { "q": "puteus",  "a": "puteus",  "correct": 0, "from": "h16" }
+  ],
+
+  "xp": {
+    "step": 20,
+    "boss": 30,
+    "quizEach": 10,
+    "quizPassMaxWrong": 1
+  },
+
+  "antiCheat": {
+    "bossMinMs": 15000
+  },
+
+  "manifestEntry": {
+    "id": "l3",
+    "capitula": ["h11", "h12", "h13", "h14", "h15", "h16"],
+    "boss": "b_l3"
+  }
+}
