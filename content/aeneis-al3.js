@@ -1340,7 +1340,7 @@
           scene: SC.a11_dona },
 
         /* Aen. 3,492–505 */
-        { la: 'Tum omnēs valedīcunt. Andromachē in lītore stat et nāvēs recēdentēs spectat, dōnec nōn iam videntur.',
+        { la: 'Tum omnēs valedīcunt. Andromachē in lītore stat et nāvēs recēdentēs spectat, dōnec iam nōn videntur.',
           scene: SC.a11_valedicunt },
 
         { la: 'Memoriā tenē: "fāta viam invenient." Trōia parva, magnae Trōiae similis, post eōs manet; sed Trōiānī maiōra quaerunt.',
@@ -1583,7 +1583,7 @@
           ttsText: 'provehimur portu terraeque urbesque recedunt.',
           nova: [{ w: 'prōvehimur', e: '⛵', g: 'nāvibus ex portū in altum vehimur. Aenēās ipse hīc loquitur: "nōs prōvehimur"' },
                  { w: 'portū', e: '⚓', g: 'portus → portū: ex portū' },
-                 { w: 'recēdunt', e: '↔', g: 'longius fīunt et minōrēs, dōnec nōn iam videntur' }] },
+                 { w: 'recēdunt', e: '↔', g: 'longius fīunt et minōrēs, dōnec iam nōn videntur' }] },
 
         { la: 'Id est: sociī nāvēs in mare dēdūcunt et lītus tōtum complent; deinde ex portū prōvehimur, et terrae urbēsque post nōs recēdunt.',
           scene: SC.a12_paraphrasis },

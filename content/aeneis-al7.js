@@ -1171,13 +1171,13 @@
         { la: 'Itaque ex īnferīs Alēctō vocat, quae inter hominēs īram et furōrem movet.',
           scene: SC.a27_vocat,
           nova: [{ w: 'Alēctō', e: '🌑', g: 'ūna ex Furiīs, quae ab īnferīs venit et animōs turbat' },
-                 { w: 'furor', e: '😠', g: 'īra caeca: quī furōre capitur nōn iam cōgitat, sed pugnāre vult; ↔ cōnsilium' }] },
+                 { w: 'furor', e: '😠', g: 'īra caeca: quī furōre capitur iam nōn cōgitat, sed pugnāre vult; ↔ cōnsilium' }] },
 
         { la: 'Alēctō fōrmam fēminae ātrae gerit, capite vēlātō. Ubi venit, animī hominum mūtantur.',
           scene: SC.a27_forma },
 
         /* Aen. 7,341–345 */
-        { la: 'Prīmum ad rēgīnam Amātam it. Post hoc rēgīna nōn iam quiēta est: fīliam Turnō dare vult, nōn advenae.',
+        { la: 'Prīmum ad rēgīnam Amātam it. Post hoc rēgīna iam nōn quiēta est: fīliam Turnō dare vult, nōn advenae.',
           scene: SC.a27_amata },
 
         /* Aen. 7,406–434 */

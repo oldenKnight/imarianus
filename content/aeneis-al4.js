@@ -773,7 +773,7 @@
         { la: 'Verba Aenēae et vultus eius in animō Dīdōnis manent: rēgīna hospitem suum amat.',
           scene: SC.a13_regina },
 
-        { la: 'Hic amor magna cūra est: Dīdō nōn iam dē urbe suā cōgitat, sed dē ūnō hospite.',
+        { la: 'Hic amor magna cūra est: Dīdō iam nōn dē urbe suā cōgitat, sed dē ūnō hospite.',
           scene: SC.a13_amor,
           nova: [{ w: 'amor', e: '💭', g: 'cum quis alium cārum habet et dē eō semper cōgitat' },
                  { w: 'cūra', e: '💭', g: 'cum animus dē aliquō sollicitus est neque quiēscit' }] },
