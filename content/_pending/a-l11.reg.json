@@ -1,0 +1,78 @@
+{
+  "_note": [
+    "Registration snippet — AUTHORING-BRIEF 'Registration protocol'. Content",
+    "agents do not touch content/manifest.js, content/manifest.json or",
+    "server/lib/rules.php; the integrator applies this and deletes the file.",
+    "",
+    "APPLY AFTER al10: al11 is the ELEVENTH region of the aeneis track and must",
+    "follow al1..al10 in the manifest's regions array — js/app.js regionIndex()",
+    "reads that order and feeds it to the phase engine as the ONE difficulty",
+    "input (DESIGN §6). al6, al7 and al8 are authored by a parallel agent; if",
+    "they have not landed when this is applied, HOLD al11 rather than inserting",
+    "it early, which would tune it as if it were an earlier liber.",
+    "",
+    "al11 is a PROBĀTIŌ liber (kind: 'probatio', boss id b_al11) with TWO",
+    "phases: transitus (hp 5 / 45 s) then sententia (hp 5 / 55 s). The crossing",
+    "is FIRST and shorter, which is the liber's own shape (the girl's life",
+    "begins with a river crossing and ends with words said about her). Legacy",
+    "single-phase tuning in the content file is hp 10 / 100 s. bossMinMs 15000",
+    "matches l2/l3/al1..al5/al9/al10.",
+    "",
+    "The transitus phase uses wall: 'harundo' and NOT 'murusAquae'. That is",
+    "deliberate and must not be 'fixed' at integration: murusAquae is Historia",
+    "Sacra's Red Sea actor and the Aeneis track does not borrow another track's",
+    "sign. content/aeneis-al3.js already ships wall: 'mountain', so a non-water",
+    "wall is precedented and js/probatio.js takes any registered actor name.",
+    "",
+    "The sententia phase declares its own `items` (6, hand-authored per",
+    "AUTHORING-BRIEF 'Boss clamor/sententia items'), so js/probatio.js never",
+    "reaches its derivation fallback. The transitus phase draws its words from",
+    "the liber's own vocabulary, as it does everywhere else. Nothing here for",
+    "rules.php to know.",
+    "",
+    "quizKey carries the same three keys per row as al1-al5, al9 and al10:",
+    "rules.php stores {q, a}, and `correct` is always 0 against the boss.quiz",
+    "order in content/aeneis-al11.js. Region id 'al11', not 'l11' — rules.php",
+    "keys regions in one flat namespace (see a-l1.reg.json). NOTE: 'al11' must",
+    "not be matched by any prefix rule written for 'al1'; check that pair",
+    "explicitly if rules.php does prefix matching anywhere.",
+    "",
+    "al11 is a NEW region: its content id IS its progressId, so it needs no",
+    "entry in rule_region_aliases().",
+    "",
+    "XP mirrors al1-al5, al9 and al10 exactly."
+  ],
+
+  "track": "aeneis",
+  "region": "al11",
+  "titulus": "Camilla",
+  "ladder": "S12",
+  "progressId": "al11",
+  "capitula": ["a41", "a42", "a43", "a44"],
+  "boss": "b_al11",
+
+  "quizKey": [
+    { "q": "indūtiae", "a": "indūtiae", "correct": 0, "from": "a41" },
+    { "q": "Camilla",  "a": "Camilla",  "correct": 0, "from": "a42" },
+    { "q": "īnfāns",   "a": "īnfāns",   "correct": 0, "from": "a42" },
+    { "q": "eques",    "a": "eques",    "correct": 0, "from": "a43" },
+    { "q": "soror",    "a": "soror",    "correct": 0, "from": "a44" }
+  ],
+
+  "xp": {
+    "step": 25,
+    "boss": 40,
+    "quizEach": 10,
+    "quizPassMaxWrong": 1
+  },
+
+  "antiCheat": {
+    "bossMinMs": 15000
+  },
+
+  "manifestEntry": {
+    "id": "al11",
+    "capitula": ["a41", "a42", "a43", "a44"],
+    "boss": "b_al11"
+  }
+}

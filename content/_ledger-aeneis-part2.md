@@ -72,8 +72,36 @@ row below is written to match.
 |---|---|---|---|
 | IX | Aen. 9,427 (a34) — **first half only, as a FORMULA** | **Aen. 9,446–447** (a36) | aeneis-al9.js |
 | X | — | **Aen. 10,467–469a** (a40) | aeneis-al10.js |
-| XI | — | **Aen. 7,808–809** (a44, displaced) | aeneis-al11.js |
+| XI | — | **Aen. 11,508–509a** (a44, displaced within the liber) | aeneis-al11.js |
 | XII | Aen. 12,435–436 (a46) | **Aen. 1,1–7, the whole proem** (a48) | aeneis-al12.js |
+
+**LIBER XI's CLOSING QUOTATION WAS CHANGED, and this is the ruling.** This table
+first booked **Aen. 7,808–809**, the wheat simile, for a44. It cannot be used:
+**the parallel wave's `content/aeneis-al7.js` closes Liber VII (a28) with
+Aen. 7,808–811, all four lines, as its own VERBA VERGILIĪ IPSĪUS.** §0.7 of this
+ledger promised that proper names were the only place the two waves would
+overlap; a shared *quotation* is a different thing, and the track must not read
+the same hexameters twice as two different librī's payoff.
+
+al7 is also right on the philology, independently: `vel … vel` in 808–811 is one
+period and cannot be halved, so 7,808–809 alone would have been a fragment —
+which the track's own parseability rule (a4, a16, a40) forbids anyway.
+
+**11,846–847** (*heu nimium, virgō, nimium crūdēle luistī / supplicium…*) was
+the brief's other candidate and is REJECTED: it is two whole hexameters and it
+is Vergil's own, but it frames a girl's death as a **penalty she paid**, which is
+both the harshest reading of Camilla available and the one a child is least able
+to weigh. It also belongs to Ōpis, whose revenge on Arrūns this file omits, so
+the speaker would arrive unintroduced.
+
+**Aen. 11,508–509a is quoted instead** — Turnus to Camilla, *ō decus Ītaliae
+virgō, quās dīcere grātēs / quāsve referre parem?* It is the liber's own text,
+it is praise of her ALIVE, and it is displaced from a42 to a44 exactly as a36
+displaces 9,446–447 and a40 displaces 10,467–469a: **the closing quotation must
+land on the LIBER's picture, and this liber's picture is Camilla honoured, not
+Camilla punished.** a42 promises it out loud and a44 keeps the promise. It runs
+to the question mark in the middle of 509 for the a40 reason — the sentence ends
+there — and the page says so in Latin, teaching the enjambment a second time.
 
 ---
 
@@ -434,3 +462,185 @@ those eight can fall and `revocat`, `lūget`, `victor`, `Mezentius`, `parcit` an
 `reddit` cannot. hp 5+6 = 11 over 55+45 = 100 s: the al5 total, with the reading
 phase first and longer, because a liber that ends on a man lifting a boy should
 not end its trial on a race.
+
+---
+
+# LIBER XI · CAMILLA — `content/aeneis-al11.js` (S12)
+
+The liber where the war stops for twelve days and both armies do the same thing,
+and then the liber where a girl who was thrown across a river on a spear rides
+out and does not come back.
+
+## a41 · Indūtiae · fons Aen. 11,1–224
+
+**CARDS (4)**
+
+| lexeme | how |
+|---|---|
+| indūtiae | card `v_indutiae` — a Trōiānus and a Latīnus **side by side in the wood**, walking the same way, no shields and no spears. Told from al10's `pāx` (two men FACING each other on an empty plain) by the trees and by the fact that these two are going somewhere together |
+| sepulcrum | card `v_sepulcrum` — the `sepulcrum` actor alone, nobody beside it |
+| lēgātus | card `v_legatus` — **the unarmed man among the armed**: the middle figure has no shield and no spear and the two beside him do. The absence is the word |
+| flet | card `v_flet` — ONE man, alone, with the tears over him. al10's `lūget` is a whole CROWD; the two are never offered together anywhere in this file, and `lūget` is kept out of al11's SONUS pool entirely |
+
+**TAUGHT (glossed, no card):** — **NŌMEN PROPRIUM:** Ēvander (a38's, re-glossed).
+
+**THE TRUCE IS TOLD WITHOUT A PYRE.** Aen. 11,1–224 is a hundred lines of
+funeral, and this file keeps every part of it EXCEPT the burning. The library has
+`sepulcrum` and has no pyre, so **the honest picture and the safe one are the
+same picture** — nothing is substituted and nothing is composed.
+**THE BEST PAGE IN THE CAPITULUM** is Vergil's own 11,133–138: *In silvam ambō
+populī iērunt, ut ligna caederent. Ibi Trōiānus et Latīnus iūxtā stetērunt, et
+neuter alterum timuit.* Two armies walking into the same wood for the same
+timber is the most hopeful thing in the second half of the poem and it costs the
+rating nothing.
+**AENĒĀS' ANSWER TO THE ENVOYS (11,110–111) IS KEPT**, in graded prose, because
+it is the best thing he says in the whole poem: *Pācem mortuīs petitis? Ego eam
+et vīvīs dare vellem.*
+**ĒVANDER (11,139–181)** is compressed to one sentence and one line of speech —
+*Nōn haec mihi prōmīserās, fīlī* — and stops.
+**NO REFUSAL DEVICE ANYWHERE IN a41, DELIBERATELY.** Nothing violent is being
+withheld here; a long lament is merely shortened, which is ordinary compression
+and **must not be dressed up as an editorial silence**. The device stays rare so
+that a44 can spend it.
+**OMITTED:** the burning of the dead (11,184–202) · the Latin council and
+Drancēs' quarrel with Turnus (11,225–497), held over as unnecessary to the arc.
+
+## a42 · Camilla rēgīna · fons Aen. 11,498–596
+
+**CARDS (4):** Camilla · exsul · īnfāns · vōtum.
+
+`v_camilla` is the wine tunic, the long hair and the spear, alone on an empty
+plain — **she is the only wine-coloured figure in the liber**. The hex is
+`#8e4257`, **deliberately the same as the parallel wave's `aeneis-al7.js` gives
+her**, so that the one figure the two waves share looks like one figure. Nothing
+depends on it: if al7 changes, this liber still reads.
+`v_exsul` (an old man walking AWAY from a city behind him — the card is the
+DIRECTION) and `v_votum` (the same old man, arms up, at an `altar`) are the same
+figure twice and are **never offered together in SONUS**.
+
+**THE CHILDHOOD IS TOLD NEARLY WHOLE**, because it needs no handling at all:
+Metabus driven out, running with a baby, the flooded Amasēnus, the spear, the
+vow, the throw, the swim (11,539–566). **Nobody is hurt anywhere in this
+capitulum.**
+**IT IS ALSO WHERE THE LIBER PRE-TEACHES.** `tumet` (*flūmen imbribus tumēbat*)
+and `volat` (*hasta cum īnfante per āera volāvit*) are glossed here, one
+capitulum before a43 needs them — charter §0.4, and the a38 `factum` precedent.
+**THE PROMISE:** *Quid Turnus eī responderit, in fīne huius librī legēs* — a44
+keeps it, exactly as a36 kept a34's and a40 kept a39's.
+**TAUGHT:** tumet · volat. **NŌMINA PROPRIA:** Volscī · Diāna · Metabus.
+**OMITTED:** 11,585–594, Diāna's promise to avenge her — it is the seed of the
+Ōpis/Arrūns killing that a44 omits entirely, so it is not planted here either.
+
+## a43 · Proelium equestre · fons Aen. 11,597–724
+
+**CARDS (3):** eques · pulvis · īnsequitur.
+
+**EVERY NAMED DEATH IN 11,597–724 IS OMITTED, AND NONE IS REFUSED.** This is
+al9's ruling 4 applied again: the device is expensive and is spent only on the
+death the liber is ABOUT, which is a44's. The file says out loud that there is
+more and does NOT use the refusal formula for it — *Multa Vergilius dē illō diē
+nārrat, et multa nōmina pōnit. Nōs autem ūnum tenēmus* — which is a statement of
+selection, not an editorial silence over violence, and reads as one.
+**WHAT REPLACES THEM IS VERGIL'S OWN SHAPE** (11,618–635): *Ter Latīnī Trōiānōs
+īnsecūtī sunt, ter Trōiānī Latīnōs. Nēmō vīcit, nēmō cessit.* A battle told as a
+RHYTHM instead of a casualty list — and then the thing the whole field is made
+of, which is dust.
+**MISSING ART, registered: NO DUST PROP.** `pulvis` is composed from `ventus` —
+the library's own swirl — laid LOW, at ankle height, among horses, with no people
+in the card. Nothing is invented: a swirl at ankle height among running horses is
+what dust looks like, and the gloss says in Latin what the thing is (*terra
+minūta quam equī currentēs in āera tollunt*).
+**SONUS:** `eques` (ONE man, ONE horse) and `pulvis` (two horses and the swirl,
+NO people) are both horses and never meet; `īnsequitur` (two crowds, one behind
+the other, both facing the same way — the card is that nobody faces anybody)
+carries the sets.
+
+## a44 · Camilla cadit · fons Aen. 11,759–835 (+ 11,896–902, + 11,508–509a)
+
+**CARDS (3):** soror · mandātum · laudat.
+
+`v_soror` is two women, SAME SIZE, side by side — **deliberately the same
+composition a35 gives `frāter`** (two identical soldiers), so that the two words
+are one idea in two pictures. They are told apart by colour: wine and linen.
+
+**CAMILLA FALLS BY THE REFUSAL DEVICE, AND SINE CRUŌRE.** Aen. 11,799–835 is a
+spear under the breast, the girl pulling at it, her friends catching her as she
+slides from the horse. None of it is on these pages:
+
+> *Quō modō ceciderit, hīc nōn nārrātur: Vergilius plūra dīcit, nōs autem hīc
+> tacēmus.*
+> *Camilla cecidit.*
+
+— the a16 device in the a39 shape, with `Camilla cecidit.` **ALONE ON ITS OWN
+PAGE**. There is no wound, no weapon, no body and no blood anywhere in a44, and
+**the word `vulnus` does not occur anywhere in this file**. The scene under the
+refusal is an empty field and a `columna`, which is a34's and a39's own grammar.
+**HER LAST WORDS ARE KEPT, and kept because they are not about dying**: Aen.
+11,823–827 is an ORDER, and the file gives it as one — *"Acca soror, plūs nōn
+possum. Ī ad Turnum: dīc eī ut veniat et urbem dēfendat."* Acca carries it, and
+Turnus leaves his ambush (11,896–902), which is where Liber XII starts.
+**ARRŪNS' MOTIVE IS OMITTED.** Aen. 11,778–782 makes her fatally intent on
+another man's gold (*fēmineō praedae et spoliōrum ārdēbat amōre*). The file
+asserts only the fact that matters and nothing false: *Illa ūnum hostem
+sequēbātur; alterum nōn vīdit.*
+**ŌPIS' REVENGE ON ARRŪNS (11,836–867) IS OMITTED ENTIRELY.** It is a killing
+done as payment. Arrūns is named once, throws once, and leaves the file.
+**TAUGHT:** decus · grātēs · parem · referre · virgō.
+**NŌMINA PROPRIA:** Arrūns · Apollō · Acca.
+
+**THE QUOTATION — Aen. 11,508–509a, one whole hexameter and a half:**
+
+```
+ō decus Ītaliae virgō, quās dīcere grātēs
+quāsve referre parem?
+```
+
+**THE CLOSING QUOTATION WAS CHANGED FROM THE COMMISSIONED ONE — see §0.9 for the
+full ruling.** In short: 7,808–811 belongs to `aeneis-al7.js` (a28), which quotes
+all four lines as Liber VII's own payoff, and `vel … vel` cannot be halved
+anyway; 11,846–847 frames her death as a penalty she paid, which is the harshest
+available reading of Camilla and is spoken by Ōpis, whose episode this file
+omits. **11,508–509a is Turnus praising her ALIVE**, displaced from a42 to a44
+exactly as a36 displaces 9,446–447 and a40 displaces 10,467–469a: the closing
+quotation must land on the LIBER's picture, and this liber's picture is Camilla
+honoured, not Camilla punished. The page says the reason in Latin — *poēta
+hominem bis ostendit: semel vīvum, semel mortuum. Nōs eam vīvam meminisse
+volumus.*
+**IT RUNS TO THE QUESTION MARK IN THE MIDDLE OF 509**, because that is where the
+sentence ends — the a40 ruling on 10,469 exactly — and the page says so in
+Latin, which **teaches the enjambment a second time**.
+Everything is in hand at the point of quotation: `virgō`, `Ītalia` and `referre`
+are cōpia commūnis; **`laudat` is a44's own card**, taught on the pages before,
+so the learner meets the ACT before he meets the noun; only `decus`, `grātēs` and
+`parem` are new, and all three are glossed on the quotation pages themselves.
+OCT/Mynors text with quantity marks added and NOT ONE LETTER CHANGED.
+
+**VERBA VERGILIĪ (Aen. 11,508–509a):** decus · Ītaliae · virgō · grātēs ·
+referre · parem.
+
+**MISSING ART, reported:** no DUST prop (a43) · **no PYRE, and none composed**
+(a41) · no BOW and no ARROW — Camilla is Diāna's and hunts, but the library has
+neither, so she carries the `spear` the library does have, which Vergil also
+gives her (11,650 *hastam*) · no BIER (al10's ruling) · **no RIVER IN FLOOD** —
+the Amasēnus is the `river` background with `harundo` on the near bank; that the
+water is high is SAID in the text (*flūmen imbribus tumēbat*) and not drawn,
+because a swollen river and an ordinary one look the same at 400×240.
+
+**PROBĀTIŌ b_al11 — Camilla:** `trānsitus` then `sententia`, in that order,
+because the liber's own shape is that order: **the girl's life begins with a
+crossing and ends with words said about her.**
+The trānsitus is `AMASĒNUS` — the one crossing in the whole track that is
+literally in the text (a42, Aen. 11,547–566, Metabus at the flooded river with
+his daughter). **The walls are `harundo`, the reeds of the near bank, and NOT
+`murusAquae`**: that actor is Historia Sacra's Red Sea, and this track must not
+borrow another track's sign — the same ruling that keeps `star` out of al10's
+Iuppiter. al3's `wall: 'mountain'` is the precedent for a non-water wall, and the
+water colour is a river green and not a sea blue.
+Then six hand-authored sententia items across all four capitula (two from a41,
+two from a42, one from a43, one from a44), carrying three ablātīvī absolūtī, a
+purpose clause, a relative clause and an indirect question. hp 5+5 = 10 over
+45+55 = 100 s — **the crossing is the shorter half on purpose**: this liber's
+weight is at its end, not its beginning, and the last thing the learner does
+before the quiz is read a sentence about a girl being praised. The liber's last
+item is *Rogās quid Turnus fēcerit? Virginem nōn culpāvit sed ____* — answer
+`laudat`, under the scene of the quotation.
