@@ -150,13 +150,20 @@ function rule_steps() {
 
    PER-REGION STEP XP IS NOT EXPRESSIBLE HERE and is not a bug: this map is
    keyed by STEP NAME, globally, so 'verba' is worth the same in Regiō I and
-   in Liber VIII. Several wave-4 registration snippets asked for a per-region
+   in Liber VIII. Several registration snippets asked for a per-region
    step value anyway — l7 and l8 asked 15, al1 and al2 asked 25 — and none of
    them could be applied. (r07-r09, l5 and l6 asked 20, which is what the
    default already is, so those were no-ops.) Where a track wanted to signal
    that its units are bigger, the FIGHT xp carries it instead: al1/al2 pay 40.
+   WAVE 5 (the last content wave) repeats the request and does not change the
+   answer: al3-al12 each asked 25, ten more snippets on the same 25, and
+   historia l9 asked 20 (a no-op). So the WHOLE aeneis track — twelve librī —
+   now wants a step value this function cannot express, and the whole track
+   carries the signal in its fight xp instead (40 per liber against Historia's
+   and Fabulae's 30).
    FLAGGED FOR OWNER TUNING: if the curve should really differ per track, this
-   function needs a region argument and every caller needs to pass one. */
+   function needs a region argument and every caller needs to pass one. It is
+   no longer a stray request from two regions; it is a track-wide one. */
 function rule_step_xp($step) {
   $map = array(
     'verba' => 20, 'fabula' => 20, 'sonus' => 20, 'ludus' => 20,
@@ -706,6 +713,50 @@ function rule_regions_builtin() {
         array('q' => 'piscis', 'a' => 'piscis')
       )
     ),
+    /* Liber IX · Iesus (content id l9). THE LAST LIBER OF HISTORIA SACRA:
+       with it the track is 58 capitula, h1..h58, complete. A PROBĀTIŌ whose
+       TWO phases are BOTH 'sententia' (hp 2 / 60 s and hp 2 / 60 s) — l5 is
+       the only other all-sententia trial, and this one is gentler still.
+
+       *** THE TUNING IS DELIBERATELY GENTLE AND IS FLAGGED FOR THE OWNER.
+       Total hp 4 where every other shipped boss totals 6 or more (legacy
+       single-phase fallback in the content file: hp 4 / 120 s). The
+       assignment calls this trial a meditation and not an exam, and the
+       numbers say so. APPROVED AS SHIPPED at integration. The house-number
+       revert is hp 3 + 3 in the content file (and legacy hp 6); nothing in
+       THIS file changes with it, because none of the phase numbers reach the
+       server. ***
+
+       Rewards are l7's and l8's: fight 30. Manifest-born, so no alias entry.
+       ANSWER KEY: mirrors the boss.quiz `la` order in content/historia-l9.js.
+       FIVE OF THE EIGHT capitula (h51 · h52 · h54 · h55 · h58) and five
+       picture families — manger and straw / smoking altar / man at the river
+       / ship at sea / open tomb.
+
+       *** NO NAME OF OUR LORD AND NO WORD OF THE PASSION IS IN THIS KEY. ***
+       `crux` and `crucifīgit` are vocabulary cards nowhere in the liber (the
+       ruling is in content/_ledger-historia.md), so js/app.js bossWords()
+       cannot resolve them and they can reach no quiz row, no sententia gap
+       and no distractor. h57 is represented in the trial only by its supper,
+       h58 only by the OPEN tomb. `Ioannēs` is the key's one proper name and
+       its single macron is on the nominative ending (Greek -ης → long -ēs,
+       Liber VIII's `Tobiās` reasoning); Iesus, Maria and Ioseph are BARE
+       everywhere in the liber per LATIN-STYLE §1 and none is in this key. */
+    'l9' => array(
+      'fables' => array('h51', 'h52', 'h53', 'h54', 'h55', 'h56', 'h57', 'h58'),
+      'track'  => 'historia',
+      'boss'   => 'b_l9',
+      'fight_xp' => 30,
+      'quiz_xp_each' => 10,
+      'quiz_pass_max_wrong' => 1,   // <=1 wrong of 5 passes
+      'quiz' => array(
+        array('q' => 'praesēpe',  'a' => 'praesēpe'),
+        array('q' => 'tūs',       'a' => 'tūs'),
+        array('q' => 'Ioannēs',   'a' => 'Ioannēs'),
+        array('q' => 'nāvis',     'a' => 'nāvis'),
+        array('q' => 'sepulcrum', 'a' => 'sepulcrum')
+      )
+    ),
     /* ---- AENEIS ---------------------------------------------------------
        THE TRACK'S FIRST TWO REGIONS. Until now { "id": "aeneis", "regions": [] }
        made Aeneis the door that opens the MOX screen; it is a real track from
@@ -761,6 +812,230 @@ function rule_regions_builtin() {
         array('q' => 'serpēns', 'a' => 'serpēns'),
         array('q' => 'ignis',   'a' => 'ignis'),
         array('q' => 'penātēs', 'a' => 'penātēs')
+      )
+    ),
+    /* al3..al12 — THE REST OF THE AENEIS, and with them the last content
+       wave. The track is twelve librī, a1..a48, complete; so is the product
+       (fabulae 36 + historia 58 + aeneis 48 = 142 capitula).
+
+       EVERY ONE of them is a PROBĀTIŌ, every one is manifest-born (so none
+       needs a rule_region_aliases() entry), every one pays al1's rewards
+       (fight 40, quiz 10 each, ≤1 wrong of 5 passes) and every one asked for
+       bossMinMs 15000, which is what rule_boss_min_ms() gives them. The one
+       thing that differs liber by liber is the PHASE SHAPE, and no phase
+       number reaches this file — it is recorded per region below because the
+       min-ms floors are derived from it.
+
+       The ids carry the `a` for the reason written above al1: rule_regions()
+       writes $out[$id] across ALL tracks in ONE FLAT namespace, and l3..l9
+       already belong to Historia Sacra. Three snippets asked explicitly
+       whether anything here does PREFIX matching that would let 'al10',
+       'al11' or 'al12' be captured by a rule written for 'al1': nothing does.
+       rule_regions(), rule_region(), rule_region_canonical(),
+       rule_region_aliases() and rule_boss_min_ms() are all exact-key array
+       lookups, and the only string comparisons in this file are `===`. */
+    /* Liber III · Errōrēs. transitus hp 5 / 45 s + sententia hp 5 / 55 s.
+       The transitus wall is 'mountain', not 'murusAquae' — this liber's
+       danger is rock. ANSWER KEY: mirrors content/aeneis-al3.js; a12 gives
+       two rows because it is the liber's longest capitulum. */
+    'al3' => array(
+      'fables' => array('a9', 'a10', 'a11', 'a12'),
+      'track'  => 'aeneis',
+      'boss'   => 'b_al3',
+      'fight_xp' => 40,
+      'quiz_xp_each' => 10,
+      'quiz_pass_max_wrong' => 1,   // <=1 wrong of 5 passes
+      'quiz' => array(
+        array('q' => 'portus',    'a' => 'portus'),
+        array('q' => 'avis',      'a' => 'avis'),
+        array('q' => 'sepulcrum', 'a' => 'sepulcrum'),
+        array('q' => 'Aetna',     'a' => 'Aetna'),
+        array('q' => 'grex',      'a' => 'grex')
+      )
+    ),
+    /* Liber IV · Pietās. TWO SENTENTIA phases (hp 5 / 55 s twice) — Liber IV
+       is a conflict of duties, so its trial is reading twice, with no chase
+       and no sort. Both phases declare their own hand-authored items.
+       ANSWER KEY: mirrors content/aeneis-al4.js. */
+    'al4' => array(
+      'fables' => array('a13', 'a14', 'a15', 'a16'),
+      'track'  => 'aeneis',
+      'boss'   => 'b_al4',
+      'fight_xp' => 40,
+      'quiz_xp_each' => 10,
+      'quiz_pass_max_wrong' => 1,   // <=1 wrong of 5 passes
+      'quiz' => array(
+        array('q' => 'turris',    'a' => 'turris'),
+        array('q' => 'canis',     'a' => 'canis'),
+        array('q' => 'fāma',      'a' => 'fāma'),
+        array('q' => 'Mercurius', 'a' => 'Mercurius'),
+        array('q' => 'rogus',     'a' => 'rogus')
+      )
+    ),
+    /* Liber V · Lūdī. ordina hp 6 / 45 s + sententia hp 5 / 55 s — al2's
+       shape, because this is the track's other ōrdina-first liber. The
+       ordina phase declares categories and NO items, so js/probatio.js draws
+       from the liber's whole vocabulary and zoneOf drops what no category
+       claims; exactly eight words can fall. Nothing for this file to know.
+       ANSWER KEY: mirrors content/aeneis-al5.js. */
+    'al5' => array(
+      'fables' => array('a17', 'a18', 'a19', 'a20'),
+      'track'  => 'aeneis',
+      'boss'   => 'b_al5',
+      'fight_xp' => 40,
+      'quiz_xp_each' => 10,
+      'quiz_pass_max_wrong' => 1,   // <=1 wrong of 5 passes
+      'quiz' => array(
+        array('q' => 'praemium', 'a' => 'praemium'),
+        array('q' => 'rēmus',    'a' => 'rēmus'),
+        array('q' => 'pellis',   'a' => 'pellis'),
+        array('q' => 'corōna',   'a' => 'corōna'),
+        array('q' => 'Iuppiter', 'a' => 'Iuppiter')
+      )
+    ),
+    /* Liber VI · Īnferī. TWO SENTENTIA phases (hp 5 / 55 s twice) — al4's
+       shape. CURRICULUM §3 names this trial itself ("underworld
+       riddle-sentences"), so neither phase sorts or steers: nothing in Liber
+       VI hurries. Twelve hand-authored items, six per phase.
+       ANSWER KEY: mirrors content/aeneis-al6.js. */
+    'al6' => array(
+      'fables' => array('a21', 'a22', 'a23', 'a24'),
+      'track'  => 'aeneis',
+      'boss'   => 'b_al6',
+      'fight_xp' => 40,
+      'quiz_xp_each' => 10,
+      'quiz_pass_max_wrong' => 1,   // <=1 wrong of 5 passes
+      'quiz' => array(
+        array('q' => 'Sibylla', 'a' => 'Sibylla'),
+        array('q' => 'rāmus',   'a' => 'rāmus'),
+        array('q' => 'Charōn',  'a' => 'Charōn'),
+        array('q' => 'umbra',   'a' => 'umbra'),
+        array('q' => 'Rōma',    'a' => 'Rōma')
+      )
+    ),
+    /* Liber VII · Latium. ordina hp 6 / 45 s + sententia hp 5 / 55 s, the
+       al2/al5 shape. The ordina phase declares categories and no items;
+       seven of the liber's words are unclaimed ON PURPOSE (a rēx who refuses
+       the war and a gate that opens it belong to neither pile), so eight
+       fall. ANSWER KEY: mirrors content/aeneis-al7.js. */
+    'al7' => array(
+      'fables' => array('a25', 'a26', 'a27', 'a28'),
+      'track'  => 'aeneis',
+      'boss'   => 'b_al7',
+      'fight_xp' => 40,
+      'quiz_xp_each' => 10,
+      'quiz_pass_max_wrong' => 1,   // <=1 wrong of 5 passes
+      'quiz' => array(
+        array('q' => 'mēnsa',     'a' => 'mēnsa'),
+        array('q' => 'lūcus',     'a' => 'lūcus'),
+        array('q' => 'pastor',    'a' => 'pastor'),
+        array('q' => 'mānsuētus', 'a' => 'mānsuētus'),
+        array('q' => 'Camilla',   'a' => 'Camilla')
+      )
+    ),
+    /* Liber VIII · Scūtum. ordina hp 6 / 45 s + sententia hp 5 / 55 s again.
+       The ordina banner is 'RŌMA AN NŌN', 11 characters, inside al5's
+       known-good 12. ANSWER KEY: mirrors content/aeneis-al8.js. */
+    'al8' => array(
+      'fables' => array('a29', 'a30', 'a31', 'a32'),
+      'track'  => 'aeneis',
+      'boss'   => 'b_al8',
+      'fight_xp' => 40,
+      'quiz_xp_each' => 10,
+      'quiz_pass_max_wrong' => 1,   // <=1 wrong of 5 passes
+      'quiz' => array(
+        array('q' => 'Ēvander',    'a' => 'Ēvander'),
+        array('q' => 'Capitōlium', 'a' => 'Capitōlium'),
+        array('q' => 'Volcānus',   'a' => 'Volcānus'),
+        array('q' => 'scūtum',     'a' => 'scūtum'),
+        array('q' => 'lupa',       'a' => 'lupa')
+      )
+    ),
+    /* Liber IX · Amīcitia. TWO SENTENTIA phases (hp 5 / 55 s twice), al4's
+       shape, because al4 is the track's other liber built on a death.
+       *** ITS ID IS al9 AND HISTORIA'S IS l9, AND BOTH LAND IN THIS WAVE. ***
+       The flat namespace held: two distinct keys, two distinct tracks.
+       ANSWER KEY: mirrors content/aeneis-al9.js. */
+    'al9' => array(
+      'fables' => array('a33', 'a34', 'a35', 'a36'),
+      'track'  => 'aeneis',
+      'boss'   => 'b_al9',
+      'fight_xp' => 40,
+      'quiz_xp_each' => 10,
+      'quiz_pass_max_wrong' => 1,   // <=1 wrong of 5 passes
+      'quiz' => array(
+        array('q' => 'Turnus',   'a' => 'Turnus'),
+        array('q' => 'amīcitia', 'a' => 'amīcitia'),
+        array('q' => 'lūna',     'a' => 'lūna'),
+        array('q' => 'virtūs',   'a' => 'virtūs'),
+        array('q' => 'carmen',   'a' => 'carmen')
+      )
+    ),
+    /* Liber X · Fāma. sententia hp 5 / 55 s FIRST, then ordina hp 6 / 45 s —
+       the reading half first and longer, which is the liber's own shape (the
+       gods talk, then the world divides). The ordina phase omits items on
+       purpose. `balteus` is in this key by the al9 balteus-exclusivity
+       ruling, which the wave-5 audit approves as shipped.
+       ANSWER KEY: mirrors content/aeneis-al10.js. */
+    'al10' => array(
+      'fables' => array('a37', 'a38', 'a39', 'a40'),
+      'track'  => 'aeneis',
+      'boss'   => 'b_al10',
+      'fight_xp' => 40,
+      'quiz_xp_each' => 10,
+      'quiz_pass_max_wrong' => 1,   // <=1 wrong of 5 passes
+      'quiz' => array(
+        array('q' => 'Iuppiter', 'a' => 'Iuppiter'),
+        array('q' => 'Pallās',   'a' => 'Pallās'),
+        array('q' => 'balteus',  'a' => 'balteus'),
+        array('q' => 'Turnus',   'a' => 'Turnus'),
+        array('q' => 'Lausus',   'a' => 'Lausus')
+      )
+    ),
+    /* Liber XI · Camilla. transitus hp 5 / 45 s FIRST, then sententia
+       hp 5 / 55 s: the girl's life begins with a river crossing and ends
+       with words said about her. The transitus wall is 'harundo' — reeds,
+       not Historia's Red Sea — on al3's precedent; VERIFIED AT 130 px at
+       integration and kept. ANSWER KEY: mirrors content/aeneis-al11.js. */
+    'al11' => array(
+      'fables' => array('a41', 'a42', 'a43', 'a44'),
+      'track'  => 'aeneis',
+      'boss'   => 'b_al11',
+      'fight_xp' => 40,
+      'quiz_xp_each' => 10,
+      'quiz_pass_max_wrong' => 1,   // <=1 wrong of 5 passes
+      'quiz' => array(
+        array('q' => 'indūtiae', 'a' => 'indūtiae'),
+        array('q' => 'Camilla',  'a' => 'Camilla'),
+        array('q' => 'īnfāns',   'a' => 'īnfāns'),
+        array('q' => 'eques',    'a' => 'eques'),
+        array('q' => 'soror',    'a' => 'soror')
+      )
+    ),
+    /* *** Liber XII · Ultimum — THE LAST REGION OF THE PRODUCT. ***
+       THREE SENTENTIA PHASES: hp 4 / 55 s + hp 4 / 50 s + hp 4 / 45 s,
+       eighteen hand-authored items, a shortening clock. Three phases is not
+       a new engine feature: js/boss.js buildPlan() loops config.phases for
+       its whole length and its ROMAN table covers ten. hp 12 over 150
+       phase-seconds is the biggest budget shipped, and the phase seconds are
+       ceilings as they are everywhere else, so the min-ms floor does NOT move
+       (unlike r12's, which moved because a fourth phase of ITEM PUMP cannot
+       be outrun; three sententiae are floored by reading). No track-completion
+       award is invented here — that is a product decision, and this is the
+       region to hang it on. ANSWER KEY: mirrors content/aeneis-al12.js. */
+    'al12' => array(
+      'fables' => array('a45', 'a46', 'a47', 'a48'),
+      'track'  => 'aeneis',
+      'boss'   => 'b_al12',
+      'fight_xp' => 40,
+      'quiz_xp_each' => 10,
+      'quiz_pass_max_wrong' => 1,   // <=1 wrong of 5 passes
+      'quiz' => array(
+        array('q' => 'foedus',  'a' => 'foedus'),
+        array('q' => 'gladius', 'a' => 'gladius'),
+        array('q' => 'dubitat', 'a' => 'dubitat'),
+        array('q' => 'balteus', 'a' => 'balteus'),
+        array('q' => 'moenia',  'a' => 'moenia')
       )
     )
   );
@@ -959,7 +1234,42 @@ function rule_boss_min_ms($regionId) {
     // al2 = ordina hp 6 / 45 s + sententia hp 5 / 55 s. Six items to catch is
     // l2's pump, but again inside a 100 s trial whose second half is reading;
     // the snippet asked for 15000 and it matches al1/l3/l4.
-    'al2' => 15000
+    'al2' => 15000,
+    // l9 = the Lūx Mundī PROBĀTIŌ and THE LAST HISTORIA LIBER: two sententia
+    // phases, hp 2 / 60 s each. No item pump anywhere in it, so l3's and l5's
+    // argument holds — floored by a child's reading, not by a machine. The
+    // GENTLE hp does not lower the floor either: a floor is a floor, not a
+    // ceiling, and 15 s is still under any honest run of two sentences.
+    'l9' => 15000,
+    // al3..al12 = THE REST OF THE AENEIS. Every one of the ten snippets asked
+    // for 15000 and every one gets it, for reasons that are al1's and al2's
+    // rather than new:
+    //   · the four with an ORDINA half (al5, al7, al8, and al10's second
+    //     phase) have l2's six-item pump, but always inside a ~100 s trial
+    //     whose other half is reading, so the pump never dominates;
+    //   · the two with a TRĀNSITUS half (al3 wall 'mountain', al11 wall
+    //     'harundo') are al1's case and not l6's: l6 takes 20000 because its
+    //     trānsitus is hp 3 inside a 95 s trial with only a 50 s sententia
+    //     after it, whereas these are hp 5 crossings followed by 55 s of
+    //     sentences, so reading dominates the whole-trial floor;
+    //   · the rest (al4, al6, al9, al12) are sententia-only and are floored
+    //     by reading by construction.
+    // al12 is the explicit non-exception: THREE phases and hp 12, the largest
+    // budget in the product, and it still takes 15000. r12 moved to 20000
+    // because its fourth phase was more ITEM PUMP; al12's third phase is more
+    // READING, and reading cannot be outrun by a forger any more slowly than
+    // it already is. If a blanket retune ever touches this map, r12 and l6/l2
+    // are the entries to exempt — not al12.
+    'al3'  => 15000,
+    'al4'  => 15000,
+    'al5'  => 15000,
+    'al6'  => 15000,
+    'al7'  => 15000,
+    'al8'  => 15000,
+    'al9'  => 15000,
+    'al10' => 15000,
+    'al11' => 15000,
+    'al12' => 15000
   );
   // A renamed region keeps its tuning (see rule_region_aliases).
   $aliases = rule_region_aliases();

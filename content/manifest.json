@@ -28,14 +28,25 @@
         { "id": "l5", "capitula": ["h23", "h24", "h25", "h26", "h27", "h28", "h29"], "boss": "b_l5" },
         { "id": "l6", "capitula": ["h30", "h31", "h32", "h33", "h34", "h35", "h36", "h37"], "boss": "b_l6" },
         { "id": "l7", "capitula": ["h38", "h39", "h40", "h41", "h42"], "boss": "b_l7" },
-        { "id": "l8", "capitula": ["h43", "h44", "h45", "h46", "h47", "h48", "h49", "h50"], "boss": "b_l8" }
+        { "id": "l8", "capitula": ["h43", "h44", "h45", "h46", "h47", "h48", "h49", "h50"], "boss": "b_l8" },
+        { "id": "l9", "capitula": ["h51", "h52", "h53", "h54", "h55", "h56", "h57", "h58"], "boss": "b_l9" }
       ]
     },
     {
       "id": "aeneis",
       "regions": [
         { "id": "al1", "capitula": ["a1", "a2", "a3", "a4"], "boss": "b_al1" },
-        { "id": "al2", "capitula": ["a5", "a6", "a7", "a8"], "boss": "b_al2" }
+        { "id": "al2", "capitula": ["a5", "a6", "a7", "a8"], "boss": "b_al2" },
+        { "id": "al3", "capitula": ["a9", "a10", "a11", "a12"], "boss": "b_al3" },
+        { "id": "al4", "capitula": ["a13", "a14", "a15", "a16"], "boss": "b_al4" },
+        { "id": "al5", "capitula": ["a17", "a18", "a19", "a20"], "boss": "b_al5" },
+        { "id": "al6", "capitula": ["a21", "a22", "a23", "a24"], "boss": "b_al6" },
+        { "id": "al7", "capitula": ["a25", "a26", "a27", "a28"], "boss": "b_al7" },
+        { "id": "al8", "capitula": ["a29", "a30", "a31", "a32"], "boss": "b_al8" },
+        { "id": "al9", "capitula": ["a33", "a34", "a35", "a36"], "boss": "b_al9" },
+        { "id": "al10", "capitula": ["a37", "a38", "a39", "a40"], "boss": "b_al10" },
+        { "id": "al11", "capitula": ["a41", "a42", "a43", "a44"], "boss": "b_al11" },
+        { "id": "al12", "capitula": ["a45", "a46", "a47", "a48"], "boss": "b_al12" }
       ]
     }
   ],
