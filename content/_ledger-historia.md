@@ -793,10 +793,269 @@ is the whole point of the contrast Liber VI then draws.
 
 ---
 
+## Liber VI · MOYSES (S7) — `content/historia-l6.js`
+
+### *** THE PERFECT ARRIVES HERE. This is the track's S7 moment. ***
+
+Stage ceiling: everything above, **plus the PERFECT**, deliberately
+introduced and contrasted with the imperfect. Still forbidden and avoided
+throughout: comparatives, superlatives and adverbs as a system (S8),
+relative clauses (S9), the passive and the deponents (S10), the
+subjunctive (S11), acc.+inf. (S12). The one deponent form in the file is
+`mortuus est`, which is a **fixed Vulgate formula and is never parsed**.
+
+Longest sentence in the liber: **7 words**. The assignment allowed this
+liber up to 9 where the perfect needed the room; **it was needed nowhere**,
+and nothing is flagged under that allowance because nothing used it.
+
+### How the perfect is introduced — the four rulings this liber runs on
+
+They are FĀBULAE r06's rulings for the imperfect, turned one rung.
+
+1. **NO NEW VERB IS INTRODUCED IN THE PERFECT.** Every `-āvit/-uit/-īvit/
+   -sit/-xit` in these eight capitula is built on a verb Librī I–V already
+   taught WITH A PICTURE: `servat·servāvit · mittit·mīsit · videt·vīdit ·
+   dīcit·dīxit · vocat·vocāvit · dat·dedit · audit·audīvit ·
+   ambulat·ambulāvit · intrat·intrāvit · exit·exiit · manet·mānsit ·
+   timet·timuit · clāmat·clāmāvit · cadit·cecidit · operit·operuit ·
+   custōdit·custōdīvit · crēdit·crēdidit · adōrat·adōrāvit ·
+   quaerit·quaesīvit · comedit·comēdit · habet·habuit · prōmittit·prōmīsit ·
+   benedīcit·benedīxit · aedificat·aedificāvit · pāret·pāruit · flet·flēvit ·
+   redit·rediit · stat·stetit · bibit·bibērunt · natat·natāvit ·
+   accūsat·accūsāvit · mōnstrat·mōnstrāvit · dormit·dormīvit`.
+   The **eight verbs this liber does add** (`līberat · dīvidit · trānsit ·
+   murmurat · colligit · scrībit · frangit · sepelit`) are each taught in
+   the PRESENT on a picture first — seven of them on a `vocab` card, which
+   the VERBA step shows before FABULA ever runs — and only then used in the
+   perfect. One new thing at a time (LATIN-STYLE §2).
+2. **THE FIRST PERFECT IS `servāvit`, AND IT IS DELIBERATE.** h30 p2,
+   `Ōlim Ioseph populum servāvit.` A first-conjugation `-āvit` (the most
+   regular ending there is), on a verb h27 carded four capitula ago, in a
+   sentence whose other four words the learner has had since Liber I, under
+   the `ōlim` h25 taught for exactly this job. Its nova carries a
+   **MORPHOLOGY PATTERN, not a definition**: `vocat ➡ vocāvit · amat ➡
+   amāvit · servat ➡ servāvit`. Only after that page does any other perfect
+   appear. It also does the narrative work Ex 1,8 needs — the liber opens by
+   remembering Liber V and then losing it ("rex novus … qui ignorabat
+   Joseph").
+3. **THE PERFECT IS THE NARRATIVE TENSE; THE IMPERFECT IS THE BACKGROUND.**
+   This is the whole point of S7 and the reason CURRICULUM put the two rungs
+   a rung apart. Every capitulum opens on an imperfect STATE and then moves
+   in perfects: h30 `Pharaō Hebraeōs timēbat` / `Hebraeī labōrābant` ➡
+   `Māter puerum in fiscellam mīsit`; h32 `Hebraeī lūcem habēbant` ➡
+   `Pharaō dīxit: "Īte!"`; h34 `Populus in dēsertō ambulābat` ➡ `Populus
+   murmurāvit`; h36 `Populus Moysēn exspectābat` ➡ `Populus vitulum aureum
+   aedificāvit`; h37 `Ierichō magnōs mūrōs habēbat` ➡ `Mūrī cecidērunt`.
+   r06's ruling 4 said the imperfect must not be written as a narrative past
+   because S7 would then have to unteach it — **this file is the other half
+   of that promise being kept**.
+   The best page for it is h34: Ex 16,21's "Colligebant autem mane singuli"
+   is an ITERATIVE, and Latin's own tense for that is the imperfect. So
+   `Māne populus manna colligēbat.` stands one page after `Vir et mulier
+   manna collēgērunt.` — the same verb in the two tenses on the same
+   picture, and the difference between them is the whole of S7.
+4. **AMBIGUOUS PERFECTS ARE AVOIDED, NOT EXPLAINED.** `venit`, `ascendit`,
+   `dēscendit` and their kind are IDENTICAL in the present and the perfect,
+   and a learner meeting the tense for the first time may not be asked to
+   disambiguate one. Every place the story wanted them the sentence was
+   changed instead (the golden exemplar's rule): `ad montem ambulāvit`,
+   `in montem ambulāvit`, `dē monte exiit`, `ex flūmine vēnērunt` (plural —
+   unambiguous). **The ONE surviving 3rd-sg `vēnit`** is h32's `Postrēmō
+   plāga magna vēnit.`, where `postrēmō` fixes the tense and every verb
+   around it is a perfect. **FLAGGED for line-audit.**
+   `comedit ➡ comēdit` is distinguished by a MACRON ALONE. This product
+   prints macrons everywhere (LATIN-STYLE §1) so the distinction is
+   genuinely visible — but it is used **exactly once** (h32 `Locustae omne
+   frūmentum comēdērunt.`, plural, where the ending disambiguates it
+   anyway). **FLAGGED.**
+
+### Name forms verified in the Clementine text before use
+
+| name | forms used | Vulgate warrant |
+|---|---|---|
+| Moyses | nom. `Moyses` · acc. `Moysēn` · dat. `Moysī` | **DECLINED.** nom. 344× (Ex 2,10 "vocavitque nomen ejus Moyses"; Ex 3,3 "Dixit ergo Moyses"); acc. 221× (Ex 3,14 "Dixit Deus ad Moysen"; Ex 2,15 "quærebat occidere Moysen"; Dt 34,8 "dies planctus lugentium Moysen"); dat./gen. 168× (Ex 31,18 "Deditque Dominus Moysi … duas tabulas"; Ex 8,13 "juxta verbum Moysi"). The abl. `Moyse` (19×, Ex 12,31) is not needed and is not used. **THE OBLIQUE CASES ARE A TEACHING MOMENT, not an accident**: this is the first Historia name that inflects at all — Ioseph, Iacob, Ēsau, Laban, Lot, Isaac, Adam, Cain, Abel and Noe are every one of them indeclinable — so `Moyses ➡ Moysēn` is glossed as a morphology pair in h31 on the page where the voice calls him, and `Moyses ➡ Moysēn ➡ Moysī` again in h33 on Ex 14,31's own clause. Three cases, one liber, each on the page where the Vulgate itself uses it. MACRONS: `Moysēn` carries the eta of Μωυσῆν, `Moysī` the iota of the Latin 3rd-declension dative; `Moyses` itself is left unmacronised, as LATIN-STYLE §1 prints it and CURRICULUM §2 lists it |
+| Iosue | **INDECLINABLE** | 200 occurrences, not one inflected. nom. Ios 6,6 "Vocavit ergo Josue filius Nun"; Dt 34,9 "Josue vero filius Nun". Wherever an oblique case was wanted the file uses **the Vulgate's OWN `ad Iosue` construction** (Ios 6,2 "Dixitque Dominus ad Josue"), so no case ever rests on a form the learner cannot read (the h12/h16/h18 rulings) |
+| Ierichō | **INDECLINABLE** | Ios 6,1 "Jericho autem clausa erat"; Ios 6,2 "dedi in manu tua Jericho"; Dt 34,1 "contra Jericho". MACRON: Greek Ἰεριχώ, omega. The one place a genitive was wanted (the h37 memoriā-tenē) is written `mūrī urbis` instead, on `urbs`, which the learner can read |
+| Pharaō | as verified in Liber V | nom., gen., acc. only |
+| Hebraeus (Hebraeī, Hebraeōs) | nom. pl. and acc. pl. | **The Vulgate's own word for the people here.** Ex 2,6 "De infantibus Hebræorum est hic"; Ex 1,15 "obstetricibus Hebræorum"; acc. pl. `Hebræos` 14×, nom. pl. `Hebræi` 7× |
+| Aegyptus | as verified in Liber V | free from h25 |
+| **manna** | **INDECLINABLE** | **A FINDING, not an assumption. `manna` does not occur in Exodus at all**: Ex 16,31 calls it `Man` ("Appellavitque domus Israel nomen ejus Man"), and `man` is what Ex 16,33.35 and Nm 11,6–9 use. The Clementine's `manna` is elsewhere and is EVERYWHERE UNINFLECTED — acc. Dt 8,3 "dedit tibi cibum manna", Dt 8,16 "cibavit te manna", nom. Ios 5,12 "Defecitque manna", acc. Ps 77,24 "pluit illis manna", acc. Jn 6,31.49 "manducaverunt manna". **`manna` is written rather than `Man`** because it is the form the Latin tradition and every later book use, it is Clementine text, and — the pedagogical reason — an indeclinable neuter can sit in any slot without ever misparsing, which `Man` beside `manet` could not. **Registered as a substitution** |
+
+### h30 Puer in Fiscellā · fons Ex 1 · 2, 1–10 — content lexemes (5)
+
+| lexeme | how |
+|---|---|
+| Moyses | vocab card, scene `v_moyses`; nova 👤, `g: Moyses nōmen puerī est`. **The costume is the handle** (he shares every frame with Pharaoh, with Iosue and with a crowd): long beard, linen robe, WINE MANTLE and a STAFF (Ex 4,2 `virga`; he is a shepherd when the bush calls him, Ex 3,1) |
+| Hebraeus (Hebraeī, Hebraeōs) | vocab card, scene `v_hebraeus`; nova 👥, `g: Hebraeī populus Deī sunt` |
+| fiscella (fiscellam, fiscellā) | vocab card, scene `v_fiscella` (the `fiscella` actor on `riverNile`); nova 👶, `g: fiscella in aquā manet et nōn cadit`. Ex 2,3 "sumpsit fiscellam scirpeam" |
+| flūmen (flūmine, flūminis) | vocab card, scene `v_flumen`; nova 🌊, `g: flūmen magnum est; aqua in flūmine it`. Ex 2,3 "ripæ fluminis" |
+| soror | vocab card, scene `v_soror`; nova 👧, `g: frāter et soror: fīlius et fīlia` (both free since h6/h20). Ex 2,4 "stante procul sorore ejus" |
+
+### h30 — the perfect and the imperfect, side by side
+
+| form | how |
+|---|---|
+| **servāvit** (THE FIRST PERFECT OF THE TRACK) | nova ⏪, `g: vocat ➡ vocāvit · amat ➡ amāvit · servat ➡ servāvit`. See ruling 2 above. FUNCTION (morphology) |
+| **timēbat** | nova ⏱, `g: iam timet ➡ ōlim timēbat` — **THE FIRST IMPERFECT ON A VERB OTHER THAN `sum` IN THE WHOLE TRACK.** Librī I–V put nothing but `erat` in it, on purpose. FUNCTION (morphology) |
+| **labōrābant** | nova ⏱, `g: ūnus labōrābat; multī labōrābant` — the plural of the same. FUNCTION (morphology) |
+| **erant** | nova ⏱, `g: ūnus erat; multī erant` — the plural of h25's `erat`. FUNCTION |
+| **mīsit · dedit** | nova ⏪, `g: mittit ➡ mīsit` / `dat ➡ dedit` — the two irregular perfects the capitulum needs, each glossed as a pair. FUNCTION (morphology) |
+| novus | free from h9 (`novum`); Ex 1,8 "rex novus" |
+
+### h31 Rubus Ārdēns · fons Ex 2,11–15 · Ex 3 — content lexemes (4)
+
+| lexeme | how |
+|---|---|
+| rubus (rubum, rubō) | vocab card, scene `v_rubus` (the `rubusArdens` actor on `mountain`); nova 🔥, `g: rubus parva arbor est` (`arbor` free from h3). Ex 3,2 "de medio rubi" — `ārdet` is free from h5 |
+| vōx (vōcem) | vocab card, scene `v_vox`; nova 💬, `g: homō vōcem habet; Moyses vōcem audit`. Ex 3,4.18 |
+| dēsertum (dēsertō) | vocab card, scene `v_desertum`; nova ☀, `g: in dēsertō nōn aqua, nōn cibus est`. Ex 3,1 "ad interiora deserti" |
+| līberat | vocab card, scene `v_liberat`; nova 🔓, `g: populus servus est; Deus līberat: populus iam nōn servit`. Ex 3,8 "descendi ut liberem eum" |
+
+### h31 — the accusative of a Vulgate name, and THE formula
+
+| form | how |
+|---|---|
+| **Moysēn** (ACCUSATIVE) | nova `👉👤`, `g: Moyses stat ➡ vōx Moysēn vocat`, on Ex 3,4's own page, with the NOMINATIVE in the quotation ("Moyses, Moyses") and the ACCUSATIVE in the narrative and the picture holding both. **The first Vulgate name in the track the learner has ever been able to see move.** FUNCTION (morphology) |
+| **EGO SUM QUĪ SUM** | **FIXED VULGATE FORMULA** (Ex 3,14, quoted exactly and cut at the full stop) — **THE formula of the track so far**, handled with maximal reverence and minimal machinery: one page, one picture (the burning bush, the gold radiance above it, Moyses on his knees), a **two-word Latin gloss** (`nōmen Deī`), no parsing, no translation, and **no exercise anywhere in the liber touching it**. The relative `quī` and the first-person `sum` are both far above S7 and are asked for nowhere. The page is quoted, so the generators skip it by design |
+| **exiit · dīxit** | nova ⏪, `g: exit ➡ exiit` / `dīcit ➡ dīxit`. FUNCTION (morphology) |
+
+### h32 Plāgae Aegyptī · fons Ex 7–12 — content lexemes (4)
+
+| lexeme | how |
+|---|---|
+| plāga (plāgae, plāgās) | vocab card, scene `v_plaga`; nova ⚡, `g: plāga magnum malum est`. **Drawn as WHAT THE PLAGUES WERE, not as an abstraction**: a dark Egypt with the locust and the frog in it |
+| rāna (rānae) | vocab card, scene `v_rana`; nova 🐸, `g: rāna parvum animal est; rāna in aquā manet`. Ex 8,6 "ascenderunt ranæ, operueruntque terram Ægypti" |
+| locusta (locustae) | vocab card, scene `v_locusta`; nova 🦗, `g: locusta parvum animal est; locusta frūmentum comedit`. Ex 10,4 "inducam cras locustam"; Ex 10,13 "levavit locustas" |
+| **tenebrae (tenebrīs, tenebrās)** | nova 🌑, `g: ↔ lūx: lūx nōn est, tenebrae sunt`. **NOT CARDED — the `cornua` precedent of h21.** There is no darkness effect in the art library; Ex 10,22's `tenebræ` are carried by the `nightSky` ground over the pyramids, which is a picture of a dark Egypt and not of the dark itself. Carding it would have made it eligible as a boss gap the picture cannot support, which js/boss-phases.js rightly refuses. Taught on the page, listed here, never a card |
+
+### h32 — the imperative and the two flagged forms
+
+| form | how |
+|---|---|
+| **Mitte** (IMPERATIVE) | nova `➡❗`, `g: Pharaō populum tenet; Moyses dīcit: "Mitte!"`. Ex 5,1 "Dimitte populum meum". FUNCTION |
+| **Īte** | **FIXED VULGATE WORD**, Ex 12,31 "Surgite et egredimini a populo meo … ite" — the `ultima plāga`'s whole answer, in one word. Already free from h28, so it needs no gloss; it is registered here because it is a quotation and not a coincidence |
+| **vēnit** (3rd sg) | **FLAGGED.** The one ambiguous 3rd-sg perfect in the liber (ruling 4). `postrēmō` fixes the tense and every verb around it is a perfect |
+| **comēdērunt** | **FLAGGED.** `comedit ➡ comēdit`, distinguished from the present by a MACRON; used exactly once, in the plural, where the ending disambiguates it anyway. nova ⏪, `g: comedunt ➡ comēdērunt` |
+| **vēnērunt · exiērunt · intrāvērunt · bibērunt** | plural perfects, chosen over the singular precisely because the ending is unambiguous. FUNCTION (morphology) |
+
+### h33 Trānsitus Maris Rubrī · fons Ex 14 — content lexemes (4)
+
+| lexeme | how |
+|---|---|
+| mūrus (mūrī, mūrōs) | vocab card, scene `v_murus` (two `murusAquae` actors with their `floor` aprons meeting, on `sea`); nova 🌊, `g: mūrus altus est; aqua stat et nōn cadit`. Ex 14,22 "erat enim aqua quasi murus a dextra eorum et læva" |
+| dīvidit | vocab card, scene `v_dividit`; nova ↔, `g: dīvidit ➡ dīvīsit: ūnum mare, tum duae partēs` (`pars` free from h9). Ex 14,16 "divide illud"; 14,21 "divisaque est aqua" |
+| trānsit | vocab card, scene `v_transit`; nova ➡, `g: trānsit: ex ūnā parte ad alteram it`. Ex 14,22 "ingressi sunt filii Israel per medium sicci maris" |
+| **siccus (sicca)** | nova ☀, `g: ↔ aqua: terra sicca aquam nōn habet`. **NOT CARDED**, for h32 `tenebrae`'s reason exactly: there is no dry/wet variant of any actor, so a `siccus` card would be a symbol standing for a word. Ex 14,21 "vertit in siccum" |
+
+### h33 — the dative of a Vulgate name
+
+| form | how |
+|---|---|
+| **Moysī** (DATIVE) | nova `👉👤`, `g: Moyses ➡ Moysēn ➡ Moysī: populus Moysī pāret`, on Ex 14,31's own clause ("crediderunt Domino, et Moysi servo ejus"). The third case of the name, on the third page the Vulgate itself gives it. FUNCTION (morphology) |
+| **`Aegyptiī sequī nōn potuērunt` → `Sed Pharaō trānsīre nōn potuit.`** | **A DELIBERATE DEPARTURE FROM THE ASSIGNMENT, flagged.** `sequī` is the infinitive of a DEPONENT — S10, three rungs above this liber and named in the stage ceiling as forbidden. The page says the same fact on this capitulum's own new verb, with `potest` + īnfīnītīvus (S5, AUTHORING-BRIEF ruling 2) doing the modal work. The singular is a second omission and not a claim: the army is simply never on the page, so nothing has to be said about it |
+| **stetit · operuit · quaesīvit · crēdidit · pāruit · līberāvit** | perfects on verbs free since Librī I–V. FUNCTION (morphology) |
+
+### h34 Manna in Dēsertō · fons Ex 16 — content lexemes (3)
+
+| lexeme | how |
+|---|---|
+| **manna** | **THE LIBER'S ONE EMOJI-ONLY VOCAB CARD** (🍚 — the h3 `pōmum` precedent, and h3's own sonus set is the shape this one copies: an emoji answer among scene distractors). nova 🍚, `g: manna cibus Deī est`; the second page adds `Manna cibus albus est` (Ex 16,31 "quasi semen coriandri album"). **MISSING ART** — there is no manna prop and none of `patina`/`frumentum` is manna; the story frames carry the desert, the people and the hint. **Art addendum requested: small white grains on the ground.** INDECLINABLE — see the names table |
+| murmurat | vocab card, scene `v_murmurat`; nova 😠, `g: murmurat: īrātus est et parvā vōce dīcit` (`vōx` free from h31). Ex 16,2 "murmuravit omnis congregatio filiorum Israel" |
+| colligit | vocab card, scene `v_colligit`; nova ⬇, `g: colligit: manna in terrā est; homō manna tenet`. Ex 16,4 "colligat"; 16,17 "collegerunt"; **16,21 "Colligebant autem mane singuli"** — the ITERATIVE that ruling 3's best page is built on |
+
+### h34 — the tense contrast, on one picture
+
+| form | how |
+|---|---|
+| **collēgērunt ↔ colligēbat** | the same verb in the two tenses on the same scene, one page apart: `Vir et mulier manna collēgērunt.` (Ex 16,17, an event) then `Māne populus manna colligēbat.` (Ex 16,21, every morning for forty years). **This is the S7 lesson in two sentences.** FUNCTION (morphology) |
+| **fāmem** | new accusative of `fāmēs`, free since h27 |
+| **Cūr populus murmurāvit?** | the S5 question word doing comprehension work, with the answer on the next line and in the picture (LATIN-STYLE §2: "the answer visible in scene or text, never a trick") |
+
+### h35 Tabulae Lēgis · fons Ex 19–20 · 24,12 · 31,18 — content lexemes (4)
+
+| lexeme | how |
+|---|---|
+| tabula (tabulae, tabulās, tabulīs) | vocab card, scene `v_tabula` (the `tabulae` actor on `mountain`); nova 📋, `g: in tabulīs lēx Deī est`. Ex 31,18 "duas tabulas testimonii lapideas" |
+| lēx (lēgem, lēgī) | vocab card, scene `v_lex`; nova 📜, `g: Deus lēgem dat; populus lēgī pāret` (`pāret` free from h9). Ex 24,12 "dabo tibi tabulas lapideas, et legem" |
+| nūbēs (nūbem) | vocab card, scene `v_nubes` (`mountain` with `cloud: true`); nova ☁, `g: nūbēs in caelō est; nūbēs alba est`. Ex 19,16 "nubes densissima operire montem" |
+| scrībit | vocab card, scene `v_scribit`; nova ✍, `g: Deus scrībit; lēx in tabulīs manet`. Ex 31,18 "scriptas digito Dei"; Ex 34,1 "scribam super eas verba" |
+
+### h35 — two graded renderings, registered as such
+
+| form | how |
+|---|---|
+| **`Ūnum Deum adōrā!`** | **A GRADED RENDERING of Ex 20,3.5** ("Non habebis deos alienos coram me" · "Non adorabis ea"), **not passed off as a quotation**. The Vulgate's is a FUTURE prohibition, which S7 cannot read; `adōrat` is h23's card and the imperative is S5's. Nothing is said that Ex 20 denies. It sits inside `Lēx dīcit: "…"`, so the law is marked as SPEAKING and the generators skip the page |
+| **`Patrem et mātrem amā!`** | **A GRADED RENDERING of Ex 20,12** ("Honora patrem tuum et matrem tuam"). `honōrat` has no picture and no place on the ladder; `amat` has been free since h2. **The softening is real and is registered — honour is not love** — but it is a simplification of the same command and not a different one |
+| **NO FIXED FORMULA in h35** | Ex 20,2's "Ego sum Dominus Deus tuus" was the natural candidate and was declined: the liber already spends its one first-person page on `EGO SUM QUĪ SUM` in h31, and two unparsed `Ego sum` formulae four capitula apart would teach the learner to expect a construction they cannot read. The h19 precedent |
+| **`ascendit` avoided** | ruling 4. Ex 19,3 · 19,20 · 24,18 all want it and it is identical in both tenses; every one is written `in montem ambulāvit` instead. The scene key is still `h35_ascendit`, because scene keys are not text |
+| **stetit · mānsit · scrīpsit · operuit** | perfects on free verbs, each glossed as a pair at first use. FUNCTION (morphology) |
+
+### h36 Vitulus Aureus · fons Ex 32 · 34,1 — content lexemes (3)
+
+| lexeme | how |
+|---|---|
+| vitulus (vitulum) | vocab card, scene `v_vitulus` (the `vitulusAureus` actor); nova 🐂, `g: vitulus parvus bōs est` (`bōs` free from h12). Ex 32,4 "fecit ex eis vitulum conflatilem" |
+| aureus (aureum) | vocab card, scene `v_aureus`; nova ✨, `g: aureus pulcher est; sōl quoque aureus est` (`pulcher` free from h23, `sōl` from h1). **The liber's ONE pictured adjective**, which is why the boss's h36 item gaps the calf and not the colour — a same-POS three-way adjective item does not exist and a two-card round is a coin-flip (the l5 ruling, second instance) |
+| frangit | vocab card, scene `v_frangit`; nova 💥, `g: frangit: ūna tabula, tum duae partēs`. Ex 32,19 "projecit de manu tabulas, et confregit eas" |
+
+### h36 — the one act of anger a child may watch
+
+| form | how |
+|---|---|
+| **`Moyses tabulās frēgit.`** | **THE BROKEN TABLETS ARE SHOWABLE and are shown** — two halves and a 💥. It is the one act of anger in the liber a child may watch, because it is done **to a THING, by the right person, for the right reason**, and the chapter itself ends in a blessing and a second set of tablets (Ex 32,14 · 34,1). The verses that made that possible are omitted whole; see the omissions register |
+| **`Populum servā!`** (IMPERATIVE) | nova ❗, `g: Deus servat; Moyses dīcit: "Servā!"`. Ex 32,11–13's long prayer reduced to its one act, on `servat` — **the liber's first perfect and its last plea are the same word** |
+| **exspectābat · habēbat** | the imperfect doing background work again, opening the capitulum before its perfects. FUNCTION (morphology) |
+
+### h37 Iosue et Ierichō · fons Dt 34 · Ios 6 — content lexemes (2)
+
+| lexeme | how |
+|---|---|
+| Iosue | vocab card, scene `v_iosue`; nova 👤, `g: Iosue vir fortis erat` (`fortis` free from h22). Costume: younger, green, short beard, **no staff** — Moyses' minister (Ex 24,13), and the eye must tell them apart |
+| Ierichō | vocab card, scene `v_iericho` (`cityWall` + two `turris` on `city`); nova 🏛, `g: Ierichō nōmen urbis est` (`urbs` free from h10) |
+| **sepelit (sepelīvit)** | nova ⬇, `g: sepelit: mortuus in terrā manet`. **NOT CARDED, and this is a deliberate decision and not an oversight.** A carded lexeme owes ≥3 recyclings (LATIN-STYLE §2) and becomes eligible as a boss gap; **neither is a thing to do with a burial in a children's book.** Taught on its page, listed here, never a card — the `cornua` precedent of h21, third instance. The `v_sepelit` scene spec is kept and used as the STORY frame for that page |
+
+Only two cards, deliberately — the h29 precedent. This capitulum's work is the
+DEATH, the succession and the walls, and almost every other word on its
+eighteen pages is already free.
+
+### h37 — the formula, and the two receptive extensions
+
+| form | how |
+|---|---|
+| **Moyses mortuus est** | **FIXED VULGATE FORMULA** (Dt 34,5 "Mortuusque est ibi Moyses servus Domini"). A perfect PASSIVE form of a DEPONENT — S10, three rungs up — and shipped as a formula for exactly that reason. **It is the first death this track has ever told**, it is told in the Vulgate's own four words, and the verse's own second half answers it in the liber's own grammar: `Deus eum sepelīvit.` (Dt 34,6 "et sepelivit eum in valle terræ Moab" — the subject is v. 5's `Dominus`, the traditional reading). nova ✨, `g: Moyses iam nōn vīvit; Moyses cum Deō est`. The frame is the mountain and the gold radiance: **no figure, no grave, no body.** Dt 34,8's "Fleveruntque eum filii Israel" follows it, because grief acknowledged is what DESIGN §8 asks for |
+| **circum + ACCUSATIVE** | **A RECEPTIVE EXTENSION, flagged.** Ios 6,3 "Circuite urbem". The ladder's preposition set is `in · ex · ab/ā · cum · dē · sub` (S4) plus the `in/ad` + acc of direction, which the AUTHORING-BRIEF admits from S2 "WHEN glossed at first use with a direction arrow". `circum` is admitted on exactly that ground and with exactly that device — nova 🔁, `g: circum urbem: populus it et redit ad locum prīmum`, in six words the track has had since Liber II. **Nothing rests on the case**: the picture is a crowd walking round a wall. FUNCTION |
+| **saepe** | **A RECEPTIVE EXTENSION, flagged.** nova 🔁, `g: iterum et iterum: saepe` (`iterum` free from h23). Adverbs as a SYSTEM are S8 and are not opened; this is one high-frequency adverb taught as a synonym of a phrase the learner already reads, the way `posteā` and `semper` were taught in Librī I–II. Ios 6,14 "Sic fecerunt sex diebus" — the number is omitted and `saepe` carries it. FUNCTION |
+| **cecidērunt** | nova ⬇, `g: cadunt ➡ cecidērunt`. Ios 6,20 "muri illico corruerunt". FUNCTION (morphology) |
+
+### Words a later liber may treat as FREE after Liber VI
+
+Everything in Librī I–V, plus
+`Moyses · Hebraeus · fiscella · flūmen · soror · rubus · vōx · dēsertum ·`
+`līberat · plāga · rāna · locusta · tenebrae · mūrus · dīvidit · trānsit ·`
+`siccus · manna · murmurat · colligit · tabula · lēx · nūbēs · scrībit ·`
+`vitulus · aureus · frangit · Iosue · Ierichō · sepelit`
+and the function words `circum` (+ acc) and `saepe`, plus **THE PERFECT
+AND THE IMPERFECT AS A CONTRASTED PAIR** — every perfect listed in ruling 1
+above, every imperfect on a taught verb (`timēbat · labōrābant · amābat ·
+latēbat · manēbat · crēscēbat · habēbat · ambulābat · exspectābat ·
+colligēbat`), and the plural copula `erant`. The three cases of `Moyses`
+(`Moyses · Moysēn · Moysī`) and the indeclinables `Iosue · Ierichō · manna`
+are free in every slot.
+
+**Liber VII inherits an obligation**: L6's perfects were all built on
+already-pictured verbs, so a later liber introducing a NEW verb may put it
+in the perfect only after showing it in the present on a picture first
+(ruling 1). And `venit`, `ascendit`, `dēscendit` are still tense-ambiguous —
+ruling 4 does not expire.
+
+---
+
 ## Omissions register (fidelity — "simplify by OMISSION only")
 
-Everything told in these ten capitula agrees with the Clementine Vulgate. What
-is **not** told, and why:
+Everything told in these thirty-seven capitula agrees with the Clementine
+Vulgate. What is **not** told, and why:
+
+### Librī I–II · CREĀTIŌ et DĪLUVIUM (Gn 1–11)
 
 | fons | omitted | reason |
 |---|---|---|
@@ -938,6 +1197,74 @@ is **not** told, and why:
 | Gn 46 (genealogy) · Gn 47–50 | the seventy souls, and everything after the reunion | a list of names; and **Iacob's death and Ioseph's are DEATHS, and this track has told none** (Liber VI tells its first) |
 
 
+### Liber VI · MOYSES (Ex 1–20 · Ex 32–34 · Dt 34 · Ios 6)
+
+| fons | omitted | reason |
+|---|---|---|
+| Ex 1,1–5 | the twelve sons and the seventy souls | names and numbers |
+| **Ex 1,16 · 1,22** | **the order to kill the Hebrew boys** | **DESIGN §8, and the assignment's softening honoured in full.** The file says `Pharaō Hebraeōs timēbat.` **and nothing else, ever.** No page anywhere states, implies or pictures a threat to a child, and the basket is simply a mother hiding a baby she loves. FLAGGED |
+| Ex 1,11 | Phithom and Ramesses | place-names |
+| Ex 1,15–21 | Sephora and Phua and everything they are asked to do | it is the decree above, told from the other side |
+| Ex 2,2 · 2,3 | the three months; the bitumen and pitch | a number and a material |
+| Ex 2,7–9 | the negotiation and the wages | a transaction |
+| Ex 2,10b | "Quia de aqua tuli eum" | first person |
+| **Ex 2,11–14** | **the Egyptian struck down, the body hidden in the sand, the quarrel of the next day**, and Ex 2,15's "quærebat occidere Moysen" | **DESIGN §8.** Moyses sees his people's labour (Ex 2,11) and leaves Egypt (Ex 2,15); **the reason between them is not told, not softened and not denied**. FLAGGED |
+| Ex 2,15–22 | Madian, Jethro/Raguel, Sephora, Gersam and Eliezer | names, a marriage and a genealogy |
+| Ex 3,5 | the holy ground and the sandals | an act with no S7 verb |
+| Ex 3,6 | "Deus Abraham, Deus Isaac et Deus Jacob" | **three indeclinable genitives in a row** — the h19 ruling, second instance |
+| Ex 3,8 | the seven peoples, and the land flowing with milk and honey | a list of names and a metaphor |
+| Ex 3,11–13 · 3,19–22 | the whole dialogue, and the promises | first person throughout, and futures |
+| Ex 5,1–21 | the straw, the tale of bricks, the beaten foremen | an industrial dispute, and a beating |
+| Ex 7,8–13 | the rod and the serpent | it would make the sign a contest of tricks |
+| Ex 7,11 · 7,22 · 8,7 | the magicians (`malefici`) | needs a word for magic this track will never own — the h27 ruling |
+| Ex 7,20 | "versa est in sanguinem" → `Aqua flūminis rubra erat.` | **DESIGN §8, a softening, registered.** `ruber` is h18's card and the picture is a red bowl. The Latin says only what the picture shows, **`sanguis` appears nowhere in the track**, and the chapter's own consequence (Ex 7,21 "non poterant bibere") is kept |
+| Ex 8,16 – 9,35 | the gnats, the flies, the murrain, the boils and the hail | **five plagues with no actor**, and hail with no art. Four stylized plagues carry the chapter, per the assignment |
+| Ex 8,8.25–28 · 10,8–11.24–26 | every one of Pharaoh's negotiations | dialogue, and a bargain a child cannot follow |
+| Ex 7,3 etc. | the hardened heart **as a theme** | a subjunctive-laden theology |
+| **Ex 11,5 · 12,29** | **the death of the firstborn** | **DESIGN §8, BY OMISSION, ABSOLUTELY.** The hardest verses in the Pentateuch for a children's book, and this file does not go near them. The page reads `Postrēmō plāga magna vēnit.` / `Tum Pharaō dīxit: "Īte!"` — two sentences, seven words, **no content whatever beyond the fact that something came and Pharaoh yielded.** The frame is an EMPTY NIGHT over the pyramids: nothing is in it, and nothing is in the next one either. FLAGGED |
+| **Ex 12,7** | **the lamb and the blood on the doorposts** | **MISSING ART, and this is why the assignment's "tastefully if the art allows" could not be taken up: it does not allow it.** There is NO house, door, doorpost or lintel actor in the library. Drawing blood on a doorframe that does not exist was never an option, and inventing one would have been a substitution the brief forbids. **Reported as a missing-art item, not as an editorial cut.** Art addendum requested: a house with a door |
+| Ex 12,1–20 | the whole Passover rubric | a rite, not a narrative |
+| Ex 10,22 | `tenebræ` **as a drawn effect** | **MISSING ART** — no darkness effect. Carried by the `nightSky` ground over the pyramids, which is a picture of a dark Egypt and not of the dark itself; the word is therefore taught on the page and **NOT CARDED** (the `cornua` precedent of h21) so it never becomes a boss gap the picture cannot support |
+| Ex 14,2 · 14,9 | Phihahiroth, Magdalum, Beelsephon | place-names |
+| Ex 14,7 | the six hundred chariots | a number and a missing actor |
+| Ex 14,11–12 | the recrimination at the sea | first and second person throughout |
+| Ex 14,14 | "Dominus pugnabit pro vobis" | a future |
+| Ex 14,16 | the outstretched hand | **MISSING ART** — the `person` actor has no reach pose that reads as a gesture over water. The page uses `arms-up` and says `Tum Moyses ad mare stetit.` — the verse's position without the verse's gesture |
+| Ex 14,19–20 · 14,24 | the pillar of cloud and of fire | two theophanies with no art, across a long night |
+| **Ex 14,23–28** | **Pharaoh's army drowned** | **DESIGN §8, BY OMISSION.** The last mention of the pursuit is `Sed Pharaō trānsīre nōn potuit.`; after that the Egyptians simply leave the page. The sea closes **in the Vulgate's own words minus its object** (`Postrēmō aqua rediit et mare operuit.`) and the capitulum ends on Ex 14,30's own sentence, `Deus populum līberāvit.` **Nobody drowns on the page, and nothing false is said, because nothing at all is said.** FLAGGED |
+| — | `Aegyptiī sequī nōn potuērunt` → `Sed Pharaō trānsīre nōn potuit.` | **a departure from the ASSIGNMENT, not from the Vulgate.** `sequī` is a DEPONENT infinitive (S10, three rungs up and named in the stage ceiling as forbidden). Same fact, this capitulum's own new verb, `potest` + īnfīnītīvus doing the modal work. FLAGGED |
+| Ex 15 | the canticle of Moyses | poetry, and futures |
+| Ex 16,5 · 16,16–18 · 16,22–30 · 16,36 | the gomor and every measure, and the sabbath rubric | numbers, and a rule rather than a narrative |
+| **Ex 16,13** | **the quail** | **MISSING ART** — there is no `coturnix`, and `columba`, `corvus`, `aquila`, `gallina`, `pavo`, `grus` and `ciconia` all exist but **none of them is a quail and none may stand in for one** (LATIN-STYLE §5). The assignment made the quail optional; they are omitted with the bird |
+| Ex 16,20–21 | the worms and the melting | the one unpleasant image in the chapter |
+| Ex 16,31 | `Man` → `manna` | a substitution, registered in the names table above and in the Additions register below |
+| — | **manna itself has no prop** | **MISSING ART.** The word gets the liber's ONE emoji-only vocab card (🍚 — the h3 `pōmum` precedent), and the story frames show the desert, the people and the hint. Art addendum requested: small white grains on the ground |
+| Ex 17 | the water from the rock | one miracle too many for one capitulum, and there is no `petra` |
+| Ex 19,1–2 | Sinai and every place-name | as everywhere in this track |
+| Ex 19,10–15 | the three days, the washing, the abstinence | a rite |
+| **Ex 19,16–19** | **the thunder, the lightning, the smoke, the trumpet, and "eratque omnis mons terribilis"** | **MISSING ART** (no `buccina`, no lightning) **and DESIGN §8** — the last clause is exactly what §8 calls horror imagery. The cloud on the mountain carries the theophany, as the `star` radiance carries God everywhere in this track |
+| Ex 19,12–13 · 19,21–24 | the death penalty for touching the mountain | DESIGN §8 |
+| Ex 20,3 · 20,5 | "Non habebis deos alienos" → `Ūnum Deum adōrā!` | **a GRADED RENDERING, registered.** The Vulgate's is a FUTURE prohibition, which S7 cannot read; `adōrat` is h23's card and the imperative is S5's. Nothing is said that Ex 20 denies, and the page is marked as the law SPEAKING |
+| Ex 20,12 | "Honora patrem tuum" → `Patrem et mātrem amā!` | **a GRADED RENDERING, registered.** `honōrat` has no picture and no place on the ladder; `amat` has been free since h2. **The softening is real — honour is not love** — but it is a simplification of the same command and not a different one |
+| Ex 20,7–11 · 20,13–17 | the seven commandments this file does not show | futures, and four of them are outside a child's world |
+| Ex 20,2 | "Ego sum Dominus Deus tuus" as a formula | declined: the liber spends its one first-person page on `EGO SUM QUĪ SUM`, and two unparsed `Ego sum` formulae four capitula apart would teach the learner to expect a construction they cannot read |
+| Ex 21–31 | the whole legal and tabernacle corpus | not narrative |
+| Ex 32,1 · 34,28 | the forty days | numbers |
+| Ex 32,2–5 · 32,21–24 | Aaron entire, the earrings, the casting, and the excuse | **Aaron is absent from the whole liber** — a second speaker the pictures cannot tell from Moyses — and with him goes a scene in which a child watches an adult invent an excuse |
+| Ex 32,6 · 32,19 | the feast and the dancing | a rite, and a scene |
+| **Ex 32,20** | **the calf burnt, ground to powder, scattered on the water and DRUNK by the people** | grotesque, and unnecessary: the calf simply stops being on the page |
+| **Ex 32,25–29 · 32,35** | **"Ponat vir gladium super femur suum … et occidat unusquisque fratrem", the three thousand dead, and the plague** | **DESIGN §8. NO WEAPON APPEARS ANYWHERE IN THIS LIBER, and this is the verse that decision was made for.** What survives is Ex 32,11–14 and Ex 34,1: Moyses asks, God spares, God writes again |
+| Ex 32,32–33 | "dele me de libro tuo" | first person, and a conditional |
+| Ex 33 | the tabernacle, the pillar, and 33,20–23's "faciem meam videre non poteris" | **this track answered that verse from h1 by never giving God a body at all** |
+| Dt 34,1–6 | Nebo, Phasga, Moab, Phogor | place-names |
+| Dt 34,7 | the hundred and twenty years, the undimmed eye, the unmoved teeth | numbers and a physical detail |
+| Dt 34,8 | the thirty days of mourning | a number; **the grief itself is kept** (`Populus Moysēn flēvit.`), because DESIGN §8 asks for death acknowledged and dignified |
+| **Ios 6,4–13 · 6,20** | **the seven trumpets** | **MISSING ART** — no `buccina` and no `tuba`. The walls fall to the SHOUT, which is **the same verse's other and sufficient cause** ("omni populo vociferante … muri illico corruerunt", Ios 6,20); `clāmat` is free from h24. The ark and the priests go with the instrument. Art addendum requested: a horn |
+| Ios 6,3 · 6,14–15 | "semel per diem … sex diebus … septies" | numbers; **`saepe` carries them**, glossed `iterum et iterum: saepe` |
+| **Ios 6,21** | **"interfecerunt omnia quæ erant in ea, a viro usque ad mulierem, ab infante usque ad senem"** | **DESIGN §8. JERICHO IS TAKEN, AND NOTHING IS DONE IN IT.** The file stops one verse early, at Ios 6,20's own `ceperuntque civitatem`, rendered `Populus in urbem intrāvit.` — and then goes straight to the gift of the land. FLAGGED |
+| Ios 2 · Ios 6,17 · 6,22–25 | Rahab entire | her trade is outside DESIGN §8 and her rescue cannot be told without it |
+| Ios 6,17–19 · 6,24 · 6,26 | the anathema, the treasury, the burning, and the curse on the rebuilder | a ban, an inventory and a curse |
+
 ## Additions register (what is on the page but not in the fōns)
 
 | where | addition | justification |
@@ -959,3 +1286,12 @@ is **not** told, and why:
 | h27 (Gn 41,42) | Ioseph's **gold mantle** from h27 on | Gn 41,42 "collo torquem auream" — the torque itself has no actor, and the mantle renders the same promotion the verse describes. Nothing is asserted in the text |
 | h25 (Gn 39) | the prison drawn as `interior` + two `columna` + a seated man | **MISSING ART** — there is no `carcer`. It reads as a bare stone room and not as a cell, and the 🔒 hint carries the rest. `Carcer bonus locus nōn est` is all the text claims |
 | h28 (Gn 44,2) | the silver cup drawn as an **`urna`** | **MISSING ART** — no `scyphus`. The h16 substitution for Gn 24,15's `hydria`, registered again; the word `scyphus` appears nowhere and the frame shows only a jar standing in the grain |
+| h30 (Ex 2) | Moyses' **wine mantle and staff** in every frame, and Iosue's **green robe and short beard** in h37 | Ex 4,2 gives Moyses the `virga` and Ex 3,1 makes him a shepherd; the mantle and the beard are the only handle the library has for telling him from Pharaoh (crowned), from Iosue and from a crowd, across a hundred and fifty frames. Ex 24,13 makes Iosue his `minister`, and the two must never be confused. Nothing is asserted in the text |
+| h32 (Ex 7,20) | the plague of blood drawn as a **red `patina`** | DESIGN §8. The text says `Aqua flūminis rubra erat`, which is what the picture shows; `sanguis` appears nowhere in the track |
+| h32 (Ex 10,22) | the darkness drawn as the **`nightSky` ground over the pyramids** | **MISSING ART** — there is no darkness effect. It is a picture of a dark Egypt and not of the dark itself, which is why `tenebrae` is taught on the page and never carded |
+| h34 (Ex 16) | **`manna` written for the Vulgate's `Man`** | Ex 16,31 has `Man`; `manna` is the Clementine's own word for the same thing in Dt 8,3.16, Ios 5,12, Ps 77,24 and Jn 6,31.49, always uninflected. It is the form the Latin tradition uses, and — the pedagogical reason — an indeclinable neuter never misparses, which `Man` beside `manet` could not promise. Registered as a substitution |
+| h34 (Ex 16) | **manna drawn as the emoji 🍚 alone** | **MISSING ART** — no manna prop, and neither `patina` nor `frumentum` is manna. The liber's ONE emoji-only vocab card, the h3 `pōmum` precedent. Art addendum requested: small white grains on the ground |
+| h35 (Ex 19,16) | the theophany drawn as the **cloud on the `mountain`** (`cloud: true`) | Ex 19,16's own "nubes densissima operire montem". The thunder, lightning, smoke and trumpet are omitted (MISSING ART, and DESIGN §8 for "eratque omnis mons terribilis"); the cloud is the verse's own image and the one the library can draw. **God still has no body anywhere in the track** |
+| h35 (Ex 20,3.5 · 20,12) | the two commandments shown as **`Ūnum Deum adōrā!`** and **`Patrem et mātrem amā!`** | GRADED RENDERINGS of the Vulgate's futures, registered in the omissions register above and marked on the page as the law SPEAKING (`Lēx dīcit: "…"`), so the generators skip them. Nothing is said that Ex 20 denies |
+| h37 (Dt 34,5–6) | Moyses' death and burial drawn as **the mountain and the gold radiance, with no figure in the frame** | DESIGN §8: "Death: acknowledged, dignified, never depicted graphically." The text is the Vulgate's own `Moyses mortuus est` (unparsed formula) and `Deus eum sepelīvit.` — no grave, no body, nothing added |
+| h37 (Ios 6,20) | the walls falling to **the shout alone**, drawn as a `cityWall` replaced by a `turris` and a ⬇ | **MISSING ART** — no `buccina`. The shout is the same verse's other cause ("omni populo vociferante"), so nothing is invented: one of two stated causes is drawn and the other is omitted with its instrument |

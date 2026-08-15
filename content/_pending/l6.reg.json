@@ -1,0 +1,87 @@
+{
+  "_note": [
+    "Registration snippet — AUTHORING-BRIEF 'Registration protocol'. Content",
+    "agents do not touch content/manifest.js, content/manifest.json or",
+    "server/lib/rules.php; the integrator applies this and deletes the file.",
+    "",
+    "Liber VI · Moyses is a PROBĀTIŌ liber (kind: 'probatio', boss id b_l6)",
+    "and it is THE TRACK'S FIRST TRĀNSITUS. Two phases: trānsitus hp 3 / 45 s",
+    "(the Red Sea corridor, wall: 'murusAquae' — the very actor h33's pages",
+    "are drawn with) then sententia hp 3 / 50 s. The trānsitus phase draws its",
+    "words from the liber's own vocabulary automatically (env.words = 27",
+    "carded lexemes across eight capitula), so it ships no item list.",
+    "",
+    "Legacy single-phase tuning in the content file is hp 6 / 55 s, kept for",
+    "the same reason l2-l5 keep theirs: a client without js/probatio.js must",
+    "still run something, and rule_boss_min_ms('l6') is derived from it.",
+    "",
+    "*** bossMinMs 20000, NOT 15000 — READ THIS BEFORE APPLYING. Every",
+    "previous Historia trial got l3's 15 s floor because a SENTENTIA is",
+    "floored by the child's reading speed and not by a machine. The TRĀNSITUS",
+    "phase is different and is floored the way l2's ORDINA is: js/probatio.js",
+    "spawns at most 3 words at a time on a 0.8-1.3 s timer, the corridor",
+    "narrows on a clock (this.narrow, ~3.4-4.6 px/s), and hp 3 means THREE",
+    "correct catches have to physically fall down the screen before the phase",
+    "can end. That pump cannot be outrun, so a 15 s whole-trial floor would be",
+    "below what an honest player can achieve and would stop flagging anything.",
+    "20 s is l2's number for l2's reason. If the integrator prefers to keep",
+    "the track uniform at 15000, that is a defensible call — but it should be",
+    "a decision and not an oversight, which is why it is written down. ***",
+    "",
+    "EIGHT capitula, five quiz questions — the largest liber in the track so",
+    "far. h33 is the trānsitus phase itself and h34 and h36 are in the",
+    "sententia phase, so every one of the eight capitula is represented",
+    "exactly once somewhere in the trial. The five quiz pictures come from",
+    "five different families — a basket on the Nile, a burning bush, a locust,",
+    "two stone tablets, a walled city — so no two can be confused at 96 px.",
+    "",
+    "quizKey carries the same {q, a} pair per row that r03-r07, l3, l4 and l5",
+    "use: rules.php stores the question word and the vocab key that must be",
+    "picked, so grading never depends on the order the client drew the options",
+    "in. For a word -> pick-the-image quiz the answer IS the question word,",
+    "and `correct` is always 0 against the boss.quiz order in",
+    "content/historia-l6.js.",
+    "",
+    "l6 is a NEW region: its content id IS its progressId, so it needs no",
+    "entry in rule_region_aliases().",
+    "",
+    "ART ADDENDA REQUESTED by this liber (reported, never substituted): a",
+    "house/door/doorpost actor (Ex 12,7 could not be drawn at all), a",
+    "`buccina`/horn (Ios 6's seven trumpets), a `coturnix` (Ex 16,13), and",
+    "small white grains on the ground for `manna` — which is currently the",
+    "liber's one emoji-only vocab card, the h3 `pōmum` precedent."
+  ],
+
+  "track": "historia",
+  "region": "l6",
+  "titulus": "Moyses",
+  "ladder": "S7",
+  "progressId": "l6",
+  "capitula": ["h30", "h31", "h32", "h33", "h34", "h35", "h36", "h37"],
+  "boss": "b_l6",
+
+  "quizKey": [
+    { "q": "fiscella", "a": "fiscella", "correct": 0, "from": "h30" },
+    { "q": "rubus",    "a": "rubus",    "correct": 0, "from": "h31" },
+    { "q": "locusta",  "a": "locusta",  "correct": 0, "from": "h32" },
+    { "q": "tabula",   "a": "tabula",   "correct": 0, "from": "h35" },
+    { "q": "Ierichō",  "a": "Ierichō",  "correct": 0, "from": "h37" }
+  ],
+
+  "xp": {
+    "step": 20,
+    "boss": 30,
+    "quizEach": 10,
+    "quizPassMaxWrong": 1
+  },
+
+  "antiCheat": {
+    "bossMinMs": 20000
+  },
+
+  "manifestEntry": {
+    "id": "l6",
+    "capitula": ["h30", "h31", "h32", "h33", "h34", "h35", "h36", "h37"],
+    "boss": "b_l6"
+  }
+}
