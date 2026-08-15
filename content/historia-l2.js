@@ -1184,10 +1184,12 @@
         { la: 'Ecce altāre! Noe in altārī dōnum dat.', scene: SC.h9_donum },
 
         /* Gn 8,21 · 9,11 — the covenant, without the bow (see the header) */
-        { la: 'Deus prōmittit. Aqua iam nōn crēscit.', scene: SC.h9_promittit,
+        /* colon, not full stop: what follows IS the promise, and the two
+           covenant pages are deliberately parallel (audit ruling) */
+        { la: 'Deus prōmittit: aqua iam nōn crēscit.', scene: SC.h9_promittit,
           nova: [{ w: 'prōmittit', e: '🤝', g: 'Deus dīcit et facit' }] },
 
-        { la: 'Deus prōmittit; dīluvium iam nōn est.', scene: SC.h9_foedus },
+        { la: 'Deus prōmittit: dīluvium iam nōn est.', scene: SC.h9_foedus },
 
         /* memoriā tenē */
         { la: 'Memoriā tenē: columba rāmum portat; Deus prōmittit.',

@@ -36,7 +36,14 @@ the receptive locative `in` + abl (`in caelō`, `in terrā`, `in hortō`, `in ag
 glossed with a direction arrow. **No plural nouns anywhere in Liber I** — the
 plural is Liber II's target.
 
-### h1 Deus mundum creat · fons Gn 1 — content lexemes (8)
+### h1 Deus mundum creat · fons Gn 1 — content lexemes (9 — GRANTED EXCEPTION)
+
+> **Cap exception (audit ruling, integration wave):** h1 carries **9** content
+> cards, one over the ≤8 cap. The creature days (Gn 1,20–25) cannot say
+> *Deus creat* with no object, so `animal` was moved here from h2 and is
+> **first used and glossed in h1** (page *Deus animal in marī creat.*).
+> h2 keeps 7 cards and treats `animal` as FREE/recycled — it is never
+> re-glossed as new there.
 
 | lexeme | how |
 |---|---|
@@ -47,6 +54,7 @@ plural is Liber II's target.
 | lūx (lūcem) | vocab card, scene `v_lux` (light on the dark water of Gn 1,2 — the `stormSea` ground, deliberately NOT `nightSky`, whose painted moon is not made until day IV); nova ✨ |
 | mare (marī) | vocab card, scene `v_mare`; nova 🌊 |
 | sōl (sōlem) | vocab card, scene `v_sol`; nova ☀ + morphology `sōl, sōlem` |
+| animal | vocab card, scene `v_animal`; nova 🐾. **FIRST USE = h1** (moved from h2, see the exception note above); named on the three creature-day pages, where the accusative is the same form as the nominative |
 | homō (hominem) | vocab card, scene `v_homo`; nova 👤 + morphology `homō, hominem` |
 
 ### h1 — FUNCTION words and the one fixed formula
@@ -64,14 +72,14 @@ plural is Liber II's target.
 | **Fiat lūx** | **FIXED VULGATE FORMULA** (Gn 1,3), the ONE in this capitulum. nova `🌑 ➡ ✨` with the Latin gloss `lūx nōn est; iam lūx est`, and the page that follows is its second gloss. Never parsed, never translated; the subjunctive is not taught here and is not asked for anywhere |
 | **Memoriā tenē** | **FIXED RUBRIC** — the closing-page heading, identical in all ten capitula. nova 🧠 in h1 only. Chrome, not content: the recap sentence after the colon never contains a new word |
 
-### h2 Adam et Eva · fons Gn 2 — content lexemes (8)
+### h2 Adam et Eva · fons Gn 2 — content lexemes (7)
 
 | lexeme | how |
 |---|---|
 | hortus (hortum, hortō) | vocab card, scene `v_hortus`; nova 🌳 + morphology |
 | Adam | vocab card, scene `v_adam`; nova 👤, `g: nōmen hominis`. **INDECLINABLE** in the Clementine text (nom. "Dixitque Adam" 2,23; acc. "adduxit eam ad Adam" 2,22; "Vocavitque Dominus Deus Adam" 3,9). Only the dative `Adae` is inflected there, and the dative is S3 — never used in this liber |
 | arbor (arborem, arbore) | vocab card, scene `v_arbor`; nova 🌳 |
-| animal | vocab card, scene `v_animal`; nova 🐾 |
+| ~~animal~~ | **FREE from h1** — no card, no nova here. Recycled 5× in h2's text and exercises (`In arbore animal est.`, `Adam animal vocat.`, `Adam omne animal vocat.`, ludus, aenigmata) with the art it already owns, `v_animal` |
 | mulier (mulierem) | vocab card, scene `v_mulier`; nova 👤 + morphology |
 | Eva (Evam) | vocab card, scene `v_eva`; nova 👤 + morphology `Eva, Evam`. See the report on the Clementine spelling *Heva* |
 | vocat | vocab card, scene `v_vocat`; nova 💬 |
@@ -144,6 +152,7 @@ plural is Liber II's target.
 | posteā | nova `1️⃣➡2️⃣` | FUNCTION |
 | ubi | nova `❓📍` | FUNCTION (question word; same justification as `cūr` in h3. Used once, for Gn 4,9 "Ubi est Abel frater tuus?", shortened to "Ubi est Abel?" because `tuus` is a possessive — S6) |
 | **in** + accusative | nova `➡🌾`, `g: Cain et Abel in agrum ambulant`. The direction pattern, receptive and glossed with an arrow exactly as the pilot ruling requires of `ad` + acc. Free after h5 |
+| **Nesciō** | **FIXED VULGATE FORMULA** (Gn 4,9 "Nescio; num custos fratris mei sum ego?"), the ONE in this capitulum — the same treatment as `Fiat lūx` in h1. nova 🤷 with the Latin gloss `nōn scit`, on the page `Cain timet. Cain dīcit: "Nesciō."`. Never parsed, never translated; the first person is not on the S1 ladder and is asked for nowhere. Quoted, so the generators skip the page by design |
 
 ### Words a later liber may treat as FREE after Liber I
 
@@ -203,7 +212,7 @@ tongues), then glossed with the singular/plural pair.
 
 | form | how |
 |---|---|
-| animālia | nova 🐾🐾, `g: ūnum animal, multa animālia` — `animal` is FREE from h2 |
+| animālia | nova 🐾🐾, `g: ūnum animal, multa animālia` — `animal` is FREE from h1 |
 
 ### h8 Dīluvium magnum · fons Gn 7, 10–24 — content lexemes (8)
 

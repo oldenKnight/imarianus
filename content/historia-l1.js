@@ -711,11 +711,14 @@
        "Deus X creat" carries eight of the thirteen pages, so the learner
        meets one verb thirteen times and reads the accusative before ever
        being asked what an accusative is.
-       OMITTED for the ≤8 lexeme cap (reported): the plants of day III,
+       OMITTED for the lexeme cap (reported): the plants of day III,
        the moon and the stars of day IV, and the naming of the creatures
-       ("appellavit"). Days V and VI are told with the SCENE carrying the
-       creatures and the text keeping the frame — the animals are named
-       in h2, where Adam names them and the words are needed anyway. */
+       ("appellavit"). Days V and VI keep the frame and name their object
+       with the one generic word 'animal'.
+       LEXEME CAP: 9 content cards, ONE OVER THE ≤8 CAP — a granted
+       exception (audit ruling). 'animal' was first taught in h2; it moved
+       here because the creature days cannot say "Deus creat" with no
+       object. h2 now recycles it as a FREE word (7 cards there). */
     {
       id: 'h1',
       titulus: 'Deus Mundum Creat',
@@ -730,6 +733,7 @@
         { la: 'lūx',    scene: SC.v_lux,    pars: 'nomen' },
         { la: 'mare',   scene: SC.v_mare,   pars: 'nomen' },
         { la: 'sōl',    scene: SC.v_sol,    pars: 'nomen' },
+        { la: 'animal', scene: SC.v_animal, pars: 'nomen' },
         { la: 'homō',   scene: SC.v_homo,   pars: 'nomen' },
         { la: 'creat',  scene: SC.v_creat,  pars: 'verbum' }
       ],
@@ -767,14 +771,17 @@
         { la: 'Sōl in caelō est.', scene: SC.h1_sol2,
           nova: [{ w: 'sōl', e: '☀', g: '' }] },
 
-        /* Gn 1,20–21 — the fish are the picture; the frame does not change */
-        { la: 'Deus in marī creat.', scene: SC.h1_pisces },
+        /* Gn 1,20–21 — the fish are the picture; the frame does not change.
+           'animal' is named HERE (audit ruling): the frame sentence needs an
+           object, and the three creature days are where the word belongs. */
+        { la: 'Deus animal in marī creat.', scene: SC.h1_pisces,
+          nova: [{ w: 'animal', e: '🐾', g: '' }] },
 
         /* Gn 1,20–21 — the birds */
-        { la: 'Deus in caelō creat.', scene: SC.h1_aves },
+        { la: 'Deus animal in caelō creat.', scene: SC.h1_aves },
 
         /* Gn 1,24–25 — the beasts of the earth */
-        { la: 'Tum Deus in terrā creat.', scene: SC.h1_animalia },
+        { la: 'Tum Deus animal in terrā creat.', scene: SC.h1_animalia },
 
         /* Gn 1,27 */
         { la: 'Postrēmō Deus hominem creat.', scene: SC.h1_homo,
@@ -894,7 +901,8 @@
         { la: 'hortus', scene: SC.v_hortus, pars: 'nomen' },
         { la: 'Adam',   scene: SC.v_adam,   pars: 'nomen' },
         { la: 'arbor',  scene: SC.v_arbor,  pars: 'nomen' },
-        { la: 'animal', scene: SC.v_animal, pars: 'nomen' },
+        /* 'animal' is NOT a card here: h1 teaches it on the creature days,
+           so this capitulum recycles it free (audit ruling). */
         { la: 'mulier', scene: SC.v_mulier, pars: 'nomen' },
         { la: 'Eva',    scene: SC.v_eva,    pars: 'nomen' },
         { la: 'vocat',  scene: SC.v_vocat,  pars: 'verbum' },
@@ -914,8 +922,7 @@
 
         /* Gn 2,9 */
         { la: 'In hortō arbor est. In arbore animal est.', scene: SC.h2_arbor,
-          nova: [{ w: 'arbor', e: '🌳', g: '' },
-                 { w: 'animal', e: '🐾', g: '' }] },
+          nova: [{ w: 'arbor', e: '🌳', g: '' }] },
 
         { la: 'In hortō animal quoque est.', scene: SC.h2_animalia,
           nova: [{ w: 'quoque', e: '➕', g: '= et' }] },
@@ -1413,8 +1420,11 @@
           nova: [{ w: 'ubi', e: '❓📍', g: '' }] },
 
         /* Gn 4,9 — "Nescio; num custos fratris mei sum ego?" The evasion is
-           told as what it is at S1: he does not say. */
-        { la: 'Cain timet. Cain īrātus nōn dīcit.', scene: SC.h5_tacet },
+           the Vulgate's own word: 'Nesciō' is kept as a FIXED FORMULA (like
+           'Fiat lūx' in h1), glossed by picture and paraphrase, never parsed —
+           the first person is not on the S1 ladder and is not taught here. */
+        { la: 'Cain timet. Cain dīcit: "Nesciō."', scene: SC.h5_tacet,
+          nova: [{ w: 'nesciō', e: '🤷', g: 'nōn scit' }] },
 
         /* Gn 4,15 — the sign is a PROTECTION, and the text says so */
         { la: 'Ecce signum! Deus signum dat.', scene: SC.h5_signum,
