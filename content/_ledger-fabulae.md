@@ -212,3 +212,102 @@ RĪVUS, S3) inherits: `leō mūs rēte dormit currit rōdit līber habitant parv
 `audit iam iuvat amīcus formīca cicāda ager frūmentum aestās hiems portat`
 `labōrat -que agricola gallīna ōvum aurum aureum pōnit quaerit volat cotīdiē`
 `multa intrā nihil habet`.
+
+---
+
+## Regiō III · RĪVUS (S3) — `content/fabulae-r03.js`
+
+Stage ceiling: everything S1–S2 **plus genitive and dative sg/pl**. No
+ablative beyond the locative habit Regiōnēs I–II already ship (`in silvā`,
+`in arbore`, `in agrō`, `in aquā`, and — new here, same shape — `in ōre`,
+which is exactly Regiō I's own `in rōstrō tenet`). `ad` + acc as shipped.
+
+Two rulings taken in this region, both recorded because a later author will
+hit them again:
+
+* **Ambiguous datives are avoided.** `rānae` is dat. sg. *and* nom. pl. Every
+  dative in f8 is `bovī` (3rd decl.) or `rānīs` (dat. pl.); `rānae` appears
+  only as a nominative plural, glossed as one.
+* **The genitive is built from marked endings first.** `canis` is its own
+  genitive, so the title's `umbra canis` is taught only after `rīvus → rīvī`
+  and `umbra → umbrae` have shown what the case does.
+
+### f7 Canis et Umbra — vocab cards (8)
+
+| lexeme | how |
+|---|---|
+| canis | vocab card, scene `v_canis`; nova 🐕 |
+| umbra | vocab card, scene `v_umbra` (dog + the thing in the water); nova 🐕🌑, `g: canis in aquā: umbra canis` |
+| truncus | vocab card, scene `v_truncus`; nova 🌳, `g: canis super truncum ambulat` |
+| lātrat | vocab card, scene `v_latrat`; nova 📢, `g: canis clāmat` |
+| rīvus | **FREE** (f3). Card + scene kept: it is the region's own name |
+| cāseus | **FREE** (f2). Card kept — the fable turns on it |
+| aqua | **FREE** (f3). Card kept |
+| portat | **FREE** (f5). Card + new scene `v_portat` (dog carrying the cheese) |
+
+### f7 — further lexemes introduced by `nova`
+
+| lexeme | how |
+|---|---|
+| ōs (ōre) | nova 👄, `g: ōs canis: canis cāseum tenet` — was GLOSS-ONLY after R1 (f2 `rōstrum = ōs avis`), now properly TAUGHT |
+| rīvī | **GENITIVE**, first of the region. nova 💧, morphology `g: rīvus → aqua rīvī` |
+| umbrae | **GENITIVE**. nova 🌑🧀, `g: umbra → cāseus umbrae` |
+| canis (gen.) | **GENITIVE**, homographic with the nominative — taught last, in `Umbra canis in aquā est`, where `umbra … est` forces the reading. FLAGGED for line-audit |
+| in ōre | locative, same fixed pattern as R1's `in rōstrō` |
+| silva · ambulat · venit · ad · super · videt · cupit · capit · cadit · sedet · quaerit · invenit · nihil · trīstis · magnus · altus · iam · sed · quoque · fābula · docet | **FREE** (R1/R2) |
+
+### f8 Rāna et Bōs — vocab cards (8)
+
+| lexeme | how |
+|---|---|
+| rāna | vocab card, scene `v_rana`; nova 🐸 |
+| bōs | vocab card, scene `v_bos`; nova 🐂 |
+| tumet | vocab card, scene `v_tumet` (the same frog small and swollen, side by side); nova 🐸⬆, `g: rāna parva, iam rāna magna` |
+| invidet | vocab card, scene `v_invidet`; nova 😒, `g: rāna nōn laeta est: bōs magnus est` — the verb that GOVERNS the new case |
+| superbus | vocab card, scene `v_superbus`; nova 😤, `g: rāna superba rānās nōn audit` |
+| ager | **FREE** (f5), emoji 🌾 |
+| aqua | **FREE** (f3), emoji 💧 |
+| cadit | **FREE** (f2), emoji ⬇️. Recycled 2× in the body, not 3 — a deliberate call, recorded: the ≥3 rule binds NEW lexemes, and this one is R1's |
+
+### f8 — further lexemes
+
+| lexeme | how |
+|---|---|
+| rānae (nom. pl.) | nova 🐸🐸, `g: ūna rāna, multae rānae` — glossed as a PLURAL so the dative never has to fight it |
+| bovem | nova 🐂, morphology `g: bōs → bovem` |
+| bovī | **DATIVE**, first of the region. nova ➡🐂, `g: bōs → bovī` |
+| rānīs | **DATIVE PLURAL**. nova ➡🐸🐸, `g: rānae → rānīs` |
+| habitat · parvus · magnus · laetus · respondet · clāmat · audit · iterum · dēvorat · frūmentum · iuvat · timet · videt · dīcit | **FREE** (R1/R2) |
+
+### f9 Cervus ad Fontem — vocab cards (8)
+
+| lexeme | how |
+|---|---|
+| cervus | vocab card, scene `v_cervus`; nova 🦌 |
+| fōns | vocab card, scene `v_fons`; nova ⛲, `g: fōns: aqua in silvā` |
+| cornua | vocab card, scene `v_cornua` — a bōs AND a cervus, so the card teaches the horns and not the beast (the device f6 used for `aureum`). **4th declension is S9**: every occurrence in this capitulum is nom./acc. PLURAL, a neuter `-a` identical in shape to f6's `ōva`. FLAGGED for line-audit |
+| pedēs | vocab card, emoji 🐾; nova `g: pēs, pedēs; cervus pedēs habet et currit` |
+| laudat | vocab card, scene `v_laudat`; nova 😍, `g: cervus dīcit: “cornua pulchra sunt!”` |
+| fugit | vocab card, scene `v_fugit`; nova 💨, `g: currit: canēs cervum nōn capiunt` |
+| servat | vocab card, scene `v_servat`; nova 🐾✓, `g: canēs cervum nōn capiunt` |
+| canis | **FREE** (f7) — the "again within the next two capitula" pass, and the hounds are the plot |
+
+### f9 — further lexemes
+
+| lexeme | how |
+|---|---|
+| fontem · fontis | nova ⛲ / 💧⛲, morphology `g: fōns → ad fontem` and `fōns → aqua fontis` (**GENITIVE**) |
+| cervī | **GENITIVE**. nova 🦌🌑, `g: cervus → umbra cervī` |
+| arborum | **GENITIVE PLURAL**, the region's only one. nova 🌳🌳, `g: arborēs → rāmī arborum` |
+| rāmus (rāmī) | nova 🌿, `g: arbor rāmōs habet` |
+| canēs · arborēs | nova, morphology `g: ūnus canis, multī canēs` / `ūna arbor, multae arborēs` |
+| umbra | **FREE** (f7), recycled in `umbra cervī` |
+| bibit · silva · arbor · timet · veniunt · discēdunt · līber · iterum · tenent · portant · pulcher · parvus · magnus | **FREE** (R1/R2) |
+
+### Words a later region may now treat as FREE
+
+Everything above, plus the R1/R2 seed. Regiō IV inherits: `canis umbra`
+`truncus lātrat ōs rāna bōs tumet invidet superbus cervus fōns cornua pedēs`
+`laudat fugit servat rāmus`, and the **genitive** and **dative** as
+constructions.
+
