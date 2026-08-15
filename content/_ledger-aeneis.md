@@ -563,6 +563,228 @@ on a device the revert is one word: `wall: 'murusAquae'`.
 
 ---
 
+# LIBER IV · PIETĀS — `content/aeneis-al4.js` (S12)
+
+> **THE MODESTY RULINGS OF THE TRACK LIVE HERE.** The four of them are written
+> out in full at the head of `content/aeneis-al4.js`; this is the ledger's
+> summary, and every one of them is a designer ruling, not a preference.
+
+### R1 · The fire is a metaphor, and is glossed as one
+
+Aen. 4,1–2 gives the queen a wound and a blind fire. This track does not put a
+wound in a child's mouth, and a fire that is not a fire must not be read as one.
+So a13 does what Ørberg does with any hard word — it names the figure and
+explains it, in Latin, on the page:
+
+> *Vergilius dīcit rēgīnam "ignī caecō carpī". Hic tamen ignis vērus nōn est:
+> poēta enim amōrem magnum quasi ignem pingit.*
+
+Nothing burns anywhere in a13. What the capitulum shows instead is **Vergil's
+own better picture (4,86–89): the work stops.** The towers do not rise, the
+walls stand half-built, the men sit down — and the cards are `cūra`, `vigilat`,
+`cessat`. Love in this liber is care and distraction; the physical content of
+the whole capitulum is a shared gaze, a banquet and a walk round the walls.
+
+### R2 · The cave is ONE CLAUSE and NO PICTURE
+
+Aen. 4,160–172 is told in exactly this much, and this is the entire text:
+
+> *Aenēās et Dīdō in eandem spēluncam vēnērunt.*
+
+Nothing before it, nothing after it, **and nobody in the picture**: the page is
+`a14_spelunca`, the mountain in the rain with two faceless `ventus` clouds and
+no figure of any kind. `spēlunca` is glossed as shelter from the rain (the
+poem's own *tēcta metū petiēre*) and is **deliberately NOT CARDED** — a card
+demands a picture, and the only honest picture here is an empty one.
+
+**The marriage that was not**, also in full, also one clause:
+
+> *Dīdō id coniugium vocat; coniugium tamen vērum nōn erat.*
+
+That is 4,172 (*coniugium vocat, hoc praetēxit nōmine culpam*) with the poet's
+own verdict kept and `culpa` dropped, because `culpa` invites a question a
+child should not be handed. **The subject of a14 is not the cave — it is
+FĀMA**, which is what Vergil himself spends the passage on (4,173–197): two
+thirds of the capitulum are the rumour.
+
+### R3 · Dīdō's end: acknowledged, refused, never shown
+
+a16 tells it the way Vergil's own next book does (5,1–7). The Trojans are
+already at sea; they see the walls glowing; **they do not know why** (*causa
+latet*). Then the narrator tells the READER, in one sentence, with no picture:
+
+> *Illō diē rēgīna Dīdō periit. Quō modō perierit, hīc nōn nārrātur:
+> Vergilius plūra dīcit, nōs autem hīc tacēmus.*
+
+That is the whole of it. **There is no sword anywhere in the liber, no bed, no
+blood, no body, no last speech.** The death is admitted (DESIGN §8:
+"acknowledged, dignified"), the mechanism is refused OUT LOUD, and the refusal
+is itself in Latin so the learner can see that something was left out on
+purpose — the same device a12 uses for Polyphēmus (*Plūra Achaemenidēs nōn
+dīcit*). The only picture is the art library's own `fire` with `pyre: true`,
+whose comment in js/actors-props.js reads "the distant funeral glow of DESIGN
+§8: light, never a body", drawn at scale 0.4–0.5, beside a small city wall,
+across water, from a ship. **Aen. 4,584–705 — the curse, the pyre built and
+mounted, Anna, Iris and the lock — is OMITTED ENTIRELY, and 4,625 is not
+quoted anywhere in this track.**
+
+### R4 · Dignity for both
+
+The queen is never a fool and never a warning: she asks, she is refused, she
+grieves, and the narrative calls her grief real (*dolor eius maximus est*).
+Aenēās is never cold: he obeys a god and says so (*Ītaliam nōn meā sponte
+petō*, 4,361 in graded prose), and *uterque dolōrem habet: illa amōrem, ille
+officium.* The inline quotation was chosen because it holds both halves in one
+line. **Aen. 4,569–570 (*varium et mūtābile semper fēmina*) IS OMITTED on
+principle:** it is a slur put in a god's mouth, the plot does not need it, and
+this product does not teach it to children. Registered here so the audit sees
+that it was a decision.
+
+## a13 · Dīdō amōre capta · fons Aen. 4,1–89
+
+**CARDS (6):** amor · soror · turris · vigilat · mōnstrat · cessat.
+
+| lexeme | how |
+|---|---|
+| amor | card `v_amor` — the two of them, APART, with one thought bubble between them. This is the only picture of love in the liber |
+| soror | card `v_soror` (the queen and Anna, in pale sea-blue) |
+| turris | card `v_turris` (the `turris` prop alone on the city ground) |
+| vigilat | card `v_vigilat` — the queen awake on bgNightSky, the region's only night card |
+| mōnstrat | card `v_monstrat` (the queen pointing at her own wall) |
+| cessat | card `v_cessat` — the wall, the tower, and the men **SITTING DOWN** under them. a4's `aedificat` is the same wall with the men pointing; the difference between the two cards is the difference the liber is about |
+
+**TAUGHT:** cūra · `ignis caecus` (the metaphor, glossed AS a metaphor — R1) ·
+pingit · opus.
+**NŌMEN PROPRIUM:** Anna.
+**RECYCLED:** convīvium, hospes, rēgīna, moenia, aedificat (a4), āra (a6).
+**CONTEXT:** vultus · augent · sānant · interdiū · alibi · inceptus.
+
+**OMITTED:** 4,15–29 (the oath to Sychaeus — it needs a dead husband and a vow
+to explain, and neither earns its lexemes) · 4,56–67 (the seers and the
+entrails; `sacra faciunt` covers it) · **4,68–73, the wounded-doe simile: a
+wound, even a simile's, is not put in this liber.**
+
+## a14 · Vēnātiō et fāma · fons Aen. 4,129–197
+
+**CARDS (6):** vēnātiō · canis · mōns · equus *(the word is a5's; the CARD is
+new, and the gloss makes the joke: `equus vērus, nōn ligneus ut ille
+Trōiānus`)* · fāma · nūntiat.
+
+**MISSING ART — FĀMA. Reported, not substituted.** Vergil's monster (eyes,
+tongues and ears under every feather, 4,181–183) is horror imagery and is not
+drawn. She is the `aquila` actor in al3's livid `FOEDUM` grey, flying over a
+city wall, with the talking crowd beneath her — and the gloss says in Latin
+which is which: *id quod hominēs inter sē dē aliīs nārrant; Vergilius eam quasi
+avem ingentem pingit.* The picture is a bird, the word is a rumour, and the
+learner is told so.
+**MISSING ART — RAIN ON LAND:** bgStormSea has rain; no land background has
+weather. The hunt's storm is `mountain` with two faceless `ventus` clouds, and
+`imber` is a glossed context word.
+
+**TAUGHT:** imber · spēlunca (**glossed, deliberately not carded — R2**) ·
+coniugium.
+**NŌMEN PROPRIUM:** Iarbās · Libya.
+**RECYCLED:** tempestās (a1 — *quālis in marī fuerat*), cervus (a2), latet
+(a5), nox, silva, turris (a13).
+**CONTEXT:** cōnscendit · comitēs · lātrant · vīrēs acquīrit · num.
+
+**OMITTED:** 4,90–128 (Iūnō and Venus arranging the day) · 4,133–139 (the gold
+and purple of the hunt) · 4,198–202 (Iarbās' ancestry, kept as one clause so
+a15's Iuppiter has a cause).
+
+## a15 · Mercurius monet · fons Aen. 4,219–449 (+ 4,449)
+
+**CARDS (5):** Mercurius · classis *(the word is a9's gloss; the CARD is new)* ·
+dolor · properat · immōtus.
+
+**MISSING ART — MERCURIUS. Reported, not substituted.** The library has no
+winged sandals, no petasus and no cādūceus, and the one winged role it owns
+(`angel`) is **Historia Sacra's picture for an angel** — the two tracks must
+not teach one picture with two meanings, which is the same rule that keeps
+`star` out of the Aenēis. Mercurius is therefore composed the way al1 composes
+Neptūnus: **by what he stands in.** He is a young beardless man in cloud-white
+and gold **standing on a cloud** (`ventus` with `face: false` under his feet),
+which no other figure in any track does, and the gloss names the attribute:
+*per āera volat et nūbibus īnsistit.* No wings, no halo, no radiance.
+
+**TAUGHT:** fallere · amāns (both **pre-teaching for a16's 4,296**).
+**VERBA VERGILIĪ (Aen. 4,449):** mēns · immōta · volvuntur · inānēs.
+**RECYCLED:** ēnsis (a7's poetic gloss, paid back in *ēnsem gemmātum gerit*),
+fātum (a1), pietās (a8), trahit (a5), cessat and turris and soror (a13),
+inānis (a11), quercus as Vergil's own simile.
+**CONTEXT:** immemor · obstupēscit · sponte · officium · uterque · neuter.
+
+**THE INLINE QUOTATION.**
+
+```
+mēns immōta manet, lacrimae volvuntur inānēs.
+```
+
+Quoted **whole**, at the moment it happens. Vergil's oak simile (4,441–446) is
+told in prose on the page before, so `immōtus` — this capitulum's own card — is
+met twice before the line uses it, and `quercus` is a prop the library owns.
+**The gloss refuses to settle the famous ambiguity**, because Vergil refuses
+to: *cuius lacrimae? Aenēaene an Dīdōnis? Vergilius nōn dīcit; nōs quoque nōn
+dīcimus.* That refusal is the pedagogy: a learner who notices the question has
+read the line the way scholars read it.
+
+**OMITTED:** 4,229–237 (Iuppiter's speech in full) · 4,246–255 (Mercury over
+Atlas — beautiful and expensive) · 4,365–387 (Dīdō's second speech: its anger
+the liber does not need and its curse it will not carry) · **4,569–570, see R4.**
+
+## a16 · Discessus et rogus procul · fons Aen. 4,450–705 · 5,1–7 (+ 4,296–297)
+
+**CARDS (4):** rogus · aurōra · vēlum · respicit.
+
+| lexeme | how |
+|---|---|
+| rogus | card `v_rogus` — the library's own `fire` with `pyre: true`, ALONE on bare ground, no person anywhere. In the story scenes it is drawn at 0.4–0.5 across water |
+| aurōra | card `v_aurora` (the sun over an empty shore; `sol` at 70,74 so it does not sit beside bgSea's own pale disc — a1's lesson) |
+| vēlum | card `v_velum` (one ship, sail full, nothing else) |
+| respicit | card `v_respicit` (the man on the ship, and the wall already small behind him) |
+
+**TAUGHT:** ignōrat (`nescit; causam nōn scit` — the B rating's own device made
+into vocabulary) · perit.
+**VERBA VERGILIĪ (Aen. 4,296–297):** at · dolōs · quis...possit · fallere ·
+amantem · praesēnsit · mōtūs · excēpit · prīma · futūrōs.
+**RECYCLED:** dolor and classis and properat and Mercurius (a15), turris and
+soror (a13), fūnēs incīdere (a12), portus (a9), aequor (a1), recēdit (a9),
+procul (a12), pietās (a8).
+
+**THE CLOSING QUOTATION.**
+
+```
+at rēgīna dolōs (quis fallere possit amantem?)
+praesēnsit, mōtūsque excēpit prīma futūrōs.
+```
+
+**Two whole hexameters and not the famous half-line alone**, because `dolōs` in
+296 has no verb until 297 and this track does not quote fragments that cannot
+be parsed — the same ruling that made a4 quote 1,3 entire. Quoted out of
+narrative sequence (they belong to a15's moment) for the reason a4 quotes the
+proem: the closing lines must land on the LIBER's picture, and this liber's
+picture is **a woman who knew before she was told**. `dolus` is a5's card;
+`fallere` and `amāns` are pre-taught in a15's own prose (*sed quis amantem
+fallere potest?*).
+
+**B RATING — see R3 above for the whole ruling.** In this capitulum: the fleet,
+the second warning, the departure before dawn, the empty harbour seen from the
+tower, the flames seen from the sea and not understood, one sentence of
+acknowledgment, and the refusal of the mechanism in Latin on the page.
+
+**PROBĀTIŌ b_al4 — Pietās:** `sententia` ×2 (hp 5 / 55 s each), and **no combat
+and no chase at all** — the liber is a conflict of duties and the trial that
+fits it is reading, twice, with the pressure gentle. Phase 1 is AMOR (six items
+from a13–a14: the queen who does not sleep, the work that stops, the rumour);
+phase 2 is PIETĀS (six from a15–a16: the god's message, the fleet, the mind
+that does not move, the fire nobody can explain). 110 seconds total — the
+longest and slowest trial in the track (al1 95 s, al2 100 s, al3 100 s) —
+because every item is a sentence about a person's motives rather than a picture
+of a storm, and because this liber must not end on a race. **Every gap is a
+NOMINATIVE**, which is the form the caught card carries.
+
+---
+
 ## Cross-liber recycling check (LATIN-STYLE §2: "again within the next two capitula")
 
 | taught in | recycled in |
