@@ -82,6 +82,11 @@ Owner is away often; proceed autonomously; PushNotification only when blocked.
 
 ## Infrastructure notes
 
+- Remote: https://github.com/oldenKnight/imarianus (private). Standing owner
+  authorization: auto-push main after every accepted milestone, before PC
+  switches, at completion. Never push unaudited work. Credential manager
+  authenticates; it cannot delete remote branches.
+
 - Dev server: node scripts/dev-server.js 8124 (serves /imarianus/ prefix too).
 - Screenshots: chrome --headless=new --hide-scrollbars --screenshot=out.png
   --window-size=<w+40>,870 --virtual-time-budget=9000
