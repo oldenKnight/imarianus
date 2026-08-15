@@ -37,6 +37,13 @@
                                       &screen=bossintro&region=l2     → Arca
 
      Extra knobs:
+        &cap=f16                 photograph a NAMED capitulum instead of the
+                                 region's first (works with every step
+                                 screen; seeds everything before it as done)
+        &page=3                  once a FĀBULA is running, tap 'perge' this
+                                 many times — the only way a headless shot
+                                 reaches story page N
+                                 e.g. &screen=fabula&region=r03&cap=f7&page=2
         &phase=caterva|clamor|fuga          (screen=boss)
         &phase=ordina|transitus|sententia   (screen=probatio)
                                  Restarts the engine on the same
@@ -76,6 +83,12 @@
       window.__QA_SCROLL = /scroll=1/.test(q);
       window.__QA_PHASE = (q.match(/phase=([a-z]+)/) || [])[1] || '';
       window.__QA_REGION = (q.match(/region=([a-z0-9]+)/) || [])[1] || '';
+      /* &cap=f16 — photograph a NAMED capitulum instead of the region's
+         first one, and &page=N tap 'perge' N times once its FĀBULA is
+         running, so a headless shot can reach a named story page. Without
+         &cap= every route below behaves exactly as it did before. */
+      window.__QA_CAP = (q.match(/cap=([a-z0-9]+)/) || [])[1] || '';
+      window.__QA_PAGE = parseInt((q.match(/page=([0-9]+)/) || [])[1] || '0', 10);
       /* which DOOR the route walks through. Explicit &track= wins; otherwise
          a Historia screen or a Historia region id (l1, l2, …) implies it. */
       window.__QA_TRACK = (q.match(/track=([a-z]+)/) || [])[1] ||
@@ -108,17 +121,28 @@
         createdAt: 1700000000000
       };
       /* The boss node only opens once EVERY capitulum of its region is done.
-         Every shipped region is covered at once (r01 = f1–f3, r02 = f4–f6,
-         l1 = h1–h5, l2 = h6–h10) because this seed runs before the manifest
-         is even parsed. l1 has no boss at all, which is the point of the
-         Historia map shot: finishing it must NOT grow a crown. */
+         EVERY shipped region is covered at once — this seed runs before the
+         manifest is even parsed, so the list is spelled out: fabulae f1–f18
+         (r01–r06) and historia h1–h22 (l1–l4). l1 has no boss at all, which
+         is the point of the Historia map shot: finishing it must NOT grow a
+         crown. Extend this range whenever a wave registers a new region. */
       if (window.__QA_SCREEN === 'boss' || window.__QA_SCREEN === 'probatio' ||
           window.__QA_SCREEN === 'bossintro') {
-        state.completed = { f1: DONE, f2: DONE, f3: DONE,
-                            f4: DONE, f5: DONE, f6: DONE,
-                            h1: DONE, h2: DONE, h3: DONE, h4: DONE, h5: DONE,
-                            h6: DONE, h7: DONE, h8: DONE, h9: DONE, h10: DONE };
+        state.completed = {};
+        for (var fi = 1; fi <= 18; fi++) { state.completed['f' + fi] = DONE; }
+        for (var hi = 1; hi <= 22; hi++) { state.completed['h' + hi] = DONE; }
         state.mapNode = 'b_' + (window.__QA_REGION || 'r01');
+      }
+      /* &cap=X: everything before X is finished and X itself is unlocked up
+         to the step being photographed — the same shape the default seed
+         gives f2, just moved. Only applies when the knob is used. */
+      if (window.__QA_CAP) {
+        var all = {}, ci;
+        for (ci = 1; ci <= 18; ci++) { all['f' + ci] = DONE; }
+        for (ci = 1; ci <= 22; ci++) { all['h' + ci] = DONE; }
+        all[window.__QA_CAP] = f2;
+        state.completed = all;
+        state.mapNode = window.__QA_CAP;
       }
       /* the landing screen is the LOGGED-OUT route: no cached name, and a
          stub Api whose me() fails, which is exactly what a visitor with no
@@ -244,7 +268,8 @@
          change: every route below was already track-shaped, it just had
          'fabulae' spelled into it. */
       var DOOR = '.door-' + window.__QA_TRACK;
-      var FIRST_CAP = (window.__QA_TRACK === 'historia') ? 'h1' : 'f2';
+      var FIRST_CAP = window.__QA_CAP ||
+        ((window.__QA_TRACK === 'historia') ? 'h1' : 'f2');
 
       /* Historia is a live door now (content/manifest.js), so screen=mox has
          to ask a track that is still empty — Aeneis is the last one left. */
@@ -403,6 +428,16 @@
             when('.steps button.node', function () {
               var b = stepButton(label);
               if (b) { tap(b); }
+              /* &page=N taps 'perge' N times so a headless shot can reach a
+                 named story page instead of only the first one. */
+              if (!window.__QA_PAGE) { return; }
+              var left = window.__QA_PAGE;
+              (function stepPage() {
+                if (left <= 0) { return; }
+                when('#next', function (nx) {
+                  tap(nx); left--; window.setTimeout(stepPage, 200);
+                }, 40);
+              }());
             });
           });
         });

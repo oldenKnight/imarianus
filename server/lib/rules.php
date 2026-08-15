@@ -327,6 +327,49 @@ function rule_regions_builtin() {
         array('q' => 'haedus',  'a' => 'haedus')
       )
     ),
+    /* Regiō V · Via (content id r05). THE WOLF RETURNS — CURRICULUM §1 gives
+       the same Lupus the bosses of R1, R5, R9 and the R12 finale — and this
+       duel is deliberately LONGER than his first: hp 8 (not the 6 r01–r04
+       share) over 72 phase-seconds, the extra hit landing in clāmor. None of
+       that reaches the server: a longer fight posts the same result payload,
+       so the rewards are the ordinary ones. Manifest-born, so no alias. */
+    'r05' => array(
+      'fables' => array('f13', 'f14', 'f15'),
+      'track'  => 'fabulae',
+      'boss'   => 'b_r05',
+      'fight_xp' => 30,
+      'quiz_xp_each' => 10,
+      'quiz_pass_max_wrong' => 1,   // <=1 wrong of 5 passes
+      // ANSWER KEY: mirrors the boss.quiz `la` values in
+      // content/fabulae-r05.js, same word -> image shape as r03/r04.
+      'quiz' => array(
+        array('q' => 'pāstor', 'a' => 'pāstor'),
+        array('q' => 'grex',   'a' => 'grex'),
+        array('q' => 'ursus',  'a' => 'ursus'),
+        array('q' => 'equus',  'a' => 'equus'),
+        array('q' => 'asinus', 'a' => 'asinus')
+      )
+    ),
+    /* Regiō VI · Urbs (content id r06). The boss is the FĒLĒS of f16, not
+       the wolf, so her tuning is the ordinary one (hp 6 / 70 phase-seconds,
+       22+28+20) and so are her rewards. Manifest-born, so no alias. */
+    'r06' => array(
+      'fables' => array('f16', 'f17', 'f18'),
+      'track'  => 'fabulae',
+      'boss'   => 'b_r06',
+      'fight_xp' => 30,
+      'quiz_xp_each' => 10,
+      'quiz_pass_max_wrong' => 1,   // <=1 wrong of 5 passes
+      // ANSWER KEY: mirrors the boss.quiz `la` values in
+      // content/fabulae-r06.js.
+      'quiz' => array(
+        array('q' => 'fēlēs',    'a' => 'fēlēs'),
+        array('q' => 'urbs',     'a' => 'urbs'),
+        array('q' => 'praesēpe', 'a' => 'praesēpe'),
+        array('q' => 'hircus',   'a' => 'hircus'),
+        array('q' => 'puteus',   'a' => 'puteus')
+      )
+    ),
     /* ---- HISTORIA SACRA -------------------------------------------------
        Liber I · Creātiō (content id l1). NO BOSS: CURRICULUM §2 gives the
        first liber of the track no probātiō, so the entry declares an empty
@@ -367,6 +410,52 @@ function rule_regions_builtin() {
         array('q' => 'dīluvium', 'a' => 'dīluvium'),
         array('q' => 'rāmus',    'a' => 'rāmus'),
         array('q' => 'turris',   'a' => 'turris')
+      )
+    ),
+    /* Liber III · Abraham (content id l3). A PROBĀTIŌ like l2 — one gentle
+       'sententia' phase, hp 5 / 55 s, no combat — and the server sees the
+       same result payload either way, so the rewards mirror l2's. SIX
+       capitula but FIVE quiz questions, which is what every shipped region
+       does: h15's own cards are all verbs, so h15 is represented in the
+       sententia phase instead. Manifest-born, so no alias entry. */
+    'l3' => array(
+      'fables' => array('h11', 'h12', 'h13', 'h14', 'h15', 'h16'),
+      'track'  => 'historia',
+      'boss'   => 'b_l3',
+      'fight_xp' => 30,
+      'quiz_xp_each' => 10,
+      'quiz_pass_max_wrong' => 1,   // <=1 wrong of 5 passes
+      // ANSWER KEY: mirrors the boss.quiz `la` values in
+      // content/historia-l3.js.
+      'quiz' => array(
+        array('q' => 'camēlus', 'a' => 'camēlus'),
+        array('q' => 'ovis',    'a' => 'ovis'),
+        array('q' => 'stēlla',  'a' => 'stēlla'),
+        array('q' => 'puer',    'a' => 'puer'),
+        array('q' => 'puteus',  'a' => 'puteus')
+      )
+    ),
+    /* Liber IV · Iacob (content id l4). The track's first TWO-PHASE probātiō
+       (ordina hp 3 / 30 s, then sententia hp 3 / 45 s), which again the
+       server never sees: same payload, same rewards. Six capitula, five quiz
+       questions — h22's five cards are all figures under one night sky and
+       none makes a fair pick-the-picture prompt, so h22 lives in the
+       sententia phase. Manifest-born, so no alias entry. */
+    'l4' => array(
+      'fables' => array('h17', 'h18', 'h19', 'h20', 'h21', 'h22'),
+      'track'  => 'historia',
+      'boss'   => 'b_l4',
+      'fight_xp' => 30,
+      'quiz_xp_each' => 10,
+      'quiz_pass_max_wrong' => 1,   // <=1 wrong of 5 passes
+      // ANSWER KEY: mirrors the boss.quiz `la` values in
+      // content/historia-l4.js.
+      'quiz' => array(
+        array('q' => 'cibus',  'a' => 'cibus'),
+        array('q' => 'patina', 'a' => 'patina'),
+        array('q' => 'scāla',  'a' => 'scāla'),
+        array('q' => 'Rachēl', 'a' => 'Rachēl'),
+        array('q' => 'hircus', 'a' => 'hircus')
       )
     )
   );
@@ -489,11 +578,27 @@ function rule_boss_min_ms($regionId) {
     // same total: hp 6 and 70 phase-seconds, all of them ceilings, so the
     // same 15 s floor is the honest one.
     'r04' => 15000,
+    // r05 = the Lupus duel, SECOND meeting: hp 8 over 72 phase-seconds
+    // (24/28/20), the longest fight shipped. The floor does NOT move with
+    // it — a longer fight cannot be forged FASTER, and the seconds are
+    // ceilings as they are everywhere else. 15 s, like every duel.
+    'r05' => 15000,
+    // r06 = the Fēlēs duel, back to the ordinary budget (hp 6, 22/28/20).
+    'r06' => 15000,
     // l2 = the Arca PROBĀTIŌ (js/probatio.js): ONE 'ordina' phase, hp 6 /
     // 45 s. Six items have to DRIFT down and be caught, and the spawn
     // interval at regionIndex 1 is ~1.5 s, so the trial is floored by the
     // item pump rather than by the player: 20 s.
-    'l2' => 20000
+    'l2' => 20000,
+    // l3 = the Prōmissa PROBĀTIŌ: ONE 'sententia' phase, hp 5 / 55 s. No
+    // item pump floors this one — a sententia asks the child to READ the
+    // sentence and choose, so the honest floor is the duel floor and not
+    // l2's: 15 s. (Both snippets asked for exactly this.)
+    'l3' => 15000,
+    // l4 = the Gregēs Iacob PROBĀTIŌ, TWO phases (ordina hp 3 / 30 s, then
+    // sententia hp 3 / 45 s). The ordina half has l2's item pump but only
+    // three items to catch, so 15 s stays the honest floor here too.
+    'l4' => 15000
   );
   // A renamed region keeps its tuning (see rule_region_aliases).
   $aliases = rule_region_aliases();

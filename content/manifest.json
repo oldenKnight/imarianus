@@ -7,14 +7,18 @@
         { "id": "r01", "capitula": ["f1", "f2", "f3"], "boss": "b_r01" },
         { "id": "r02", "capitula": ["f4", "f5", "f6"], "boss": "b_r02" },
         { "id": "r03", "capitula": ["f7", "f8", "f9"], "boss": "b_r03" },
-        { "id": "r04", "capitula": ["f10", "f11", "f12"], "boss": "b_r04" }
+        { "id": "r04", "capitula": ["f10", "f11", "f12"], "boss": "b_r04" },
+        { "id": "r05", "capitula": ["f13", "f14", "f15"], "boss": "b_r05" },
+        { "id": "r06", "capitula": ["f16", "f17", "f18"], "boss": "b_r06" }
       ]
     },
     {
       "id": "historia",
       "regions": [
         { "id": "l1", "capitula": ["h1", "h2", "h3", "h4", "h5"] },
-        { "id": "l2", "capitula": ["h6", "h7", "h8", "h9", "h10"], "boss": "b_l2" }
+        { "id": "l2", "capitula": ["h6", "h7", "h8", "h9", "h10"], "boss": "b_l2" },
+        { "id": "l3", "capitula": ["h11", "h12", "h13", "h14", "h15", "h16"], "boss": "b_l3" },
+        { "id": "l4", "capitula": ["h17", "h18", "h19", "h20", "h21", "h22"], "boss": "b_l4" }
       ]
     },
     { "id": "aeneis", "regions": [] }
