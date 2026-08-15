@@ -40,7 +40,33 @@ Latīnus, Lāvīnia, Pallās, Ēvander, Camilla, Mezentius** — and by charter 
 name is free against the cap and glossed at first use, so both waves may gloss
 the same name without either being wrong. The integrator need do nothing.
 
-### 0.8 The quotation table, continued
+### 0.8 THE BALTEUS — one visual variable across three librī
+
+The four librī of this part share ONE running picture, and it is the object
+Vergil hangs the end of his poem on: the sword-belt Turnus strips from Pallās
+at 10,495–500 and is still wearing at 12,941. The art library has no belt prop,
+so the belt is carried as **a single colour variable on one figure**:
+
+| liber | Turnus is drawn | why |
+|---|---|---|
+| IX (a33–a36) | `robeColor: RUTULUS, mantleColor: CANUS` — blue tunic, **white** cloak, no gold anywhere | he does not have the belt yet |
+| X a37–a38 | the same white | still not his |
+| X a39 onward | `mantleColor: GOLD` — one variable, changed once | he takes it on that page |
+| XI (a41–a44) | gold | he keeps it |
+| XII a47 | gold, and **Aenēās sees it** | the poem's last turn |
+
+Aenēās' own mantle has been GOLD since a1 and never changes; what changes is
+that the RUTULIAN acquires gold he did not have. Pallās wears the same gold in
+a38, alone in the frame, as the card `v_balteus`. By the time a47 says *Aenēās
+balteum vidit*, the learner has been looking at that gold band for two librī.
+
+**LEDGER CORRECTION, applied.** `content/aeneis-al9.js` originally drew Turnus
+with `mantleColor: GOLD` from a33 on, which would have spent the gold before
+the belt existed and left a47 with nothing to point at. The file was corrected
+before the liber shipped and this table is the corrected ruling; the a33 card
+row below is written to match.
+
+### 0.9 The quotation table, continued
 
 | liber | inline | closing | file |
 |---|---|---|---|
@@ -59,7 +85,7 @@ the same name without either being wrong. The integrator need do nothing.
 
 | lexeme | how |
 |---|---|
-| Turnus | card `v_turnus` — a Rutulian in **steel blue** with a **gold mantle**, the colour pair that marks him out for four librī. NŌMEN PROPRIUM, free against the cap, carded because the trial needs his picture |
+| Turnus | card `v_turnus` — a Rutulian in **steel blue** with a **WHITE cloak**, the colour pair that marks him out from his own men. NŌMEN PROPRIUM, free against the cap, carded because the trial needs his picture. **TURNUS WEARS NO GOLD IN THIS LIBER, deliberately** — see §0.8 above |
 | vāllum | card `v_vallum` — the `cityWall` actor alone, nobody on it and nothing beside it |
 | custōs | card `v_custos` — the same wall AT NIGHT with one man awake in front of it. The night is what tells this card from `vāllum` at tile size |
 | nympha | card `v_nympha` — **MISSING ART, composed**: no nymph actor exists, so the ships-turned-goddesses of 9,117–122 are what the text calls them, *deae maris fōrmā puellae* — `person` role 'woman', veil off, sea-green, standing LOW IN THE WATER (y 226) so the `sea` background's waterline cuts them at the waist. No tail, no fish, nothing invented |

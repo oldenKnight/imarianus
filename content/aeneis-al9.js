@@ -205,12 +205,19 @@
     return merge({ t: 'person', x: x, y: y, s: s, role: 'soldier',
                    robeColor: RUTULUS, mantleColor: false }, opts);
   }
-  /* Turnus: a Rutulian in the Rutulian blue, marked out by the GOLD
-     mantle (Vergil's gilded crest) and by youth — no beard. The gold
-     is his and nobody else's in this liber; in Liber X it moves. */
+  /* Turnus: a Rutulian in the Rutulian blue, marked out from his own
+     men by a WHITE cloak and by youth — no beard.
+     TURNUS WEARS NO GOLD ANYWHERE IN THIS LIBER, and that is
+     deliberate. Aenēās' own mantle has been gold since a1 and stays
+     gold; what changes is that the RUTULIAN has none, because the gold
+     he will wear is Pallās' balteus and he does not have it yet.
+     He takes it in Liber X (a39) and from that page on he is
+     drawn with `mantleColor: GOLD` — one variable, changed once, so
+     that when Aenēās sees the gold on his shoulder in Liber XII (a47)
+     the learner has been looking at it for two librī. */
   function turnus(x, y, s, opts) {
     return merge({ t: 'person', x: x, y: y, s: s, role: 'soldier',
-                   robeColor: RUTULUS, mantleColor: GOLD, beard: 'none' }, opts);
+                   robeColor: RUTULUS, mantleColor: CANUS, beard: 'none' }, opts);
   }
   /* the two friends, colour for colour as al5 drew them in a19 */
   function nisus(x, y, s, opts) {
