@@ -3,7 +3,9 @@
 Purpose: lets ANY fresh Claude session (new PC, new conversation) resume this
 project with zero context loss. Read MASTER-PLAN.md first, then this. Keep this
 file updated at every milestone; it is the cross-machine continuation point.
-Last updated: 2026-08-15 ~03:15 (America/Mexico_City) by Fable (main agent).
+Last updated: 2026-08-15 (America/Mexico_City) by the INT-5 integrator, after
+the FINAL content registration. **All 142 capitula are shipped, audited and
+registered.**
 
 ## Roles (owner's standing instruction — binding)
 
@@ -27,30 +29,55 @@ Owner is away often; proceed autonomously; PushNotification only when blocked.
 - M3 boss/probatio engine: 6 commits, phases caterva/clamor/fuga + probatio
   ordina/transitus/sententia, boss-as-data, item validation gates.
 - M9: offline queue with event ids, PWA (manifest/sw/icons/pwa.js), teacher
-  dashboard at teacher/. Regression suite 49/49.
-- CONTENT shipped, LINE-AUDITED and registered: fabulae r01-r06 (f1-f18),
-  historia l1-l4 (h1-h22). Committed+audited awaiting registration: fabulae
-  r07 (one fix queued), r10, aeneis al1/al2 (all in task-13 INT-4 queue).
+  dashboard at teacher/. Regression suite 50/50.
+- **ALL THREE CONTENT TRACKS COMPLETE, LINE-AUDITED AND REGISTERED —
+  142/142 capitula, 33 regions.** Nothing is left in content/_pending/.
+  - FĀBULAE r01-r12 (f1-f36) — 12 duels, r12 the four-phase Lupus finale.
+  - HISTORIA SACRA l1-l9 (h1-h58) — l9 Iesus is the last and the most
+    closely audited; its probātiō (Lūx Mundī, two sententia phases, hp 2+2)
+    is DELIBERATELY GENTLE and approved as shipped, flagged for owner tuning.
+  - AENĒIS al1-al12 (a1-a48) — al12 Ultimum is the product's hardest region
+    and its only THREE-phase boss (sententia 4/55 + 4/50 + 4/45).
+  - Registration (INT-5): manifest.js/.json twins data-identical;
+    server/lib/rules.php carries all 33 regions, answer keys and min-ms
+    floors; the three vocabulary ledgers are merged back to ONE PER TRACK.
+  - Verified headlessly at that registration: regression 50/50; a loadRegion
+    sweep over all 33 regions generating every capitulum × 7 steps (994 steps,
+    7719 items) with ZERO empty steps, ZERO console warnings and ZERO errors;
+    map/boss/story DOM checks on l9, al6, al12, h57 and a48.
 
-## IN FLIGHT as of 2026-08-15 03:15 (relaunch per finisher pattern if lost)
+## IN FLIGHT
 
-Four FINISHER agents: fabulae r08(draft)+r09(new), fabulae r11(draft)+r12(new,
-finale Lupus Ultimus), historia l5(draft)+l6(draft; perfect-tense landmark),
-historia l7(draft, has known stage violations to fix)+l8(new). Drafts sit
-untracked in content/. If their "M5:"/"M6:" commits are absent, relaunch.
+Two agents, both on non-content files and both running in parallel with INT-5:
+
+- ART agent — js/actors-*, js/backgrounds2.js, tests/art-gallery.html,
+  tests/regression.html (the art rows).
+- POLISH agent — css/styles.css, js/app.js, js/map.js, js/probatio.js,
+  js/boss.js, js/content-loader.js, tests/qa.html.
+
+Their working-tree changes are NOT in the INT-5 commits. If either is lost,
+relaunch per the finisher pattern; content/, the manifest twins, rules.php and
+the ledgers are already committed and are not theirs to touch.
 
 ## NEXT (order)
 
-1. Audit each finished wave; INT-4 per task 13 (aeneis al1/al2 registration,
-   queued audit fixes, ledger part2 merges, r07-r12 + l5-l8 registration, push).
-2. Historia L9 IESUS — dedicated agent, most doctrinally sensitive, closest
-   audit (8 capitula per CURRICULUM §2).
-3. Aeneis librī III-XII in three waves (a9+; ids continue al3..al12; 4
-   capitula each; authentic Virgil lines per liber close; charter in the
-   al1/al2 file headers + CURRICULUM §3).
-4. Art addendum + polish backlog (task 12). 5. M10 final gauntlet (visual
-   sweep, whole-corpus Latin audit, side-by-side vs commercial apps), then
-   owner deploy checklist below.
+1. INT-6 — ONLY IF NEEDED, i.e. if the art or polish agents queue registration
+   work or leave anything in content/_pending/. There is no content wave left
+   to integrate.
+2. M10 final gauntlet: visual sweep across all 33 regions, whole-corpus Latin
+   audit, side-by-side against commercial apps.
+3. Owner deploy checklist below.
+
+### Open, flagged for the OWNER (not blockers)
+
+- Per-region STEP xp is inexpressible: rule_step_xp() is keyed by step name
+  globally. The whole Aenēis track asked for 25; the signal is carried by
+  fight xp (40 vs 30) instead. Fixing it needs a region argument and every
+  caller changed.
+- l9's gentle boss tuning (total hp 4 against the house 6+). Revert is
+  hp 3+3 in content/historia-l9.js and touches nothing else.
+- al11's `harundo` transitus wall is legible but the softest of the three
+  walls (thin stems, green on teal) — the one to re-check on a small screen.
 
 ## AUDIT RULINGS LOG (Latin/design decisions — do not re-litigate)
 
@@ -64,7 +91,17 @@ untracked in content/. If their "M5:"/"M6:" commits are absent, relaunch.
   killed, Cain's deed off-page, flood shows no victims.
 - Cap: ≤8 pictured content lexemes/capitulum (h1 granted 9), function words
   free but glossed+ledgered, ≤16 total types. Boss clamor/sententia items
-  hand-authored from wave 3 on.
+  hand-authored from wave 3 on. AENĒIS runs on its own charter instead:
+  ≤10 cards, whole S1-S12 ladder open, cōpia commūnis assumed (ledger §0).
+- Wave-5 audit, APPROVED AS SHIPPED and recorded in content/_ledger-aeneis.md:
+  the ten Librī VI-VIII open questions; the Liber XI closing-quotation swap
+  (11,846-847 rejected, 11,508-509a quoted at a44); the balteus-exclusivity
+  ruling (§0.8's colour variable and the SONUS pairs it forbids).
+- Options that differ ONLY by a macron are a BUG, not a distractor:
+  normWord() strips macrons, so the wrong chip grades correct. Guarded by
+  tests/regression.html BUG-4 over every manifest region. Fix rule: replace
+  the colliding NON-answer with a real form of the same declension that
+  collides with nothing (-ae in decl. 1, the ablative in decl. 4).
 
 ## OWNER DEPLOY CHECKLIST (when project done — owner does this)
 
