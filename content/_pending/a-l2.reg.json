@@ -1,0 +1,68 @@
+{
+  "_note": [
+    "Registration snippet — AUTHORING-BRIEF 'Registration protocol'. Content",
+    "agents do not touch content/manifest.js, content/manifest.json or",
+    "server/lib/rules.php; the integrator applies this and deletes the file.",
+    "",
+    "APPLY AFTER content/_pending/a-l1.reg.json: al2 is the SECOND region of",
+    "the aeneis track and must follow al1 in the manifest's regions array —",
+    "js/app.js regionIndex() reads that order and feeds it to the phase engine",
+    "as the ONE difficulty input (DESIGN §6), so a wrong order makes Liber II",
+    "easier than Liber I.",
+    "",
+    "al2 is a PROBĀTIŌ liber (kind: 'probatio', boss id b_al2) with TWO phases:",
+    "ordina (hp 6 / 45 s) + sententia (hp 5 / 55 s). Legacy single-phase tuning",
+    "in the content file is hp 11 / 100 s. bossMinMs 15000 matches l2/l3/al1.",
+    "",
+    "The ordina phase declares its categories in the content file and does NOT",
+    "declare `items`: js/probatio.js then draws from the liber's whole",
+    "vocabulary and drops every word no category claims (zoneOf), so exactly",
+    "eight words can fall. Nothing for rules.php to know here — recorded so the",
+    "integrator does not go looking for an item list.",
+    "",
+    "quizKey carries the same three keys per row as r03/r04/l3/al1: rules.php",
+    "stores {q, a}, and `correct` is always 0 against the boss.quiz order in",
+    "content/aeneis-al2.js — note the file name, and see the FILE NAME block",
+    "in a-l1.reg.json for why the region id is 'al2' and not 'l2' (rules.php",
+    "keys regions in one flat namespace and 'l2' is Historia's).",
+    "",
+    "al2 is a NEW region: its content id IS its progressId, so it needs no",
+    "entry in rule_region_aliases().",
+    "",
+    "XP mirrors al1 exactly; see that file's note for why it sits above the",
+    "Historia numbers."
+  ],
+
+  "track": "aeneis",
+  "region": "al2",
+  "titulus": "Trōia",
+  "ladder": "S12",
+  "progressId": "al2",
+  "capitula": ["a5", "a6", "a7", "a8"],
+  "boss": "b_al2",
+
+  "quizKey": [
+    { "q": "equus",   "a": "equus",   "correct": 0, "from": "a5" },
+    { "q": "castra",  "a": "castra",  "correct": 0, "from": "a5" },
+    { "q": "serpēns", "a": "serpēns", "correct": 0, "from": "a6" },
+    { "q": "ignis",   "a": "ignis",   "correct": 0, "from": "a7" },
+    { "q": "penātēs", "a": "penātēs", "correct": 0, "from": "a8" }
+  ],
+
+  "xp": {
+    "step": 25,
+    "boss": 40,
+    "quizEach": 10,
+    "quizPassMaxWrong": 1
+  },
+
+  "antiCheat": {
+    "bossMinMs": 15000
+  },
+
+  "manifestEntry": {
+    "id": "al2",
+    "capitula": ["a5", "a6", "a7", "a8"],
+    "boss": "b_al2"
+  }
+}
