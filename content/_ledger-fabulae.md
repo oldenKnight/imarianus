@@ -311,3 +311,102 @@ Everything above, plus the R1/R2 seed. Regiō IV inherits: `canis umbra`
 `laudat fugit servat rāmus`, and the **genitive** and **dative** as
 constructions.
 
+---
+
+## Regiō IV · MŌNS (S4) — `content/fabulae-r04.js`
+
+Stage ceiling: everything S1–S3 **plus the ablative** — the six prepositions
+`in / ex / ab / cum / dē / sub` and the instrumental ablative. Regiōnēs I–III
+used `in silvā`-type locatives as an unanalysed habit; f10 p6 (`in monte`) is
+where that habit is finally NAMED, and every later ablative is built on it.
+
+Still forbidden and avoided throughout: imperative, vocative, question words,
+pronouns, imperfect, perfect, comparative, and the infinitive with
+`potest`/`vult`/`dēbet` (S5 per AUTHORING-BRIEF ruling 2 — so Regiō I's
+`capere nōn potest` is NOT reused; every such thought is a plain negative
+present instead).
+
+**MISSING ART, reported not worked around:** there is no road/`via` prop or
+background in the library, so `in viā` is not taught anywhere in this region.
+The six prepositions the ladder actually names are all pictured instead.
+
+### The FUNCTION words of this region (free against the ≤8 cap, all glossed)
+
+| word | first use | how |
+|---|---|---|
+| ex | f10 p2 | nova ⬅🌳, `g: lepus iam nōn in silvā est` |
+| in + abl. | f10 p6 | nova ⛰, morphology `g: mōns → in monte` |
+| cum | f10 p7 | nova 🐢➕🐇, `g: = testūdō et lepus`; + `lepore` morphology gloss |
+| dē | f10 p7 | nova ⛰⬇️, `g: mōns suprā est; testūdō dē monte venit` (suprā is f3-taught) |
+| sub | f10 p9 | nova 🌳⬇, `g: arbor suprā, lepus īnfrā` (both f3-taught) — also a vocab CARD, `pars: 'praepositio'`, scene `v_sub` |
+| ab | f10 p14 | nova 🌳➡, `g: ↔ ad arborem` |
+
+### f10 Testūdō et Lepus — vocab cards (8)
+
+| lexeme | how |
+|---|---|
+| testūdō | vocab card, scene `v_testudo`; nova 🐢 |
+| lepus | vocab card, scene `v_lepus`; nova 🐇 |
+| mōns | vocab card, scene `v_mons`; nova ⛰, `g: mōns altus est` |
+| celer | vocab card, scene `v_celer`; nova 💨, `g: ↔ tardus` |
+| tardus | vocab card, scene `v_tardus`; nova 🐢, `g: testūdō nōn currit; testūdō ambulat` |
+| vincit | vocab card, scene `v_vincit`; nova 🥇, `g: lepus nōn vincit` |
+| dormit | **FREE** (f4). Card + new scene `v_dormit` (the hare asleep under the tree) |
+| sub | the region's preposition card — see the FUNCTION table above |
+| testūdinem | nova 🐢, morphology `g: testūdō → testūdinem` |
+
+### f11 Vulpēs et Cicōnia — vocab cards (8)
+
+| lexeme | how |
+|---|---|
+| ciconia | vocab card, scene `v_ciconia`; nova 🐦, `g: ciconia rōstrum habet` |
+| patina | vocab card, scene `v_patina` (the dish EMPTY, so the card teaches the vessel and not the food); nova 🍽, `g: patina nōn alta est` |
+| urna | vocab card, scene `v_urna`; nova 🏺, `g: urna alta est; patina nōn alta` |
+| cēna | vocab card, scene `v_cena`; nova 🍽, `g: cibus in patinā: cēna` |
+| cibus | vocab card, scene `v_cibus` — grain AND a full dish, so the card teaches the class; nova 🍲, `g: frūmentum, cāseus, ōva: cibus`. Was GLOSS-ONLY after R1 (f1 `ēsurit = cibum cupit`), now TAUGHT |
+| lingua | vocab card, scene `v_lingua`; nova 👅, `g: lingua in ōre est` (`ōs` from f7) |
+| dat | vocab card, scene `v_dat`; nova 🤲➡, `g: vulpēs cēnam ciconiae pōnit` — carries Regiō III's DATIVE forward |
+| vulpēs | **FREE** (f1), emoji 🦊 |
+
+### f11 — the instrumental ablative, and the datives
+
+| form | how |
+|---|---|
+| linguā | **INSTRUMENTAL**, first of the region. nova 👅, `g: lingua vulpis cibum capit` (`vulpis` is a Regiō III genitive, recycled) |
+| rōstrō | **INSTRUMENTAL**. nova 🐦👄, `g: vulpēs linguam habet, ciconia rōstrum` — `rōstrum` itself is **FREE** (f2) |
+| in patinā · in urnā | nova 🍽 / 🏺, morphology `g: patina → in patinā`, `urna → in urnā` |
+| ex urnā · ab urnā | the S4 prepositions, on a noun taught two pages earlier |
+| ciconiae (dat.) | nova ➡🐦, `g: ciconia → vulpēs ciconiae dat`. AMBIGUOUS in form — afforded here only because `dat` + an accusative object has fixed the slot, and because it is paired with… |
+| vulpī (dat.) | nova ➡🦊, `g: vulpēs → ciconia vulpī dat` — 3rd declension, unmistakable |
+| **DROPPED:** `avis`, `longus` | both were drafted into f11's opening gloss and both cut: each would have been a 9th/10th content lexeme in a capitulum already at the cap, and neither could have been recycled three times |
+
+### f12 Haedus et Lupus — vocab cards (8)
+
+| lexeme | how |
+|---|---|
+| haedus | vocab card, scene `v_haedus`; nova 🐐 |
+| mūrus | vocab card, scene `v_murus`; nova 🏰, `g: mūrus altus est: haedus suprā, lupus īnfrā` |
+| stat | vocab card, scene `v_stat`; nova 🐐⬆, `g: nōn sedet, nōn ambulat: stat` |
+| tūtus | vocab card, scene `v_tutus`; nova 🛡, `g: lupus haedum nōn capit` |
+| lupus | **FREE** (f3), emoji 🐺 — the WOLF CAMEO of the narrative spine |
+| clāmat | **FREE** (f3), emoji 📢. 2 body uses, not 3 — recorded, same call as f8's `cadit` |
+| īrātus | **FREE** (f3), emoji 😠. 2 body uses — same call |
+| sub | **FREE** (f10). Card kept with its own scene `v_subMuro`, because the wall is where the preposition finally means something |
+
+### f12 — further lexemes
+
+| lexeme | how |
+|---|---|
+| locus | nova 📍, `g: mūrus locus altus est; silva locus lupī est` (`lupī` = a Regiō III genitive, recycled). No card: every picture of "place" this art set can make is a picture of the wall, which would collide with `mūrus` |
+| in mūrō | nova 🏰, morphology `g: mūrus → in mūrō` |
+| ex silvā · sub mūrō · dē mūrō | the S4 prepositions, all **FREE** by f10 |
+| vincit | **FREE** (f10) — which is what lets the mōrāle use it |
+| servat | **FREE** (f9) — pre-taught two capitula early, which is what lets `locus haedum servat` carry the moral |
+| altus · malus · timet · videt · venit · ambulat · discēdit · parvus · semper · silva · fābula · docet | **FREE** (R1–R3) |
+
+### Words a later region may now treat as FREE
+
+Everything above, plus the R1–R3 seed. Regiō V inherits: `testūdō lepus mōns`
+`celer tardus vincit ciconia patina urna cēna cibus lingua dat haedus mūrus`
+`stat tūtus locus`, the six prepositions `in ex ab cum dē sub`, and the
+**ablative** (locative and instrumental) as constructions.
