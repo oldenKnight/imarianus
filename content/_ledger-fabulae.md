@@ -853,3 +853,238 @@ Everything above, plus the R1–R6 seed. Regiō VIII inherits: `cornīx lapillus
 `iacit plēnus aegrōtus vestīgium senex callidus lāna gravis levis sal` `subitō`
 `tum tandem nēmō prōcul`, and the **perfect** — including the 3rd person plural
 `-ērunt` — as a construction, with the imperfect's background role intact.
+
+---
+
+## Regiō VIII · HORTUS (S8) — `content/fabulae-r08.js`
+
+**COMPARISON IS A PICTURE BEFORE IT IS AN ENDING.** S8 is comparatives,
+superlatives and adverbs, and a comparative needs TWO THINGS IN ONE FRAME —
+which is the same requirement Regiō VI's `rūsticus`/`urbānus` card already
+solved. The two devices are one device, so every comparative in this region is
+asserted on a page whose picture has already settled it.
+
+Five rulings are recorded in the file header. The three that bind later authors:
+
+1. **THE NEW MORPHOLOGY ARRIVES ON AN OLD WORD.** The comparative is
+   introduced on `altus` (R1 f1), not on anything new — Regiō VII's "no new
+   verb in the perfect" applied to a morphology instead of a tense.
+2. **THE COMPARATIVE ADVERB COMES THIRD, NEVER FIRST**, and its gloss prints
+   the whole series: `fortis → fortiter → fortius → fortissimē` (f22),
+   `altus → altē → altius → altissimē` (f24). Three forms of one word, one per
+   page. f22 spends four pages on the wind failing because the escalation IS
+   the paradigm and Aesop supplied it.
+3. **AN ITEM THAT DOES NOT SAY WHERE IN THE SEQUENCE IT STANDS IS A
+   COIN-FLIP.** `altē`, `altius` and `altissimē` are all true of a flying
+   crane. Every hand-authored CORRIGE/COMPLĒ item in this region therefore
+   keeps its position word — `prīmum`, `tum`, `tandem` — inside the item text,
+   which is Regiō VI's `Ōlim`-stays-in-the-item rule one stage on.
+
+Only two irregular comparatives are opened, `magnus → maior` and
+`parvus → minor` (f23, adjacent pages, each glossed with its own positive);
+`bonus → melior` and `malus → peior` are deliberately left shut, because an
+irregular form with no work to do is a paradigm and not a lesson. The
+`-errimus` superlative is taught on `pulcher` alone (f24) — `celerrimus` is
+left for a region that needs it. The **ablative of comparison is not opened**:
+`quam` carries every comparison here, because one way of saying a thing is a
+lesson and two are a paradigm.
+
+**MISSING ART, REPORTED AND NOT WORKED AROUND** (the fourth such report; IV, V
+and VII filed the others):
+
+* There is **no garden, `hortus`, wall or bed** in the library. The region is
+  CALLED Hortus and the word is taught NOWHERE in it, for the reason R5 gave
+  for `via` and R7 for `lītus`. Everything grows `in agrō`.
+* There is **no feather, wing, `penna` or `āla`**. f24 never names one: the
+  peacock's tail is `cauda` (the `pavo` actor draws it fanned as its whole
+  silhouette) and the crane simply flies, in the bird core's `fly` pose.
+
+**ART THAT TURNED OUT TO EXIST, worth inheriting:** `harundo` takes
+`bend:true`, so the reed's bending — the thing f23 is about — is one prop
+option. `person` takes `mantleColor` / `mantleColor:false`, which is f22's
+pallium ON and OFF the same man. `sol` and `ventus` both have faces.
+
+**TWO ART TRAPS, recorded because they are R7's `lapilli`-not-`lapillī` lesson
+again — a silently wrong option still renders a perfectly nice picture:**
+
+* **`pose:'carry'` IS NOT "he holds his cloak."** js/actors-person.js draws a
+  SECOND PERSON riding the carrier's shoulders (it exists for Aenēās portāns
+  Anchīsēn). Five pages of f22 showed the traveller with a bearded passenger
+  on his back while the Latin talked about a garment. All five are now the
+  default `stand`.
+* **THE FALLEN PALLIUM IS NOT A `pellis`.** The pellis prop is a near-WHITE
+  fleece; the man's mantle is COL.terra `#c9663c`. A learner reading `viātor
+  pallium posuit` over a white hide attaches the word to the wrong object —
+  and that same fleece is **Regiō IX's wolf disguise**, so one picture would
+  have carried two words two regions apart. The cloak on the ground is two
+  stacked `umbra` ellipses in the mantle's own colour instead, which is R7's
+  lapillus/vestīgium device exactly. **FLAGGED FOR LINE-AUDIT.**
+
+**A QUANTITY RULING, FLAGGED FOR LINE-AUDIT.** `grūs` is a monosyllabic 3rd
+declension noun of the `bōs`/`sūs` class: long in the nominative, SHORT in the
+oblique stem — **grūs, gruis, gruem**. The draft wrote `grūem`/`grūis`
+throughout and it is corrected here, on the track's own shipped precedent
+(`bōs → bovem, bovī` in R3 f8; `vulpēs → vulpem, vulpe` in R1/R4). Five string
+edits if Fable rules the other way.
+
+**`quercus` IS 4TH DECLENSION** and the ladder puts 4th/5th at S9. It is used
+here in the **nominative and accusative only** (`quercus` / `quercum`) — the
+two forms indistinguishable from the 2nd declension the learner has had since
+Regiō I, which is the afford R3 f9 took for `cornua`. No genitive, dative or
+ablative of it anywhere: f23's reed says `ad quercum`, never `quercuī`.
+**FLAGGED FOR LINE-AUDIT.**
+
+### The COMPARISON MORPHOLOGY and the FUNCTION words (free against the ≤8 cap, all glossed)
+
+| form | first use | how |
+|---|---|---|
+| altior | f22 p3 | nova ⬆, `g: ventus altus est; sōl altior est` — over a picture with the sun drawn ABOVE the cloud, so the ending is the only new thing on the page |
+| quam | f22 p3 | **FUNCTION**, nova ↔, `g: sōl altior quam ventus: sōl suprā, ventus īnfrā` (both R1-taught). Carries every comparison in the region; the ablative of comparison is never opened |
+| fortior · fortissimus | f22 p4, p19 | nova 💪⬆ / 💪🥇, each glossed off the positive standing beside it |
+| fortiter · fortius · fortissimē | f22 p8, p10, p12 | the ADVERB SERIES, one per page, each gloss printing the run so far (`fortiter, fortius, fortissimē: nēmō fortius flat`) |
+| calidior | f22 p17 | nova 🔥⬆, `g: calidus, calidior: sōl calidior quam hiems est` |
+| maior · minor | f23 p4, p5 | the two IRREGULARS, adjacent pages, each with its own positive in the gloss |
+| altē · altius · altissimē | f24 p10, p11, p12 | the second ADVERB SERIES, on `altus`, drawn as three y values in three pictures |
+| pulchrior · pulcherrima | f24 p6, p3 | the `-ERRIMUS` pattern, on the one adjective the fable is about |
+| tū | f23 p8 | **PERSONAL PRONOUN**, new to the track (R1 shipped `ā tē`, R6 `mē`, but never `tū`). Glossed by POINTING — nova 👉, `g: harundō ad quercum dīcit: “tū” — quercus est` — on the page where the picture holds exactly two characters and one is speaking. Direct speech only, exactly like R5's ruling for `tuus`. 5 uses (f23 p8/p17, f24 p7/p9 plus `tē` in f23 p17). **`ego` was CUT** from a late draft of f24 p18: the contrast was already carried by `tua` in the sentence before, and a second new pronoun was not worth it |
+| nūlla | f24 p3 | **FUNCTION**, nova 0️⃣, `g: nūlla cauda = nōn ūna cauda` (`ūnus` from R2 f4). Glossed AND used in the sentence beside it, then again in f24 p17 and COMPLĒ[4] — 3 encounters. See the recorded call below |
+| prope | f23 p3 | **FUNCTION**, nova ↔, `g: nōn prōcul: prope` (`prōcul` from R7 f20). 2 story uses + the AENIGMATA scramble that quotes p3 — the R7 `subitō` treatment |
+| perfect forms glossed | throughout | `flāvit · tenuit · vīcit · flexit · cecidit · stetit · mānsit · posuit · portāvit · vīdit · rīsit · respondit · dīxit · vēnit · discessit`. Morphology, not lexemes: every underlying verb is R1–R7 vocabulary, so R7's rule holds one stage on |
+| imperfects | throughout | `erat · erant · stābat · portābat · ambulābat · habēbat · iacēbat · cupiēbat · vidēbat` — R6's background job, unchanged |
+| 1sg in DIRECT SPEECH | f22 p4, f23 p7, f24 p18 | `sum · timeō · volō`. Not new as a construction: R1 f1/f3 shipped `cupiō`, `habeō`, `possum` in quoted speech and R5 recorded the rule. Never in narrative, never in a mōrāle |
+
+### f22 Ventus et Sōl — vocab cards (8), SIX new content lexemes
+
+| lexeme | how |
+|---|---|
+| ventus | vocab card, scene `v_ventus`; nova 💨, `g: ventus flat; ventus arborēs movet`. 13 uses. **The region's through-line**: f22's antagonist, f23's storm, f24's last failed hope, and the boss |
+| sōl | vocab card, scene `v_sol`; nova ☀, `g: sōl in caelō est; sōl nōn ventus est`. 12 uses |
+| pallium | vocab card, scene `v_pallium` — the SAME man with the cloak and without it, so the card teaches the garment and not the man (the R6 `v_rusticus` device). **Held out of SONUS and AENIGMATA**: `viātor` is a man on both boards. 8 uses |
+| fortis | nova 💪, `g: fortis ↔ fessus; fortis ventus nōn fessus est`. **NO CARD** — the whole `fortis` family is a comparison, and a comparison is two pictures, which does not fit a tile. 2 body uses in the positive, plus six more of the paradigm built on it |
+| calidus | nova 🔥, `g: sōl calidus est; hiems nōn calida est`. **NO CARD**, same reason (and `v_sol` would be the only picture of it). 3 body uses |
+| flat | vocab card, scene `v_flat` — the cloud AND what its gusts do, so the card is the blowing and not the wind. **Held out of SONUS/AENIGMATA** (one more cloud than `ventus`). The story only ever shows `flāvit`; the card carries the citation form, which is the treatment R6 f17 gave `dormit` |
+| viātor | **FREE** (R5 f14), scene `v_viator`. 9 uses. R5 gave it no card because every picture of "traveller" is a picture of `vir`; here there is no `vir` in the capitulum, so the card is safe |
+| arbor · hiems · pōnit | **FREE** (R1 f1 / R2 f5 / R2 f6). See the recorded calls below |
+
+**RECORDED CALL — three FREE cards with one body use each.** `arbor` (`ab
+arbore`, p6), `hiems` (`hiems nōn erat`, p16) and `pōnit` (as `posuit`, p17)
+each appear once in f22's Latin. The ≥3 rule binds NEW lexemes and all three
+are old; the same call was recorded for R3 f8's `cadit`, R4 f12's `clāmat`,
+R6 f17's `dormit` and R6 f18's `cornua`. All three earn their cards on the
+board rather than in the text: they are the only pictures in this capitulum
+that share nothing with a cloud, a sun or a man. **The first draft had `arbor`
+at ZERO uses**, which is past every precedent — p6 now reads `Viātor ab arbore
+ambulābat`, which is true in the picture (the tree stands at the left edge and
+he walks away from it, to the right).
+
+### f23 Quercus et Harundō — vocab cards (8), THREE new carded lexemes
+
+| lexeme | how |
+|---|---|
+| quercus | vocab card, scene `v_quercus`; nova 🌳, `g: quercus arbor magna est; quercus glandēs habet`. 17 uses. 4th declension — see the ruling above |
+| harundō | vocab card, scene `v_harundo`; nova 🌾, `g: harundō prope aquam crēscit; harundō tenuis est`. 13 uses |
+| flectit | vocab card, scene `v_flectit` (the reed bent, with the wind that bends it). **Held out of SONUS/AENIGMATA** — two reeds on one board would be `harundō` twice. Story shows `flexit` 3× |
+| truncus | **FREE** (R3 f7), scene `v_truncus`; nova 🪵, `g: quercus cecidit: iam truncus in agrō iacet`. 3 uses. The oak's fall needs no new art: the `quercus` leaves the frame and R3's log lies where it stood |
+| ventus · sōl | **FREE** (f22). 13 and 2 uses |
+| ager · agricola | **FREE** (R2 f5 / R2 f6), scenes `v_ager` (the grain alone) / `v_agricola` (a man beside the same grain). **The two never meet in SONUS or AENIGMATA**: by ear the learner would be choosing between two pictures both true of the word heard |
+
+**NO PARTICIPLES ANYWHERE IN THIS REGION.** "The bent reed" is a perfect
+passive participle and the passive is S10, so f23 never says it. What it says
+instead is what the picture shows and what the learner can already read —
+`Ventus harundinem flectit`, a plain accusative object, the construction
+Regiō I opened — which also puts the agent of the whole fable in the subject
+where it belongs. This is the golden exemplar's rule (change the sentence,
+never the grammar) applied to a participle.
+
+**ONE DEPARTURE FROM THE FABLE AS COMMONLY TOLD, recorded:** in Aesop the oak
+is uprooted and hurled into a river and the reed's speech is a rebuke over the
+corpse. Here the oak simply falls and becomes R3's `truncus`, the sun comes
+out, the reed's line is about the wind rather than about the oak's ruin, and
+the `agricola` of Regiō II comes to take the wood — which is what actually
+happens to a fallen oak. **The mōrāle is untouched** and it is still the reed
+that survives; only the tone is B-rated (DESIGN §8).
+
+### f24 Pāvō et Grūs — vocab cards (SEVEN), TWO new carded lexemes
+
+| lexeme | how |
+|---|---|
+| pāvō | vocab card, scene `v_pavo`; nova 🦚, `g: pāvō avis magna est; pāvō caudam magnam habet`. 13 uses. `pavo` is drawn with `alwaysFan`, so the fan IS the silhouette |
+| grūs | vocab card, scene `v_grus` — on **bgHiems**, whose `#c3ced6` sky is darker than bgPlain's cream and throws a pale grey bird forward. That is the Regiō IV ciconia fix, and cranes in winter are also just true. 16 uses |
+| cauda | nova 🦚, `g: cauda pāvōnis magna est; cauda gruis parva est`. **NO CARD** — a card would have been a second peacock. Treatment precedent: R5's `sōlus`, R7's `sal`. 8 uses |
+| volat | vocab card, scene `v_volat` (the crane IN THE AIR). **Held out of SONUS/AENIGMATA** — one more crane. 8 uses |
+| ager · sōl · ventus · arbor | **FREE** (R2 f5 / f22 / f22 / R1 f1). 3 · 2 · 3 · 1 uses |
+
+**`quercus` WAS DROPPED FROM THIS CAPITULUM'S CARDS, and the reason is a rule
+worth inheriting: A CARD IS A PROMISE THAT THE CAPITULUM SAYS THE WORD.** The
+first draft carded eight words here of which `quercus`, `sōl` and `ventus`
+appeared **nowhere in f24's Latin** — they were on the board purely to give
+SONUS enough non-colliding pictures. That is past every shipped precedent
+(the worst before this was one body use, never zero). Two fixes, both taken:
+`sōl` and `ventus` were **written into the fable**, and the arc they make —
+sun, then wind, then sun again — is the one f23 already walks
+(`ventus discessit et sōl vēnit`), so the region's three fables now share one
+sky and the wind fails at the peacock one page before the learner has to fight
+him. `quercus` was **removed**, which also deletes the region's closest 96 px
+call (`arbor` on the plain against `quercus` on the plain — two pictures of a
+tree). Seven cards, every one of them with a body use.
+
+**RECORDED CALL — `nūlla` is used 2× in the f24 story, not 3.** It is a
+FUNCTION word (the BRIEF's cap language exempts these), it is glossed AND used
+in the same page's second sentence rather than left to live inside a gloss,
+and the third encounter is COMPLĒ[4], which keeps `Nūlla cauda pulchrior est`
+in the item text on purpose — the clause is what forces the superlative, so
+without it the item is a coin-flip. Same shape as R5's `sōlus` and R7's
+`subitō`.
+
+**`spectat` WAS CUT** from a late draft of p13, which had glossed
+`spectat = videt` and then used the word exactly once — the gloss-once-use-once
+defect this ledger exists to catch, and the same call R7 made on `terra` and
+`valdē`. The page now reads `Pāvō gruem vidēbat`, which is R1's verb in R6's
+imperfect and costs nothing.
+
+**THE CRANE'S ANSWER IS NOT AN INSULT (DESIGN §8).** In Aesop the crane calls
+the peacock a slave to his own beauty; here she simply flies, comes back, and
+gives him his superlative before she takes hers. The peacock is left admired
+and grounded, not humiliated, and the mōrāle gives each of them their own
+comparative — `pāvō pulchrior est, sed grūs altius volat` — which is the
+fable's actual justice.
+
+### Boss b_r08 · Ventus
+
+Ordinary duel tuning (hp 6 / 70 phase-seconds, 22 + 28 + 20), because he is NOT
+the wolf — CURRICULUM §1 gives Lupus R1, R5, R9 and the R12 finale. The learner
+has watched this one weather-being lose to the sun, break an oak and fail to
+lift a peacock, and then fights him; that is the shape R6 gave the fēlēs.
+**The FUGA phase is thematic here** — in fuga the player is pushed, and being
+pushed by Ventus is the fable — which is why the phase order is unchanged
+rather than reshuffled the way r04's race was.
+
+Hand-authored clāmor, five items, all three capitula represented. **Every
+frame carries a comparative, a superlative or an adverb**: the gap stays a
+picturable noun (the BRIEF's rule) and the target morphology does its work in
+the words around it, so the learner reads five comparisons under time
+pressure. `cauda`, `fortis`, `calidus` and every comparative are absent from
+the gap list on purpose — the first two have no card, and an adjective gap
+would need a card that is itself a comparison, which is two pictures and does
+not fit a tile.
+
+**A CLĀMOR DEFECT THE HARNESS CAUGHT, and the rule it restates:** the fifth
+item read `Cauda ____ pulcherrima est.` and answered it with `pāvō`. The
+catchable tile carries the **citation form**, so the filled frame read
+`Cauda pāvō pulcherrima est`, which is not Latin — the gap wanted a genitive.
+R5's ruling already says the gap stands where the DICTIONARY form stands; the
+frame is turned around instead (`____ caudam pulcherrimam habet.`), which
+keeps the superlative and gives the nominative a nominative's slot.
+
+**SHARED-PICTURE CHECK ACROSS CAPITULA** (R7's rule): `harundō` is not in the
+boss quiz because `quercus` is — a reed and an oak are both green things on
+the same cream field at 96 px — and `arbor` is excluded for the same reason.
+The quiz is `ventus · sōl` (f22), `quercus` (f23), `pāvō · grūs` (f24).
+
+### Words a later region may now treat as FREE
+
+Everything above, plus the R1–R7 seed. Regiō IX inherits: `ventus sōl pallium`
+`fortis calidus flat viātor quercus harundō flectit truncus pāvō grūs cauda`
+`volat prope nūlla quam tū`, and **comparatives, superlatives and the adverb**
+— positive, comparative and superlative of both — as constructions, with
+`maior` and `minor` as the only irregulars opened.
