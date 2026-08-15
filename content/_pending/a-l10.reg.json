@@ -1,0 +1,72 @@
+{
+  "_note": [
+    "Registration snippet — AUTHORING-BRIEF 'Registration protocol'. Content",
+    "agents do not touch content/manifest.js, content/manifest.json or",
+    "server/lib/rules.php; the integrator applies this and deletes the file.",
+    "",
+    "APPLY AFTER al9: al10 is the TENTH region of the aeneis track and must",
+    "follow al1..al9 in the manifest's regions array — js/app.js regionIndex()",
+    "reads that order and feeds it to the phase engine as the ONE difficulty",
+    "input (DESIGN §6). al6, al7 and al8 are authored by a parallel agent; if",
+    "they have not landed when this is applied, HOLD al10 rather than inserting",
+    "it early, which would tune it as if it were an earlier liber.",
+    "",
+    "al10 is a PROBĀTIŌ liber (kind: 'probatio', boss id b_al10) with TWO",
+    "phases: sententia (hp 5 / 55 s) then ordina (hp 6 / 45 s) — the reading",
+    "phase FIRST and longer, which is the liber's own shape (the gods talk,",
+    "then the world divides). Legacy single-phase tuning in the content file is",
+    "hp 11 / 100 s. bossMinMs 15000 matches l2/l3/al1..al5/al9.",
+    "",
+    "The sententia phase declares its own `items` (6, hand-authored per",
+    "AUTHORING-BRIEF 'Boss clamor/sententia items'). The ordina phase",
+    "DELIBERATELY OMITS `items`: js/probatio.js then draws from the whole",
+    "liber's vocabulary and silently drops every word no category claims",
+    "(zoneOf), so exactly the eight accepted words can fall. Nothing here for",
+    "rules.php to know.",
+    "",
+    "quizKey carries the same three keys per row as al1-al5 and al9: rules.php",
+    "stores {q, a}, and `correct` is always 0 against the boss.quiz order in",
+    "content/aeneis-al10.js. Region id 'al10', not 'l10' — rules.php keys",
+    "regions in one flat namespace (see a-l1.reg.json). NOTE: 'al10' must not",
+    "be matched by any prefix rule written for 'al1'; if rules.php does prefix",
+    "matching anywhere, check that pair explicitly.",
+    "",
+    "al10 is a NEW region: its content id IS its progressId, so it needs no",
+    "entry in rule_region_aliases().",
+    "",
+    "XP mirrors al1-al5 and al9 exactly."
+  ],
+
+  "track": "aeneis",
+  "region": "al10",
+  "titulus": "Fāma",
+  "ladder": "S12",
+  "progressId": "al10",
+  "capitula": ["a37", "a38", "a39", "a40"],
+  "boss": "b_al10",
+
+  "quizKey": [
+    { "q": "Iuppiter", "a": "Iuppiter", "correct": 0, "from": "a37" },
+    { "q": "Pallās",   "a": "Pallās",   "correct": 0, "from": "a38" },
+    { "q": "balteus",  "a": "balteus",  "correct": 0, "from": "a38" },
+    { "q": "Turnus",   "a": "Turnus",   "correct": 0, "from": "a39" },
+    { "q": "Lausus",   "a": "Lausus",   "correct": 0, "from": "a40" }
+  ],
+
+  "xp": {
+    "step": 25,
+    "boss": 40,
+    "quizEach": 10,
+    "quizPassMaxWrong": 1
+  },
+
+  "antiCheat": {
+    "bossMinMs": 15000
+  },
+
+  "manifestEntry": {
+    "id": "al10",
+    "capitula": ["a37", "a38", "a39", "a40"],
+    "boss": "b_al10"
+  }
+}

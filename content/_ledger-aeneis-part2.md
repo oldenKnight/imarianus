@@ -257,3 +257,173 @@ Four ablātīvī absolūtī, two purpose clauses, a relative clause and an indir
 question across the twelve items; every gap is a picturable content lexeme in
 the nominative. The last item of the liber is *Rogās quid amīcōs servāverit?
 ____ Vergiliī eōs servāvit* — answer `carmen`, under the scene of the quotation.
+
+---
+
+# LIBER X · FĀMA — `content/aeneis-al10.js` (S12)
+
+The liber that begins in heaven and ends with a man giving a dead boy back to
+his people. Between those two things stands the object this track has been
+building toward: **the balteus** (§0.8).
+
+## a37 · Concilium deōrum · fons Aen. 10,1–117
+
+**CARDS (4)**
+
+| lexeme | how |
+|---|---|
+| concilium | card `v_concilium` — the `throne` with Iuppiter on it and Venus and Iūnō on either side. Told from `v_iuppiter` by the CROWD: `v_iuppiter` is one god and one bird |
+| Iuppiter | card `v_iuppiter` — the `king` in cloud-white and gold with the `aquila` beside him, **no throne and NO RADIANCE OF ANY KIND**. NŌMEN PROPRIUM, free against the cap |
+| pāx | card `v_pax` — two men of the two colours facing each other with open hands and **not one weapon on the page**. The absence is the word |
+| favet | card `v_favet` — a goddess with her hand out over two small soldiers; the size difference is the meaning |
+
+**TAUGHT (glossed, no card):** murmurat · īdem · cuique · fortūna · iūrat.
+**NŌMINA PROPRIA:** Venus, Iūnō and Iuppiter are a1/a5's and re-glossed here.
+
+**THE GODS ARGUE AND DO NOT DECIDE.** The council is compressed to what a child
+can hold: Iuppiter forbids the war and is disobeyed, Venus pleads, Iūnō answers,
+heaven murmurs *like the first wind in a wood* (10,96–99 — Vergil's own simile,
+kept and drawn with `ventus` between two `tree`s), and the king refuses to take
+a side: *rēx Iuppiter omnibus īdem*. Nobody is hurt in this capitulum.
+**THE HALF-LINE THAT IS NOT RE-QUOTED.** Iuppiter's last words are *fāta viam
+invenient* (10,113), which is **3,395, and a11 already quoted it as a whole
+hexameter**. The page says so in Latin and sends the learner back to Liber III.
+It is NOT registered as a fresh authentic line: here it is a half-line, and the
+track does not quote fragments.
+**ART RULING.** Iuppiter is drawn as a20 draws him — `king`, cloud-white and
+gold, `aquila` beside him, and **never `star`**: `star` is Historia Sacra's sign
+for the God who has no body, and the two tracks must not teach one picture with
+two meanings.
+
+## a38 · Pallās fortis · fons Aen. 10,146–425
+
+**CARDS (3):** Pallās · balteus · revocat.
+
+**THE BALTEUS IS A CARD, AND IT IS MISSING ART.** See §0.8 for the three-liber
+mechanism. `v_balteus` is Pallās ALONE on an empty plain in the one gold band —
+nothing else in the frame, because the frame IS the definition. The gloss says
+in Latin exactly what the thing is (*zōna lāta quam vir fortis ex umerō gerit*),
+the liber names it eight times, and a39's last page tells the learner outright
+to remember it. Nothing is asserted that the picture cannot show: a gold band on
+a shoulder is drawn, and a gold band on a shoulder is what the word means.
+**SONUS never offers `balteus` against `Pallās`** — the same young man twice.
+`v_pallas` puts him on a river bank with his Arcadēs behind him; `v_balteus`
+puts him alone on an empty plain.
+**TAUGHT:** Ēvander · asper · aciēs · factum (**pre-taught here on purpose** —
+`factīs` is in the liber's closing quotation, and a38 plants it in Pallās' own
+speech, *per fortia facta patrum*).
+**B RATING.** The battle is DESIGN §8 throughout: a line that gives way, a young
+man who turns it round, and no one struck. `revocat` is the capitulum's verb and
+its picture is a man facing his own retreating men.
+**OMITTED:** the aristeia of 10,310–425.
+
+## a39 · Turnus et Pallās · fons Aen. 10,439–509
+
+**CARDS (3):** Turnus (re-carded from a33, same picture) · victor · lūget.
+
+**PALLĀS' DEATH — the a16 REFUSAL DEVICE, first of this liber's two uses.**
+Aen. 10,474–489 is one spear through a shield and a body. On the page there is
+this and nothing else:
+
+> *Duo iuvenēs concurrunt. Quō modō pugnāverint, hīc nōn nārrātur: Vergilius
+> plūra dīcit, nōs autem hīc tacēmus.*
+> *Pallās cecidit.*
+
+No wound, no weapon, no body, no blood. `Pallās cecidit.` stands **alone on its
+own page** with the refusal scene under it — two words, which is the whole point.
+**WHAT IS KEPT is the dignity Vergil gives Turnus two lines later** (10,491–495):
+he does not keep the body, he sends it back to the father, and he says so.
+**AND THE POET'S OWN VERDICT** (10,501–505) is kept, in graded prose and NOT as
+a quotation, because a sentence about a man buying a day back is worth more to a
+child in words he can read: *Nescit mēns hominum quid futūrum sit. Victor hodiē
+gaudet; sed veniet diēs quō hunc balteum magnō pretiō ēmptum esse dīcet.*
+**THE THEFT, and the promise:** *Ūnum tamen abstulit: balteum aureum ex umerō
+iuvenis sustulit et umerō suō imposuit.* From this page on Turnus is drawn
+`mantleColor: GOLD` (§0.8). The capitulum's last page is *Memoriā tenē ūnum
+balteum … in librō duodecimō iterum eum vidēbis.*
+**TAUGHT:** pretium.
+**FORWARD PROMISE:** *Quid Iuppiter responderit, in fīne huius librī legēs* —
+a40 keeps it, exactly as a36 kept a34's.
+
+## a40 · Īra Aenēae temperāta · fons Aen. 10,633–908 (+ 10,467–469a)
+
+**CARDS (4):** Mezentius · Lausus · parcit · reddit.
+
+**ĪRA AENĒAE IS OMITTED ENTIRE, AND NOT REFUSED.** Aen. 10,510–605 — the killing
+spree that follows the news of Pallās, including the four young men taken alive
+for a human sacrifice — is the darkest thing the hero of this poem does, and no
+part of the liber's arc needs it. It is therefore simply **NOT ON THE PAGE**: no
+refusal sentence, no *nōs hīc tacēmus*, nothing. The device is expensive and
+this liber spends it exactly twice.
+The omission is not a hole, **because Vergil himself supplies the bridge**: at
+10,633–688 Iūnō draws Turnus off the field with a phantom, so the man Aenēās is
+hunting is not there to be found. What the capitulum shows instead is what the
+brief asks for — his grief (*tacuit — deinde lacrimāvit*) and his resolve.
+
+**LAUSUS' DEATH — the a16 REFUSAL DEVICE, second and last use:**
+
+> *Lausus tamen nōn cessit. Quō modō ceciderit, hīc nōn nārrātur: Vergilius
+> plūra dīcit, nōs autem hīc tacēmus.*
+
+**Everything after it is Aen. 10,821–832 almost entire**, because it is the best
+thing in the liber and completely safe: Aenēās sees the boy's face, groans,
+remembers his own father, takes NOTHING (*Arma tua tibi manent: nihil auferō*),
+lifts him himself, and gives him back to his people. Father and son wear the
+SAME IRON, which is the capitulum's point — and a SONUS hazard at tile size, so
+`Mezentius` and `Lausus` are never offered together.
+**MEZENTIUS' OWN END (10,833–908) IS OMITTED ENTIRELY**: he goes back to look
+for his son and the liber closes. Vergil's last hundred lines are named as
+existing and not retold — *Plūra Vergilius nārrat; hīc autem liber decimus fīnem
+habet.*
+**MŌRĀLE:** *etiam hostis patrem amāvit — et hostis alter id intellēxit. Quī
+victō parcit et corpus reddit, is vērē victor est.*
+**TAUGHT:** claudicat · ingemit.
+
+**THE QUOTATION — Aen. 10,467–469a, TWO AND A HALF hexameters:**
+
+```
+stat sua cuique diēs, breve et inreparābile tempus
+omnibus est vītae; sed fāmam extendere factīs,
+hoc virtūtis opus.
+```
+
+**WHY THREE WORDS OF A THIRD LINE.** `extendere` in 468 has no governing
+predicate until *hoc virtūtis opus* in 469, and this track does not quote what
+cannot be parsed — the ruling that made a4 quote 1,3 entire and a16 quote 4,297
+together with 4,296. So the quotation runs to the full stop in the middle of 469
+and the third page says in Latin what it is doing: *Vergilius versum tertium hīc
+incipit; haec tria verba sententiam fīniunt.* **The enjambment is thereby
+TAUGHT**, exactly as a4 taught it on `lītora`.
+They are Iuppiter's answer to Hercules as Pallās goes out to die — they belong
+to a39's moment and are read at the END of the liber for the reason a4 quotes
+the proem, a12 the departure, a16 the queen's foreknowledge and a36 the two
+friends: **the closing quotation must land on the LIBER's picture, and this
+liber's picture is a man lifting a boy who is not his son.**
+Everything is in hand at the point of quotation: `brevis`, `tempus`, `vīta`,
+`diēs` are cōpia commūnis; `fāma` is a14's card; **`virtūs` is a35's card**,
+taught one liber earlier; `opus` is a13's gloss; `factum` is a38's own gloss,
+planted for this line. Only `cuique`, `inreparābile` and `extendere` are new,
+and all three are glossed on the quotation pages themselves.
+OCT/Mynors text with quantity marks added and NOT ONE LETTER CHANGED.
+
+**VERBA VERGILIĪ (Aen. 10,467–469a):** stat · sua cuique · breve ·
+inreparābile · vītae · fāmam · extendere · factīs · hoc … opus · virtūtis.
+
+**MISSING ART, reported:** no BELT prop (§0.8) · no HERCULES and no STYX
+(Pallās' prayer is a young man with his hands up and an empty sky, which is what
+praying looks like) · no CHARIOT (Mezentius fights on foot beside his `equus`) ·
+no BIER (Pallās is carried by two men in `pose: 'carry'`).
+
+**PROBĀTIŌ b_al10 — Fāma Factīs:** `sententia` then `ōrdinā`, **in that order
+and not the other way round**, because the liber's own shape is exactly that:
+first the gods talk, then the world divides into what happens above and what
+happens below. Six hand-authored sententia items across all four capitula (four
+ablātīvī absolūtī, a passive, a relative clause); then the liber sorted into
+`IN CAELŌ` (Iuppiter, concilium, pāx, favet — badged `throne`) against
+`IN CAMPŌ` (Turnus, Pallās, balteus, Lausus — badged `swordShield`). `items` is
+deliberately ABSENT from the ōrdinā phase so the engine draws from the whole
+liber's vocabulary and silently drops every word no category claims — so exactly
+those eight can fall and `revocat`, `lūget`, `victor`, `Mezentius`, `parcit` and
+`reddit` cannot. hp 5+6 = 11 over 55+45 = 100 s: the al5 total, with the reading
+phase first and longer, because a liber that ends on a man lifting a boy should
+not end its trial on a race.
