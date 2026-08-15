@@ -3,9 +3,15 @@
 Purpose: lets ANY fresh Claude session (new PC, new conversation) resume this
 project with zero context loss. Read MASTER-PLAN.md first, then this. Keep this
 file updated at every milestone; it is the cross-machine continuation point.
-Last updated: 2026-08-15 (America/Mexico_City) by the INT-5 integrator, after
-the FINAL content registration. **All 142 capitula are shipped, audited and
-registered.**
+Last updated: 2026-08-15 ~16:10 (America/Mexico_City) by Fable (main agent).
+
+**PROJECT COMPLETE.** All 142 capitula shipped, line-audited and registered;
+art (107 actors, 15 backgrounds) and polish backlogs cleared; the M10 gauntlet
+ran (118-shot visual matrix at 4 widths, zero overflow; 9 findings triaged;
+10-ruling fix round applied and verified; final regression 77/77) and every
+gate G1-G6 passes — the full verdict with the side-by-side comparison is in
+docs/GAUNTLET-VERDICT.md, including the six open OWNER DECISIONS. Everything
+is pushed to origin/main. What remains is the owner's deploy (checklist below).
 
 ## Roles (owner's standing instruction — binding)
 
