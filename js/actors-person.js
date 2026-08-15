@@ -509,13 +509,54 @@
      tinted toward the sky so they read as distance, exactly like the
      distantTree trick in scenes.js.
      opts: n (3..5), colors (array of hex), pose, seed
+
+     `seed` and `pose` were declared in this header from the start but never
+     read, so every populus in the book was the SAME four people: same count,
+     same robes, standing on the same five pixels. Historia asks for a crowd
+     twenty times in a liber and the repetition is the thing the eye catches
+     first. Both keys are live now (INT pass 6).
      ============================================================ */
   var CROWD_ROBES = [COL.linen, COL.terra, COL.olive, COL.ochre, COL.grey, COL.cream];
   var CROWD_SKINS = ['light', 'mid', 'deep', 'pale'];
 
+  /* A crowd must vary between SCENES and never between two draws of the SAME
+     scene: js/scenes.js caches sprites and the regression harness compares
+     emitted strings, so Math.random would make a sprite disagree with the
+     scene it was cut from and make every test here unpinnable. xorshift32 —
+     three shifts and three xors, nothing else, so it is ES5 to the letter and
+     bit-identical in every engine (JS bitwise ops are defined on int32, which
+     is precisely the arithmetic xorshift wants; the >>> 0 only puts the sign
+     bit back before the divide).
+
+     THE WARM-UP IS NOT DECORATION. Content seeds crowds with small hand-typed
+     numbers — historia-l7 uses 5, 7, 9 and 13 — and every generator of this
+     shape emits a first value that is still nearly a straight function of its
+     seed: taken raw, seeds 1 through 24 all chose a crowd of THREE. Three
+     rounds are enough to scatter neighbouring seeds fully. */
+  function crowdRand(seed) {
+    var st = (Math.floor(seed) >>> 0) || 1;
+    function r() {
+      st ^= (st << 13); st >>>= 0;
+      st ^= (st >>> 17);
+      st ^= (st << 5); st >>>= 0;
+      return st / 4294967296;
+    }
+    r(); r(); r();
+    return r;
+  }
+
   function crowdGroup(opts) {
     var o = opts || {};
-    var n = o.n || 4;
+    /* NO seed = the exact call the whole book makes today, and it must emit
+       byte-identical markup: rnd stays null and every branch below falls back
+       to the constant it used before. */
+    var seeded = (typeof o.seed === 'number' && isFinite(o.seed));
+    var rnd = seeded ? crowdRand(o.seed) : null;
+    /* drawn FIRST and unconditionally so that the robe/jitter stream below
+       depends only on the seed, not on whether the caller also passed n --
+       seed 7 dresses its crowd the same way whether it has three or five. */
+    var drawnN = rnd ? (3 + Math.floor(rnd() * 3)) : 4;
+    var n = o.n || drawnN;
     if (n < 3) { n = 3; }
     if (n > 5) { n = 5; }
     /* layout: middle figure in front, others fanned out behind */
@@ -531,15 +572,36 @@
     /* draw the deepest first */
     order.sort(function (a, b) { return b.d - a.d; });
 
-    var s = '', it, robeC, fig;
+    /* rotate the robe table by a whole number of entries: the crowd keeps its
+       authored colour SPACING (every other entry, so no two neighbours share a
+       tunica) and only the starting point moves. */
+    var rot = rnd ? Math.floor(rnd() * CROWD_ROBES.length) : 0;
+    /* pose passes straight through — person() already validates it against
+       POSES and falls back to 'stand', so there is no second list here to
+       drift out of step with the core. Without a pose the authored
+       stand/point alternation is untouched. */
+    var forced = o.pose || null;
+
+    var s = '', it, robeC, fig, jx;
     for (i = 0; i < order.length; i++) {
       it = order[i];
-      robeC = (o.colors && o.colors[i]) || CROWD_ROBES[(i * 2 + 1) % CROWD_ROBES.length];
+      robeC = (o.colors && o.colors[i]) || CROWD_ROBES[(i * 2 + 1 + rot) % CROWD_ROBES.length];
       /* distance tint: mix toward the cream sky, like distantTree's opacity */
       if (it.d) { robeC = mix(robeC, 246, 0.12 * it.d); }
+      /* +/-4 units, quantised to 0.5 so the transform string stays short.
+         Small on purpose twice over: the slots are a composed fan, and more
+         than about a quarter of a figure's width turns the group back into a
+         row — and the registered BOUNDS below are deliberately NOT widened to
+         cover the jitter, because widening them would re-crop every existing
+         single-crowdGroup sprite (historia l2's v_lingua among them) and those
+         are exactly the unseeded scenes this change promises not to touch.
+         Safe as long as a seeded crowd is never a scene's only actor, which is
+         true of all four seeded uses in the book (historia-l7). */
+      jx = it.x;
+      if (rnd) { jx = it.x + Math.round((rnd() * 8 - 4) * 2) / 2; }
       fig = person({
         role: 'crowd',
-        pose: (i % 3 === 1) ? 'point' : 'stand',
+        pose: forced || ((i % 3 === 1) ? 'point' : 'stand'),
         robeColor: robeC,
         mantleColor: (i % 2) ? COL.umber : false,
         skin: CROWD_SKINS[i % CROWD_SKINS.length],
@@ -548,7 +610,7 @@
         beard: (i % 3 === 0) ? 'short' : 'none',
         hair: (i % 4 === 2) ? 'long' : 'short'
       });
-      s += '<g transform="translate(' + it.x + ',' + (-2 * it.d) + ') scale(' + it.k + ')"' +
+      s += '<g transform="translate(' + jx + ',' + (-2 * it.d) + ') scale(' + it.k + ')"' +
         (it.d ? ' opacity="' + (1 - 0.1 * it.d) + '"' : '') + '>' + fig + '</g>';
     }
     return s;

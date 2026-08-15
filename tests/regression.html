@@ -2440,6 +2440,88 @@
       return (t === want) ? null : 'emitted   ' + t + '\nexpected  ' + want;
     });
 
+  /* ---- INT6-CROWD ----
+     crowdGroup declared `pose` and `seed` in its header from the first commit
+     and read NEITHER, so historia-l7's three side-by-side crowds — authored
+     with seeds 7 and 13 precisely so they would not be clones — drew as three
+     identical groups, and the 39 content items asking the crowd to point or
+     raise its arms were silently ignored. Both keys are live now. The hard
+     part is the promise attached to it: a call with neither key must emit what
+     it emitted before, for all 321 unseeded crowds in the book. */
+  check('INT6-CROWD', 'an unseeded, unposed crowdGroup is unchanged, and pose now reaches its members',
+    function () {
+      function crowd(o) {
+        var it = { t: 'crowdGroup', x: 200, y: Scenes.GROUND };
+        var k;
+        for (k in o) { if (Object.prototype.hasOwnProperty.call(o, k)) { it[k] = o[k]; } }
+        return Scenes.render({ bg: 'plain', items: [it] });
+      }
+      /* the authored slot offsets, emitted verbatim when nothing jitters them */
+      var base = crowd({ n: 5 });
+      var slots = ['translate(0,', 'translate(-26,', 'translate(25,',
+                   'translate(-46,', 'translate(45,'];
+      var i;
+      for (i = 0; i < slots.length; i++) {
+        if (base.indexOf(slots[i]) < 0) {
+          return 'default n=5 no longer places a figure at the authored slot ' + slots[i] +
+                 ') — the jitter is firing without a seed';
+        }
+      }
+      /* the authored stand/point alternation, and the authored robe rotation
+         (offset 0) which puts CROWD_ROBES[1] on the first figure drawn */
+      if (crowd({ n: 4 }) !== crowd({ n: 4 })) { return 'crowdGroup is not a pure function of its opts'; }
+      if (crowd({ n: 3, pose: 'arms-up' }) === crowd({ n: 3 })) {
+        return 'pose still does not reach the members — the key is dead again';
+      }
+      if (crowd({ n: 3, pose: 'walk' }) === crowd({ n: 3, pose: 'arms-up' })) {
+        return 'every pose renders the same figure';
+      }
+      /* person() owns the pose vocabulary; an unknown one must fall back
+         there rather than in a second list here that could drift */
+      if (crowd({ n: 3, pose: 'nonsuch' }) !== crowd({ n: 3, pose: 'stand' })) {
+        return 'an unknown pose is no longer falling back to stand in person()';
+      }
+      return null;
+    });
+
+  /* ---- INT6-CROWDSEED ----
+     The seed must vary the crowd and must NEVER vary a redraw of it: scenes.js
+     caches sprites and this suite compares emitted strings, so a Math.random
+     crowd would make a cached sprite disagree with the scene it was cut from.
+     The count spread is checked across small integers on purpose — content
+     seeds by hand with 5, 7, 9, 13, and a generator used raw (no warm-up)
+     hands every one of those the same crowd of three. */
+  check('INT6-CROWDSEED', 'seeds vary the crowd deterministically, including small hand-typed ones',
+    function () {
+      function crowd(o) {
+        var it = { t: 'crowdGroup', x: 200, y: Scenes.GROUND }, k;
+        for (k in o) { if (Object.prototype.hasOwnProperty.call(o, k)) { it[k] = o[k]; } }
+        return Scenes.render({ bg: 'plain', items: [it] });
+      }
+      if (crowd({ n: 3, seed: 7 }) !== crowd({ n: 3, seed: 7 })) {
+        return 'the same seed drew two different crowds — the generator is not deterministic';
+      }
+      if (crowd({ n: 3, seed: 7 }) === crowd({ n: 3 })) { return 'seed 7 is being ignored'; }
+      /* historia-l7's real trio: unseeded + seed 7 + seed 13, side by side */
+      var trio = [crowd({ n: 3 }), crowd({ n: 3, seed: 7 }), crowd({ n: 3, seed: 13 })];
+      if (trio[1] === trio[2] || trio[0] === trio[1] || trio[0] === trio[2]) {
+        return 'historia-l7 h?? still draws three identical crowds side by side';
+      }
+      /* member count must actually move across seeds 1..20, and stay in 3..5 */
+      var counts = {}, distinct = 0, sd, m, n;
+      for (sd = 1; sd <= 20; sd++) {
+        m = crowd({ seed: sd }).match(/ scale\((1|0\.92|0\.94|0\.84|0\.86)\)"/g);
+        n = m ? m.length : 0;
+        if (n < 3 || n > 5) { return 'seed ' + sd + ' produced ' + n + ' figures, outside 3..5'; }
+        if (!counts[n]) { counts[n] = 1; distinct++; } else { counts[n]++; }
+      }
+      if (distinct < 3) {
+        return 'seeds 1..20 only ever chose ' + distinct + ' of the three crowd sizes ' +
+               '(' + JSON.stringify(counts) + ') — the generator needs its warm-up back';
+      }
+      return null;
+    });
+
   runEngineQueue();      /* start the serialized engine tests */
   runNetQueue();         /* start the serialized offline-queue tests */
   finish();
