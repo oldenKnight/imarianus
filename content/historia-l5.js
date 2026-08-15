@@ -62,7 +62,7 @@
 
    3. ŌLIM CARRIES THE TENSE, NOT THE PICTURE (r06 ruling 2). A drawing
       cannot show pastness. `ōlim` is introduced on the same page as
-      the first `erat`, glossed `ōlim: tum, nōn iam` in words the track
+      the first `erat`, glossed `ōlim: tum, iam nōn` in words the track
       has had since Liber I, and every later imperfect either sits under
       it or one page after it.
 
@@ -1516,7 +1516,7 @@
         /* THE FIRST IMPERFECT OF THE TRACK. `ōlim` carries the tense
            (fabulae-r06 ruling 2); `erat` is glossed from `est`. */
         { la: 'Ōlim Ioseph puer erat; iam vir est.', scene: SC.h25_olim,
-          nova: [{ w: 'ōlim', e: '⏪', g: 'ōlim: tum, nōn iam' },
+          nova: [{ w: 'ōlim', e: '⏪', g: 'ōlim: tum, iam nōn' },
                  { w: 'erat', e: '⏱', g: 'iam est ➡ ōlim erat' }] },
 
         /* Gn 39,6 — "Erat autem Joseph pulchra facie, et decorus aspectu";

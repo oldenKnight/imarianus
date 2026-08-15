@@ -78,7 +78,7 @@
         the same moral without the menace, and the crane leaves whole.
       · f32: the stork CHASES and NOTHING IS EATEN ON-PAGE. The frogs
         dive, the stork walks the bank, and the fable ends on what the
-        frogs have lost — `lībertātem nōn iam habent` — which is what
+        frogs have lost — `lībertātem iam nōn habent` — which is what
         the fable is actually about.
       · f33: MORS IS A PERSON, and a calm one — a veiled figure in a
         dark blue robe who walks up, stands, and asks a question. NO
@@ -865,7 +865,7 @@
           nova: [{ w: 'lībertās', e: '🔓', g: 'līber → lībertās; ōlim rānae līberae erant: lībertātem habēbant' }] },
 
         /* mōrāle: gnomic present, no new words */
-        { la: 'Fābula docet: rānae rēgem petunt et lībertātem nōn iam habent.',
+        { la: 'Fābula docet: rānae rēgem petunt et lībertātem iam nōn habent.',
           scene: SC.f32_moral, nova: [] }
       ],
       ludus: {
@@ -1047,7 +1047,7 @@
         { la: 'Senex Mortem videt. Senex timet.',
           scene: SC.f33_timet, nova: [] },
 
-        { la: 'Senex Mortem vidēre nōn iam cupit.',
+        { la: 'Senex Mortem vidēre iam nōn cupit.',
           scene: SC.f33_timet, nova: [] },
 
         /* the fable's joke, and it is the whole fable */

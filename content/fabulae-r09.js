@@ -660,7 +660,7 @@
         { la: 'Lupus, quī callidus erat, pellem cēpit.', scene: SC.f25_capit,
           nova: [{ w: 'quī', e: '➡', g: 'lupus callidus est: lupus quī callidus est' }] },
 
-        { la: 'Iam pellis alba in lupō erat. Lupus nōn iam lupus erat!',
+        { la: 'Iam pellis alba in lupō erat. Lupus iam nōn lupus erat!',
           scene: SC.f25_induit, nova: [] },
 
         /* THE RELATIVE, feminine — NOMINATIVE, never `quam` (ruling 1) */

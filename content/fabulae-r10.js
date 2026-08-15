@@ -732,7 +732,7 @@
         { la: 'Sed in cibō ignis est! Cibus cum igne ad nīdum portātur.',
           scene: SC.f28_rapit, nova: [] },
 
-        { la: 'Ecce ignis in arbore! Aquila timet: nīdus nōn iam tūtus est.',
+        { la: 'Ecce ignis in arbore! Aquila timet: nīdus iam nōn tūtus est.',
           scene: SC.f28_periculum, nova: [] },
 
         { la: 'Aquila catulum capit et ex arbore volat.',
@@ -1169,11 +1169,11 @@
           scene: SC.f30_omnes,
           nova: [{ w: 'dētegunt', e: '🎭 ⬇⬇', g: 'vōx dētegit; vōx et aurēs dētegunt' }] },
 
-        { la: 'Cervus et lepus vulpem sequuntur. Cervus et lepus nōn iam timent.',
+        { la: 'Cervus et lepus vulpem sequuntur. Cervus et lepus iam nōn timent.',
           scene: SC.f30_sequuntur,
           nova: [{ w: 'sequuntur', e: '🦌🐇 ➜', g: 'ūnus sequitur, multī sequuntur' }] },
 
-        { la: 'Asinus pellem nōn iam portat. Asinus in agrum ambulat.',
+        { la: 'Asinus pellem iam nōn portat. Asinus in agrum ambulat.',
           scene: SC.f30_discedit, nova: [] },
 
         { la: 'Vulpēs et cervus et lepus rīdent. Asinus quoque rīdet.',
@@ -1338,7 +1338,7 @@
         { text: 'In arbore altā ____ est: aquila ōva servat.',
           answer: 'nīdus', options: ['nīdus', 'rēte', 'āra'],
           scene: SC.f28_ova },
-        { text: 'Aquila ____ timet: nīdus nōn iam tūtus est.',
+        { text: 'Aquila ____ timet: nīdus iam nōn tūtus est.',
           answer: 'ignis', options: ['ignis', 'aqua', 'rēte'],
           scene: SC.f28_periculum },
         { text: '____ ā formīcā servāta est: iam tūta in arbore sedet.',

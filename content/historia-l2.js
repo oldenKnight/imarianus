@@ -1141,7 +1141,7 @@
 
         /* Gn 8,6 · 8,10 — "expectatis autem ultra septem diebus" */
         { la: 'Noe exspectat. Noe aquam videt.', scene: SC.h9_exspectat,
-          nova: [{ w: 'exspectat', e: '⏳', g: 'nōn iam labōrat, sedet' }] },
+          nova: [{ w: 'exspectat', e: '⏳', g: 'iam nōn labōrat, sedet' }] },
 
         /* Gn 8,7 — "dimisit corvum, qui egrediebatur" */
         { la: 'Ecce corvus! Corvus exit.', scene: SC.h9_corvus,

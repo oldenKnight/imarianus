@@ -69,7 +69,7 @@
               Samson", 16,25 "vocaretur Samson"; dat. 14,10 "filio suo
               Samson"; after ad, 16,6 "ad Samson"). **This file therefore
               never writes an INFLECTED form of Samsōn in any case**:
-              `capillī ēius` (not `capillī Samsōnis`), `fortitūdō Samsōn`
+              `capillī eius` (not `capillī Samsōnis`), `fortitūdō Samsōn`
               (the indeclinable genitive — the `grex Lot` device of h12),
               `Hostēs Samsōn cēpērunt` (the indeclinable accusative, Idc
               15,10 "Ut ligemus Samson"). **FINISHER FIX: the draft wrote
@@ -190,14 +190,14 @@
      h42  8                  Saūl rēx oleum populus monet asina fundit
                              tamen→FUNCTION (see below)
    `capillus` and `longus` are BOOKED TO h39, where the words first
-   appear (`Capillī ēius longī erant.`, Idc 13,24–5 + 13,5) and where the
+   appear (`Capillī eius longī erant.`, Idc 13,24–5 + 13,5) and where the
    picture is a long-haired boy; h40 RE-CARDS `capillus` without a nova
    and without a cap slot, exactly as h21 of Liber IV re-cards `ovis` and
    `grex` so the ŌRDINĀ phase can sort them. The draft glossed neither
    word in h39 and then carded `capillus` as new in h40, which is both an
    unsupported word and a double count.
    Time adverbs (`māne nunc ōlim statim prīmō ter tamen`), quantifiers
-   (`nūllus cēterī nihil`), pronoun forms (`ēius eum cui quī quam
+   (`nūllus cēterī nihil`), pronoun forms (`eius eum cui quī quam
    inter`) and the fixed formulae are FUNCTION: free against the ≤8 cap,
    glossed at first appearance, and listed in the part-2 ledger.
 
@@ -1085,18 +1085,18 @@
       ],
       story: [
         /* Idc 13,24 — "Peperit itaque filium, et vocavit nomen ejus Samson" */
-        { la: 'Mulier fīlium habuit et nōmen ēius Samsōn vocāvit.', scene: SC.h39_natus,
+        { la: 'Mulier fīlium habuit et nōmen eius Samsōn vocāvit.', scene: SC.h39_natus,
           nova: [{ w: 'Samsōn', e: '👤', g: '' },
-                 /* FINISHER FIX: `ēius` was glossed on p2 but USED here on
+                 /* FINISHER FIX: `eius` was glossed on p2 but USED here on
                     p1. A gloss belongs at the FIRST appearance. */
-                 { w: 'ēius', e: '👤➡', g: 'nōmen fīliī: nōmen ēius' }] },
+                 { w: 'eius', e: '👤➡', g: 'nōmen fīliī: nōmen eius' }] },
 
         /* Idc 13,24–25 "Crevitque puer" + 13,5 "novacula non ascendet
            super caput ejus". FINISHER FIX: `capillī` stood here unglossed
            and uncarded and was then carded as NEW in h40. It is booked to
            h39, where it first appears and where the picture is a
            long-haired boy; h40 re-cards it free. */
-        { la: 'Puer crēvit. Capillī ēius longī erant.', scene: SC.h39_puer,
+        { la: 'Puer crēvit. Capillī eius longī erant.', scene: SC.h39_puer,
           nova: [{ w: 'capillī', e: '👦', g: 'vidē capillōs puerī!' },
                  { w: 'longī', e: '📏', g: '↔ parvī' }] },
 
@@ -1106,7 +1106,7 @@
           nova: [{ w: 'fortissimus', e: '💪💪', g: 'fortis · fortior · fortissimus' }] },
 
         /* Idc 13,25 · 14,6 — "irruit spiritus Domini in Samson" */
-        { la: 'Fortitūdō ēius ā Deō erat.', scene: SC.h39_deus,
+        { la: 'Fortitūdō eius ā Deō erat.', scene: SC.h39_deus,
           nova: [{ w: 'fortitūdō', e: '💪', g: 'vir fortis fortitūdinem habet' }] },
 
         /* Idc 14,5 — "apparuit catulus leonis saevus, et rugiens" */
@@ -1136,7 +1136,7 @@
              needs no second modal to explain it. */
           nova: [{ w: 'potuērunt', e: '💪', g: 'hostēs Samsōn tenent? nōn tenent: nōn potuērunt' }] },
 
-        { la: 'Fortitūdō ēius maior quam fortitūdō hostium erat.', scene: SC.h39_fortis,
+        { la: 'Fortitūdō eius maior quam fortitūdō hostium erat.', scene: SC.h39_fortis,
           nova: [{ w: 'maior', e: '⬆', g: 'magnus · maior · maximus' },
                  /* FINISHER FIX: `quam` carried the whole comparison and
                     was never glossed. */
@@ -1206,7 +1206,7 @@
             { la: 'Samsōn leōnem superāvit.',      scene: SC.h39_superat },
             { la: 'Ōlim leō ad Samsōn vēnit.',     scene: SC.h39_leo },
             { la: 'Samsōn iūdex Israēl fuit.',     scene: SC.h39_iudex },
-            { la: 'Capillī ēius longī erant.',     scene: SC.h39_puer }
+            { la: 'Capillī eius longī erant.',     scene: SC.h39_puer }
           ]
         },
         corrige: [
@@ -1218,12 +1218,12 @@
             options: ['nihil', 'multa', 'omnia'], correct: 0, scene: SC.h39_manus },
           { words: ['Samsōn', 'hostis', 'Israēl', 'fuit.'], wrong: 1,
             options: ['iūdex', 'vellus', 'tuba'], correct: 0, scene: SC.h39_iudex },
-          { words: ['Fortitūdō', 'ēius', 'ā', 'hostibus', 'erat.'], wrong: 3,
+          { words: ['Fortitūdō', 'eius', 'ā', 'hostibus', 'erat.'], wrong: 3,
             options: ['Deō', 'leōne', 'manū'], correct: 0, scene: SC.h39_deus },
           /* the two rows the cap recount added: `capillus`/`longus` are
              h39 lexemes now and must be recycled here, and `potuērunt`
              stood on ONE page with no exercise anywhere */
-          { words: ['Capillī', 'ēius', 'parvī', 'erant.'], wrong: 2,
+          { words: ['Capillī', 'eius', 'parvī', 'erant.'], wrong: 2,
             options: ['longī', 'rubrī', 'sōlī'], correct: 0, scene: SC.h39_puer },
           { words: ['Hostēs', 'Samsōn', 'tenēre', 'nōn', 'vēnērunt.'], wrong: 4,
             options: ['potuērunt.', 'crēvērunt.', 'audīvērunt.'], correct: 0, scene: SC.h39_tenere }
@@ -1237,9 +1237,9 @@
             options: ['ū', 'us', 'ibus'], correct: 0, scene: SC.h39_manus },
           { text: 'Samsōn ___ Israēl fuit.',
             options: ['iūdex', 'hostis', 'leō'], correct: 0, scene: SC.h39_iudex },
-          { text: '___ ēius ā Deō erat.',
+          { text: '___ eius ā Deō erat.',
             options: ['Fortitūdō', 'Manus', 'Castra'], correct: 0, scene: SC.h39_deus },
-          { text: 'Capillī ēius ___ erant.',
+          { text: 'Capillī eius ___ erant.',
             options: ['longī', 'rubrī', 'sōlī'], correct: 0, scene: SC.h39_puer },
           { text: 'Hostēs Samsōn tenēre nōn ___.',
             options: ['potuērunt', 'vēnērunt', 'crēvērunt'], correct: 0, scene: SC.h39_tenere }
@@ -1292,7 +1292,7 @@
       fons: 'Idc 16',
       vocab: [
         { la: 'Dalila',   scene: SC.v_dalila,   pars: 'nomen' },
-        /* RE-CARDED, NOT NEW: `capillus` is booked to h39 (`Capillī ēius
+        /* RE-CARDED, NOT NEW: `capillus` is booked to h39 (`Capillī eius
            longī erant`) and carries no nova and no cap slot here. It
            keeps its card because the ŌRDINĀ phase sorts it and
            js/app.js bossWords() only sees carded words — the same
@@ -1324,7 +1324,7 @@
 
         /* Idc 16,17 — "Tunc aperiens veritatem rei … si rasum fuerit
            caput meum, recedet a me fortitudo mea" */
-        { la: 'Postrēmō Samsōn fortitūdinem mōnstrāvit: fortitūdō ēius in capillīs erat.',
+        { la: 'Postrēmō Samsōn fortitūdinem mōnstrāvit: fortitūdō eius in capillīs erat.',
           scene: SC.h40_capilli },
 
         /* Idc 16,19 — "At illa dormire eum fecit … et rasit septem crines ejus" */
@@ -1336,11 +1336,11 @@
            the learner never read and SONUS would have spoken it cold.
            The glosses now carry the pair, exactly as h38's `nunc dat;
            tum dedit` does for the tense itself. */
-        { la: 'Dalila capillōs ēius rāsit.', scene: SC.h40_radit,
+        { la: 'Dalila capillōs eius rāsit.', scene: SC.h40_radit,
           nova: [{ w: 'rāsit', e: '✂', g: 'nunc rādit, tum rāsit: capillī longī erant; iam nōn sunt' }] },
 
         /* Idc 16,19 — "statim enim ab eo fortitudo discessit" */
-        { la: 'Statim fortitūdō ēius discessit. Samsōn iam fortis nōn erat.',
+        { la: 'Statim fortitūdō eius discessit. Samsōn iam fortis nōn erat.',
           scene: SC.h40_infirmus,
           nova: [{ w: 'statim', e: '⏱', g: 'statim: nōn posteā, sed eō ipsō tempore' }] },
 
@@ -1352,7 +1352,7 @@
           nova: [{ w: 'cēpērunt', e: '✋', g: 'nunc capiunt, tum cēpērunt: hostēs eum tenent' }] },
 
         /* Idc 16,22 — "Jamque capilli ejus renasci coeperunt" */
-        { la: 'Sed capillī ēius iterum crēvērunt.', scene: SC.h40_crescunt },
+        { la: 'Sed capillī eius iterum crēvērunt.', scene: SC.h40_crescunt },
 
         /* Idc 16,27 — "Domus autem erat plena virorum ac mulierum" */
         { la: 'In domō magnā hostium multī hominēs erant.',
@@ -1376,7 +1376,7 @@
         { la: 'Samsōn Deum vocāvit.', scene: SC.h40_orat },
 
         /* Idc 16,29 — "apprehendens ambas columnas quibus innitebatur domus" */
-        { la: 'Deus fortitūdinem ēius iterum dedit.', scene: SC.h40_movet },
+        { la: 'Deus fortitūdinem eius iterum dedit.', scene: SC.h40_movet },
 
         /* Idc 16,30 — THE ONE LINE. See the header, point 3. */
         { la: 'Samsōn columnās mōvit; domus magna cecidit; Samsōn cum hostibus periit.',
@@ -1436,7 +1436,7 @@
           ],
           scrambles: [
             { la: 'Hostēs Samsōn cēpērunt.',              scene: SC.h40_capti },
-            { la: 'Dalila capillōs ēius rāsit.',          scene: SC.h40_radit },
+            { la: 'Dalila capillōs eius rāsit.',          scene: SC.h40_radit },
             { la: 'Samsōn inter duās columnās stābat.',   scene: SC.h40_inter },
             { la: 'Samsōn Deum vocāvit.',                 scene: SC.h40_orat }
           ]
@@ -1444,9 +1444,9 @@
         corrige: [
           { words: ['Dalila', 'fortitūdinem', 'Samsōn', 'portāvit.'], wrong: 3,
             options: ['quaerēbat.', 'rāsit.', 'mōvit.'], correct: 0, scene: SC.h40_quaerit },
-          { words: ['Fortitūdō', 'ēius', 'in', 'columnīs', 'erat.'], wrong: 3,
+          { words: ['Fortitūdō', 'eius', 'in', 'columnīs', 'erat.'], wrong: 3,
             options: ['capillīs', 'castrīs', 'manibus'], correct: 0, scene: SC.h40_capilli },
-          { words: ['Dalila', 'columnās', 'ēius', 'rāsit.'], wrong: 1,
+          { words: ['Dalila', 'columnās', 'eius', 'rāsit.'], wrong: 1,
             options: ['capillōs', 'tubās', 'gregēs'], correct: 0, scene: SC.h40_radit },
           { words: ['Samsōn', 'inter', 'duās', 'tubās', 'stābat.'], wrong: 3,
             options: ['columnās', 'domōs', 'manūs'], correct: 0, scene: SC.h40_inter },
@@ -1454,9 +1454,9 @@
             options: ['mōvit.', 'vocāvit.', 'petīvit.'], correct: 0, scene: SC.h40_movet }
         ],
         comple: [
-          { text: 'Fortitūdō ēius in ___ erat.',
+          { text: 'Fortitūdō eius in ___ erat.',
             options: ['capillīs', 'columnīs', 'castrīs'], correct: 0, scene: SC.h40_capilli },
-          { text: 'Dalila ___ ēius rāsit.',
+          { text: 'Dalila ___ eius rāsit.',
             options: ['capillōs', 'columnās', 'tubās'], correct: 0, scene: SC.h40_radit },
           { text: 'Samsōn inter duās ___ stābat.',
             options: ['columnās', 'domōs', 'manūs'], correct: 0, scene: SC.h40_inter },
@@ -1468,7 +1468,7 @@
              PRESENT (`rādit`, `movet`, `perit`) and narrates in the
              PERFECT, and `rādit → rāsit` is the one pair whose stem the
              learner cannot guess from the letters */
-          { text: 'Nunc rādit; tum Dalila capillōs ēius ___.',
+          { text: 'Nunc rādit; tum Dalila capillōs eius ___.',
             options: ['rāsit', 'mōvit', 'vocāvit'], correct: 0, scene: SC.h40_radit }
         ]
       }
@@ -1529,7 +1529,7 @@
         { la: 'Anna Deō prōmīsit.', scene: SC.h41_orat },
 
         /* 1 Rg 1,20 — "peperit filium : vocavitque nomen ejus Samuel" */
-        { la: 'Deus Annam audīvit. Anna fīlium habuit et nōmen ēius Samuēl vocāvit.',
+        { la: 'Deus Annam audīvit. Anna fīlium habuit et nōmen eius Samuēl vocāvit.',
           scene: SC.h41_puer,
           nova: [{ w: 'Samuēl', e: '👤', g: '' }] },
 
@@ -1557,7 +1557,7 @@
         { la: 'Samuēl ad sacerdōtem cucurrit. Sed sacerdōs eum nōn vocāvit.',
           scene: SC.h41_currit,
           /* FINISHER FIX: `eum` is the track's first ACCUSATIVE of
-             is/ea/id in narrative and stood unglossed. `ēius` is glossed
+             is/ea/id in narrative and stood unglossed. `eius` is glossed
              in h39; this is its partner. */
           nova: [{ w: 'eum', e: '👉👤', g: 'sacerdōs puerum nōn vocāvit: sacerdōs eum nōn vocāvit' }] },
 

@@ -1265,7 +1265,7 @@
         { la: 'Virgō nihil respondet, sed discēdit.',
           scene: SC.a3_discedit },
 
-        { la: 'Dum discēdit, vēram fōrmam suam ostendit: nōn iam virgō, sed dea est.',
+        { la: 'Dum discēdit, vēram fōrmam suam ostendit: iam nōn virgō, sed dea est.',
           scene: SC.a3_ostendit,
           nova: [{ w: 'ostendit', e: '👀', g: '↔ cēlat: quod cēlātum erat iam vidērī potest' }] },
 

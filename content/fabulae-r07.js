@@ -737,7 +737,7 @@
           nova: [{ w: 'cecidērunt', e: '🕰⬇⬇', g: 'ūnus cecidit; multī cecidērunt' }] },
 
         /* the PERFECT OF ESSE, against r06's `erat` on the same page */
-        { la: 'Tandem urna plēna fuit! Aqua nōn iam īnfrā erat.', scene: SC.f19_plena,
+        { la: 'Tandem urna plēna fuit! Aqua iam nōn īnfrā erat.', scene: SC.f19_plena,
           nova: [{ w: 'tandem', e: '➜', g: 'nōn prīmum, sed post multa: tandem' },
                  { w: 'fuit', e: '🕰', g: 'iam est; tandem fuit' }] },
 

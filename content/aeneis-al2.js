@@ -1468,7 +1468,7 @@
           scene: SC.a8_pietas },
 
         /* Aen. 2,735–744, B-RATED: lost with grief and mystery */
-        { la: 'Sed ubi ad portam veniunt, Creūsa nōn iam post eōs est.',
+        { la: 'Sed ubi ad portam veniunt, Creūsa iam nōn post eōs est.',
           scene: SC.a8_porta },
 
         { la: 'Aenēās trīstis in urbem redit et per viās nōmen uxōris vocat, sed nēmō respondet.',

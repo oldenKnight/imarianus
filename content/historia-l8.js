@@ -1291,7 +1291,7 @@
           scene: SC.h43_ager,
           nova: [{ w: 'minimus', e: '1️⃣', g: 'parvus · minor · minimus' }] },
 
-        { la: 'Nōmen ēius David erat. David pāstor erat.', scene: SC.v_david,
+        { la: 'Nōmen eius David erat. David pāstor erat.', scene: SC.v_david,
           nova: [{ w: 'David', e: '👤', g: '' }] },
 
         /* 1 Rg 16,12 — "Erat autem rufus, et pulcher aspectu" */
@@ -1471,7 +1471,7 @@
         { la: 'Hostēs vēnērunt et castra posuērunt.', scene: SC.h44_castra },
 
         /* 1 Rg 17,4 — "egressus est vir … nomine Goliath" */
-        { la: 'Ūnus hostis ē castrīs vēnit. Nōmen ēius Goliath erat.',
+        { la: 'Ūnus hostis ē castrīs vēnit. Nōmen eius Goliath erat.',
           scene: SC.h44_goliath,
           nova: [{ w: 'Goliath', e: '👤', g: '' }] },
 
@@ -2050,7 +2050,7 @@
                   puerum nōn dīvīsit: cōnsilium enim rēgis sapiēns erat.`
          page 4  `Ūna mulier clāmāvit: "Date illī puerum vīvum!"`
          page 5  `Rēx dīxit: "Date huic puerum vīvum: haec est māter
-                  ēius."`
+                  eius."`
          page 6  `Māter enim fīlium suum amat.`
        3 Rg 3,24's "Afferte mihi gladium" is OMITTED WHOLE — no sword is
        named, drawn, glossed or asked for anywhere in this capitulum —
@@ -2099,7 +2099,7 @@
       story: [
         /* 3 Rg 2,12 · 3,1 — "Confirmatum est igitur regnum in manu
            Salomonis" */
-        { la: 'Post David fīlius ēius Salomōn rēx fuit.', scene: SC.h47_filius,
+        { la: 'Post David fīlius eius Salomōn rēx fuit.', scene: SC.h47_filius,
           nova: [{ w: 'Salomōn', e: '👤', g: '' }] },
 
         { la: 'Salomōn iuvenis erat, et rēgnum magnum habēbat.', scene: SC.h47_rex,
@@ -2151,7 +2151,7 @@
 
         /* 3 Rg 3,27 — "Date huic infantem vivum … hæc est enim mater
            ejus", minus "et non occidatur" */
-        { la: 'Tum rēx dīxit: "Date huic puerum vīvum: haec est māter ēius."',
+        { la: 'Tum rēx dīxit: "Date huic puerum vīvum: haec est māter eius."',
           scene: SC.h47_mater },
 
         { la: 'Māter enim fīlium suum amat.', scene: SC.h47_mater,
@@ -2222,7 +2222,7 @@
           ]
         },
         corrige: [
-          { words: ['Post', 'David', 'fīlius', 'ēius', 'Nathan', 'rēx', 'fuit.'], wrong: 4,
+          { words: ['Post', 'David', 'fīlius', 'eius', 'Nathan', 'rēx', 'fuit.'], wrong: 4,
             options: ['Salomōn', 'Saūl', 'Goliath'], correct: 0, scene: SC.h47_filius },
           { words: ['Salomōn', 'cor', 'trīste', 'petīvit.'], wrong: 2,
             options: ['sapiēns', 'magnum', 'pulchrum'], correct: 0, scene: SC.h47_petit },
@@ -2236,7 +2236,7 @@
             options: ['sapientia', 'nebula', 'cithara'], correct: 0, scene: SC.h47_populus }
         ],
         comple: [
-          { text: 'Post David fīlius ēius ___ rēx fuit.',
+          { text: 'Post David fīlius eius ___ rēx fuit.',
             options: ['Salomōn', 'Saūl', 'Nathan'], correct: 0, scene: SC.h47_filius },
           { text: 'Salomōn cor ___ petīvit.',
             options: ['sapiēns', 'trīste', 'longum'], correct: 0, scene: SC.h47_petit },
@@ -2485,7 +2485,7 @@
                          dead, **Tb 2,11's swallows' dung and the
                          blindness it caused** (an accident with no
                          picture and no purpose here — the file says only
-                         `pater ēius nōn vidēbat`), Sara and Ragūēl, the
+                         `pater eius nōn vidēbat`), Sara and Ragūēl, the
                          hiring of "Azarias".
          **Tb 3,7–8 · 6,13–17 · 8,1–3** **Sara, the seven husbands and
                          the demon Asmodeus** — omitted absolutely
@@ -2514,7 +2514,7 @@
       ],
       story: [
         /* 3 Rg 11,43 · 12,1 — "Venit autem Roboam in Sichem" */
-        { la: 'Post Salomōnem fīlius ēius rēx fuit.', scene: SC.h49_mortuus },
+        { la: 'Post Salomōnem fīlius eius rēx fuit.', scene: SC.h49_mortuus },
 
         /* 3 Rg 12,4.16 — "Quæ nobis pars in David?" */
         { la: 'Sed populus alium rēgem nōn amāvit.', scene: SC.h49_populus },
@@ -2537,12 +2537,12 @@
         { la: 'Sed multī hominēs ante vitulōs ōrāvērunt.', scene: SC.h49_nondeus },
 
         /* Tb 1,9 · 2,10 — the second half begins */
-        { la: 'Illīs annīs vir iūstus in aliā terrā habitābat. Nōmen ēius Tobiās erat.',
+        { la: 'Illīs annīs vir iūstus in aliā terrā habitābat. Nōmen eius Tobiās erat.',
           scene: SC.h49_tobias,
           nova: [{ w: 'Tobiās', e: '👤', g: '' }] },
 
         /* Tb 2,10–11 — the cause omitted, see the header */
-        { la: 'Pater ēius senex erat: oculī ēius iam nōn vidēbant.',
+        { la: 'Pater eius senex erat: oculī eius iam nōn vidēbant.',
           scene: SC.h49_caecus,
           nova: [{ w: 'oculī', e: '👀', g: 'oculīs vidēmus: oculī patris malī erant' }] },
 
@@ -2746,7 +2746,7 @@
         { la: 'Sed Daniēl ter cotīdiē ad Deum ōrāvit.',
           scene: SC.h50_orat },
 
-        { la: 'Fidēs ēius maior quam timor erat.', scene: SC.h50_orat,
+        { la: 'Fidēs eius maior quam timor erat.', scene: SC.h50_orat,
           nova: [{ w: 'fidēs', e: '🙏', g: 'quī crēdit, fidem habet: fidēs Daniēlis magna erat' },
                  { w: 'timor', e: '😨', g: 'quī timet, timōrem habet' }] },
 
@@ -2887,7 +2887,7 @@
             options: ['nocuērunt', 'pepercērunt', 'implēvērunt'], correct: 0, scene: SC.h50_nocet },
           { text: 'Lapis magnus posit___ est.',
             options: ['us', 'a', 'um'], correct: 0, scene: SC.h50_lapis },
-          { text: '___ ēius maior quam timor erat.',
+          { text: '___ eius maior quam timor erat.',
             options: ['Fidēs', 'Lēx', 'Nebula'], correct: 0, scene: SC.h50_orat }
         ]
       }

@@ -502,7 +502,7 @@
                  { w: 'magnus', e: '🦁 ↔ 🐭', g: '↔ parvus' }] },
 
         { la: 'Sed leō mūrem nōn dēvorat: leō mūrem līberat.', scene: SC.f4_liberat,
-          nova: [{ w: 'līberat', e: '🔓', g: 'nōn iam tenet' }] },
+          nova: [{ w: 'līberat', e: '🔓', g: 'iam nōn tenet' }] },
 
         { la: 'Posteā virī veniunt et leōnem capiunt.', scene: SC.f4_viri,
           nova: [{ w: 'posteā', e: '1️⃣➡2️⃣', g: '' },

@@ -534,7 +534,7 @@
           nova: [{ w: 'cibō nōn datō', e: '🚫 🍽 ➜', g: 'cibus nōn datur; corpus nōn valet: cibō nōn datō, corpus nōn valet' },
                  { w: 'valet', e: '💪', g: 'corpus cibum accipit et valet ↔ corpus sine cibō nōn valet' }] },
 
-        { la: 'Manūs nōn iam labōrant. Pedēs nōn iam ambulant.',
+        { la: 'Manūs iam nōn labōrant. Pedēs iam nōn ambulant.',
           scene: SC.f34_fessum, nova: [] },
 
         { la: 'Membra vident corpus tōtum aegrum esse.',
@@ -755,7 +755,7 @@
           scene: SC.f35_calidus,
           nova: [{ w: 'serpente … positō', e: '🐍 🔥 ➜', g: 'serpēns ad ignem pōnitur; corpus calidum fit: serpente positō, corpus calidum fit' }] },
 
-        { la: 'Iam serpēns sē movet. Serpēns nōn iam frīgidus est.',
+        { la: 'Iam serpēns sē movet. Serpēns iam nōn frīgidus est.',
           scene: SC.f35_movet, nova: [] },
 
         { la: 'Rūsticus laetus est: “Ecce! Serpēns vīvit.”',
@@ -986,9 +986,9 @@
           nova: [{ w: 'canem … esse', e: '👀 💭', g: 'lupus videt: canis līber nōn est' }] },
 
         /* ABLATIVE ABSOLUTE, and the fable turns on it */
-        { la: 'Catēnā vīsā, lupus nōn iam ambulat.',
+        { la: 'Catēnā vīsā, lupus iam nōn ambulat.',
           scene: SC.f36_liber,
-          nova: [{ w: 'catēnā vīsā', e: '🔗 👀 ➜', g: 'catēna vidētur; lupus cōnsistit: catēnā vīsā, lupus nōn iam ambulat' }] },
+          nova: [{ w: 'catēnā vīsā', e: '🔗 👀 ➜', g: 'catēna vidētur; lupus cōnsistit: catēnā vīsā, lupus iam nōn ambulat' }] },
 
         { la: 'Lupus dīcit: “Nōlī mē vocāre! Ego tēcum nōn veniō.”',
           scene: SC.f36_liber, nova: [] },
@@ -1071,7 +1071,7 @@
           ],
           scrambles: [
             { la: 'Lupus videt canem pinguem esse.',   scene: SC.f36_videt },
-            { la: 'Catēnā vīsā, lupus nōn iam ambulat.', scene: SC.f36_liber },
+            { la: 'Catēnā vīsā, lupus iam nōn ambulat.', scene: SC.f36_liber },
             { la: 'Dominus canī cibum dat.',           scene: SC.f36_canis },
             { la: 'Lupus in silvam redit.',            scene: SC.f36_redit }
           ]
@@ -1096,7 +1096,7 @@
             options: ['esse', 'est', 'sunt'], correct: 0, scene: SC.f36_videt },
           { text: 'Canis dīcit ___ cotīdiē cibum dare.',
             options: ['dominum', 'dominus', 'dominō'], correct: 0, scene: SC.f36_rogat },
-          { text: '___ vīsā, lupus nōn iam ambulat.',
+          { text: '___ vīsā, lupus iam nōn ambulat.',
             options: ['Catēnā', 'Catēna', 'Catēnam'], correct: 0, scene: SC.f36_liber },
           { text: 'Catēnā ___, lupus in silvam redit.',
             options: ['vīsā', 'vidētur', 'vidēre'], correct: 0, scene: SC.f36_liber },
