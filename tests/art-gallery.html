@@ -251,6 +251,132 @@
   cell(g, 'scala', { glow: false }, 'scala, no glow');
   cell(g, 'testudo', { pose: 'hide' }, 'testūdō in shell');
 
+  /* ================= 3b. ART2 ADDENDUM =================
+     The gaps the finished content reported (content/_ledger-*.md,
+     "MISSING ART"). Reviewed as a block so the addition can be judged
+     against the M2 set above rather than hidden among it. */
+  h2('Addenda — the art the content asked for');
+
+  h3('catēna — the collar of Lupus et Canis');
+  g = grid();
+  cell(g, 'catena', {}, 'catēna (collar + chain)');
+  cell(g, 'catena', { collar: true }, '{collar:true} — compact, drawn round the origin');
+  cell(g, 'catena', { collar: true, tilt: -22 }, '{collar:true, tilt:-22}');
+  sceneCell(grid(true), { bg: 'plain', items: [
+    { t: 'wolf', x: 118, y: 210, s: 1.15 },
+    { t: 'canis', x: 268, y: 210, s: 1.3, flip: true },
+    /* THE PLACEMENT CONTENT SHOULD COPY. canis has no neck — its head
+       circle sits straight on the body — so the band goes on the
+       head/shoulder junction: for a dog at (X,210) scale k facing LEFT,
+       about (X - 18k, 210 - 29k) with tilt -22. Mirror the tilt sign for a
+       dog facing right. */
+    { t: 'catena', x: 248, y: 172, s: 1.1, collar: true, tilt: -22 }
+  ], bubbles: [{ x: 150, y: 46, w: 74, h: 42, text: '❓ 👀', kind: 'thought', tail: 'right', fs: 18 }] },
+    'f36 — the collar ON the dog (why catēna exists)');
+
+  h3('via · arcus · domus · manna');
+  g = grid();
+  cell(g, 'via', {}, 'via (foreground road)');
+  cell(g, 'via', { herba: false }, 'via, no grass crown');
+  cell(g, 'arcus', {}, 'arcus (Gn 9)');
+  cell(g, 'arcus', { nubes: true }, 'arcus in nūbibus');
+  cell(g, 'domus', {}, 'domus + iānua');
+  cell(g, 'domus', { signum: true }, '{signum:true} — Ex 12,7');
+  cell(g, 'manna', {}, 'manna');
+  cell(g, 'manna', { n: 22 }, 'manna, multum');
+
+  h3('mūsica');
+  g = grid();
+  cell(g, 'cithara', {}, 'cithara');
+  cell(g, 'tuba', {}, 'tuba');
+  cell(g, 'tuba', { vexillum: true }, 'tuba + vexillum');
+  cell(g, 'buccina', {}, 'buccina');
+  cell(g, 'tympanum', {}, 'tympanum');
+
+  h3('animālia nova');
+  g = grid();
+  cell(g, 'coturnix', {}, 'coturnīx');
+  cell(g, 'coturnix', { pose: 'peck' }, 'coturnīx, peck');
+  cell(g, 'coturnix', { pose: 'fly' }, 'coturnīx, fly');
+  cell(g, 'sus', {}, 'sūs');
+  cell(g, 'sus', { alba: true }, 'sūs alba (outlined)');
+  cell(g, 'sus', { alba: true, porci: 3 }, 'sūs alba + trēs porcī');
+  cell(g, 'sus', { pose: 'walk' }, 'sūs, walk');
+  cell(g, 'harpyia', { pose: 'fly' }, 'harpyia — no face, ragged wings');
+  cell(g, 'harpyia', {}, 'harpyia, stand');
+
+  h3('dōna Magōrum — tūs et myrrha beside the amphora');
+  g = grid();
+  cell(g, 'tus', {}, 'tūs (casket)');
+  cell(g, 'tus', { fumus: true }, 'tūs, lid ajar + fūmus');
+  cell(g, 'myrrha', {}, 'myrrha (ointment jar)');
+  cell(g, 'amphora', {}, 'amphora (for contrast)');
+
+  h3('amplexus, and the faceless register');
+  g = grid();
+  cell(g, 'person', { role: 'man', pose: 'amplexus' }, 'person · pose amplexus (one figure)');
+  cell(g, 'amplexus', {}, 'amplexus (the pair)');
+  cell(g, 'amplexus', { role: 'patriarch', alterRole: 'child', alterK: 0.8 }, 'Lc 15,20 — pater et fīlius');
+  cell(g, 'amplexus', { role: 'man', robeColor: '#c9663c', alterRole: 'man', alterRobe: '#6f8f3f' },
+    'Gn 33,4 — two brothers');
+  cell(g, 'sol', {}, 'sōl (face, default)');
+  cell(g, 'sol', { face: false }, 'sōl {face:false}');
+  cell(g, 'ventus', {}, 'ventus (face, default)');
+  cell(g, 'ventus', { face: false }, 'ventus {face:false}');
+
+  h3('mascots — same 60×60 box as Scenes.mascot(52)');
+  g = grid();
+  cell(g, 'columbaMascot', {}, 'columbaMascot (Historia)');
+  cell(g, 'navisMascot', {}, 'navisMascot (Aeneis)');
+
+  h3('addenda in scenes');
+  g = grid(true);
+  sceneCell(g, { bg: 'desert', items: [
+    { t: 'via', x: 210, y: 238, s: 1.05 },
+    { t: 'domus', x: 96, y: 208, s: 0.72, signum: true },
+    { t: 'person', x: 262, y: 214, s: 0.9, role: 'patriarch', pose: 'walk', staff: true }
+  ] }, 'via + domus signāta (Ex 12)');
+  sceneCell(g, { bg: 'desert', items: [
+    { t: 'manna', x: 176, y: 216, s: 1.1 },
+    { t: 'manna', x: 300, y: 224, s: 0.9 },
+    { t: 'coturnix', x: 330, y: 208, s: 0.9, flip: true },
+    { t: 'person', x: 92, y: 216, s: 0.92, role: 'woman', pose: 'kneel' }
+  ] }, 'manna et coturnīx (Ex 16)');
+  sceneCell(g, { bg: 'mountain', items: [
+    { t: 'arcus', x: 200, y: 210, s: 1.05, nubes: true },
+    { t: 'altar', x: 118, y: 214, s: 0.8, smoke: true },
+    { t: 'person', x: 232, y: 216, s: 0.9, role: 'patriarch', pose: 'arms-up' }
+  ] }, 'arcus in nūbibus (Gn 9)');
+  sceneCell(g, { bg: 'stabulum', items: [
+    { t: 'praesepe', x: 208, y: 214, s: 1, infans: true },
+    { t: 'person', x: 84, y: 216, s: 0.86, role: 'king', pose: 'walk' },
+    { t: 'tus', x: 292, y: 212, s: 0.8, fumus: true },
+    { t: 'myrrha', x: 330, y: 212, s: 0.8 },
+    { t: 'star', x: 344, y: 108, s: 0.55, comet: true }
+  ] }, 'dōna Magōrum');
+  sceneCell(g, { bg: 'sea', items: [
+    { t: 'harpyia', x: 130, y: 120, s: 1.4, pose: 'fly', flip: true },
+    { t: 'harpyia', x: 268, y: 92, s: 1.05, pose: 'fly' },
+    { t: 'mensa', x: 210, y: 218, s: 0.95 },
+    { t: 'person', x: 96, y: 220, s: 0.9, role: 'soldier', pose: 'point' }
+  ] }, 'harpyiae (Aen. III)');
+  sceneCell(g, { bg: 'forest', items: [
+    { t: 'sus', x: 196, y: 214, s: 1.1, alba: true, porci: 3 },
+    { t: 'person', x: 82, y: 214, s: 0.95, role: 'man', pose: 'point' },
+    { t: 'tree', x: 336, y: 210, s: 0.9 }
+  ] }, 'sūs alba cum porcīs (Aen. VIII)');
+  sceneCell(g, { bg: 'city', items: [
+    { t: 'amplexus', x: 176, y: 214, s: 1.05, role: 'patriarch', alterRole: 'child', alterK: 0.82 },
+    { t: 'crowdGroup', x: 320, y: 212, s: 0.5 }
+  ] }, 'amplexus — pater et fīlius (Lc 15,20)');
+  sceneCell(g, { bg: 'desert', items: [
+    { t: 'person', x: 130, y: 216, s: 0.95, role: 'woman', pose: 'walk' },
+    { t: 'tympanum', x: 152, y: 178, s: 0.72 },
+    { t: 'person', x: 236, y: 216, s: 0.95, role: 'woman', pose: 'stand', robeColor: '#4d6c8a' },
+    { t: 'cithara', x: 262, y: 200, s: 0.7 },
+    { t: 'tuba', x: 330, y: 200, s: 0.9, vexillum: true }
+  ] }, 'mūsica — tympanum, cithara, tuba');
+
   /* ================= 4. BACKGROUNDS ================= */
   h2('Scaenae — backgrounds');
   g = grid(true);

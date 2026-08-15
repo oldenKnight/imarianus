@@ -144,6 +144,13 @@
     point:   { shY: -58, back: [[-9, -56], [-13, -44], [-12, -30]], front: [[9, -56], [18, -52], [30, -55]] },
     'arms-up': { shY: -58, back: [[-9, -56], [-17, -67], [-19, -82]], front: [[9, -56], [17, -67], [19, -82]] },
     carry:   { shY: -58, back: [[-9, -56], [-14, -63], [-9, -70]], front: [[9, -56], [14, -63], [9, -70]] },
+    /* amplexus: both arms reach FORWARD and around — the far arm high,
+       over the other's shoulder, the near arm low, round the waist. The
+       reach (x 30) is deliberately the same as `point`, so the pose costs
+       the person actor no extra bounds and every existing person sprite
+       keeps its crop. Two of these facing each other embrace; the paired
+       composite is registered below as its own actor, `amplexus`. */
+    amplexus: { shY: -58, back: [[-9, -56], [4, -61], [20, -59]], front: [[9, -56], [19, -50], [30, -45]] },
     kneel:   { shY: -44, back: [[-8, -42], [-13, -33], [-5, -27]], front: [[8, -42], [13, -33], [5, -27]] },
     sit:     { shY: -46, back: [[-9, -44], [-13, -35], [-10, -25]], front: [[9, -44], [13, -35], [10, -25]] }
   };
@@ -547,6 +554,48 @@
     return s;
   }
 
+  /* ============================================================
+     amplexus — TWO figures in an embrace (Lc 15,20; Gn 33,4).
+     ------------------------------------------------------------
+     Why a composite actor rather than a pose that draws its own
+     partner, as `carry` does: `carry` stacks the second figure
+     UPWARD, inside the carrier's own box, while an embrace puts it
+     beside — which would widen the `person` bounds from 77 to ~116
+     and shrink every person sprite in the gallery, on the map and in
+     every probatio tile. So `person` gains only the single-figure
+     pose 'amplexus' (arms forward, same reach as 'point', bounds
+     untouched), and the PAIR is this second registered name with its
+     own box. Content can use either: two hand-placed people in pose
+     'amplexus' facing each other, or this one item.
+
+     opts: role/robeColor/mantleColor/skin/hair/beard/veil/halo/k …
+             — anything `person` takes, applied to the LEFT figure;
+           alterRole, alterRobe, alterMantle, alterSkin, alterVeil,
+           alterHair, alterBeard, alterK — the same for the RIGHT one;
+           gap  — distance between the two origins (default 38).
+     ============================================================ */
+  function amplexus(opts) {
+    var o = opts || {}, key;
+    var gap = (typeof o.gap === 'number') ? o.gap : 38;
+    var left = {}, right = {};
+    /* every key that is not gap/flip/alter… describes the LEFT figure */
+    for (key in o) {
+      if (!own(o, key)) { continue; }
+      if (key === 'gap' || key === 'flip' || key.indexOf('alter') === 0) { continue; }
+      left[key] = o[key];
+    }
+    left.pose = 'amplexus';
+    right = {
+      role: o.alterRole || 'man', pose: 'amplexus',
+      robeColor: o.alterRobe, mantleColor: o.alterMantle, skin: o.alterSkin,
+      veil: o.alterVeil, hair: o.alterHair, beard: o.alterBeard, k: o.alterK
+    };
+    /* the right figure is drawn FIRST and mirrored, so the left figure's
+       arms lie on top of it and the embrace reads as one action */
+    return '<g transform="translate(' + gap + ',0) scale(-1,1)">' + person(right) + '</g>' +
+      person(left);
+  }
+
   /* ---------- registration ----------
      Bounds must cover the WIDEST variant of the actor, because sprite()
      gets one box per registered name: a raised staff (y -104), a
@@ -557,4 +606,5 @@
      stroke half-widths. */
   Scenes.register('person', person, { x: -39, y: -113, w: 77, h: 119 });
   Scenes.register('crowdGroup', crowdGroup, { x: -63, y: -90, w: 140, h: 96 });
+  Scenes.register('amplexus', amplexus, { x: -21, y: -103, w: 90, h: 109 });
 }());

@@ -191,6 +191,12 @@
     var b = cfg.body;
     var hx = cfg.head.x, hy = cfg.head.y, hr = cfg.head.r;
     var s = '', drop = 0;
+    /* An OUTLINE, off by default and used by exactly one animal so far:
+       a white sow on the cream sky (C.sky #f6e8c9) has no silhouette at
+       all without it — the same problem pellis and ventus solved the same
+       way. Every other animal in the table is saturated enough that the
+       flat two-tone shading is the whole edge it needs. */
+    var edgeAttr = (o.edge || cfg.edge) ? ' stroke="' + mix(fur, 0, 0.30) + '" stroke-width="2"' : '';
 
     if (lie) {
       drop = -cfg.legY * 0.60;              /* body settles toward the ground */
@@ -208,7 +214,7 @@
     /* body */
     var rot = (pose === 'run') ? -8 : 0;
     inner += '<g transform="rotate(' + rot + ' 0 ' + b.cy + ')">' +
-      '<ellipse cx="0" cy="' + b.cy + '" rx="' + b.rx + '" ry="' + b.ry + '" fill="' + fur + '"/>' +
+      '<ellipse cx="0" cy="' + b.cy + '" rx="' + b.rx + '" ry="' + b.ry + '" fill="' + fur + '"' + edgeAttr + '/>' +
       '<path d="M' + (-b.rx) + ',' + b.cy + ' a' + b.rx + ',' + b.ry + ' 0 0 0 ' + (2 * b.rx) + ',0 Z" fill="' + dark + '" opacity="0.35"/>' +
       '<ellipse cx="' + (b.rx * 0.22) + '" cy="' + (b.cy + b.ry * 0.5) + '" rx="' + (b.rx * 0.5) +
       '" ry="' + (b.ry * 0.42) + '" fill="' + belly + '" opacity="0.85"/>' +
@@ -254,7 +260,17 @@
       }
     }
     h += ears(cfg.ears, hr, fur, dark);
-    h += '<circle cx="0" cy="0" r="' + hr + '" fill="' + fur + '"/>';
+    h += '<circle cx="0" cy="0" r="' + hr + '" fill="' + fur + '"' + edgeAttr + '/>';
+    /* snout: a flat disc with two nostrils, not a tapering muzzle. It is
+       the single feature that makes `sus` a pig rather than a small pale
+       dog, and it lives in the core (rather than in an `extra`) because
+       only the core knows where the head went in the eat/lie poses. */
+    if (cfg.snout) {
+      h += '<ellipse cx="' + (hr * 0.92) + '" cy="' + (hr * 0.30) + '" rx="' + (hr * 0.46) +
+        '" ry="' + (hr * 0.40) + '" fill="' + belly + '" stroke="' + mix(belly, 0, 0.22) + '" stroke-width="1.2"/>';
+      h += '<circle cx="' + (hr * 1.02) + '" cy="' + (hr * 0.16) + '" r="' + (hr * 0.10) + '" fill="' + COL.ink + '" opacity="0.8"/>';
+      h += '<circle cx="' + (hr * 1.02) + '" cy="' + (hr * 0.46) + '" r="' + (hr * 0.10) + '" fill="' + COL.ink + '" opacity="0.8"/>';
+    }
     /* muzzle */
     if (cfg.muzzle) {
       h += '<ellipse cx="' + (hr * 0.72 + cfg.muzzle * 0.4) + '" cy="' + (hr * 0.32) + '" rx="' + (hr * 0.52 + cfg.muzzle * 0.5) +
@@ -364,6 +380,15 @@
       fur: '#9a8f84', belly: '#e6dbcc', body: { cy: -10, rx: 13, ry: 8 },
       legY: -6, legX: [-8, -3, 3, 8], legW: 3.4,
       head: { x: 13, y: -16, r: 6.5 }, muzzle: 4, ears: 'tuft', tail: 'thin'
+    },
+    /* sus: fat body, no neck, curl tail, and the snout the core draws for
+       nobody else. `alba` (the white sow of Aen. 8,43–45) and `porci` are
+       handled by the wrapper and the `extra` below, not by a second row. */
+    sus: {
+      fur: '#cf9a90', belly: '#f2d6cd', body: { cy: -23, rx: 28, ry: 16 },
+      legY: -13, legX: [-16, -7, 8, 17], legW: 7, hooves: true,
+      head: { x: 30, y: -31, r: 10 }, muzzle: 0, snout: true, ears: 'droop',
+      tail: 'curl', extra: susPorci
     }
   };
 
@@ -455,7 +480,13 @@
     }
     /* beak */
     var bk = cfg.beak || 'short', bc = cfg.beakCol || COL.ochre;
-    if (bk === 'long') {
+    if (cfg.faceless) { bk = 'none'; }
+    if (bk === 'none') {
+      /* a bird with NO FACE: the head stays a silhouette. This is how the
+         harpy is drawn (DESIGN §8 "fear": menacing but stylized) — give it
+         an eye and a hooked beak and it becomes a horror illustration. */
+      bk = '';
+    } else if (bk === 'long') {
       s += '<path d="M' + (hr * 0.6) + ',-1 l' + (hr * 2.6) + ',3 l-' + (hr * 2.5) + ',4 Z" fill="' + bc + '"/>';
     } else if (bk === 'hooked') {
       /* a raptor's beak: deep base, a real down-curved tip */
@@ -465,13 +496,15 @@
     } else {
       s += '<path d="M' + (hr * 0.6) + ',-1 l' + (hr * 1.15) + ',3 l-' + (hr * 1.1) + ',4 Z" fill="' + bc + '"/>';
     }
-    if (cfg.brow) {
+    if (cfg.brow && !cfg.faceless) {
       /* the frown ridge that separates an eagle from a duck */
       s += '<path d="M' + (-hr * 0.15) + ',' + (-hr * 0.62) + ' q' + (hr * 0.8) + ',-2 ' + (hr * 1.15) + ',3" stroke="' +
         mix(col, 0, 0.35) + '" stroke-width="3" fill="none" stroke-linecap="round"/>';
     }
-    s += '<circle cx="' + (hr * 0.28) + '" cy="' + (-hr * 0.3) + '" r="' + Math.max(1.5, hr * 0.22) + '" fill="' + COL.ink + '"/>';
-    if (cfg.eyeRing) { s += '<circle cx="' + (hr * 0.28) + '" cy="' + (-hr * 0.3) + '" r="0.8" fill="' + COL.white + '"/>'; }
+    if (!cfg.faceless) {
+      s += '<circle cx="' + (hr * 0.28) + '" cy="' + (-hr * 0.3) + '" r="' + Math.max(1.5, hr * 0.22) + '" fill="' + COL.ink + '"/>';
+      if (cfg.eyeRing) { s += '<circle cx="' + (hr * 0.28) + '" cy="' + (-hr * 0.3) + '" r="0.8" fill="' + COL.white + '"/>'; }
+    }
     s += '</g>';
 
     if (cfg.extra) { s += cfg.extra(col, dark, o, cfg); }
@@ -518,6 +551,23 @@
       col: '#fbf6ea', light: '#ffffff', dark: '#cdc2ad', bodyY: -46, rx: 17, ry: 12,
       headX: 18, headY: -74, headR: 7, neck: 7, beak: 'long', beakCol: COL.blood,
       legCol: COL.blood, legW: 2.6, tail: 'short', wingBar: '#4a4038'
+    },
+    /* coturnix (Ex 16,13): small, round, ground-coloured and SPECKLED —
+       the speckles are the whole identification, since a plain buff bird
+       this size is a partridge, a chick or nothing in particular. */
+    coturnix: {
+      col: '#b98f5e', light: '#dcc094', dark: '#7d5c34', bodyY: -15, rx: 15, ry: 11,
+      headX: 13, headY: -26, headR: 6.5, beak: 'short', beakCol: '#8a7a5e',
+      legCol: '#c9a06a', legW: 2.2, tail: 'short', extra: coturnixMarks
+    },
+    /* harpyia (Aen. 3,209–258). Aeneis Liber III already flies the aquila
+       recoloured livid; this is that composition given a NAME, so no scene
+       has to carry the override. Aquila's proportions exactly — only the
+       colour, the ragged wing edges and the missing FACE differ. */
+    harpyia: {
+      col: '#7e8a72', light: '#9aa88e', dark: '#4d5849', bodyY: -30, rx: 18, ry: 14,
+      headX: 16, headY: -48, headR: 10.5, faceless: true,
+      legCol: '#6b6f5c', legW: 3.2, tail: 'short', extra: harpyiaRags
     }
   };
 
@@ -1379,9 +1429,15 @@
     }
     s += '<circle cx="0" cy="-30" r="24" fill="' + g + '"/>';
     s += '<path d="M0,-54 a24,24 0 0 1 0,48 Z" fill="' + sh(g) + '" opacity="0.35"/>';
-    s += '<circle cx="-7" cy="-33" r="2.4" fill="' + COL.ink + '"/>';
-    s += '<circle cx="7" cy="-33" r="2.4" fill="' + COL.ink + '"/>';
-    s += '<path d="M-8,-24 q8,7 16,0" stroke="' + COL.ink + '" stroke-width="2" fill="none" stroke-linecap="round"/>';
+    /* { face: false } — the REVERENT register. In a fable the sun argues
+       with the wind and needs a face; in Historia Sacra the sun is a thing
+       God made, and a smiling face on it turns Gn 1 into a nursery decal.
+       Content opts in; every existing scene keeps the face. */
+    if (o.face !== false) {
+      s += '<circle cx="-7" cy="-33" r="2.4" fill="' + COL.ink + '"/>';
+      s += '<circle cx="7" cy="-33" r="2.4" fill="' + COL.ink + '"/>';
+      s += '<path d="M-8,-24 q8,7 16,0" stroke="' + COL.ink + '" stroke-width="2" fill="none" stroke-linecap="round"/>';
+    }
     return s;
   }
 
@@ -1401,9 +1457,13 @@
     s += '<ellipse cx="-34" cy="-36" rx="16" ry="12" fill="' + c + '"/>';
     s += '<ellipse cx="2" cy="-48" rx="18" ry="13" fill="' + hi(c) + '"/>';
     s += '<path d="M-40,-40 a26,18 0 0 0 40,10 Z" fill="' + sh(c) + '" opacity="0.28"/>';
-    s += '<circle cx="-4" cy="-44" r="2.4" fill="' + COL.ink + '"/>';
-    s += '<circle cx="6" cy="-45" r="2.4" fill="' + COL.ink + '"/>';
-    s += '<ellipse cx="12" cy="-36" rx="5" ry="4" fill="' + COL.ink + '" opacity="0.8"/>';
+    /* { face: false }: the same cloud with the gusts and no blowing face —
+       the wind of Gn 8,1 rather than the character of Ventus et Sōl. */
+    if (o.face !== false) {
+      s += '<circle cx="-4" cy="-44" r="2.4" fill="' + COL.ink + '"/>';
+      s += '<circle cx="6" cy="-45" r="2.4" fill="' + COL.ink + '"/>';
+      s += '<ellipse cx="12" cy="-36" rx="5" ry="4" fill="' + COL.ink + '" opacity="0.8"/>';
+    }
     /* gusts */
     s += '<path d="M20,-38 q22,-6 34,2 q-14,4 -30,2" stroke="' + edge + '" stroke-width="3.4" fill="none" stroke-linecap="round"/>';
     s += '<path d="M18,-26 q28,-4 44,6 q-18,2 -38,-1" stroke="' + edge + '" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.8"/>';
@@ -1800,6 +1860,554 @@
   }
 
   /* ============================================================
+     4b. ART2 — the gaps the three content tracks reported
+     ------------------------------------------------------------
+     Every entry below exists because a finished capitulum asked for
+     it by name and had to be staged around its absence (see the
+     MISSING ART sections of content/_ledger-*.md). Same contract as
+     everything above: flat fills, one computed darker tone, light
+     from the upper left, origin at the ground point, facing right.
+     ============================================================ */
+
+  /* ---- catena: the collar and its chain ----
+     The hinge of Lupus et Canis (f36): the wolf sees the mark of the
+     collar and walks away. There was no collar, chain or neck-band in
+     the library, and an `umbra` ellipse laid on the dog's throat landed
+     on its CHEEK and read as a wound, because `canis` has no neck.
+     Two forms out of one actor, because they are one object:
+       default        collar + hanging chain + links trailing on the
+                      ground — the standalone prop for a vocabulary card;
+       { collar:true} the COMPACT form: the band alone with two links on
+                      its ring, drawn AROUND the origin instead of above
+                      it, so a scene item can be dropped straight onto a
+                      quadruped's throat (canis head centre ≈ x27,y-42 at
+                      s=1, so { t:'catena', collar:true } at that point,
+                      scaled with the dog, sits where a collar sits).
+     The band is a flat ellipse ring seen slightly from above — the angle
+     at which it reads as "around something" and not as a stripe. */
+  function chainLink(x, y, rx, ry, rot, col, w) {
+    return '<ellipse cx="' + x + '" cy="' + y + '" rx="' + rx + '" ry="' + ry +
+      '" fill="none" stroke="' + col + '" stroke-width="' + (w || 2.6) +
+      '" transform="rotate(' + rot + ' ' + x + ' ' + y + ')"/>';
+  }
+
+  function collarBand(cy) {
+    var lea = COL.umber, s = '';
+    s += '<ellipse cx="0" cy="' + cy + '" rx="15" ry="6" fill="none" stroke="' + lea + '" stroke-width="6"/>';
+    /* lit top edge, shaded lower edge: the two-tone rule, on a ring */
+    s += '<path d="M-15,' + cy + ' a15,6 0 0 1 30,0" fill="none" stroke="' + hi(lea) +
+      '" stroke-width="2" opacity="0.65"/>';
+    s += '<path d="M15,' + cy + ' a15,6 0 0 1 -30,0" fill="none" stroke="' + sh(lea) +
+      '" stroke-width="2.4" opacity="0.7"/>';
+    /* studs along the top of the band */
+    s += '<circle cx="-9" cy="' + (cy - 4.8) + '" r="1.6" fill="' + COL.bronze + '"/>';
+    s += '<circle cx="0" cy="' + (cy - 6) + '" r="1.6" fill="' + COL.bronze + '"/>';
+    s += '<circle cx="9" cy="' + (cy - 4.8) + '" r="1.6" fill="' + COL.bronze + '"/>';
+    /* the ring the chain hangs from, at the front of the band */
+    s += '<circle cx="0" cy="' + (cy + 7) + '" r="4.2" fill="none" stroke="' + COL.bronze + '" stroke-width="2.4"/>';
+    return s;
+  }
+
+  function catena(o) {
+    o = o || {};
+    var iron = o.color || COL.iron, s = '', i, y;
+    if (o.collar) {
+      s += chainLink(0, 15, 3.2, 5.4, 0, iron);
+      s += chainLink(0, 22, 5.4, 3.2, 0, iron);
+      s += collarBand(0);
+      /* `tilt` (degrees, clamped to ±30) leans the band with the animal's
+         neck. A scene item can scale and flip an actor but cannot rotate
+         it, and a dead-level band on a dog that has no neck reads as a ring
+         lying on its back — this is the one option that fixes that. */
+      var t = n(o.tilt, 0);
+      if (t < -30) { t = -30; }
+      if (t > 30) { t = 30; }
+      return t ? '<g transform="rotate(' + t + ')">' + s + '</g>' : s;
+    }
+    /* the chain hanging from the ring */
+    for (i = 0; i < 6; i++) {
+      y = -48 + i * 8;
+      s += (i % 2) ? chainLink(0, y, 5.4, 3.2, 0, iron) : chainLink(0, y, 3.2, 5.6, 0, iron);
+    }
+    /* the last links lie flat and trail away to the right: that is what
+       says "chain" rather than "necklace hanging in the air" */
+    s += chainLink(6, -5, 6, 3.4, -14, iron);
+    s += chainLink(17, -3.5, 6, 3.4, -6, iron);
+    s += chainLink(28, -3, 6, 3.4, 3, iron);
+    s += collarBand(-62);
+    return s;
+  }
+
+  /* ---- via: the road ----
+     A FOREGROUND strip: widest at the reader's feet, converging to a
+     point 48 units up. Placed at { x:200, y:238 } it runs off the bottom
+     of the frame and gives a scene a road to walk out of; at y=210 it
+     lies on the standing line and runs to the horizon. */
+  function via(o) {
+    o = o || {};
+    var dirt = o.color || '#c6a066', d = sh(dirt), l = hi(dirt), s = '';
+    var nx = 112, fx = 15, fy = -48, k = fx / nx;
+    s += '<path d="M' + (-nx) + ',2 L' + (-fx) + ',' + fy + ' L' + fx + ',' + fy + ' L' + nx + ',2 Z" fill="' + dirt + '"/>';
+    /* the right half is the shade side, as everywhere in this set */
+    s += '<path d="M0,2 L0,' + fy + ' L' + fx + ',' + fy + ' L' + nx + ',2 Z" fill="' + d + '" opacity="0.16"/>';
+    /* two wheel ruts. Drawn as WEDGES, not strokes: a stroke cannot taper,
+       and a rut of constant width is what kills a perspective road. */
+    function rut(x0, x1) {
+      return '<path d="M' + x0 + ',2 L' + x1 + ',2 L' + (x1 * k).toFixed(1) + ',' + fy +
+        ' L' + (x0 * k).toFixed(1) + ',' + fy + ' Z" fill="' + d + '" opacity="0.42"/>';
+    }
+    s += rut(-64, -46) + rut(46, 64);
+    /* the grass crown between the ruts, that no wheel ever touches */
+    if (o.herba !== false) {
+      s += '<path d="M-15,2 L15,2 L' + (15 * k).toFixed(1) + ',' + fy + ' L' + (-15 * k).toFixed(1) + ',' + fy +
+        ' Z" fill="' + COL.olive + '" opacity="0.28"/>';
+      var tufts = [[-8, -4], [6, -12], [-4, -24], [3, -34]], i;
+      for (i = 0; i < tufts.length; i++) {
+        s += '<path d="M' + tufts[i][0] + ',' + tufts[i][1] + ' l-3,-5 M' + tufts[i][0] + ',' + tufts[i][1] +
+          ' l1,-6 M' + tufts[i][0] + ',' + tufts[i][1] + ' l4,-4" stroke="' + COL.leafD +
+          '" stroke-width="1.4" fill="none" stroke-linecap="round" opacity="0.75"/>';
+      }
+    }
+    /* verges: a darker lip, then grass tufts along both edges */
+    s += '<path d="M' + (-nx) + ',2 L' + (-fx) + ',' + fy + '" stroke="' + d +
+      '" stroke-width="2.4" fill="none" opacity="0.6"/>';
+    s += '<path d="M' + nx + ',2 L' + fx + ',' + fy + '" stroke="' + d +
+      '" stroke-width="2.4" fill="none" opacity="0.6"/>';
+    var edges = [[-100, -2, 1], [-64, -18, 0.8], [-40, -32, 0.6], [96, -1, 1], [62, -18, 0.8], [38, -32, 0.6]], j, e;
+    for (j = 0; j < edges.length; j++) {
+      e = edges[j];
+      s += '<g transform="translate(' + e[0] + ',' + e[1] + ') scale(' + e[2] + ')">' +
+        '<path d="M0,0 q-2,-7 -6,-10 M0,0 q0,-8 2,-12 M0,0 q4,-6 8,-9" stroke="' + COL.leafD +
+        '" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.85"/></g>';
+    }
+    /* a few stones, so the dirt has a surface */
+    var st = [[-52, -6, 4], [-20, -20, 3], [26, -12, 3.4], [70, -4, 4.2], [8, -40, 2], [-78, -1, 3.4]], p;
+    for (j = 0; j < st.length; j++) {
+      p = st[j];
+      s += '<ellipse cx="' + p[0] + '" cy="' + p[1] + '" rx="' + p[2] + '" ry="' + (p[2] * 0.5) +
+        '" fill="' + l + '" opacity="0.7"/>';
+    }
+    return s;
+  }
+
+  /* ---- arcus: the bow in the clouds (Gn 9,13–16) ----
+     Three soft bands, WARM: terracotta, gold and olive rather than the
+     seven-colour spectrum, so the covenant sign sits in the Pompeiian
+     palette instead of arriving from a different picture book. Springs
+     from the ground line, so at { y:210 } its feet stand on the earth.
+     { nubes:true } gives it the clouds Genesis puts it in. */
+  function arcus(o) {
+    o = o || {};
+    var bands = [[88, COL.terra], [76, COL.gold], [64, COL.olive]], s = '', i, r;
+    if (o.nubes) {
+      /* the clouds carry a darker silhouette UNDERNEATH rather than a
+         stroke on each ellipse — the ventus trick, for the same reason:
+         white cloud on the cream sky has no edge otherwise. */
+      var ec = '#c3bda9';
+      s += '<g opacity="0.9">' +
+        '<ellipse cx="-84" cy="-10" rx="32" ry="13" fill="' + ec + '"/>' +
+        '<ellipse cx="-62" cy="-6" rx="22" ry="10" fill="' + ec + '"/>' +
+        '<ellipse cx="84" cy="-12" rx="30" ry="12" fill="' + ec + '"/>' +
+        '<ellipse cx="62" cy="-6" rx="20" ry="9" fill="' + ec + '"/>' +
+        '<ellipse cx="-84" cy="-11" rx="30" ry="11" fill="' + COL.white + '"/>' +
+        '<ellipse cx="-62" cy="-7" rx="20" ry="8" fill="' + COL.white + '"/>' +
+        '<ellipse cx="84" cy="-13" rx="28" ry="10" fill="' + COL.white + '"/>' +
+        '<ellipse cx="62" cy="-7" rx="18" ry="7" fill="' + mix(COL.white, 0, 0.07) + '"/>' +
+        '</g>';
+    }
+    for (i = 0; i < bands.length; i++) {
+      r = bands[i][0];
+      s += '<path d="M' + (-r) + ',0 A' + r + ',' + r + ' 0 0 1 ' + r + ',0" fill="none" stroke="' +
+        bands[i][1] + '" stroke-width="11" opacity="0.55" stroke-linecap="round"/>';
+    }
+    /* a pale inner edge: the light the bow is made of, not a fourth colour */
+    s += '<path d="M-56,0 A56,56 0 0 1 56,0" fill="none" stroke="' + COL.cream +
+      '" stroke-width="6" opacity="0.35" stroke-linecap="round"/>';
+    return s;
+  }
+
+  /* ============ mūsica ============ */
+
+  /* cithara — the small lyre: a shell sound box, two horns, a yoke and
+     six strings. Deliberately the size of something a person can hold. */
+  function cithara(o) {
+    o = o || {};
+    var w = o.color || COL.wood, d = sh(w), g = COL.gold, s = '', i, x;
+    /* the arms rise from behind the shell */
+    s += '<path d="M-15,-22 q-13,-14 -5,-40" stroke="' + w + '" stroke-width="5.5" fill="none" stroke-linecap="round"/>';
+    s += '<path d="M15,-22 q13,-14 5,-40" stroke="' + d + '" stroke-width="5.5" fill="none" stroke-linecap="round"/>';
+    /* the yoke across the top */
+    s += '<path d="M-23,-62 L23,-62" stroke="' + w + '" stroke-width="5" stroke-linecap="round" fill="none"/>';
+    s += '<path d="M-21,-63.5 L21,-63.5" stroke="' + hi(w) + '" stroke-width="1.6" opacity="0.7" fill="none"/>';
+    s += '<circle cx="-23" cy="-62" r="3" fill="' + g + '"/>';
+    s += '<circle cx="23" cy="-62" r="3" fill="' + sh(g) + '"/>';
+    /* strings, from the yoke down to the bridge */
+    for (i = 0; i < 6; i++) {
+      x = -10 + i * 4;
+      s += '<path d="M' + x + ',-60 L' + x + ',-20" stroke="' + COL.cream +
+        '" stroke-width="1.2" opacity="0.9" fill="none"/>';
+    }
+    /* the shell: a tortoise back, its face a stretched soundboard */
+    s += '<path d="M-21,-6 q-2,-24 21,-24 q23,0 21,24 q-21,9 -42,0 Z" fill="' + w + '"/>';
+    s += '<path d="M0,-30 q23,0 21,24 q-10,4.5 -21,4.5 Z" fill="' + d + '" opacity="0.45"/>';
+    s += '<ellipse cx="0" cy="-18" rx="15" ry="10" fill="' + COL.linen + '"/>';
+    s += '<path d="M0,-28 a15,10 0 0 1 0,20 Z" fill="' + sh(COL.linen) + '" opacity="0.4"/>';
+    s += '<circle cx="0" cy="-20" r="3.6" fill="' + COL.woodD + '"/>';
+    /* bridge */
+    s += '<path d="M-12,-20 L12,-20" stroke="' + g + '" stroke-width="2.6" stroke-linecap="round" fill="none"/>';
+    return s;
+  }
+
+  /* the two horns share their fittings — the cup at the lip and the
+     flared bell are one object on both instruments, and only the tube
+     between them is straight (tuba) or bent round (buccina). */
+  function hornBell(x, y, rot, k, col) {
+    var d = sh(col);
+    return '<g transform="translate(' + x + ',' + y + ') rotate(' + rot + ') scale(' + k + ')">' +
+      '<path d="M0,-4.5 Q10,-13 17,-15 L17,15 Q10,13 0,4.5 Z" fill="' + col + '"/>' +
+      '<path d="M0,0 Q9,4 17,15 L17,0 Z" fill="' + d + '" opacity="0.45"/>' +
+      '<ellipse cx="17" cy="0" rx="3.6" ry="15" fill="' + d + '"/>' +
+      '<ellipse cx="17" cy="0" rx="3.6" ry="15" fill="none" stroke="' + hi(col) + '" stroke-width="2"/>' +
+      '</g>';
+  }
+  function hornMouth(x, y, rot, col) {
+    return '<g transform="translate(' + x + ',' + y + ') rotate(' + rot + ')">' +
+      '<ellipse cx="0" cy="0" rx="2.6" ry="5" fill="' + hi(col) + '"/>' +
+      '<path d="M2,-4.5 L6,-3.6 L6,3.6 L2,4.5 Z" fill="' + col + '"/></g>';
+  }
+
+  /* tuba — the long straight war-trumpet, mouthpiece low, bell raised */
+  function tuba(o) {
+    o = o || {};
+    var b = o.color || COL.bronze, s = '';
+    var rot = -36;
+    /* the tube */
+    s += '<path d="M-34,-8 L26,-52" stroke="' + b + '" stroke-width="7" stroke-linecap="round" fill="none"/>';
+    s += '<path d="M-32,-10 L24,-51" stroke="' + hi(b) + '" stroke-width="2" opacity="0.7" fill="none"/>';
+    /* reinforcing bands */
+    s += '<path d="M-14,-23 l5,-7 M4,-36 l5,-7" stroke="' + sh(b) + '" stroke-width="7" stroke-linecap="butt" fill="none"/>';
+    s += hornBell(26, -52, rot, 1, b);
+    s += hornMouth(-34, -8, rot, sh(b));
+    if (o.vexillum) {
+      /* the little banner a Roman tuba hangs below the tube */
+      s += '<path d="M-2,-29 L18,-44 L20,-32 L2,-19 Z" fill="' + COL.blood + '"/>';
+      s += '<path d="M-2,-29 L18,-44 L19,-38 L0,-24 Z" fill="' + sh(COL.blood) + '" opacity="0.5"/>';
+    }
+    return s;
+  }
+
+  /* buccina — the curved horn. Same bell and same mouthpiece; the tube
+     is a filled crescent, because a horn TAPERS and a stroke cannot. */
+  function buccina(o) {
+    o = o || {};
+    var b = o.color || COL.bronze, s = '';
+    /* The crescent: outer edge up the left, then the mouth of the tube,
+       then the inner edge back down. The bell is set on the MIDPOINT of
+       that mouth and rotated to its normal (-50°) — get the rotation
+       wrong and a wedge of daylight opens between tube and bell. */
+    s += '<path d="M-30,-4 Q-40,-40 -6,-60 L6,-50 Q-22,-32 -18,-4 Z" fill="' + b + '"/>';
+    s += '<path d="M-30,-4 Q-34,-28 -18,-4 Z" fill="' + sh(b) + '" opacity="0.35"/>';
+    s += '<path d="M-27,-10 Q-34,-38 -8,-54" stroke="' + hi(b) + '" stroke-width="2" fill="none" opacity="0.65"/>';
+    /* the reinforcing band where the tube widens */
+    s += '<path d="M-14,-49 L-8,-40" stroke="' + sh(b) + '" stroke-width="4.5" fill="none"/>';
+    s += hornBell(0, -55, -50, 0.82, b);
+    s += hornMouth(-24, -4, 90, sh(b));
+    return s;
+  }
+
+  /* tympanum — the hand drum (Ex 15,20, Maria with the women).
+     Held facing the reader: a wooden hoop, a stretched skin, the cords
+     that tension it, and two pairs of bronze jingles in the rim. */
+  function tympanum(o) {
+    o = o || {};
+    var w = o.color || COL.wood, head = COL.linen, s = '', i, a1, a2, dd;
+    var cy = -26, r = 25, ri = r - 6;
+    s += '<circle cx="0" cy="' + cy + '" r="' + r + '" fill="' + w + '"/>';
+    s += '<path d="M0,' + (cy - r) + ' a' + r + ',' + r + ' 0 0 1 0,' + (2 * r) + ' Z" fill="' + sh(w) + '" opacity="0.45"/>';
+    s += '<circle cx="0" cy="' + cy + '" r="' + ri + '" fill="' + head + '"/>';
+    s += '<path d="M0,' + (cy - ri) + ' a' + ri + ',' + ri + ' 0 0 1 0,' + (2 * ri) + ' Z" fill="' + sh(head) + '" opacity="0.30"/>';
+    s += '<circle cx="0" cy="' + cy + '" r="' + ri + '" fill="none" stroke="' + sh(head) + '" stroke-width="1.4"/>';
+    s += '<path d="M-13,' + (cy - 11) + ' a17,17 0 0 1 13,-5" stroke="' + hi(head) +
+      '" stroke-width="2.4" fill="none" opacity="0.8" stroke-linecap="round"/>';
+    /* tension cords: a zigzag between the hoop and the skin */
+    dd = '';
+    for (i = 0; i <= 12; i++) {
+      a1 = (i * 30) * Math.PI / 180;
+      dd += (i ? 'L' : 'M') + (Math.cos(a1) * (i % 2 ? ri + 1 : r - 1.5)).toFixed(1) + ',' +
+        (cy + Math.sin(a1) * (i % 2 ? ri + 1 : r - 1.5)).toFixed(1) + ' ';
+    }
+    s += '<path d="' + dd + '" stroke="' + COL.straw + '" stroke-width="1.6" fill="none" opacity="0.85"/>';
+    /* jingles */
+    for (i = 0; i < 2; i++) {
+      a2 = (i ? 330 : 210) * Math.PI / 180;
+      s += '<circle cx="' + (Math.cos(a2) * r).toFixed(1) + '" cy="' + (cy + Math.sin(a2) * r).toFixed(1) +
+        '" r="4" fill="' + COL.bronze + '"/>';
+      s += '<circle cx="' + (Math.cos(a2) * r).toFixed(1) + '" cy="' + (cy + Math.sin(a2) * r).toFixed(1) +
+        '" r="1.6" fill="' + hi(COL.bronze) + '"/>';
+    }
+    return s;
+  }
+
+  /* ---- domus: a small house front, and the DOOR is the point ----
+     Ex 12,7 needs doorposts and a lintel that can be marked, so the door
+     is built as a frame (two posts + lintel) with a leaf inside it, and
+     { signum:true } lays one short stroke on each post and one across the
+     lintel — a mark, deliberately not a smear (DESIGN §8). */
+  function domus(o) {
+    o = o || {};
+    var wall = o.color || COL.linen, d = sh(wall), roof = COL.terra, s = '';
+    s += '<rect x="-52" y="-72" width="104" height="72" fill="' + wall + '"/>';
+    s += '<rect x="6" y="-72" width="46" height="72" fill="' + d + '" opacity="0.28"/>';
+    s += '<path d="M-62,-72 L0,-97 L62,-72 Z" fill="' + roof + '"/>';
+    s += '<path d="M0,-97 L62,-72 L0,-72 Z" fill="' + sh(roof) + '" opacity="0.42"/>';
+    s += '<path d="M-64,-72 L64,-72" stroke="' + sh(roof) + '" stroke-width="4" stroke-linecap="round"/>';
+    s += '<path d="M-40,-84 L-34,-78 M-20,-90 L-14,-84 M20,-90 L26,-84" stroke="' + sh(roof) +
+      '" stroke-width="1.6" opacity="0.5" fill="none"/>';
+    /* window, on the lit side */
+    s += '<rect x="-42" y="-58" width="22" height="20" rx="2" fill="' + COL.ink + '" opacity="0.7"/>';
+    s += '<path d="M-31,-58 L-31,-38 M-42,-48 L-20,-48" stroke="' + COL.wood + '" stroke-width="2.4"/>';
+    /* the door: frame first, then the leaf inside it */
+    s += '<rect x="-20" y="-52" width="40" height="52" fill="' + COL.wood + '"/>';
+    s += '<rect x="13" y="-52" width="7" height="52" fill="' + sh(COL.wood) + '" opacity="0.5"/>';
+    s += '<rect x="-13" y="-45" width="26" height="45" fill="' + COL.woodD + '"/>';
+    s += '<path d="M0,-45 L0,0" stroke="' + sh(COL.woodD) + '" stroke-width="1.8"/>';
+    s += '<path d="M-7,-45 L-7,0 M7,-45 L7,0" stroke="' + sh(COL.woodD) + '" stroke-width="1.2" opacity="0.7"/>';
+    s += '<circle cx="9" cy="-22" r="2.6" fill="' + COL.bronze + '"/>';
+    if (o.signum) {
+      var m = COL.blood;
+      s += '<path d="M-16.5,-44 L-16.5,-20" stroke="' + m + '" stroke-width="4" stroke-linecap="round" opacity="0.85"/>';
+      s += '<path d="M16.5,-44 L16.5,-20" stroke="' + m + '" stroke-width="4" stroke-linecap="round" opacity="0.85"/>';
+      s += '<path d="M-13,-48.5 L13,-48.5" stroke="' + m + '" stroke-width="4" stroke-linecap="round" opacity="0.85"/>';
+    }
+    /* the step */
+    s += '<rect x="-26" y="-4" width="52" height="4" rx="1.5" fill="' + COL.stone + '"/>';
+    s += '<rect x="0" y="-4" width="26" height="4" fill="' + sh(COL.stone) + '" opacity="0.4"/>';
+    return s;
+  }
+
+  /* ---- manna: white grains on the ground (Ex 16,14.31) ----
+     "quasi semen coriandri album" — small, round, white, LYING THERE.
+     The pale patch under them is what keeps them from floating. */
+  function manna(o) {
+    o = o || {};
+    var count = n(o.n, 15), g = COL.white, edge = mix(g, 0, 0.34), s = '', i, p;
+    if (count < 4) { count = 4; }
+    if (count > 22) { count = 22; }
+    /* the patch of ground, in sand rather than cream: on the desert and on
+       the gallery's cream tile a cream patch is invisible, and white grains
+       with nothing under them float like soap bubbles. */
+    s += '<ellipse cx="0" cy="-4" rx="46" ry="11" fill="' + COL.sand2 + '" opacity="0.55"/>';
+    s += '<ellipse cx="0" cy="-4" rx="46" ry="11" fill="none" stroke="' + sh(COL.sand2) +
+      '" stroke-width="1.4" opacity="0.4"/>';
+    var pts = [[-38, -4, 3], [-27, -7, 2.4], [-19, -2, 3.4], [-10, -8, 2.6], [-2, -3, 3.2],
+      [6, -9, 2.4], [15, -4, 3], [24, -8, 2.6], [33, -3, 3.2], [41, -6, 2.2],
+      [-33, -1, 2.2], [-6, -1, 2.6], [19, -1, 2.4], [30, -12, 2], [-15, -12, 2.2],
+      [9, -14, 2], [-24, -12, 1.8], [37, -13, 1.9], [0, -17, 1.8], [-41, -10, 1.8],
+      [26, -18, 1.7], [-30, -18, 1.7]];
+    for (i = 0; i < count; i++) {
+      p = pts[i];
+      /* each grain gets the small shadow that puts it ON the ground */
+      s += '<ellipse cx="' + (p[0] + p[2] * 0.35) + '" cy="' + (p[1] + p[2] * 0.5) + '" rx="' + p[2] +
+        '" ry="' + (p[2] * 0.5) + '" fill="' + sh(COL.sand2) + '" opacity="0.45"/>';
+      s += '<ellipse cx="' + p[0] + '" cy="' + p[1] + '" rx="' + p[2] + '" ry="' + (p[2] * 0.74) +
+        '" fill="' + g + '" stroke="' + edge + '" stroke-width="1.1"/>';
+      s += '<ellipse cx="' + (p[0] - p[2] * 0.3) + '" cy="' + (p[1] - p[2] * 0.28) + '" rx="' + (p[2] * 0.3) +
+        '" ry="' + (p[2] * 0.22) + '" fill="#ffffff"/>';
+    }
+    return s;
+  }
+
+  /* ---- the pig, and her piglets ----
+     `porci` are drawn AT HER FEET and inside her own footprint on
+     purpose: a line of piglets trailing off to the left would force the
+     sprite bounds wide and shrink the sow in every vocabulary tile. */
+  function susPorci(fur, dark, o, cfg) {
+    if (!o || !o.porci) { return ''; }
+    var count = o.porci > 3 ? 3 : o.porci, s = '', i;
+    var slots = [[-18, 0.40], [4, 0.40], [24, 0.36]];
+    for (i = 0; i < count; i++) {
+      s += '<g transform="translate(' + slots[i][0] + ',0) scale(' + slots[i][1] + ')">' +
+        quad(cfg, { color: fur, edge: o.edge, porci: 0 }) + '</g>';
+    }
+    return s;
+  }
+
+  function sus(o) {
+    o = o || {};
+    var c = {}, k;
+    for (k in o) { if (own(o, k)) { c[k] = o[k]; } }
+    if (o.alba) {
+      /* the white sow of Aen. 8,43–45, and the one animal in the table
+         that needs an outline to exist against the cream sky */
+      c.color = o.color || '#f0e7d8';
+      c.edge = true;
+    }
+    return quad(QUADS.sus, c);
+  }
+
+  /* ---- the Magi's two other gifts ----
+     Both must be readable as NOT the amphora: tūs is a cubic casket seen
+     from a low three-quarter angle, myrrha a squat stoppered jar with no
+     handles at all. */
+  function tus(o) {
+    o = o || {};
+    var box = o.color || COL.wood, d = sh(box), g = COL.gold, s = '';
+    var lift = o.fumus ? 4 : 0;              /* the lid stands ajar for the smoke */
+    /* body */
+    s += '<path d="M-18,0 L18,0 L18,-20 L-18,-20 Z" fill="' + box + '"/>';
+    s += '<path d="M18,0 L26,-6 L26,-26 L18,-20 Z" fill="' + d + '"/>';
+    s += '<path d="M-18,-20 L-10,-26 L26,-26 L18,-20 Z" fill="' + COL.ink + '" opacity="0.55"/>';
+    /* lid */
+    s += '<g transform="translate(0,' + (-lift) + ')">';
+    s += '<path d="M-20,-20 L20,-20 L20,-27 L-20,-27 Z" fill="' + hi(box) + '"/>';
+    s += '<path d="M20,-20 L28,-26 L28,-33 L20,-27 Z" fill="' + d + '"/>';
+    s += '<path d="M-20,-27 L-12,-33 L28,-33 L20,-27 Z" fill="' + mix(box, 255, 0.32) + '"/>';
+    s += '<circle cx="4" cy="-30" r="2.6" fill="' + g + '"/>';
+    s += '</g>';
+    /* gold fittings */
+    s += '<path d="M-18,-11 L18,-11" stroke="' + g + '" stroke-width="3" fill="none"/>';
+    s += '<path d="M18,-11 L26,-17" stroke="' + sh(g) + '" stroke-width="3" fill="none"/>';
+    s += '<path d="M-2,-20 L-2,0 L2,0 L2,-20 Z" fill="' + g + '"/>';
+    s += '<circle cx="0" cy="-11" r="3.4" fill="' + hi(g) + '"/>';
+    if (o.fumus) {
+      s += '<path d="M0,-34 q-9,-11 2,-20 q11,-9 2,-19" stroke="' + COL.grey +
+        '" stroke-width="3.4" fill="none" opacity="0.40" stroke-linecap="round"/>';
+      s += '<path d="M8,-34 q6,-9 0,-16" stroke="' + COL.grey +
+        '" stroke-width="2.4" fill="none" opacity="0.28" stroke-linecap="round"/>';
+      s += '<circle cx="-2" cy="-76" r="2" fill="' + COL.gold + '" opacity="0.5"/>';
+    }
+    return s;
+  }
+
+  function myrrha(o) {
+    o = o || {};
+    var st = o.color || '#e2d6c0', d = sh(st), g = COL.gold, s = '';
+    /* the round belly of an alabastron */
+    s += '<path d="M-17,-16 q0,-18 17,-18 q17,0 17,18 q0,14 -17,14 q-17,0 -17,-14 Z" fill="' + st + '"/>';
+    s += '<path d="M0,-34 q17,0 17,18 q0,14 -17,14 Z" fill="' + d + '" opacity="0.42"/>';
+    s += '<ellipse cx="-6" cy="-24" rx="4.5" ry="6" fill="' + hi(st) + '" opacity="0.75"/>';
+    /* neck and lip */
+    s += '<path d="M-6,-33 L6,-33 L5,-45 L-5,-45 Z" fill="' + st + '"/>';
+    s += '<path d="M0,-33 L6,-33 L5,-45 L0,-45 Z" fill="' + d + '" opacity="0.45"/>';
+    s += '<ellipse cx="0" cy="-45" rx="8" ry="3" fill="' + hi(st) + '"/>';
+    /* the stopper, and one gold band on the shoulder */
+    s += '<path d="M-5,-45 L5,-45 L3.5,-52 L-3.5,-52 Z" fill="' + g + '"/>';
+    s += '<circle cx="0" cy="-53" r="3" fill="' + hi(g) + '"/>';
+    s += '<path d="M-14,-27 q14,7 28,0" stroke="' + g + '" stroke-width="2.6" fill="none" opacity="0.9"/>';
+    return s;
+  }
+
+  /* ---- the harpy's ragged wings ----
+     The only thing added to the eagle's silhouette besides the colour and
+     the missing face: torn feather points along the wing edges. */
+  function harpyiaRags(col, dark, o, cfg) {
+    var pose = (o && o.pose) || 'stand', s = '', i, t, x, y;
+    var by = cfg.bodyY, hr = cfg.headR;
+    /* a torn feather point, hanging OFF a wing edge: the two corners sit
+       ON the edge and only the point leaves it, so nothing floats free */
+    function rag(px, py, dx, dy, fill) {
+      return '<path d="M' + px.toFixed(1) + ',' + py.toFixed(1) +
+        ' l' + dx.toFixed(1) + ',' + dy.toFixed(1) +
+        ' l' + (-dx * 0.35).toFixed(1) + ',' + (-dy * 1.5).toFixed(1) + ' Z" fill="' + fill + '"/>';
+    }
+    if (pose === 'fly') {
+      /* the near wing's outer edge runs (40,by-24) -> (10,by+6) */
+      for (i = 0; i < 4; i++) {
+        t = 0.12 + i * 0.26;
+        x = 40 - t * 30; y = (by - 24) + t * 30;
+        s += rag(x, y, 7, 7, cfg.light);
+      }
+      /* the far wing's edge runs (-38,by-28) -> (-12,by+2) */
+      for (i = 0; i < 3; i++) {
+        t = 0.15 + i * 0.32;
+        x = -38 + t * 26; y = (by - 28) + t * 30;
+        s += rag(x, y, -8, 6, dark);
+      }
+    } else {
+      /* folded wing: the edge lies along the flank, y ≈ by + ry*0.2 */
+      for (i = 0; i < 4; i++) {
+        s += rag(-12 + i * 8, by + 3 + i * 0.8, 6, 6, cfg.light);
+      }
+    }
+    /* THE HOOD. A faceless head is a ball unless something shapes it, so
+       the front half of the skull is in shadow and that shadow runs out
+       into the wedge where a beak would be. The silhouette of a raptor is
+       there; the eye, the brow and the hooked tip are not. */
+    s += '<g transform="translate(' + cfg.headX + ',' + cfg.headY + ')">' +
+      '<path d="M0,' + (-hr) + ' A' + hr + ',' + hr + ' 0 0 1 0,' + hr +
+      ' Q' + (hr * 0.65) + ',' + (hr * 0.62) + ' ' + (hr * 1.45) + ',' + (hr * 0.18) +
+      ' Q' + (hr * 0.65) + ',' + (-hr * 0.4) + ' 0,' + (-hr) + ' Z" fill="' + dark + '"/>' +
+      '</g>';
+    return s;
+  }
+
+  /* ---- the quail's markings ---- */
+  function coturnixMarks(col, dark, o, cfg) {
+    var s = '', i, p;
+    var flecks = [[-9, -19], [-3, -13], [3, -20], [8, -14], [-6, -10], [1, -23], [10, -19], [-12, -14]];
+    for (i = 0; i < flecks.length; i++) {
+      p = flecks[i];
+      s += '<ellipse cx="' + p[0] + '" cy="' + p[1] + '" rx="2.4" ry="1.3" fill="' + dark +
+        '" opacity="0.75" transform="rotate(' + (i % 2 ? 18 : -14) + ' ' + p[0] + ' ' + p[1] + ')"/>';
+    }
+    s += '<path d="M-11,-21 q7,-3 13,-1 M-8,-16 q7,-3 12,-1" stroke="' + COL.cream +
+      '" stroke-width="1.4" fill="none" opacity="0.65" stroke-linecap="round"/>';
+    return s;
+  }
+
+  /* ============================================================
+     4c. TRACK MASCOTS
+     js/map.js walks the player's avatar across the board with
+     Scenes.mascot(52, avatar) — a fox head in a -30..30 box. These two
+     are the same object for the other two tracks: same size, same
+     friendly front-facing head language, so map.js can swap in
+     Scenes.sprite('columbaMascot', {}, 52) and change nothing else.
+     They are drawn CENTRED ON THE ORIGIN rather than on a ground
+     point, which is exactly what makes them interchangeable with
+     mascot() — and why they are mascots and not scene actors.
+     ============================================================ */
+  function columbaMascot() {
+    var w = COL.white, d = '#d8cdb8', s = '';
+    /* the bust: shoulders and a folded wing */
+    s += '<path d="M-24,24 q4,-16 24,-16 q20,0 24,16 q-24,7 -48,0 Z" fill="' + w + '"/>';
+    s += '<path d="M0,8 q20,0 24,16 q-12,3.5 -24,3.5 Z" fill="' + d + '" opacity="0.55"/>';
+    s += '<path d="M-20,18 q10,-8 20,-4 q-8,8 -20,4 Z" fill="' + d + '" opacity="0.7"/>';
+    /* head */
+    s += '<circle cx="0" cy="-2" r="17" fill="' + w + '"/>';
+    s += '<path d="M0,-19 a17,17 0 0 1 0,34 Z" fill="' + d + '" opacity="0.45"/>';
+    s += '<path d="M14,0 l14,4 l-14,5 Z" fill="#d98a54"/>';
+    s += '<path d="M14,4 l14,0 l-14,5 Z" fill="' + mix('#d98a54', 0, 0.22) + '"/>';
+    s += '<circle cx="-7" cy="-5" r="2.8" fill="' + COL.ink + '"/>';
+    s += '<circle cx="7" cy="-5" r="2.8" fill="' + COL.ink + '"/>';
+    s += '<circle cx="-6" cy="-6" r="0.9" fill="#ffffff"/>';
+    s += '<circle cx="8" cy="-6" r="0.9" fill="#ffffff"/>';
+    /* the crown feather that keeps it from reading as an egg */
+    s += '<path d="M-4,-18 q-3,-8 3,-11 q3,6 1,11 Z" fill="' + d + '"/>';
+    return s;
+  }
+
+  function navisMascot() {
+    var hull = COL.wood, d = sh(hull), s = '';
+    /* mast, yard and sail */
+    s += '<path d="M0,6 L0,-26" stroke="' + hull + '" stroke-width="4" stroke-linecap="round" fill="none"/>';
+    s += '<path d="M-16,-24 L16,-24" stroke="' + COL.woodD + '" stroke-width="2.6" stroke-linecap="round"/>';
+    s += '<path d="M-15,-23 Q0,-16 15,-23 L12,2 Q0,7 -12,2 Z" fill="' + COL.cream + '"/>';
+    s += '<path d="M1,-19 Q9,-20 15,-23 L12,2 Q6,4 1,4 Z" fill="' + sh(COL.cream) + '" opacity="0.45"/>';
+    s += '<path d="M-13,-9 Q0,-3 13,-9" stroke="' + COL.terra + '" stroke-width="4" fill="none" opacity="0.85"/>';
+    s += '<path d="M0,-26 l10,3 l-10,4 Z" fill="' + COL.blood + '"/>';
+    /* hull */
+    s += '<path d="M-24,6 L24,6 Q20,20 8,21 L-8,21 Q-20,20 -24,6 Z" fill="' + hull + '"/>';
+    s += '<path d="M0,6 L24,6 Q20,20 8,21 L0,21 Z" fill="' + d + '" opacity="0.45"/>';
+    s += '<path d="M-24,9 L24,9" stroke="' + d + '" stroke-width="2.2"/>';
+    s += '<ellipse cx="15" cy="13" rx="4" ry="3" fill="' + COL.cream + '"/>';
+    s += '<circle cx="15.5" cy="13" r="1.5" fill="' + COL.ink + '"/>';
+    /* two waves, so it is sailing and not shelved */
+    s += '<path d="M-27,22 q7,-5 13,0 q7,5 14,0 q7,-5 13,0" stroke="' + COL.water +
+      '" stroke-width="3" fill="none" stroke-linecap="round"/>';
+    return s;
+  }
+
+  /* ============================================================
      5. registration — bounds are measured from the geometry above
      ============================================================ */
   function reg(name, fn, b) { Scenes.register(name, fn, b); }
@@ -1827,12 +2435,17 @@
     haedus:  { x: -27, y: -55,  w: 79,  h: 68 },
     camelus: { x: -54, y: -95,  w: 127, h: 121 },
     lepus:   { x: -27, y: -55,  w: 79,  h: 65 },
-    mus:     { x: -38, y: -30,  w: 76,  h: 37 }
+    mus:     { x: -38, y: -30,  w: 76,  h: 37 },
+    sus:     { x: -37, y: -46,  w: 93,  h: 58 }
   };
   var qk;
   for (qk in QUADS) {
     if (own(QUADS, qk)) { reg(qk, quadActor(qk), QUAD_BOUNDS[qk]); }
   }
+  /* sus goes through its own wrapper (the `alba` variant needs an outline
+     the plain table row cannot express), so it overwrites the generic
+     registration the loop just made. */
+  reg('sus', sus, QUAD_BOUNDS.sus);
 
   /* birds */
   function birdActor(key) {
@@ -1845,7 +2458,9 @@
     gallina: { x: -41, y: -52,  w: 84, h: 64 },
     pavo:    { x: -51, y: -121, w: 94, h: 129 },
     grus:    { x: -41, y: -86,  w: 88, h: 100 },
-    ciconia: { x: -41, y: -84,  w: 88, h: 98 }
+    ciconia: { x: -41, y: -84,  w: 88, h: 98 },
+    coturnix: { x: -41, y: -46, w: 84, h: 53 },
+    harpyia: { x: -46, y: -62,  w: 92, h: 67 }
   };
   var bk;
   for (bk in BIRDS) {
@@ -1923,4 +2538,29 @@
   reg('arborNuda', arborNuda, { x: -62, y: -172, w: 124, h: 180 });
   reg('nidus', nidus, { x: -43, y: -31, w: 86, h: 37 });
   reg('columna', columna, { x: -20, y: -109, w: 40, h: 112 });
+
+  /* ---- ART2 ----
+     Bounds measured the same way as everything above: each actor was
+     rendered into an oversized viewBox for EVERY option it supports
+     ({collar}, {porci}, {fumus}, {signum}, {nubes}, {vexillum}, and each
+     pose for the two new birds), the getBBox() results unioned, and 3
+     units added for stroke half-widths. */
+  reg('catena', catena, { x: -29, y: -73, w: 66, h: 105 });
+  reg('via', via, { x: -115, y: -51, w: 230, h: 56 });
+  reg('arcus', arcus, { x: -119, y: -91, w: 236, h: 98 });
+  reg('cithara', cithara, { x: -29, y: -68, w: 58, h: 70 });
+  reg('tuba', tuba, { x: -43, y: -80, w: 97, h: 80 });
+  reg('buccina', buccina, { x: -36, y: -79, w: 59, h: 84 });
+  reg('tympanum', tympanum, { x: -29, y: -54, w: 58, h: 56 });
+  reg('domus', domus, { x: -67, y: -100, w: 134, h: 103 });
+  reg('manna', manna, { x: -49, y: -23, w: 98, h: 33 });
+  reg('tus', tus, { x: -23, y: -81, w: 54, h: 84 });
+  reg('myrrha', myrrha, { x: -20, y: -59, w: 40, h: 60 });
+  /* The two mascots are the ONE deliberate exception to tight bounds:
+     their box is Scenes.mascot's own -30..30 square (the artwork sits
+     inside it), because the whole point is that map.js can draw a dove or
+     a ship at the same 52px as the fox head and have it come out the same
+     size on the board. A tight box would render them 8% larger. */
+  reg('columbaMascot', columbaMascot, { x: -30, y: -30, w: 60, h: 60 });
+  reg('navisMascot', navisMascot, { x: -30, y: -30, w: 60, h: 60 });
 }());

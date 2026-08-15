@@ -593,6 +593,290 @@
       return assertSized('nativity scene', svgFromImage(Scenes.toImage(svg, 200)));
     });
 
+  /* ================= CHECK 6b =================
+     Guards the ART2 addendum — the actors added after the content campaign
+     reported them missing (catena, via, arcus, the musica set, domus, manna,
+     sus, tus/myrrha, coturnix, harpyia, amplexus, the two track mascots) and
+     the two shared cores they changed (the quadruped snout/outline and the
+     faceless bird).
+
+     Three failure modes are specific to this batch and all of them are
+     silent:
+       · a scene asks for 'catena' and gets nothing, because a typo dropped
+         the registration — the picture then simply lacks the object the
+         sentence names, which is exactly the situation the addendum exists
+         to end;
+       · an option (signum, alba, face:false, collar) is accepted and
+         ignored, so the art contradicts the text (domus with no mark on
+         the posts, a "sūs alba" that is pink);
+       · bounds that do not actually contain the artwork, which crops a
+         sprite in the gallery, on the map and in every probatio tile —
+         the reason every box below is MEASURED with getBBox rather than
+         guessed. */
+
+  var ART2 = ['catena', 'via', 'arcus', 'cithara', 'tuba', 'buccina', 'tympanum',
+    'domus', 'manna', 'sus', 'tus', 'myrrha', 'coturnix', 'harpyia', 'amplexus',
+    'columbaMascot', 'navisMascot'];
+
+  /* every option each new actor understands, so bounds are checked against
+     the WIDEST variant exactly as they were measured */
+  var ART2_VARIANTS = {
+    catena: [{}, { collar: true }, { collar: true, tilt: -30 }, { collar: true, tilt: 30 },
+      { collar: true, tilt: 99 }, { collar: true, tilt: -99 }],
+    via: [{}, { herba: false }],
+    arcus: [{}, { nubes: true }],
+    tuba: [{}, { vexillum: true }],
+    domus: [{}, { signum: true }],
+    manna: [{}, { n: 22 }, { n: 4 }, { n: 99 }, { n: -3 }],
+    tus: [{}, { fumus: true }],
+    sus: [{}, { alba: true }, { alba: true, porci: 3 }, { porci: 9 },
+      { pose: 'walk' }, { pose: 'lie' }, { pose: 'eat' }, { pose: 'run' }],
+    coturnix: [{}, { pose: 'walk' }, { pose: 'peck' }, { pose: 'fly' }, { pose: 'lie' }],
+    harpyia: [{}, { pose: 'fly' }, { pose: 'peck' }],
+    amplexus: [{}, { role: 'patriarch', alterRole: 'child' },
+      { role: 'woman', alterRole: 'soldier', alterK: 0.9 }]
+  };
+
+  function variantsOf(name) {
+    return Object.prototype.hasOwnProperty.call(ART2_VARIANTS, name) ? ART2_VARIANTS[name] : [{}];
+  }
+
+  /* the real measurement: put a sprite's BODY into an off-screen SVG and ask
+     the browser where the ink actually is. */
+  var measureSvg = null;
+  function bboxOf(name, opts) {
+    var NS = 'http://www.w3.org/2000/svg';
+    if (!measureSvg) {
+      measureSvg = document.createElementNS(NS, 'svg');
+      measureSvg.setAttribute('viewBox', '-500 -500 1000 1000');
+      measureSvg.setAttribute('width', '1000');
+      measureSvg.setAttribute('height', '1000');
+      measureSvg.style.position = 'absolute';
+      measureSvg.style.left = '-9999px';
+      measureSvg.style.top = '0';
+      document.body.appendChild(measureSvg);
+    }
+    var svg = Scenes.sprite(name, opts, 100);
+    var inner = svg.replace(/^[\s\S]*?<svg[^>]*>/, '').replace(/<\/svg>\s*$/, '');
+    var g = document.createElementNS(NS, 'g');
+    g.innerHTML = inner;
+    measureSvg.appendChild(g);
+    var b;
+    try { b = g.getBBox(); } finally { measureSvg.removeChild(g); }
+    return b;
+  }
+
+  function viewBoxNums(name) {
+    var vb = viewBoxOf(Scenes.sprite(name, {}, 100)).split(' ');
+    return { x: parseFloat(vb[0]), y: parseFloat(vb[1]), w: parseFloat(vb[2]), h: parseFloat(vb[3]) };
+  }
+
+  check('M-ART2', 'every ART2 actor is registered (a typo drops the whole batch silently)',
+    function () {
+      var have = {}, names = Scenes.actorNames(), i, missing = [];
+      for (i = 0; i < names.length; i++) { have[names[i]] = true; }
+      for (i = 0; i < ART2.length; i++) { if (!have[ART2[i]]) { missing.push(ART2[i]); } }
+      return missing.length ? 'missing actors: ' + missing.join(', ') : null;
+    });
+
+  check('M-ART2', 'every ART2 actor + option sprites cleanly at 96px and 130px (the probatio tile)',
+    function () {
+      var i, j, v, msg, svg, sizes = [96, 130], k;
+      for (i = 0; i < ART2.length; i++) {
+        v = variantsOf(ART2[i]);
+        for (j = 0; j < v.length; j++) {
+          for (k = 0; k < sizes.length; k++) {
+            svg = Scenes.sprite(ART2[i], v[j], sizes[k]);
+            msg = assertSized(ART2[i] + ' ' + JSON.stringify(v[j]) + ' @' + sizes[k], svg);
+            if (msg) { return msg; }
+            if (svg.indexOf('NaN') >= 0 || svg.indexOf('undefined') >= 0) {
+              return ART2[i] + ' ' + JSON.stringify(v[j]) + ' emitted NaN/undefined';
+            }
+          }
+        }
+      }
+      return null;
+    });
+
+  check('M-ART2', 'ART2 bounds really contain the artwork, for EVERY option (measured with getBBox)',
+    function () {
+      var i, j, v, b, vb, eps = 0.75, bad = [];
+      for (i = 0; i < ART2.length; i++) {
+        vb = viewBoxNums(ART2[i]);
+        v = variantsOf(ART2[i]);
+        for (j = 0; j < v.length; j++) {
+          b = bboxOf(ART2[i], v[j]);
+          if (b.x < vb.x - eps || b.y < vb.y - eps ||
+              b.x + b.width > vb.x + vb.w + eps || b.y + b.height > vb.y + vb.h + eps) {
+            bad.push(ART2[i] + ' ' + JSON.stringify(v[j]) +
+              ' bbox[' + b.x.toFixed(1) + ',' + b.y.toFixed(1) + ',' +
+              (b.x + b.width).toFixed(1) + ',' + (b.y + b.height).toFixed(1) + ']' +
+              ' outside viewBox[' + vb.x + ',' + vb.y + ',' + (vb.x + vb.w) + ',' + (vb.y + vb.h) + ']');
+          }
+        }
+      }
+      return bad.length ? bad.join(' | ') : null;
+    });
+
+  check('M-ART2', 'catena{collar:true} is the compact form and sits AROUND the origin',
+    function () {
+      /* the compact collar exists to be dropped on a dog's throat: if it
+         only ever drew above y=0 like a standing prop it could not be. */
+      var full = Scenes.sprite('catena', {}, 120);
+      var band = Scenes.sprite('catena', { collar: true }, 120);
+      if (full === band) { return 'the collar option renders identically to the full chain'; }
+      var b = bboxOf('catena', { collar: true });
+      if (b.y + b.height < 4) { return 'the compact collar never crosses y=0, so it cannot sit on a neck'; }
+      if (b.height > 60) { return 'the compact collar is not compact: ' + b.height.toFixed(0) + ' units tall'; }
+      var f = bboxOf('catena', {});
+      if (f.height < 60) { return 'the full catena lost its chain: only ' + f.height.toFixed(0) + ' units tall'; }
+      /* tilt exists because a scene item cannot rotate an actor; it must
+         also clamp, or a stray value swings the band out of its bounds */
+      if (Scenes.sprite('catena', { collar: true, tilt: -22 }, 120) === band) { return 'tilt is ignored'; }
+      if (Scenes.sprite('catena', { collar: true, tilt: 99 }, 120) !==
+          Scenes.sprite('catena', { collar: true, tilt: 30 }, 120)) {
+        return 'tilt:99 did not clamp to 30';
+      }
+      return null;
+    });
+
+  check('M-ART2', 'domus{signum:true} really marks the posts (Ex 12,7) and the plain door does not',
+    function () {
+      function marks(opts) {
+        var m = Scenes.sprite('domus', opts, 120).match(/#b33a2b/g);
+        return m ? m.length : 0;
+      }
+      var plain = marks({}), signed = marks({ signum: true });
+      if (plain !== 0) { return 'the unmarked house already paints ' + plain + ' blood-coloured shape(s)'; }
+      if (signed < 3) { return 'signum drew ' + signed + ' mark(s); the two posts and the lintel need three'; }
+      return null;
+    });
+
+  check('M-ART2', 'sus{alba:true} is white AND outlined (a white animal on the cream sky needs an edge)',
+    function () {
+      var pink = Scenes.sprite('sus', {}, 120);
+      var alba = Scenes.sprite('sus', { alba: true }, 120);
+      if (pink === alba) { return 'alba renders identically to the ordinary sow'; }
+      if (pink.indexOf('stroke-width="2"') >= 0 && pink.indexOf('#cf9a90" stroke=') >= 0) {
+        return 'the ordinary sow gained an outline it should not have';
+      }
+      if (alba.indexOf('stroke=') < 0) { return 'the white sow has no outline, so she vanishes into the sky'; }
+      /* piglets must stay inside their mother's box — that is why they are
+         drawn at her feet instead of trailing off to the left */
+      var vb = viewBoxNums('sus'), b = bboxOf('sus', { alba: true, porci: 3 });
+      if (b.x < vb.x - 0.75 || b.x + b.width > vb.x + vb.w + 0.75) {
+        return 'the piglets push the sow out of her own bounds';
+      }
+      if (Scenes.sprite('sus', { porci: 2 }, 120) === Scenes.sprite('sus', {}, 120)) {
+        return 'porci:2 drew no piglets';
+      }
+      return null;
+    });
+
+  check('M-ART2', 'harpyia is a REGISTERED faceless bird, not a recoloured aquila with an eye',
+    function () {
+      var h = Scenes.sprite('harpyia', { pose: 'fly' }, 120);
+      var a = Scenes.sprite('aquila', { pose: 'fly' }, 120);
+      if (h === a) { return 'harpyia renders identically to aquila'; }
+      /* the ink dot is the eye: every other bird has exactly one, this one
+         must have none (DESIGN §8 — menacing but stylized, and no face) */
+      if (h.indexOf('#3a2417') >= 0) { return 'the harpy has an ink feature — it is supposed to have NO face'; }
+      if (a.indexOf('#3a2417') < 0) { return 'fixture stale: the eagle lost its ink eye, so the test proves nothing'; }
+      return null;
+    });
+
+  check('M-ART2', 'sol/ventus {face:false} drop the face and leave the default untouched',
+    function () {
+      var i, pair = ['sol', 'ventus'], plain, bare;
+      for (i = 0; i < pair.length; i++) {
+        plain = Scenes.sprite(pair[i], {}, 120);
+        bare = Scenes.sprite(pair[i], { face: false }, 120);
+        if (plain === bare) { return pair[i] + ' ignored face:false'; }
+        if (bare.length >= plain.length) { return pair[i] + ' face:false did not REMOVE anything'; }
+        if (bare.indexOf('#3a2417') >= 0) { return pair[i] + ' face:false still paints ink features'; }
+        if (plain.indexOf('#3a2417') < 0) { return pair[i] + ' lost its default face — content that relies on it breaks'; }
+      }
+      return null;
+    });
+
+  check('M-ART2', 'the embrace: person keeps its bounds, and the amplexus pair really is two figures',
+    function () {
+      /* pose 'amplexus' on `person` must NOT widen the person box: person is
+         the most-used sprite in the app and a wider box shrinks it on the
+         map, in the gallery and in every probatio tile. */
+      var vb = viewBoxNums('person');
+      if (vb.w !== 77 || vb.h !== 119) {
+        return 'person bounds changed to ' + vb.w + 'x' + vb.h + ' — every person sprite just moved';
+      }
+      var roles = ['man', 'woman', 'patriarch', 'child', 'king'], i, b;
+      for (i = 0; i < roles.length; i++) {
+        b = bboxOf('person', { role: roles[i], pose: 'amplexus' });
+        if (b.x < vb.x - 0.75 || b.x + b.width > vb.x + vb.w + 0.75 || b.y < vb.y - 0.75) {
+          return 'person/' + roles[i] + ' in pose amplexus reaches outside the person box';
+        }
+      }
+      var pair = Scenes.sprite('amplexus', {}, 130);
+      var one = Scenes.sprite('person', { pose: 'amplexus' }, 130);
+      if (pair.length <= one.length * 1.5) { return 'amplexus does not draw a second figure'; }
+      if (pair.indexOf('scale(-1,1)') < 0) { return 'the second figure is not mirrored, so the two do not face each other'; }
+      if (Scenes.sprite('amplexus', { alterRole: 'soldier' }, 130) === pair) {
+        return 'alterRole is ignored, so the pair can never be two different people';
+      }
+      return null;
+    });
+
+  check('M-ART2', 'the two track mascots carry Scenes.mascot\'s own 60x60 box',
+    function () {
+      /* map.js draws the walking mascot at 52px from a -30..30 box; a dove or
+         a ship measured tight would come out a different size on the board. */
+      var i, names = ['columbaMascot', 'navisMascot'], vb, b;
+      for (i = 0; i < names.length; i++) {
+        vb = viewBoxNums(names[i]);
+        if (vb.x !== -30 || vb.y !== -30 || vb.w !== 60 || vb.h !== 60) {
+          return names[i] + ' box is ' + vb.x + ' ' + vb.y + ' ' + vb.w + ' ' + vb.h + ', not -30 -30 60 60';
+        }
+        b = bboxOf(names[i], {});
+        if (b.x < -30 || b.y < -30 || b.x + b.width > 30 || b.y + b.height > 30) {
+          return names[i] + ' draws outside the mascot box, so the viewBox clips it';
+        }
+        if (b.width < 40 || b.height < 40) {
+          return names[i] + ' fills only ' + b.width.toFixed(0) + 'x' + b.height.toFixed(0) +
+            ' of the box, so it reads smaller than the fox mascot';
+        }
+      }
+      return null;
+    });
+
+  check('M-ART2', 'manna clamps its grain count and never contradicts an empty ground',
+    function () {
+      function grains(opts) {
+        var m = Scenes.sprite('manna', opts, 120).match(/<ellipse/g);
+        return m ? m.length : 0;
+      }
+      var few = grains({ n: 4 }), many = grains({ n: 22 });
+      if (!(many > few)) { return 'the grain count does not grow with n: 4->' + few + ' 22->' + many; }
+      if (grains({ n: 99 }) !== many) { return 'n:99 did not clamp'; }
+      if (grains({ n: -3 }) !== few) { return 'n:-3 did not clamp'; }
+      return null;
+    });
+
+  check('M-ART2', 'the ART2 props survive a full scene render + toImage (the game path)',
+    function () {
+      var svg = Scenes.render({ bg: 'desert', items: [
+        { t: 'via', x: 200, y: 238, s: 1.05 },
+        { t: 'domus', x: 96, y: 208, s: 0.72, signum: true },
+        { t: 'manna', x: 250, y: 220, s: 1 },
+        { t: 'coturnix', x: 300, y: 212, s: 0.9 },
+        { t: 'arcus', x: 200, y: 150, s: 0.7, nubes: true },
+        { t: 'amplexus', x: 150, y: 214, s: 0.9 },
+        { t: 'sus', x: 340, y: 216, s: 0.8, alba: true, porci: 2 },
+        { t: 'catena', x: 60, y: 210, s: 0.9 },
+        { t: 'harpyia', x: 280, y: 90, s: 1, pose: 'fly' }
+      ] });
+      if (svg.indexOf('NaN') >= 0) { return 'the ART2 scene emitted NaN'; }
+      return assertSized('ART2 scene', svgFromImage(Scenes.toImage(svg, 200)));
+    });
+
   /* ================= CHECK 7 =================
      Guards the M3 phase engine (js/boss.js + boss-phases.js + probatio.js).
 
