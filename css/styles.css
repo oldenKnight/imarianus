@@ -349,12 +349,41 @@ h1, h2, h3 { font-family: var(--serif); }
 .opt:disabled { opacity: 0.35; border-color: var(--cream-dim); cursor: default; }
 .emoji-opt { font-size: 2.4rem; padding: 0.5rem 1rem; }
 
+/* NARROW PHONES: a SONUS question offers up to four picture tiles, and a
+   picture tile is 72px of art + 32px of padding + 4px of border = 108px.
+   Four of those need 460px and the content column is 343px at 375 and 388px
+   at 420 — so the row wrapped and orphaned the last tile onto its own line,
+   and a THIRD tile ended up within 7px of the right edge (any scrollbar or
+   any slightly wider glyph pushed it over). The tiles now shrink with the
+   viewport instead: 15vw is 54px at 360, 56px at 375 and 63px at 420, which
+   puts four tiles plus their gaps at 305 / 314 / 341px inside content columns
+   of 328 / 343 / 388px — a whole row, with room to spare, at every width the
+   app supports. `max-width` caps the growth so nothing changes above 480px,
+   where the fixed 72px box has always been right. (Deliberately not `min()`:
+   this file stays plain CSS 2.1-shaped so it can be read at a glance, and
+   width + max-width IS min().) */
+@media (max-width: 480px) {
+  .opt-row { gap: 0.45rem; }
+  .emoji-opt { padding: 0.4rem 0.4rem; }
+  .emoji-opt .scn-thumb {
+    width: 15vw; height: 15vw;
+    max-width: 72px; max-height: 72px;
+  }
+}
+
 /* sentences */
 .sentence {
   font-family: var(--serif);
   font-size: 1.45rem;
   text-align: center;
   margin: 0.8rem 0.3rem;
+  /* a story line is Latin prose and wraps between words, but a compound like
+     "Trōiānōrum-cum-Latīnīs" or a long proper noun on a 320px screen has no
+     break opportunity at all, and one such word used to push the whole line
+     past the right edge. break-word only splits a word that would otherwise
+     overflow, so ordinary lines are untouched. */
+  overflow-wrap: break-word;
+  word-wrap: break-word;          /* older WebKit spelling; same behaviour */
 }
 .word {
   font-family: var(--serif);
@@ -441,6 +470,19 @@ h1, h2, h3 { font-family: var(--serif); }
   margin: 0.5rem 0;
 }
 .bonus { font-size: 1.4rem; color: var(--green); font-family: var(--serif); }
+/* the region's own closing line (boss.postWin), under the standard victory
+   text: quieter than the "Vīcistī!" above it, because it is the story
+   speaking rather than the game. */
+.post-win {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.15rem;
+  color: var(--cream-dim);
+  margin: 0.9rem auto 0;
+  max-width: 22em;
+  padding: 0 0.6rem;
+  overflow-wrap: break-word;
+}
 .hearts-big { font-size: 2rem; letter-spacing: 0.2rem; }
 .refill { text-align: center; }
 .refill h2 { color: var(--fresco); font-size: 1.3rem; }
