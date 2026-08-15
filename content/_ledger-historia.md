@@ -443,6 +443,174 @@ indeclinable names `Lot · Isaac` in every case.
 
 ---
 
+## Liber IV · IACOB (S4) — `content/historia-l4.js`
+
+Stage ceiling: everything above, **plus** the ABLATIVE and its prepositions
+(`in · ex · ab/ā · cum · dē · sub`) and the instrumental ablative. Still no
+imperative, no vocative, no pronouns, no imperfect, no perfect, no
+comparative, no infinitive, no passive, no deponent.
+
+The ablative is this liber's target and is introduced the way Liber III
+introduced the genitive: **one preposition at a time, each on a picture
+that already says it**, and never two new ones on the same page —
+`ex agrō` and `cum mātre` in h17, `in patinā` in h18, `dē terrā` and
+`sub caelō` in h19, `cum grege` and the duration ablative `septem annīs`
+in h20, `ā Laban` and `cum ovibus` in h21, the instrumental `nōmine` in
+h22. Longest sentence in the liber: **6 words**.
+
+### Name forms verified in the Clementine text before use
+
+| name | forms used | Vulgate warrant |
+|---|---|---|
+| Iacob | **INDECLINABLE** in every case | 112 occurrences in Genesis, not one inflected. nom. 25,26; acc. 25,26 "appellavit eum Jacob"; dat. 27,6 "dixit filio suo Jacob"; gen. 32,32 "in femore Jacob". (The `Jacobum/Jacobi/Jacobo` of the NT are **Jacobus**, the apostle James — a different name, and not this man) |
+| Ēsau | **INDECLINABLE** | 57 occurrences in Genesis, likewise. nom. 25,25; acc. 25,28 "Isaac amabat Esau"; dat. 32,13 "munera Esau fratri suo" |
+| Laban | **INDECLINABLE** | 29 occurrences in Genesis, likewise. nom. 29,13; acc. 25,20 "sororem Laban"; dat. 29,15 (Laban speaking, `servies mihi`); the file's `terra Laban` is a genitive and `Iacob Laban servit` a dative, exactly as `grex Lot` and `Abraham Lot terram dat` are in h12 |
+| Rachēl | nom./acc. `Rachēl` only | nom. 29,6 "ecce Rachel filia ejus venit"; **acc. 29,28 "Rachel duxit uxorem" and 31,4 "vocavit Rachel et Liam"**. The Clementine DOES inflect the oblique cases elsewhere (gen. `Rachelis` 30,22 · 31,33; dat. `Racheli` 1 Par 7,25), but this liber never needs them |
+| Israēl | nom. `Israēl` | 32,28 "sed Israël". Macronised as CURRICULUM §2 prints it; the Greek Ἰσραήλ has eta in the final syllable, the "quantity is certain" case LATIN-STYLE §1 allows. `Ēsau` (Ἠσαῦ) and `Rachēl` (Ῥαχήλ) carry their macrons on the same ground and on CURRICULUM's own authority |
+| Isaac · Rebecca · Abraham | as verified in Liber III | unchanged |
+
+### h17 Ēsau et Iacob · fons Gn 25, 19–28 — content lexemes (5)
+
+| lexeme | how |
+|---|---|
+| Ēsau | vocab card, scene `v_esau` (person `man`, `beard: 'long'`, `robeColor: '#b5713f'`); nova 👤. **The long beard and the terracotta robe are Ēsau's costume in EVERY frame of the liber** — it is the only thing that tells the twins apart, and both brothers are drawn together nine times |
+| Iacob | vocab card, scene `v_iacob` (person `man`, the plain preset, beside a `tent` — Gn 25,27 "habitabat in tabernaculis"); nova 👤 |
+| cibus (cibum) | vocab card, scene `v_cibus` (`mensa` + `patina`); nova 🍲, `g: cibum comedimus? cibum comedit` |
+| prīmus | vocab card, scene `v_primus`; nova 1️⃣, `g: prīmus fīlius: Ēsau, tum Iacob`. Gn 25,25 "qui prior egressus est" |
+| venit | vocab card, scene `v_venit`; nova ➡ |
+
+### h17 — morphology and function words
+
+| form | how |
+|---|---|
+| **ex + ablative** | nova `🌾➡`, `g: Ēsau in agrō est, tum ex agrō venit`, on the picture that already says it. **THE FIRST ABLATIVE PREPOSITION OF THE TRACK.** Gn 25,29 "cum venisset Esau de agro" | FUNCTION |
+| **cum + ablative** | nova `👤👤`, `g: Iacob et māter in tabernāculō sunt` (`cum mātre`; `māter` is free from h14) | FUNCTION |
+| duo (duōs, duās) | nova `1️⃣2️⃣`, `g: ūnus, et ūnus: duo`. Gn 25,24 "ecce gemini" | FUNCTION |
+
+### h18 Iūs Prīmōgenitī · fons Gn 25, 29–34 — content lexemes (5)
+
+| lexeme | how |
+|---|---|
+| patina (patinā) | vocab card, scene `v_patina`; nova 🍲, `g: in patinā cibus est`. The art library's own word for the dish; Gn 25,29's `pulmentum` is what is IN it, and is told as `cibus` |
+| locus (locum) | vocab card, scene `v_locus`; nova `1️⃣👤`, `g: Ēsau prīmus est: locus prīmī fīliī Ēsau est`. **The abstract made picturable**: `primogenita` has no picture, so the file draws the FIRST SON'S PLACE — the elder standing nearer the father — and returns to the same frame with the brothers exchanged when the trade is done |
+| ruber (rubrum) | vocab card, scene `v_ruber`; nova 🟥, `g: ruber: nōn albus`. Gn 25,30 "de coctione hac rufa" |
+| parat | vocab card, scene `v_parat`; nova `🔥🍲`, `g: cibus nōn est; Iacob cibum parat`. Gn 25,29 "Coxit autem Jacob pulmentum" |
+| petit | vocab card, scene `v_petit`; nova `🙋🍲`, `g: Ēsau cibum nōn habet: cibum petit` |
+
+### h18 — the one fixed formula
+
+| form | how |
+|---|---|
+| **Dā mihi** | **FIXED VULGATE FORMULA** (Gn 25,30 "Da mihi de coctione hac rufa"), shortened as h5 shortens Gn 4,9. nova `🤲🍲` with the Latin gloss `Ēsau cibum petit`; the outstretched hand and the bowl are the second gloss. The imperative and `mihi` are neither on the S4 ladder nor ever parsed, and the page is quoted, so the generators skip it by design |
+
+### h19 Scāla Caelestis · fons Gn 28, 10–19 — content lexemes (4)
+
+| lexeme | how |
+|---|---|
+| scāla (scālam, scālā) | vocab card, scene `v_scala` (the `scala` actor on `nightSky`); nova `⬆☁`, `g: in scālā ascendimus? in scālā ascendunt`. **The hint is NOT 🪜** — see the emoji note below |
+| somnium (somniō) | vocab card, scene `v_somnium`; nova 💭, `g: Iacob dormit et videt: somnium est`. Gn 28,12 "Viditque in somnis" |
+| surgit | vocab card, scene `v_surgit`; nova ⬆, `g: ↔ dormit`. Gn 28,18 "Surgens ergo Jacob mane" |
+| tangit | vocab card, scene `v_tangit`; nova `☁👆`, `g: scāla alta est: caelum tangit`. Gn 28,12 "cacumen illius tangens cælum" |
+
+### h19 — function words
+
+| form | how |
+|---|---|
+| **dē + ablative** | nova `🌍➡`, `g: Iacob in terrā patris est, tum discēdit`. Gn 28,10 "egressus Jacob de Bersabee" | FUNCTION |
+| **sub + ablative** | nova `☁⬇`, `g: caelum super Iacob est` | FUNCTION |
+
+**No fixed formula in h19.** Gn 28,13's "Ego sum Dominus Deus Abraham patris
+tui" was the natural choice and was rejected: the Clementine's genitive
+there is the indeclinable `Abraham`, and Liber III has just spent a
+capitulum teaching `Abrahae`. Quoting it unparsed would still have put a
+second genitive of the same name in front of the learner. The promise is
+carried by the dative instead, as h9 and h13 carry theirs.
+
+### h20 Iacob et Rachēl · fons Gn 29 (abridged) — content lexemes (5)
+
+| lexeme | how |
+|---|---|
+| Rachēl | vocab card, scene `v_rachel` — a `woman` **with her flock**, after Gn 29,9 "veniebat cum ovibus patris sui". Carding her with the `grex` is what keeps her picture distinct from every other woman in the track, which the boss quiz depends on; nova 👤 |
+| Laban | vocab card, scene `v_laban` (person `patriarch` + tent); nova 👤. Held back from Liber III on purpose (see the h16 row of the omissions register) so that he first appears where he acts |
+| fīlia (fīliās) | vocab card, scene `v_filia`; nova `👤👤`, `g: fīlius, fīlia: Rachēl fīlia est` (`fīlius` is free from h6). Gn 29,16 "Habebat vero duas filias" |
+| annus (annī, annīs) | vocab card, scene `v_annus` (four suns over a flock); nova `☀☀☀`, `g: annus longus est; septem annī sunt` |
+| servit | vocab card, scene `v_servit`; nova 💪, `g: servus virō servit; Iacob Laban servit` (`servus` is free from h16). **Takes the DATIVE** — Gn 29,15 "gratis servies mihi" |
+
+### h20 — morphology and function words
+
+| form | how |
+|---|---|
+| **septem annīs** (ABLATIVE OF DURATION) | nova on `annīs`, `☀☀☀`. **This is the Clementine's own case**, Gn 29,20 "Servivit ergo Jacob pro Rachel septem annis" (so too 29,18 "septem annis", 29,30 "septem annis aliis"). The assignment proposed the accusative of duration; the ablative was written instead because it is what the source verse has AND because the ablative is this liber's declared target, so the construction teaches the stage instead of borrowing from S1. **Registered as a deliberate departure from the assignment brief** |
+| septem | nova `7️⃣`, `g: ūnus, duo … septem` | FUNCTION |
+| **cum grege** | second gloss of `cum` + abl, `👤🐑`, `g: Rachēl et grex simul ambulant` — verbatim the construction of Gn 29,6 "venit cum grege suo" | FUNCTION |
+
+### h21 Iacob Redit · fons Gn 31–33 (abridged) — content lexemes (6)
+
+| lexeme | how |
+|---|---|
+| hircus (hircī, hircōs) | vocab card, scene `v_hircus`; nova 🐐, `g: hircus nōn ovis est`. Gn 30,35 "capras, et oves, et hircos"; Gn 32,14 "hircos viginti" |
+| haedus (haedī) | vocab card, scene `v_haedus`; nova 🐐, `g: haedus parvus est; hircus magnus` (`magnus`/`parvus` free from h12) |
+| cornua | nova 🐐, `g: bōs quoque cornua habet` (`bōs` is free from h12). Not carded — the horns are what the two goat pictures differ by, so the word is taught on the picture that shows them |
+| pāx | vocab card, scene `v_pax`; nova 🤝, `g: frātrēs nōn iam īrātī sunt: pāx est` (`īrātus` free from h5). **The point of the capitulum** — Gn 33,4 |
+| mittit | vocab card, scene `v_mittit`; nova `➡🎁`, `g: Iacob dōna dat; dōna ad frātrem ambulant`. Gn 32,13 "separavit … munera Esau fratri suo" |
+| currit | vocab card, scene `v_currit`; nova 💨, `g: nōn ambulat: currit`. Gn 33,4 "Currens itaque Esau obviam fratri suo" |
+
+**RE-CARDED, NOT NEW:** `ovis` and `grex` are FREE after Liber III and
+carry no nova and no gloss here, but they DO carry vocab cards in h21,
+because `js/app.js bossWords()` only sees the capitula of the region it is
+in and the ŌRDINĀ phase sorts exactly those two words against `hircus`
+and `haedus`. They do not count against the cap.
+
+### h21 — function words and the one fixed formula
+
+| form | how |
+|---|---|
+| **ā + ablative** | nova `👤➡`, `g: Iacob cum Laban est, tum ā Laban discēdit`. Written `ā` (not `ab`) before the consonant of `Laban` | FUNCTION |
+| **cum ovibus** (abl. pl.) | nova `🐐🐑`, `g: hircī et ovēs simul sunt` — the plural of the preposition h17 taught in the singular | FUNCTION |
+| **Revertere in terram patrum tuōrum** | **FIXED VULGATE FORMULA** (Gn 31,3), the ONE in this capitulum, quoted exactly and cut at a clause boundary. nova `↩🌍` with the Latin gloss `Iacob redit ad terram patris`; the road and the radiance are the second gloss. The imperative and the possessive `tuōrum` are on no ladder here, are never parsed, and are asked for nowhere; the page is quoted, so the generators skip it |
+
+### h22 Iacob fit Israēl · fons Gn 32, 24–30 — content lexemes (5)
+
+| lexeme | how |
+|---|---|
+| Israēl | vocab card, scene `v_israel`; nova `✨👤`, `g: nōmen novum Iacob` (`nōmen` free from h14) |
+| sōlus | vocab card, scene `v_solus`; nova `1️⃣👤`, `g: sōlus: ūnus vir, nōn multī`. Gn 32,24 "mansit solus". **ENGINE NOTE:** `solus` is on js/boss-phases.js's FUNCTIO stoplist, so an authored boss gap on this word is DROPPED outright. Do not gap it in a clamor or sententia item — in any liber |
+| fortis | vocab card, scene `v_fortis`; nova 💪, `g: fortis vir nōn timet`. Gn 32,28 "si contra Deum fortis fuisti" |
+| tenet | vocab card, scene `v_tenet`; nova 🤝, `g: nōn dat: tenet` |
+| superat | vocab card, scene `v_superat`; nova ⚖, `g: vir fortis est; Iacob quoque fortis`. **The Vulgate's own verb** — Gn 32,25 "cum videret quod eum superare non posset" |
+
+### h22 — morphology
+
+| form | how |
+|---|---|
+| **nōmine** (INSTRUMENTAL ABLATIVE) | nova `💬➡`, `g: nōmen → vir Iacob nōmine vocat`. The liber's one instrumental, on the naming of Gn 32,28 — `nōmen` itself is free from h14, so only the case is new |
+
+### Emoji ruling (binding on later libri)
+
+🪜 (U+1FA9C, Emoji 13.0) **does not render** on the target font stack: it
+draws the same empty box as 🪙, the glyph AUTHORING-BRIEF already names as
+tofu. Verified by rasterising every glyph this liber uses onto a canvas and
+comparing the pixel signature against a known tofu reference — 🪜 was the
+only failure in the set, and every other glyph in l4 (including ⬆ ⬇ ➡ ⚖ ☁
+🤲 🙋 🟥 💨 💬 ↩ ✨ 🐐 👆 and the keycaps) renders. The ladder is hinted
+with `⬆☁`, and the ladder ITSELF is always the drawn `scala` actor.
+**Do not reintroduce 🪜.**
+
+### Words a later liber may treat as FREE after Liber IV
+
+Everything in Librī I–III, plus
+`Ēsau · Iacob · Laban · Rachēl · Israēl · cibus · prīmus · venit ·`
+`patina · locus · ruber · parat · petit · scāla · somnium · surgit ·`
+`tangit · fīlia · annus · servit · hircus · haedus · cornua · pāx ·`
+`mittit · currit · sōlus · fortis · tenet · superat`
+and the function words `septem` and `duo`, plus **the whole ablative
+apparatus this liber teaches**: `in · ex · ab/ā · cum · dē · sub` + abl,
+the ablative of duration (`septem annīs`) and the instrumental
+(`nōmine`), and the indeclinable names `Iacob · Ēsau · Laban · Rachēl` in
+every case.
+
+---
+
 ## Omissions register (fidelity — "simplify by OMISSION only")
 
 Everything told in these ten capitula agrees with the Clementine Vulgate. What
@@ -513,6 +681,38 @@ is **not** told, and why:
 | Gn 24,22 | the weights of the gold ornaments | numbers |
 | Gn 24,15 | `hydriam` → `urnam` | synonym substitution, registered: the same object under a word the art library owns (`urna`), exactly as `urbs` stands for *civitas* in h10 |
 
+### Liber IV · IACOB (Gn 25–33)
+
+| fons | omitted | reason |
+|---|---|---|
+| Gn 25,1–18 | Cetura and her sons; the death of Abraham; the generations of Ismael | genealogy. Abraham's death is also a death, which this track has not yet told |
+| Gn 25,21–23 | Rebecca's barrenness; the children striving in the womb; **the oracle "major serviet minori"** | the oracle is a future, and a verse the whole liber would then have to keep answering. Nothing replaces it and nothing denies it |
+| Gn 25,25 | Ēsau's red hair and hairiness; the name Edom | the pun is untellable without the Hebrew, and `rufus`/`hispidus` would have cost two cap slots to say what the picture says by itself. **The costume the file DOES give him (long beard, terracotta robe) asserts nothing the verse denies** |
+| Gn 25,26.20 | the ages (sixty, forty) | numbers |
+| **Gn 25,33** | **the oath — "Jura ergo mihi. Juravit ei Esau"** | omitted whole, per assignment. The trade is told as the two GIFTS the chapter's own verbs make it (`Ēsau Iacob locum prīmī fīliī dat` / `Iacob Ēsau cibum dat`), and no page anywhere says Ēsau was cheated |
+| Gn 25,34b | "parvipendens quod primogenita vendidisset" | the chapter's own verdict on Ēsau; a child reading Liber IV is not asked to judge either brother |
+| **Gn 26 entire** | **Isaac at Gerara; the "she is my sister" episode; the wells; the covenant with Abimelech** | CURRICULUM §2 does not list it, and 26,7–11 is DESIGN §8 territory besides |
+| **Gn 27 entire** | **the stolen blessing: the goatskins, the deceived blind father, Ēsau's cry, and 27,41's "occidam Jacob fratrem meum"** | CURRICULUM §2 does not list it and this file does not tell it. Nothing in Liber IV asks a child to watch a brother deceived, and the hatred of 27,41 is precisely what h21's reconciliation would have had to answer. **Not told, not alluded to, not denied** |
+| Gn 28,11 · 28,18 · 29,2–10 | **the stone under Iacob's head, the pillar he anoints, and the stone on the well's mouth** | **MISSING ART** — there is no `lapis` actor. Omitted rather than half-drawn, the `later` precedent of h10. Iacob simply sleeps on the ground under the sky, which is what Gn 28,11 otherwise says. Art addendum requested: a `lapis` |
+| Gn 28,14 | "quasi pulvis terræ"; the four quarters | futures and similes |
+| Gn 28,17 | **"Quam terribilis est locus iste"** | this page keeps wonder and refuses dread (DESIGN §8). Gn 28,16's "Vere Dominus est in loco isto" is first person and goes with it |
+| Gn 28,19 · 32,2 · 32,30 · 33,17–18 | Bethel, Luza, Bersabee, Haran, Mahanaim, Phanuel, Socoth, Salem | place-names whose sense is a phrase and not a picture |
+| Gn 28,20–22 | Iacob's vow and the tithe | first person, and a conditional |
+| Gn 29,11 | the kiss and the weeping | lexeme cap; Gn 29,13's welcome carries the meeting |
+| **Gn 29,16–17 (names) · 29,21–30 · 29,31–30,24** | **THE LEAH EPISODE IN FULL** — Lia's name, the wedding, the substitution, the second seven years, and the births of the twelve | omitted whole, per assignment. Gn 29,16's bare fact that there were TWO daughters is kept, because the picture needs them and the verse says only that. **Nothing in this file says Iacob was deceived, and nothing says he was not**: the marriage is told in one sentence and the years are told once, in the Vulgate's own ablative |
+| Gn 30,25–43 | the speckled flocks, the peeled rods, the bargain with Laban | pastoral accounting no picture can carry. Gn 30,43's "habuit greges multos" survives as h21's opening, and Gn 30,32's "tam in ovibus quam in capris" is the boss trial's subject |
+| Gn 31,19–35 | Rachēl and her father's household images | the idols are a theft and a deception, and `idolum` is a word this track has no reason to own yet |
+| Gn 31,36–54 | the quarrel, the heap of witness, the covenant at Galaad | speeches throughout |
+| Gn 32,9–12 | Iacob's prayer | first person |
+| Gn 32,14–15 | the tallies of the gift (200 goats, 20 rams, 30 camels…) | numbers; the gift is drawn as the animals it is |
+| **Gn 32,24 "luctabatur"** | **the struggle itself — every blow, hold and reversal of it** | DESIGN §8. There is no S4 verb for `luctari` that is not violent, and the choreography of a fight is not children's imagery. The night is told as ONE LOCKED GRIP held for a single frame — `Vir Iacob tenet; Iacob virum tenet.` — and then the dawn, the blessing and the naming. Nothing is struck, nothing is thrown, nobody is hurt. **Gn 32,25's touched sinew and Gn 32,31's limp are omitted with the fight**, and Gn 32,32's dietary note goes with them |
+| Gn 32,26.29 | "Dimitte me" / "Non dimittam te" / "Cur quæris nomen meum?" | direct speech in the first and second person; the blessing of 32,29b survives as `Vir Iacob benedīcit` |
+| Gn 33,1–3.5–16 | the four hundred men; the ranked wives and children; the bowing seven times; the long courtesy over the gift | Gn 33,1's four hundred men are a threat the file has already declined to raise (32,6–8 omitted with them), and the rest is dialogue |
+| **Gn 33,4 "amplexatus est eum"** | **the embrace** | **MISSING ART** — the `person` actor has no embrace pose. Carried by the SAME VERSE's other verb, `Ēsau ad frātrem currit`, with the two brothers drawn close and glad. Nothing is claimed that the picture cannot show. Art addendum requested: an embrace pose |
+| Gn 33,19–20 · Gn 34 entire | the field bought at Sichem; the rape of Dina | the first is a transaction, the second is absolutely outside DESIGN §8 |
+| Gn 30,32 | `capra` → the zone label `HIRCĪ` | synonym substitution, registered: the Vulgate sorts "tam in ovibus quam in capris", but there is no `capra` actor in the art library and no `capra` lexeme in this track. The boss's two zones are labelled `OVĒS` and `HIRCĪ`, both of them words the learner has read — a zone label the learner cannot read is a translation prompt |
+| Gn 32,14 | `arietes` → `ovēs` | **MISSING ART** — no `aries` actor, exactly as in h15. The animal is drawn with `lamb`/`grex` and named `ovis`, which a ram is. The word `aries` appears nowhere |
+
 ## Additions register (what is on the page but not in Gn)
 
 | where | addition | justification |
@@ -526,3 +726,7 @@ is **not** told, and why:
 | h13, h19 | the **stars of the sky are the `nightSky` background's own painted stars**, never the `star` actor | the `star` actor is the radiance of God in this track from h1 on. Using it for `stēlla` would have given one symbol two meanings; the background paints nineteen real stars, so the word is genuinely pictured |
 | h15 (Gn 22,9) | the altar built but **unlit until the ram is given** | `flame: false` on every altar frame before Gn 22,13, `flame: true` after. Gn 22 puts the fire in Abraham's hand at v. 6 (omitted, DESIGN §8); this ordering says nothing the chapter denies and keeps the summit free of fire until it is an offering |
 | h16 (Gn 24,22) | the servant's gift shown as a **gesture, not as jewellery** | there is no ornament actor; `Servus Rebeccae dōnum dat` is the verse's own act with its object left to the picture |
+| h19 (Gn 28,18) | the **lit altar** on the waking page, and the sentence `Iacob surgit et Deō dōnum dat` | Gn 28 has Iacob pour oil on the pillar and promise a tithe (28,18.22) — an offering with no picture and no S4 words. The altar is the same traditional iconography h5 and h11 already registered, and Gn 35,7 has Iacob build a real altar at this same place. The text asserts only that he gives God a gift, which Gn 28 says twice |
+| h19 (Gn 28,12) | `Angelī dē caelō dēscendunt` | Gn 28,12 has the angels "ascendentes et descendentes **per eam**" — by the ladder, without naming where from. `dē caelō` says where a descending angel comes from and lets the liber teach `dē` + abl on a second picture. Nothing the verse denies |
+| h22 (Gn 32,24) | the `vir` drawn with the **`angel` preset and its WINGS TURNED OFF** | Gn 32,24 says `vir` and the file says `vir`. The white robe, the gold mantle and the halo of the messengers of h4 and h19, on a man's body: the picture says exactly what the text says — a man, and more than a man. **No wings are asserted**, and God still has no body anywhere in the track (Gn 32,30's "Vidi Deum" is drawn as the `star` radiance, as h1 established) |
+| h17 · h21 (Gn 25,27 · 32,14) | Ēsau's **long beard and terracotta robe**, and Iacob's household staged with `tent`, `grex`, `hircus` and `camelus` | the twins must be told apart in nine shared frames and the art library has no other handle; Gn 25,25 makes Ēsau the hairy one, so the beard is the verse's own. The livestock is itemised by Gn 30,43 ("greges multos … camelos et asinos") and Gn 32,14 |
