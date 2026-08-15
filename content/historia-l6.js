@@ -1005,7 +1005,7 @@
                   { t: 'person',  x: 226, y: G, s: 1.12, role: 'patriarch' },
                   { t: 'person',  x: 306, y: G, s: 1.08, role: 'woman', flip: true }
                 ],
-                bubbles: [{ x: 200, y: 76, w: 132, h: 44, text: 'Patrem et mātrem amā!', kind: 'speech', tail: 'left', fs: 11 }] },
+                bubbles: [{ x: 200, y: 76, w: 132, h: 44, text: 'Patrem et mātrem honōrā!', kind: 'speech', tail: 'left', fs: 11 }] },
 
     h35_exiit: { bg: 'mountain', items: [
                   { t: 'mountain', x: 300, y: G, s: 1.05, cloud: true },
@@ -2124,17 +2124,19 @@
 
     /* ============ h35 — TABULAE LĒGIS ============
        fons Ex 19–20 · 24,12 · 31,18. The mountain, the cloud, the law.
-       THE TWO COMMANDMENTS THIS FILE SHOWS ARE GRADED RENDERINGS, and
-       both are registered as such, not passed off as quotations:
+       ONE OF THE TWO COMMANDMENTS THIS FILE SHOWS IS A GRADED RENDERING
+       and is registered as such, not passed off as a quotation:
          · `Ūnum Deum adōrā!` for Ex 20,3.5 ("Non habebis deos alienos
            coram me" · "Non adorabis ea"). The Vulgate's is a FUTURE
            prohibition, which S7 cannot read; `adōrat` is h23's card and
            the imperative is S5's. Nothing is said that Ex 20 denies.
-         · `Patrem et mātrem amā!` for Ex 20,12 ("Honora patrem tuum et
-           matrem tuam"). `honōrat` has no picture and no place on the
-           ladder; `amat` has been free since h2. The softening is real
-           and is registered — honour is not love — but it is a
-           simplification of the same command and not a different one.
+       The other is the VULGATE'S OWN IMPERATIVE, kept verbatim:
+         · `Patrem et mātrem honōrā!` for Ex 20,12 ("Honora patrem tuum
+           et matrem tuam"). An earlier draft wrote `amā` here because
+           `honōrat` has no picture; the line audit reversed that —
+           honour is not love, and softening a commandment to fit the
+           art library is the wrong trade. `honōrā` carries a gloss
+           (`amā et pāre`) instead, which is what glosses are for.
        Both sit inside `Lēx dīcit: "…"`, so they are marked as the law
        SPEAKING and the generators skip them (quoted pages).
        NO FIXED FORMULA in this capitulum. Ex 20,2's "Ego sum Dominus
@@ -2208,8 +2210,9 @@
           ttsText: 'Lex dicit: Unum Deum adora!' },
 
         /* Ex 20,12 — a GRADED RENDERING, registered. See the header. */
-        { la: 'Lēx dīcit: "Patrem et mātrem amā!"', scene: SC.h35_ama,
-          ttsText: 'Lex dicit: Patrem et matrem ama!' },
+        { la: 'Lēx dīcit: "Patrem et mātrem honōrā!"', scene: SC.h35_ama,
+          ttsText: 'Lex dicit: Patrem et matrem honora!',
+          nova: [{ w: 'honōrā', e: '🙏', g: 'amā et pāre' }] },
 
         /* Ex 32,15 — "reversus est Moyses de monte, portans duas tabulas" */
         { la: 'Tum Moyses dē monte exiit.', scene: SC.h35_exiit },

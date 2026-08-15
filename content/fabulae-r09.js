@@ -651,8 +651,9 @@
           scene: SC.f25_servat, nova: [] },
 
         /* the fleece, and the region's 5th declension */
-        { la: 'Ūnō diē lupus pellem in agrō invēnit.', scene: SC.f25_pellisIacet,
-          nova: [{ w: 'pellem', e: '🐑', g: 'pellis ovīna = pellis agnī: lāna alba, sed agnus nōn est' },
+        { la: 'Quōdam diē lupus pellem in agrō invēnit.', scene: SC.f25_pellisIacet,
+          nova: [{ w: 'quōdam diē', g: '= ōlim' },
+                 { w: 'pellem', e: '🐑', g: 'pellis ovīna = pellis agnī: lāna alba, sed agnus nōn est' },
                  { w: 'diē', e: '☀', g: 'diēs: sōl in caelō est. Ūnus diēs, duo diēs' }] },
 
         /* THE RELATIVE, masculine, on the oldest noun in the track */
@@ -775,7 +776,7 @@
             { la: 'pāstor', scene: SC.v_pastor }
           ],
           scrambles: [
-            { la: 'Ūnō diē lupus pellem in agrō invēnit.', scene: SC.f25_pellisIacet },
+            { la: 'Quōdam diē lupus pellem in agrō invēnit.', scene: SC.f25_pellisIacet },
             { la: 'Tum lupus in gregem ambulāvit.',        scene: SC.f25_inGrege },
             { la: 'Pāstor lupum manū cēpit.',              scene: SC.f25_manu },
             { la: 'Lupus agnum nōn cēpit.',                scene: SC.f25_discedit }
@@ -876,7 +877,7 @@
 
         { la: 'Sociī cum leōne cotīdiē ambulābant.', scene: SC.f26_ambulant, nova: [] },
 
-        { la: 'Ūnō diē sociī cibum invēnērunt.', scene: SC.f26_cibus, nova: [] },
+        { la: 'Quōdam diē sociī cibum invēnērunt.', scene: SC.f26_cibus, nova: [] },
 
         /* THE RELATIVE, masculine ACCUSATIVE */
         { la: 'Cibus, quem asinus invēnit, magnus erat.', scene: SC.f26_cibus,
@@ -986,7 +987,7 @@
             { la: 'quercus', scene: SC.v_quercus }
           ],
           scrambles: [
-            { la: 'Ūnō diē sociī cibum invēnērunt.', scene: SC.f26_cibus },
+            { la: 'Quōdam diē sociī cibum invēnērunt.', scene: SC.f26_cibus },
             { la: 'Sociī sub quercū sēdērunt.',      scene: SC.f26_subQuercu },
             { la: 'Tum asinus trēs partēs fēcit.',   scene: SC.f26_partes },
             { la: 'Leō trēs partēs habēbat.',        scene: SC.f26_discedunt }
@@ -1087,7 +1088,7 @@
         { la: 'Mūrēs fēlem timēbant. Mūrēs cotīdiē fugiēbant. Cāseum nōn cēpērunt.',
           scene: SC.f27_fugiunt, nova: [] },
 
-        { la: 'Ūnō diē mūrēs cōnsilium habuērunt.', scene: SC.f27_consilium,
+        { la: 'Quōdam diē mūrēs cōnsilium habuērunt.', scene: SC.f27_consilium,
           nova: [{ w: 'cōnsilium', e: '💬', g: 'mūrēs cōnsilium habent: mūrēs dīcunt et audiunt' }] },
 
         { la: 'Mūs, quī parvus erat, dīxit: “Audīte! Ecce cōnsilium!”',
@@ -1194,7 +1195,7 @@
           ],
           scrambles: [
             { la: 'Mūrēs fēlem timēbant.',            scene: SC.f27_fugiunt },
-            { la: 'Ūnō diē mūrēs cōnsilium habuērunt.', scene: SC.f27_consilium },
+            { la: 'Quōdam diē mūrēs cōnsilium habuērunt.', scene: SC.f27_consilium },
             { la: 'Mūs quī cōnsilium dīxit quoque tacuit.', scene: SC.f27_musTacet },
             { la: 'Tum fēlēs vēnit.',                 scene: SC.f27_felesVenit }
           ]
@@ -1226,7 +1227,7 @@
             options: ['quod', 'quī', 'quem'], correct: 0, scene: SC.f27_audiunt },
           { text: 'Mūrēs, ___ cōnsilium audīvērunt, laetī erant.',
             options: ['quī', 'quae', 'quem'], correct: 0, scene: SC.f27_audiunt },
-          { text: 'Ūnō diē mūrēs ___ habuērunt.',
+          { text: 'Quōdam diē mūrēs ___ habuērunt.',
             options: ['cōnsilium', 'cāseum', 'mēnsam'], correct: 0, scene: SC.f27_consilium },
           { text: 'Dīcere ___ erat, sed facere difficile erat.',
             options: ['facile', 'parvum', 'album'], correct: 0, scene: SC.f27_tacent },

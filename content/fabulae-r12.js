@@ -726,8 +726,9 @@
           scene: SC.f35_serpens,
           nova: [{ w: 'serpēns', e: '🐍', g: 'serpēns longus est et pedēs nōn habet: serpēns per terram it' }] },
 
-        { la: 'Serpēns nōn movet. Corpus serpentis frīgidum est.',
-          scene: SC.f35_frigidus, nova: [] },
+        { la: 'Serpēns sē nōn movet. Corpus serpentis frīgidum est.',
+          scene: SC.f35_frigidus,
+          nova: [{ w: 'sē movet', e: '🐍 ↔', g: 'serpēns ipse movētur: serpēns sē movet' }] },
 
         /* ACC + ĪNF, and the picture settles it: the snake is blue-grey
            and lying still */
@@ -754,7 +755,7 @@
           scene: SC.f35_calidus,
           nova: [{ w: 'serpente … positō', e: '🐍 🔥 ➜', g: 'serpēns ad ignem pōnitur; corpus calidum fit: serpente positō, corpus calidum fit' }] },
 
-        { la: 'Iam serpēns movet. Serpēns nōn iam frīgidus est.',
+        { la: 'Iam serpēns sē movet. Serpēns nōn iam frīgidus est.',
           scene: SC.f35_movet, nova: [] },
 
         { la: 'Rūsticus laetus est: “Ecce! Serpēns vīvit.”',

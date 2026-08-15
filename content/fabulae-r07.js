@@ -1155,7 +1155,7 @@
         { la: 'Subitō asinus in rīvum cecidit!', scene: SC.f21_cadit,
           nova: [{ w: 'cecidit', e: '🕰⬇', g: 'iam cadit; subitō cecidit' }] },
 
-        { la: 'Aqua salem cēpit. Sal in aquā nōn mānsit.', scene: SC.f21_manet,
+        { la: 'Aqua salem cēpit. Sal in onere nōn mānsit.', scene: SC.f21_manet,
           nova: [{ w: 'cēpit', e: '🕰✊', g: 'iam capit; tum cēpit' },
                  { w: 'mānsit', e: '🕰📍', g: 'iam manet; tum mānsit' }] },
 
@@ -1295,7 +1295,7 @@
             options: ['portābat', 'portāvit', 'portant'], correct: 0, scene: SC.f21_onus },
           { text: 'Posteā dominus lānam in onus ___.',
             options: ['posuit', 'pōnēbat', 'pōnit'], correct: 0, scene: SC.f21_lana },
-          { text: 'Sal in aquā nōn mānsit: onus ___ fuit.',
+          { text: 'Sal in onere nōn mānsit: onus ___ fuit.',
             options: ['leve', 'grave', 'plēnum'], correct: 0, scene: SC.f21_levis },
           { text: 'Lāna aquam cēpit: onus ___ fuit.',
             options: ['grave', 'leve', 'parvum'], correct: 0, scene: SC.f21_gravis }

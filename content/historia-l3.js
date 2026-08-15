@@ -1968,7 +1968,7 @@
               scene: SC.v_ascendit },
             { text: 'Ecce ____! Rebecca aquam portat.',
               answer: 'urna',
-              options: ['urna', 'puteus', 'stēlla'],
+              options: ['urna', 'altāre', 'stēlla'],
               scene: SC.h16_urna }
           ] }
       ],
