@@ -375,3 +375,237 @@ Everything above, plus everything Regiōnēs I–X left. **Regiō XII inherits:*
 `ciconia templum mittit lībertās senex Mors vocat levat celeriter tardē`,
 and as constructions **the SUBJUNCTIVE** — purpose (`ut`/`nē`), result
 (`tam … ut`), the cum-clause and the indirect question, in both voices.
+
+---
+
+## Regiō XII · FORUM (S12) — `content/fabulae-r12.js` — **THE FINALE**
+
+Stage ceiling: everything S1–S11 **plus the three constructions this
+region owns** — the ACCUSATIVE + ĪNFĪNĪTĪVUS (indirect statement), the
+ABLATIVE ABSOLUTE, and the GERUNDIVE, the last deliberately LIGHT (three
+uses in the whole region). Nothing is withheld any more: this is the top
+of the ladder and the region spends the whole of it.
+
+Seven rulings:
+
+* **THE THREE NEW CONSTRUCTIONS ARRIVE ONE AT A TIME, ON KNOWN VERBS,
+  WITH THE PLAIN SENTENCE BESIDE THEM IN THE GLOSS** — the device Regiō
+  VI used for the imperfect, X for the passive and XI for the
+  subjunctive. **No new verb ever carries a new construction.** Every
+  acc+inf here hangs on `videt` or `dīcit` (Regiō I); every ablative
+  absolute is built on the passive Regiō X installed (`datur`,
+  `pōnitur`, `ēicitur`, `vidētur`); both gerundives are on `dat` and
+  `servat`, from Regiōnēs I and X.
+* **THE ABLATIVE ABSOLUTE IS TAUGHT AS A PAIR, NEGATIVE THEN POSITIVE,
+  ON ONE PICTURE-PAIR.** `Cibō nōn datō, corpus nōn valet` (f34 p14) and
+  `Cibō datō, corpus iterum valet` (f34 p22) stand on mirror frames —
+  the same man, the same table, turned away and then turned back. The
+  learner meets the construction twice before being asked to do anything
+  with it, and the second meeting IS the fable's resolution, so the
+  grammar and the story turn on one hinge.
+* **THE ACC + ĪNF IS ALWAYS ANSWERED BY THE PICTURE.** Indirect statement
+  is the one construction a learner can parse correctly and still not
+  know whether it is true, so all eleven here report something the frame
+  shows: `lupus videt canem pinguem esse` stands over a fat dog.
+* **B-RATING (DESIGN §8), two decisions, BOTH FLAGGED FOR LINE-AUDIT:**
+  f35's snake TRIES AND FAILS — in the fable as commonly told the farmer
+  is bitten and dies; here the snake `mordēre vult`, the farmer is
+  quicker (`celeriter surgit`), NOBODY IS HARMED, and the snake goes
+  back out into the snow. The mōrāle is untouched and is sharper for it:
+  the ingratitude, not the injury, is the point, and `malus beneficium
+  nōn reddit` says exactly that. f36's wolf is HUNGRY, not starving, and
+  the collar is described, never shown as a wound.
+* **THE WOLF ARC ENDS HERE, AND HE ENDS SYMPATHETIC.** The lamb-taker of
+  Regiō I, who would not pay the crane in Regiō XI, is in f36 thin,
+  alone, offered everything he wants — and turns it down. **He is never
+  drawn in the 'angry' pose in this capitulum, not once**: the open-jawed
+  wolf of eleven regions stands with his mouth shut through the whole of
+  his last fable. The last thing a learner sees him do is choose.
+* **THE LAST LINE OF THE TRACK** is f36's mōrāle, built entirely from
+  words earned in four different regions: `Fābula docet: lībertās plūs
+  quam cibus valet.` (`lībertās` R11 f32, where the frogs LOST it by
+  asking for a king; `cibus` R4; `valet` f34 of this region; `plūs quam`
+  the S8 comparative.) The wolf's own last words do the same with Regiō
+  XI's punchline word — `“Ego ēsuriō, sed līber sum: id mihi satis est.”`
+  `satis`, which in R11 was the wolf's excuse for paying nobody, is here
+  what he settles for.
+* **FORUM IS TAUGHT**, as TEMPLUM was in Regiō XI: `bgCity` with two
+  `columna` and a `temple` in it is a forum, and `forum` is a card. The
+  last two regions of the track are the only two that could picture
+  their own names.
+
+### MISSING ART — reported and NOT worked around
+
+* **NO COLLAR.** `catēna` is the hinge of f36 — the thing the wolf sees
+  and the reason he walks away — and there is no collar, chain or
+  neck-band anywhere in the library. An `umbra` ellipse laid on the
+  dog's throat was tried and RENDERED: the `canis` actor has no neck
+  (its head circle sits directly on the body ellipse), so the shape
+  lands on the dog's CHEEK and reads as a wound. That is worse than
+  nothing in a children's reader and was thrown away. `catēna` is taught
+  by GLOSS and by the dog's own speech, carries NO CARD, and is never
+  asked for by ear or picture. **A `catena` prop (a simple ring at a
+  quadruped's throat, or a standalone chain) is the single
+  highest-value addition the art library could make for this track.**
+* **THE WOLF CANNOT BE DRAWN THIN.** `js/scenes.js` wolf() takes only a
+  pose; it accepts no `color` and has no lean variant, so `macer` cannot
+  be pictured on the animal it describes. Carried by the staging instead
+  — an EMPTY `patina` beside the wolf, a FULL `praesēpe` beside the dog
+  — and by the text. No card. `pinguis` is glossed as its opposite.
+* **NO EMPTY TABLE.** `mensa` draws its own bread, dish and cup
+  unconditionally, so f34 cannot show a bare table. **This turned out to
+  IMPROVE the staging and was kept on purpose**: in Menenius's fable the
+  food is there and the limbs simply refuse to carry it, so a LOADED
+  table the body has turned its back on is the truer picture.
+* `venter`, `membrum`, `manus` and `collum` have NO CARDS, for the
+  reason Regiō XI gave for `caput` and Regiō X for `aurēs`: this art set
+  cannot draw a body part apart from the body that wears it. All four
+  are glossed and all four are kept out of SONUS, the boss quiz and the
+  clāmor gaps.
+
+### THE S12 CONSTRUCTIONS of this region (free against the ≤8 cap, every one glossed)
+
+| form | first use | how |
+|---|---|---|
+| ventrem … labōrāre | f34 p10 | **THE FIRST ACC + ĪNF**, on `videt`, `g: membra vident: venter nōn labōrat → membra vident ventrem nōn labōrāre`. The frame shows the belly doing nothing, which is what makes the report checkable |
+| ventrem … habēre | f34 p11 | the same on `dīcunt`, one page later, so the learner sees the construction survive a change of governing verb |
+| cibō nōn datō | f34 p14 | **THE FIRST ABLATIVE ABSOLUTE**, and the NEGATIVE half of the pair, `g: cibus nōn datur; corpus nōn valet` |
+| corpus … esse | f34 p16 | acc+inf with an adjective predicate (`corpus aegrum esse`) |
+| dandus est | f34 p20 | **THE FIRST GERUNDIVE**, on Regiō I's `dat`, `g: membra ventrī cibum dare dēbent: cibus ventrī dandus est` |
+| cibō datō | f34 p22 | **the POSITIVE half of the pair**, on the answering frame — the fable's resolution and the construction's second showing at once |
+| serpentem … esse | f35 p6 · p17 | acc+inf twice, both settled by the picture (a blue-grey snake lying still; a snake rearing) |
+| serpente … positō | f35 p11 | ablative absolute over the RECOLOUR frame — the construction and the plot turn together |
+| serpente ēiectō | f35 p19 | ablative absolute, perfect passive participle, `g: serpēns ēicitur; rūsticus tūtus est` |
+| canem … esse | f36 p8 · p19 | acc+inf, the second one carrying the fable's whole point (`canem līberum nōn esse`) |
+| dominum … dare | f36 p11 | acc+inf in the dog's own report |
+| catēnā vīsā | f36 p20 | **the ablative absolute the fable turns on**, `g: catēna vidētur; lupus cōnsistit` |
+| servanda est | f36 p26 | **THE LAST GERUNDIVE AND THE TRACK'S PENULTIMATE SENTENCE**, on Regiō X's `servat` and Regiō XI's `lībertās`: `lībertās servanda est` |
+
+### f34 Membra et Venter — vocab cards (7) and new lexemes
+
+Menenius Agrippa's fable, told as he told it: a FRAME in the forum, a
+fable inside it, and a last line that gives the fable back to the crowd.
+**Two registers, two backgrounds, on purpose** — the frame is `city`,
+the fable inside it is `plain` with one man and one table and nothing
+else, because a learner must be able to tell the story from the
+story-inside-the-story and a change of ground is how a picture book says
+so.
+
+| lexeme | how |
+|---|---|
+| forum | vocab card, scene `v_forum` — `bgCity` with two `columna` and a `temple` and **NO PEOPLE**, because a card with a crowd on it would teach `populus` (Regiō VI's ruling for `urbs`, applied to this region's own name). nova 🏛. 5 uses. **THE REGION'S OWN NAME, taught** |
+| populus | vocab card, scene `v_populus` — the `crowdGroup` and NO stone, the same rule in reverse. nova 👥, `g: ūnus vir · multī virī: populus`. 4 uses |
+| corpus | vocab card, scene `v_corpus` — ONE man, whole, alone. **`vir` therefore gets NO card in this region: it would be the same picture.** nova 🧍. 11 uses, and recycled into f35 as the snake's cold body |
+| valet | nova 💪, `g: corpus cibum accipit et valet ↔ corpus sine cibō nōn valet`. 4 uses. **NO CARD** (a picture of "being strong" is a picture of a man). Pre-taught here for f36's mōrāle, which stands on it |
+| venter | nova `🍽 ⬇`, `g: cibus in ventrem it; venter in mediō corpore est`. 12 uses. **NO CARD — missing art** (see above) |
+| membrum (membra) | nova `✋🦶👄`, `g: manus membrum est; pēs membrum est`. 9 uses. **NO CARD — missing art** |
+| manus | nova ✋✋, `g: manus corporis pars est: manibus labōrāmus`. 6 uses. **NO CARD — missing art** |
+| aeger | nova 🤒, `g: aeger ↔ validus; corpus sine cibō aegrum fit` |
+| mēnsa · cibus · templum · senex | **FREE** (R6 / R4 / R11 / R11). Cards kept — `mēnsa` is where the refusal happens, and `senex` is Menenius |
+| vir · pēs · ōs · labōrat · sedet · portat · dat · iuvat · urbs · loquitur | **FREE** (R1–R11; `loquitur` is Regiō X's deponent, and the speaker of the frame uses it) |
+
+### f35 Rūsticus et Serpēns — vocab cards (6) and new lexemes
+
+**THIS FABLE PAYS THREE REGIONS' DEBTS AT ONCE.** Regiō X wrote into its
+own ledger that `ignis` was pre-taught "for Regiō XII f35, where the
+farmer warms the snake at it", that `mordet` was pre-taught "for Regiō
+XII f35, where the snake tries it", and that `reddit` was pre-taught
+"for Regiō XII f35's mōrāle, which stands on it"; Regiō XI added
+`beneficium` and `celeriter`. **All five are spent here, exactly as
+promised**, and the mōrāle — `malus beneficium nōn reddit` — is the
+answering half of Regiō XI's `lupus beneficium nōn reddit`.
+
+**THE COLD AND THE WARM SNAKE ARE THE SAME ACTOR IN TWO COLOURS.**
+`serpent` takes an `o.color`, so the frozen snake is drawn blue-grey
+(`#7f93a6`) against `bgHiems` and the revived one in the library's own
+green (`#6f8f3f`). Nothing else changes — same actor, same pose, same
+scale — so the recolour reads as ONE animal that has warmed up, which is
+the whole plot, and `frīgidus`/`calidus` are taught by the difference
+between two frames rather than by a word.
+
+| lexeme | how |
+|---|---|
+| serpēns | vocab card, scene `v_serpens` (the green one — the card must teach the animal, not the plot beat). nova 🐍, `g: serpēns longus est et pedēs nōn habet: serpēns per terram it`. 16 uses |
+| rūsticus | vocab card, scene `v_rusticus` — **A MAN WITH GRAIN BESIDE HIM**, not a man alone, because a man alone is `corpus`. **FLAGGED FOR LINE-AUDIT: Regiō VI f16 taught `rūsticus` as an ADJECTIVE on a mouse (`mūs rūsticus`); this is the SUBSTANTIVE.** The shift is glossed explicitly on first use — `g: mūs rūsticus in agrō habitat; hic vir quoque in agrō labōrat: rūsticus est` — and the two never meet in an exercise. 14 uses |
+| frīgidus | nova ❄, `g: frīgidus ↔ calidus; hieme omnia frīgida sunt`. 4 uses. **NO CARD**: the picture of it is `bgHiems` itself and the snake's colour, and a card would be a picture of snow |
+| tollit | nova `🤲 ⬆`, `g: serpēns in nive iacet; rūsticus eum tollit`. 3 uses |
+| calefacit | nova `🔥 ➜`, `g: ignis calidus est: ignis serpentem calidum facit`, built on R6's `calidus` and R10's `ignis` |
+| surgit | nova `⬆ 🧍`, `g: rūsticus sedet; deinde surgit: iam stat`. **This is the verb that keeps the B-rating** — it is what makes the snake miss |
+| ēicit | nova `➡ 🚪`, `g: serpēns intus erat; rūsticus eum forās mittit`. 3 uses, and it carries the second ablative absolute |
+| ignis · hiems · corpus · silva | **FREE** (R10 / R6 / f34 of this region / R1) |
+| mordet · beneficium · reddit · celeriter · calidus · nix · ager · vult · servat | **FREE** (R10 / R11 / R10 / R11 / R6 / R6 / R2 / S5 / R10) |
+
+### f36 Lupus et Canis — vocab cards (6) and new lexemes
+
+**LIGHT ON WORDS, HEAVY ON SYNTAX, on purpose.** Three new lexemes in
+the whole capitulum, two of which have no card because they have no art.
+Everything else is the track's own vocabulary coming back for the exam —
+which is exactly what the last fable of a course should be.
+
+| lexeme | how |
+|---|---|
+| macer | nova 🦴, `g: macer ↔ pinguis; lupus cibum nōn habet: lupus macer est`. 4 uses. **NO CARD — missing art** (the wolf cannot be drawn thin; see above). Carried by an EMPTY `patina` beside him |
+| pinguis | nova 🍖, `g: pinguis ↔ macer; canis cotīdiē cibum habet`. 4 uses. **NO CARD**, same reason in reverse — carried by the FULL `praesēpe` |
+| catēna | nova 🔗, `g: catēna canem tenet: canis nōn est līber; catēna ↔ lībertās`. 6 uses. **NO CARD — MISSING ART, the region's biggest gap** (see above) |
+| collum | nova 🧣, `g: collum inter caput et corpus est`. 3 uses. **NO CARD — missing art** (a body part) |
+| cōgitat | nova 💭, `g: lupus in animō dīcit: lupus cōgitat`. 3 uses |
+| lupus | vocab card, scene `v_lupus` — the wolf ALONE, mouth shut, at s 1.5. Regiō XI carded him with the 🐺 emoji; the finale gives him the drawn actor, because he is the boss and the arc |
+| canis · dominus · praesēpe · cibus · silva | **FREE** (R2 f7 / R6 / R6 f17 / R4 / R1). **`praesēpe` is a deliberate callback**: the dog who lay in the manger in Regiō VI is fed at one here |
+| lībertās · līber · satis · ēsurit · hiems · quaerit · invenit · redit · tenet · vocat | **FREE** (R11 / R2 / R11 / R1 / R6 / R1 / R1 / R1 / R1 / R11) |
+
+### NO FILLER CARDS IN THIS REGION
+
+Regiō XI carried `arbor` and `mōns` cards in capitula whose stories never
+used the words, purely so that a SONUS place-board had two pictures that
+were not each other, and its ledger flagged the practice for the line
+audit. **This region does not repeat it.** Every card above is a word its
+own story actually says, and the SONUS boards were rebuilt around the
+words that were left. Seven of the nineteen cards are FREE revision
+words, which is the R10/R11 precedent and is what makes the boss a real
+cumulative exam (below).
+
+### THE BOSS — b_r12 LUPUS ULTIMUS, and two ENGINE CONSTRAINTS
+
+Four phases where every other region has three, hp 10 over 90
+phase-seconds, `bossMinMs` **20000** (not the 15000 every other duel
+region uses — this fight is half again as long). The extra phase is a
+SECOND CLĀMOR at the end, because the finale's job is to examine SYNTAX
+and clāmor is the only phase that reads a sentence: the fight opens on
+words (caterva), tests this region's own grammar (clāmor I), makes him
+run (fuga), and finishes on the whole track's grammar (clāmor II).
+`js/boss.js buildPlan()` iterates the list and does not deduplicate
+types, and `js/boss-phases.js` prefers a phase's own `cfg.data.items`
+over `boss.clamor`, so the two clāmor phases carry different sets and
+never repeat a sentence. Both were verified against the real engine.
+
+**CONSTRAINT 1 — THE BOSS CANNOT DRAW TRACK-WIDE, though a finale wants
+to.** `js/app.js bossWords()` builds its pool from `CUR.region.capitula`
+ONLY, and `runBossQuiz()` silently DROPS any entry it cannot resolve — so
+`{ la: 'vulpēs', from: 'f1' }` would not fail loudly, it would just make
+the quiz four questions long. `js/boss-phases.js fromAuthored()` resolves
+clāmor answers and options against the same region-local pool and drops
+what it cannot find (with a loud warning, at least). **The cumulative
+feel was therefore built the legitimate way instead:** this region's own
+cards deliberately carry words from six earlier regions — `cibus` R4,
+`silva` R1, `canis` R2, `dominus`/`mēnsa`/`praesēpe` R6, `ignis` R10,
+`templum`/`senex` R11 — so the boss draws on the whole track *through*
+r12's own vocabulary, and every clāmor frame quotes an earlier region's
+construction (R10's passive with the ā/ab agent, R11's purpose clause,
+R9's relative clause, R8's comparative). FILED FOR THE ENGINE BACKLOG: a
+`from` that could name a capitulum in an already-cleared region would let
+a finale be a real cumulative exam.
+
+**CONSTRAINT 2 — NO POST-WIN TEXT.** The finale wants to close on
+`Lupus līber discēdit.` — the wolf walking away from his own boss fight
+as he walks away from the collar. The engine has nowhere to put it:
+`js/app.js showBossResult()` renders `DATA.MAP_UI.vicisti`, the mascot
+and the XP bonus, and reads nothing from the region config. FILED FOR THE
+ENGINE BACKLOG: an optional `boss.postWin` string rendered under the
+victory line would cost one line in `showBossResult()` and would let
+every region close in its own voice. The line is recorded here so it is
+not lost.
+
+### THE TRACK IS COMPLETE
+
+Thirty-six fables over twelve regions, S1 to S12. The last thing a
+learner reads is `Fābula docet: lībertās plūs quam cibus valet.`
