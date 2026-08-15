@@ -1,0 +1,36 @@
+{
+  "id": "/imarianus/",
+  "name": "MARIANE — Fābulae Latīnae",
+  "short_name": "MARIANE",
+  "description": "Disce linguam Latīnam per fābulās illūstrātās — mēthodo nātūrālī, sine ūllā linguā aliā.",
+  "lang": "la",
+  "dir": "ltr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "portrait",
+  "background_color": "#2b1c16",
+  "theme_color": "#2b1c16",
+  "categories": ["education"],
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

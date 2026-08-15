@@ -8,9 +8,16 @@
   <meta property="og:title" content="MARIANE — Fābulae Latīnae">
   <meta property="og:description" content="Latin through illustrated fables, 100% in Latin. Natural method, fully gamified.">
   <meta property="og:type" content="website">
+  <!-- theme-color paints the phone's status bar / address bar the same umber
+       as --wall in css/styles.css, and is also what the installed app uses
+       before the first paint. Keep it in step with manifest.webmanifest. -->
   <meta name="theme-color" content="#2b1c16">
   <base href="/imarianus/">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E%F0%9F%A6%8A%3C/text%3E%3C/svg%3E">
+  <!-- PWA (M9): the manifest makes the site installable; js/pwa.js registers
+       sw.js and offers the install chip. Both resolve through <base>, so they
+       work at /imarianus/ on the shared host and at / in local QA. -->
+  <link rel="manifest" href="manifest.webmanifest">
   <link rel="stylesheet" href="css/styles.css">
   <!-- Load order is FIXED and matters (all defer ⇒ executed in document order):
        storage/api/audio/tts are leaf utilities; scenes draws; data-core defines
@@ -48,6 +55,10 @@
   <script src="js/probatio.js" defer></script>
   <script src="js/map.js" defer></script>
   <script src="js/app.js" defer></script>
+  <!-- last: pwa.js only registers the worker and draws its own chip, so it
+       must never delay anything above it. It borrows Scenes.mascot when the
+       art library is present and degrades to a text-only chip when it is not. -->
+  <script src="js/pwa.js" defer></script>
 </head>
 <body>
   <header id="topbar"></header>

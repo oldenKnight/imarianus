@@ -1427,6 +1427,138 @@
       } finally { Storage.clearQueue(); }
     });
 
+  /* ================= M9 — PWA =================
+     These four need a SERVER (fetch of ../sw.js etc.), which is how the site
+     actually runs. Opened over file:// they report a skip rather than a red
+     row, because a red row nobody can fix is noise. */
+
+  var SERVED = window.location.protocol !== 'file:';
+
+  /* sw.js is never executed here — a service worker cannot run in a page
+     context — so this is a SYNTAX gate: fetch the bytes the browser would be
+     asked to install and hand them to the JS parser via new Function. A typo
+     in sw.js otherwise shows up only as "install failed" in a console the
+     owner will never open. */
+  checkAsync('M9-PWA', 'sw.js parses as JavaScript and declares a VERSION',
+    function (done) {
+      if (!SERVED) { done(null); return; }
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', '../sw.js', true);
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState !== 4) { return; }
+        if (xhr.status < 200 || xhr.status >= 300) {
+          done('sw.js did not load: HTTP ' + xhr.status); return;
+        }
+        var src = xhr.responseText;
+        try {
+          /* wrapped so its top-level `self` references are merely referenced,
+             never evaluated: parsing is the whole point */
+          new Function('self', src);
+        } catch (e) {
+          done('sw.js is not parseable: ' + (e && e.message ? e.message : e));
+          return;
+        }
+        if (!/var\s+VERSION\s*=/.test(src)) {
+          done('sw.js has no VERSION constant — nothing would ever cache-bust');
+          return;
+        }
+        if (src.indexOf('/server/') < 0) {
+          done('sw.js no longer excludes /server/ — the API must never be cached');
+          return;
+        }
+        done(null);
+      };
+      xhr.send(null);
+    });
+
+  checkAsync('M9-PWA', 'manifest.webmanifest parses and names the right shape',
+    function (done) {
+      if (!SERVED) { done(null); return; }
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', '../manifest.webmanifest', true);
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState !== 4) { return; }
+        if (xhr.status < 200 || xhr.status >= 300) {
+          done('manifest did not load: HTTP ' + xhr.status); return;
+        }
+        var m;
+        try { m = JSON.parse(xhr.responseText); }
+        catch (e) { done('manifest is not valid JSON: ' + e.message); return; }
+        if (m.lang !== 'la') { return done('lang must be "la", got ' + m.lang); }
+        if (!m.name || m.name.indexOf('MARIANE') !== 0) {
+          return done('name should start with MARIANE, got ' + m.name);
+        }
+        if (m.theme_color !== '#2b1c16' || m.background_color !== '#2b1c16') {
+          return done('colours drifted from --wall in styles.css: ' +
+                      m.theme_color + ' / ' + m.background_color);
+        }
+        if (m.start_url !== './' || m.scope !== './') {
+          return done('start_url/scope must stay relative so /imarianus/ works: ' +
+                      m.start_url + ' / ' + m.scope);
+        }
+        if (!m.icons || m.icons.length < 2) { return done('fewer than 2 icons'); }
+        var maskable = false, i;
+        for (i = 0; i < m.icons.length; i++) {
+          if (String(m.icons[i].purpose || '').indexOf('maskable') >= 0) { maskable = true; }
+        }
+        if (!maskable) { return done('no maskable icon — Android will letterbox it'); }
+        return done(null);
+      };
+      xhr.send(null);
+    });
+
+  checkAsync('M9-PWA', 'every icon the manifest promises actually exists',
+    function (done) {
+      if (!SERVED) { done(null); return; }
+      /* self-contained on purpose: it re-reads the manifest rather than
+         depending on the previous check having finished first */
+      var mx = new XMLHttpRequest();
+      mx.open('GET', '../manifest.webmanifest', true);
+      mx.onreadystatechange = function () {
+        if (mx.readyState !== 4) { return; }
+        var icons = null;
+        try { icons = JSON.parse(mx.responseText).icons; } catch (e) { icons = null; }
+        if (!icons || !icons.length) { done('no icon list in the manifest'); return; }
+        var left = icons.length, bad = [];
+        var i;
+        for (i = 0; i < icons.length; i++) {
+          (function (icon) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('HEAD', '../' + icon.src, true);
+            xhr.onreadystatechange = function () {
+              if (xhr.readyState !== 4) { return; }
+              if (xhr.status < 200 || xhr.status >= 300) {
+                bad.push(icon.src + ' → HTTP ' + xhr.status);
+              }
+              left--;
+              if (left === 0) { done(bad.length ? bad.join('; ') : null); }
+            };
+            xhr.send(null);
+          }(icons[i]));
+        }
+      };
+      mx.send(null);
+    });
+
+  check('M9-PWA', 'pwa.js keeps the worker scope inside the app root',
+    function () {
+      /* The bug this guards: registering "/sw.js" from a site served at
+         /imarianus/ registers a worker that controls nothing, and the app
+         looks installable while being useless offline. pwa.js derives the
+         root from document.baseURI; this asserts the derivation itself. */
+      function root(base) { return base.split('#')[0].split('?')[0].replace(/[^\/]*$/, ''); }
+      if (root('https://x.test/imarianus/') !== 'https://x.test/imarianus/') {
+        return 'a directory base URL must be left alone';
+      }
+      if (root('https://x.test/imarianus/index.html') !== 'https://x.test/imarianus/') {
+        return 'a file base URL must drop the file name';
+      }
+      if (root('https://x.test/imarianus/index.html?a=1#b') !== 'https://x.test/imarianus/') {
+        return 'query and hash must not become part of the scope';
+      }
+      return null;
+    });
+
   runEngineQueue();      /* start the serialized engine tests */
   runNetQueue();         /* start the serialized offline-queue tests */
   finish();

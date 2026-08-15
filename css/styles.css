@@ -1072,3 +1072,70 @@ h1, h2, h3 { font-family: var(--serif); }
   text-decoration: underline; cursor: pointer; font: inherit; padding: 0;
 }
 .ordo-actions { display: flex; justify-content: center; margin-top: 0.8rem; }
+
+/* ---------- M9: PWA install chip (js/pwa.js) ----------
+   A modest, dismissible offer that sits ABOVE the safe area at the bottom of
+   a phone and never covers the topbar or the answer buttons. It is a panel in
+   the same fresco language as the rest of the app: umber wall, ochre rule. */
+.pwa-chip {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%) translateY(140%);
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: calc(100% - 1.2rem);
+  max-width: 460px;
+  margin-bottom: calc(0.6rem + env(safe-area-inset-bottom, 0px));
+  padding: 0.55rem 0.7rem;
+  background: var(--wall-soft);
+  border: 1px solid rgba(224, 169, 62, 0.45);
+  border-radius: var(--radius);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45);
+  transition: transform 0.25s ease-out, opacity 0.25s ease-out;
+  opacity: 0;
+}
+.pwa-chip.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+.pwa-chip .pwa-fox { flex: 0 0 auto; line-height: 0; }
+.pwa-chip .pwa-fox svg { display: block; }
+
+.pwa-chip .pwa-text {
+  flex: 1 1 auto;
+  min-width: 0;                       /* let the sub-line ellipsize, not push */
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+.pwa-chip .pwa-text b {
+  font-family: var(--serif);
+  letter-spacing: 0.06em;
+  color: var(--ochre);
+  font-size: 0.95rem;
+}
+.pwa-chip .pwa-text small {
+  color: var(--cream-dim);
+  font-size: 0.78rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pwa-chip .pwa-yes { flex: 0 0 auto; margin: 0; }
+.pwa-chip .pwa-no {
+  flex: 0 0 auto;
+  background: none;
+  border: 0;
+  color: var(--cream-dim);
+  font-size: 1.3rem;
+  line-height: 1;
+  padding: 0.2rem 0.35rem;
+  cursor: pointer;
+}
+.pwa-chip .pwa-no:active { transform: scale(0.9); }
+
+@media (max-width: 360px) {
+  .pwa-chip .pwa-text small { display: none; }   /* title + buttons still fit */
+}
