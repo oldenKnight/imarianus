@@ -1401,3 +1401,371 @@ and one uncarded distractor replaced; the six that ship carry two ablātīvī
 absolūtī, two relatives (one of them a passive), a purpose clause and a temporal
 clause.**
 
+# LIBER VIII · SCŪTUM — `content/aeneis-al8.js` (S12)
+
+> **The kindest liber in the second half of the poem, and the one that is
+> secretly about this whole product:** a man is shown a place where nothing has
+> been built yet, and a picture of everything that will be built there, and he
+> does not understand any of it — and is glad.
+
+## a29 · Tiberis et Ēvander · fons Aen. 8,1–183
+
+**CARDS (4):** Tiberīnus · Ēvander · Pallās · auxilium.
+
+**THE WHITE SOW IS OMITTED, AND IT IS AN ART GAP, NOT A RATING ONE.**
+Aen. 8,43–48 and 8,81–85 turn on a white sow with thirty piglets lying under the
+oaks on the bank: the sign of the place, and the count of the years to Alba
+Longa. **THE LIBRARY HAS NO PIG.** js/actors-props.js `QUADS` holds canis,
+feles, leō, ursus, asinus, equus, bōs, cervus, hircus, haedus, camēlus, lepus,
+mūs, and scenes.js adds fox, crow, wolf, lamb — **there is no sūs, no porcus, no
+porca**, and nothing in the set can be recoloured into one, because a
+quadruped's shape is its table row and not its fill. So the a10 rule applies (*a
+picture the learner cannot see must not be asserted in a gloss*) and the omen is
+dropped from the TEXT as well as from the art, exactly as al6 dropped the
+Sibyl's leaves and a26 the bees on the laurel. **It is not glossed around, and
+the editorial voice is not spent on it** (see a30): an art gap is not something
+Vergil said that a child may not hear.
+
+**WHAT CARRIES THE SCENE INSTEAD is Vergil's own other sign**, given in the same
+speech and drawable: **TIBERĪNUS HIMSELF** (8,31–65), the river's own old man
+rising out of the water among the reeds, who tells Aenēās in so many words that
+this is the place and that Ēvander is upstream. He is carded, composed from
+Vergil's own description (8,33–34, *glaucō vēlābat amictū*) as a `patriarch`
+drained to river-blue standing IN the water with the `harundō` beside him — **no
+horns, no urn, because the library has neither and neither is asserted.**
+**FLAGGED FOR THE LINE-AUDIT:** if a `sūs` actor is ever drawn, the omen wants
+two pages in a29 between the dream and the sailing.
+
+**ĒVANDER WEARS NO CROWN, and that is a tile decision as much as a historical
+one.** a32's `triumphus` card is a crowned man in front of a crowd, and the
+ŌRDINĀ phase drops Ēvander and triumphus onto the same field at the same time;
+**two crowned men at 130 px is a sort the learner would lose on eyesight rather
+than on Latin.** Uncrowned, he is an old man beside a tent and nothing else in
+the liber looks like that — which is also exactly what Vergil says he is
+(*pauper… Ēvandrī*, 8,360).
+
+**TAUGHT:** auxilium (carded) · harundō · suprā (`↔ īnfrā`).
+**NŌMINA PROPRIA:** Tiberīnus (carded) · Ēvander (carded) · Pallās (carded) ·
+Arcadēs · Pallantēum.
+**RECYCLED:** Tiberis (a25) · somnium (a7) · Anchīsēs (a8) · hospes (a4) ·
+mēnsa (a25) · āra (a6) · rēmus (a18) · nympha · arx and collis (a3 context) ·
+equus (a19) · Turnus (a27) · epulae (a10 context).
+**CONTEXT:** signum bellī · cūrās volvit · haurit · plāna unda · mīrantur ·
+tendit · adhūc · comes.
+
+**OMITTED:** the nymphs' names (8,71–73, compressed to *nymphae flūminis*) · the
+Etruscan embassy and **the whole Mezentius back-story (8,478–519 — al7 refused
+Mezentius and this file keeps that refusal)** · Aenēās' arms-omen in the sky
+(8,520–540, no lightning prop).
+
+## a30 · Locus futūrae Rōmae · fons Aen. 8,184–369 (+ 8,347–348)
+
+**CARDS (4):** Herculēs · Capitōlium · dūmus · armentum.
+
+**CACUS IS TWO SENTENCES AND THE EDITORIAL VOICE CARRIES THE REST.**
+Aen. 8,184–279 is the one passage in this liber that DESIGN §8 forbids outright,
+and not marginally: Vergil hangs men's faces on the monster's door (8,196–197)
+and has Herculēs throttle him (8,260–261). Neither is paraphrasable at a B
+rating and neither may be hinted at. So the episode is told as **the altar's
+reason**, in two stylized sentences — a thief took the cattle, Herculēs took
+them back, and the place has kept his altar ever since — and the page after it
+uses **THE APPROVED EDITORIAL DEVICE**, in the form a15, a16 and al5
+established:
+
+> *Vergilius plūra dīcit; nōs autem hīc tacēmus.*
+
+**That is its ONE use in this liber.** It is not spent on the sow (an art gap)
+nor on the compressed shield catalogue (a length cut); it is spent where the
+charter allows it and nowhere else — on something the poem says that a child may
+not be shown. **Cacus is also never drawn:** there is no scene in this file with
+a monster in it, and the two sentences run over the cattle and the altar, which
+are what the story is actually about. **Omitted with him:** the whole fight
+(8,225–267), Pōtitiī and Pīnāriī and the hymn (8,268–305, names with nothing to
+picture), and the two citadels of Iānus and Saturn (8,355–358, compressed to one
+sentence about Saturn).
+
+**MISSING ART, and two of them changed the composition.**
+* **NO LION-SKIN, and the draft's first answer was wrong.** `pellis` (a19's
+  card) was tried beside Herculēs and renders as a **pale cream fleece** — it
+  reads as a sheep, and a gloss saying *pellem leōnis ferēbat* over that picture
+  is exactly the assertion the a10 rule forbids. **The skin is dropped from the
+  art AND from the gloss**, and Herculēs is identified the way the story
+  identifies him: the big man with the cattle. His club has no prop and is never
+  mentioned either.
+* **NO SNOW SWITCH ON `mountain`.** The actor paints its cap unconditionally
+  (js/actors-props.js draws both snow paths with no option to suppress them), so
+  **the Capitol is composed WITHOUT the actor** — `bgMountain` for the hills at
+  distance, `bush` × 3 and an `altar` in front. **A snow-capped Capitol would
+  have taught a lie no gloss could undo.** Aetna keeps the actor in a31, because
+  a snow-capped Aetna is simply correct.
+* `Capitōlium` (bushes + altar under distant hills) and `dūmus` (three bushes on
+  flat ground, no hills, no altar) share their greenery and are **never offered
+  together in one SONUS set.**
+
+**TAUGHT:** dūmus (carded) · horridus (`asper et incomptus, dūmīs plēnus; ↔
+cultus`) · fūr · armentum (carded) · agrestis.
+**NŌMINA PROPRIA:** Herculēs (carded) · Capitōlium (carded) · Saturnus ·
+Carmentālis · Forum · Tarpēia sēdēs.
+**RECYCLED:** bōs (a5's sacrifice) · lūcus (a26) · āra (a6) · lēx and aetās
+aurea · frūmentum (a25's `pānis`) · Ēvander (a29) · porta (a28's gates).
+**VERBA VERGILIĪ (8,347–348):** hinc · Tarpēiam sēdem · Capitōlia · dūcit ·
+aurea · nunc · ōlim · silvestribus · horrida · dūmīs.
+
+**THE INLINE QUOTATION, and the debt it pays.**
+
+```
+hinc ad Tarpēiam sēdem et Capitōlia dūcit,
+aurea nunc, ōlim silvestribus horrida dūmīs.        (inline, 8,347–348)
+```
+
+It is **the one place in the poem where Vergil steps out of his own story to
+stand beside the reader and compare two centuries**, and the prose page before
+it says so in Latin, because a child who is not told that *nunc* means VERGIL'S
+now and not Ēvander's will read the lines backwards: *Hīc autem Vergilius ipse
+loquitur, nōn Ēvander… Ille Capitōlium suum aureum vīderat; Ēvander sōlōs dūmōs
+mōnstrābat.*
+
+**IT ALSO PAYS A DEBT THE TRACK OWES ITSELF.** The head of aeneis-al6.js
+undertook, in writing, that `horridus` would be taught in al8 "in its harmless
+botanical sense (*silvestribus horrida dūmīs*, 8,348) — which is the honest
+place for it", after al6 refused to teach the adjective on *bella, horrida
+bella* (6,86). **This is that place**, and `dūmus` is carded so the adjective has
+a picture to sit on. **Both lines are quoted, not 348 alone:** 348 is an
+appositive with no noun of its own, and this track does not quote fragments that
+cannot be parsed (the a16 ruling, applied again in al7). `Tarpēia sēdēs` is
+glossed for what it is in Vergil's sentence and nothing else — *nōmen alterum
+eiusdem collis*.
+
+## a31 · Arma Volcānia · fons Aen. 8,370–453
+
+**CARDS (3):** Volcānus · fornāx · ferrum.
+
+**Three cards on purpose** (the a26 precedent). The happiest workshop in Latin
+literature, and the liber's one purely joyful capitulum: a mother asks, a god
+says yes, and a cave full of giants puts down what it was making and makes
+something better.
+
+**WHAT VERGIL'S CYCLŌPĒS WERE MAKING (8,426–432) is a thunderbolt, and the
+inventory is kept** — rain, cloud, fire, wind, sound — because it is a lovely
+thing to read and contains nothing frightening once the bolt is **put down
+unfinished**, which is exactly what happens in the poem. **The Cyclōpēs are a12's
+own, and the text says so:** *iīdem quōs ōlim in Siciliā vīdimus, sed hīc fabrī
+sunt, nōn pāstōrēs* — which turns the most frightening card of Liber III into a
+workman in one clause.
+
+**HOW THE GODS ARE DRAWN (charter).** **VOLCĀNUS HAS NO BIRD.** He is composed
+by what he stands at, the way al1 composes Neptūnus and al4 Mercurius: a
+short-tunicked man with grey hair beside a `fire`, and **the fire is the whole
+god.** VENUS keeps her `columba` (a3's bird, and a22's two doves), and is given
+neither wings nor radiance.
+
+**MISSING ART.** **No ANVIL, no HAMMER, no TONGS**, so `malleus` and `incūs` are
+**not taught** — the words would name things the picture does not contain. **No
+MENSA in the forge either:** the `mensa` actor paints its own dishes on its top,
+and a sword among the plates is a dinner, so the iron rests on a `truncus`.
+**NO FORGE INTERIOR:** the library's only inside is `bgInterior`, a room with a
+column and a window — the background al1 uses 18 times, al4 17 and al7 11 — and
+the officina under Aetna is that room. **Registered as this liber's one wrong
+light**, in the form al6 registered its daylit river crossing: the page before it
+shows the mountain the room is inside of, and no page asserts a cave the picture
+does not contain. `Volcānus` (man + small fire) and `fornāx` (big fire, no man)
+are **never offered together in one SONUS set.**
+
+**TAUGHT:** Volcānus (carded) · fornāx (carded) · ferrum (carded) · faber ·
+fulmen.
+**NŌMINA PROPRIA:** Volcānus · Aetna (a12, carded there) · Cyclōpēs (a12).
+**RECYCLED:** Venus and columba (a3) · Cyclōps and Aetna (a12) · ignis and
+ārdet (a7) · arma and scūtum (a4's proem gloss) · dōnum (a5) · lāna · opus ·
+labor · gaudium (a5's `laetus`).
+**CONTEXT:** ērubēscit · candet · stridet · follēs · orbēs · imperfectum.
+
+**OMITTED:** Venus' embrace of Volcānus (8,387–393, **DESIGN §8**), and the
+making of the shield's pictures, which is held back for a32 so that the two
+capitula do not tell one scene twice.
+
+## a32 · Scūtum Aenēae · fons Aen. 8,608–731 (+ 8,729–731)
+
+**CARDS (4):** scūtum *(the word is a4's proem gloss; the CARD is new, and it is
+needed as a catchable tile — the a25 `mēnsa` precedent)* · lupa · triumphus ·
+nepōs *(a24's card, re-carded here because the closing line needs it as a tile)*.
+
+**THE SHIELD IS THREE PICTURES AND THE TEXT SAYS SO.** 8,626–728 is a catalogue
+of eight centuries; a32 gives the three the commission names — **the she-wolf
+with the twins (8,630–634), the walls (8,652–653), the triumph (8,714–728)** —
+and admits the compression in Latin the way a28 does:
+
+> *Vergilius multa in scūtō vīdit; nōs tria tantum spectāmus.*
+
+**OMITTED FROM THE SHIELD, and registered:** the Sabine women (8,635–641, an
+abduction) · Mettus torn apart by chariots (8,642–645) · **Catilīna hanging in
+Tartarus and Catō giving laws to the good (8,666–670 — Tartarus was omitted
+whole in al6 and does not come back through a picture)** · **ACTIUM ENTIRE
+(8,671–713), and with it Cleopātra and the death Vergil gives her
+(8,709–713).** What survives of Actium is one clause on the triumph page —
+*post bellum longum et longē gestum* — which is true, names nobody, and shows
+nothing. **No GOOSE in the library**, so Mānlius and the geese on the Capitol
+(8,652–656) go with the walls panel's other detail; the panel keeps its walls,
+which the `cityWall` actor owns.
+
+**THE PAGE THAT PAYS a8 BACK.** `umerus` was glossed inside a8's `portat` — the
+page where a son carried his father out of a burning city on those same
+shoulders — and a32 brings the picture back with the `carry` pose under it:
+*Deinde scūtum umerō tollit — illō ipsō umerō quō patrem ex urbe ārdente
+portāverat.* The paraphrase page says the whole point of the liber in one
+sentence: ***iam nōn patrem portat, sed nepōtēs: hoc est pietās quae ante sē
+spectat.***
+
+**MISSING ART:** the arms Venus lays under the oak are named as **only what the
+`swordShield` actor draws** — a spear, a sword and a shield. A `galea` and a
+`lōrīca` would have been two words for two things not in the picture (the a10
+rule). `triumphus` (a crowned man with a crowd) and `nepōs` (an old man with a
+boy) are both people-in-a-row and are **never offered together in one SONUS
+set**.
+
+**TAUGHT:** lupa (carded) · triumphus (carded) · ignārus (`↔ gnārus`) ·
+attollit (`ad-tollit: sublevat et sūrsum fert`) · umerus (a8, re-glossed for the
+line) · clipeus (`scūtum clipeus quoque dīcitur` — **poetic diction, pre-taught
+by the charter's own device, so 731's `clipeum` is not met cold**).
+**NŌMINA PROPRIA:** Rōmulus and Remus (a24) · Volcānus (a31).
+**RECYCLED:** imāgō (a8) · fāma (a14) · fātum (a1) · nepōs (a24) · dōnum (a5) ·
+mīrātur (a5) · Venus and columba (a3) · quercus (a22) · pietās (a8) · mūrus and
+turris · Ēvander and dūmus and Capitōlium (a29–a30, in the walls panel: *hī mūrī
+illīus collis sunt quem Ēvander dūmīs horridum mōnstrāverat*).
+**VERBA VERGILIĪ (8,729–731):** tālia · clipeum · Volcānī · dōna parentis ·
+mīrātur · rērum ignārus · imāgine · gaudet · attollēns · umerō · fāmam · fāta ·
+nepōtum.
+
+**THE CLOSING QUOTATION.**
+
+```
+tālia per clipeum Volcānī, dōna parentis,
+mīrātur rērumque ignārus imāgine gaudet
+attollēns umerō fāmamque et fāta nepōtum.        (closing, 8,729–731)
+```
+
+**THE COMMISSION RECOMMENDED 8,731 ALONE**, and 731 is indeed the line — but it
+is a **bare participial phrase whose subject and main verb are both in 730**,
+and quoting it by itself would break the same a16 fragment rule that governs
+8,348 two capitula earlier and 7,808–811 one liber back. **So the sentence is
+quoted whole and 731 is what the `versūs memorābilēs` page carries away**, which
+is where a learner meets a line twice. Every content word is in hand at the
+point of quotation, and the last three close circles the track opened long ago:
+`fāma` is a14's card, `fātum` a1's first gloss, and `umerō` is a8's own picture.
+
+**PROBĀTIŌ b_al8 — Scūtum:** `ordina` (hp 6 / 45 s) + `sententia` (hp 5 / 55 s),
+the al2/al5/al7 shape. The trial asks the learner to do what Aenēās could not:
+tell what belongs to the city from what does not. **RŌMA** (lupa, triumphus,
+Capitōlium, nepōs — badged with the `wolf`, the city's own sign and a32's own
+card) against **NŌN RŌMA** (Ēvander, Pallās, Volcānus, fornāx — a Greek king,
+his son, a god and his fire: everything that helps Rome without being Rome,
+badged with the `tent` of Ēvander's poor town). `items` is deliberately absent,
+so js/probatio.js drops every word no category claims, leaving exactly those
+eight. **UNCLAIMED ON PURPOSE, and the reasons matter:** `Tiberīnus` is the river
+of both and belongs to neither; **`Herculēs` is a Greek who is honoured at Rome
+for ever, which is precisely the ambiguity the trial must not adjudicate**;
+`armentum`, `dūmus` and `ferrum` are things, not sides; and **`scūtum` is the
+FRAME of the sort, not an item in it** — the trial is named for it, and sorting
+the shield into one of its own piles would be a small logical joke at the
+learner's expense. The banner is `RŌMA AN NŌN` (11 characters), **inside al5's
+known-good 12 with a character to spare.** The sententia's six items carry two
+ablātīvī absolūtī, two relatives, an indirect question and a purpose clause.
+
+---
+
+## THE GAP-FORM RULE (Librī VI–VIII) — a structural finding, not a style note
+
+**Every sententia gap must be the vocabulary card's own CITATION FORM.** The gap
+is filled by CATCHING A CARD, and the card carries the entry's `la` string.
+`js/boss-phases.js` `fromAuthored()` matches `answer` against the region's
+vocabulary as a **literal string** (`lower(bare(la))`, macrons kept) and DROPS
+any item whose answer is not one; it also **skips any OPTION** that is not a
+carded, pictured word. An inflected gap is therefore a round that cannot be won,
+and an uncarded distractor is a tile that never appears.
+
+**Seven items across al6 and al7 broke this rule in the first drafts and were
+found only by running the REAL gate** (the drafts had been checked structurally
+and reported clean):
+
+| liber | item as drafted | why it failed | as it ships |
+|---|---|---|---|
+| al6 | *… volant **geminae** columbae, quās Venus mīsit* | `geminae` is not a card; `geminī` is | relative clause on `geminī` |
+| al6 | *Aenēās videt **umbrās** quiētās stāre* (acc. + inf.) | card is `umbra` | relative clause on `umbra` |
+| al6 | *Anchīsēs dīcit **Rōmam** … conditum īrī* | card is `Rōma` | future passive on `Rōma` |
+| al6 | ×2 offered `antrum` as a distractor | `antrum` is TAUGHT, never carded | `lacus` |
+| al7 | offered `porta` as a distractor | not a card in al7 | `lūcus` |
+| al7 | gap on **`furor`** | `furor` is taught as a word and **deliberately never drawn** (a27 ruling 2) | abl. abs. on `Alēctō` |
+| al7 | *nescit cervum **mānsuētum** esse* | card is `mānsuētus` | temporal clause on `pastor` |
+| al7 | gap on **`portae`** | the gates are the `cityWall`'s `open: true`, not a card | relative + passive on `exercitus` |
+
+**Nothing was lost from any LIBER.** The accūsātīvus cum īnfīnītīvō, `furor`, the
+gates of war and the twin doves are all taught in the story pages, where nothing
+has to be caught. **What the phase cannot carry is a construction that needs an
+oblique or plural gap** — a subject accusative under an acc. + inf., an
+attributive adjective agreeing with a plural — and all three file headers now
+say so where an author will read it.
+
+## Cross-liber recycling check, Librī VI–VIII
+
+| taught in | recycled in |
+|---|---|
+| a11 Sibylla (promised) | **a21 (carded)** · a22 · a23 |
+| a21 īnferī, lacus, dēscendit | a22 (lacus, in the ludus/aenigmata pool) · a23 (īnferī) |
+| a22 rāmus, quercus | **a23 (the bough is what gets them across)** · a24 |
+| a22 geminī | **al8/a32 (the twins on the shield)** |
+| a23 umbra, Charōn, Cerberus, āvertit | a24 (umbra, in Ēlysium) · al6 boss (all four) |
+| a24 nepōs, imperium, Rōma | **al8/a32 (nepōs re-carded for 8,731)** |
+| a6 hasta, a4 arma/scūtum (gloss) | **al8/a32 (scūtum re-carded)** |
+| a10 mēnsa | **a25 (re-carded for the probātiō)** · a26 · al7 boss |
+| a25 Tiberis, Latium, cōnsūmit | a26 · a27 · **al8/a29 (Tiberis → Tiberīnus)** |
+| a26 Latīnus, Lāvīnia, lūcus | a27 (Lāvīnia) · a28 (lūcus) · al7 boss |
+| a27 Alēctō, Turnus, pastor, mānsuētus | a28 (Turnus) · al7 boss (all four) |
+| a28 exercitus, Camilla, seges, aperit | al7 boss (all four) · **Camilla again in Liber XI** |
+| a29 Ēvander, Pallās, auxilium | a30 (Ēvander) · a31 (Ēvander, ludus) · **a32 (Ēvander in the walls panel)** · **Pallās again in Liber X** |
+| a30 Capitōlium, dūmus, armentum | a31 (dūmus, ludus) · **a32 (Capitōlium and dūmus, in the walls panel)** |
+| a31 Volcānus, fornāx, ferrum | **a32 (Volcānus is named in 8,729)** · al8 boss |
+| a8 umerus (context, in `portat`) | **a32, with the `carry` picture back under it** |
+
+## Open questions for the line-audit, Librī VI–VIII
+
+1. **The white sow.** Registered as an art gap and omitted whole (a29). If a
+   `sūs` actor is drawn, the omen wants two pages and the thirty-year count. The
+   question for the audit is whether omitting a *sign* is different in kind from
+   omitting a *detail* — this file says no, on the a10 rule, but it is the
+   largest single omission in Librī VI–VIII.
+2. **`Pallāsem`.** The accusative of `Pallās` is written `Pallāsem` in a29 (the
+   Greek-declension `Pallanta` and the genitive `Pallantis` both appear in
+   Vergil). `Pallantis` is used in the comple distractors. A reviewer may prefer
+   `Pallanta` throughout; the change is three tokens.
+3. **`clipeum` at 8,729.** Vergil's accusative of `clipeus` — kept exactly, and
+   glossed against the carded `scūtum`. Flagged because it looks like a neuter
+   nominative and is not (the same class of flag a3's `nāvīs` carries).
+4. **`ignārus` quantity.** Written with only the `ā` marked, following the
+   file-wide practice of marking nature and not position (`magnus`, not
+   `māgnus`). A reviewer who marks the first syllable long will want `īgnārus`
+   in two glosses and one line.
+5. **`PĀX AN BELLUM` is 13 characters** (al7) against al5's known-good 12. The
+   revert is `PĀX ET ARMA`. `RŌMA AN NŌN` (al8) is 11 and safe.
+6. **The forge on `bgInterior`.** The room has a window with a sunny landscape
+   in it, and the officina is supposed to be under Aetna. Registered as al8's
+   one wrong light, on the al6 river-crossing precedent, but a reviewer may
+   prefer the `mountain` + `umbra` cave-mouth device a21 uses — the change is
+   three scenes and one comment.
+7. **Ēvander uncrowned.** Taken for tile-legibility against a32's `triumphus`
+   (both would otherwise be crowned men on the same ŌRDINĀ field). Historically
+   defensible on 8,360, but it is a `king` role drawn without the crown its
+   preset gives it, which is a first for the track.
+8. **The editorial voice, fourth use.** *Vergilius plūra dīcit; nōs autem hīc
+   tacēmus* (a30, Cacus) is the device's fourth appearance in the track after
+   a12, a15 and a16. It is still only ever used where DESIGN §8 forbids showing,
+   but four is the number at which a reviewer should decide whether the device
+   is a voice or a habit.
+9. **Herculēs without his skin or his club.** He is identified by his cattle
+   alone. Every other named figure in the track carries at least one attribute;
+   he carries none, and a reader who does not already know him meets a large
+   man. Flagged as the weakest identification in Librī VI–VIII.
+10. **`Prope viam stat umbra quiēta`** (al6 boss, phase 2 item 1) offers
+    `Sibylla` as a distractor. The Sibyl does stand beside the road in this
+    liber; what makes her wrong is the relative clause *quae nihil dīcit*, which
+    requires reading to the end of the sentence. That is the intended difficulty,
+    but it is the one item in the three librī whose distractor is ruled out by
+    the LAST three words rather than by the picture.

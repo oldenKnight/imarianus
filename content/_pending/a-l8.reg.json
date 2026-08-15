@@ -1,0 +1,82 @@
+{
+  "_note": [
+    "Registration snippet — AUTHORING-BRIEF 'Registration protocol'. Content",
+    "agents do not touch content/manifest.js, content/manifest.json or",
+    "server/lib/rules.php; the integrator applies this and deletes the file.",
+    "",
+    "APPLY AFTER al7: al8 is the EIGHTH region of the aeneis track and must",
+    "follow al1..al7 in the manifest's regions array — js/app.js regionIndex()",
+    "reads that order and feeds it to the phase engine as the ONE difficulty",
+    "input (DESIGN §6). al9's own snippet (a-l9.reg.json, parallel agent) says",
+    "to HOLD al9 until al6, al7 and al8 are in; with this file applied, that",
+    "hold is released.",
+    "",
+    "al8 is a PROBĀTIŌ liber (kind: 'probatio', boss id b_al8) with TWO phases:",
+    "ordina (hp 6 / 45 s) + sententia (hp 5 / 55 s) — the al2/al5/al7 shape,",
+    "because this is an ōrdina liber like those three and the four should tune",
+    "alike. Legacy single-phase tuning in the content file is hp 11 / 100 s.",
+    "bossMinMs 15000 matches l2/l3/al1..al7.",
+    "",
+    "The ordina phase declares its categories in the content file and does NOT",
+    "declare `items`: js/probatio.js then draws from the liber's whole",
+    "vocabulary and drops every word no category claims (zoneOf), so exactly",
+    "eight words can fall (lupa, triumphus, Capitōlium, nepōs / Ēvander,",
+    "Pallās, Volcānus, fornāx). Tiberīnus, auxilium, Herculēs, dūmus, armentum,",
+    "ferrum and scūtum are unclaimed ON PURPOSE — the river belongs to both",
+    "sides, Herculēs is a Greek honoured at Rome for ever, three of them are",
+    "things rather than sides, and the shield is the FRAME of the sort rather",
+    "than an item in it. Nothing for rules.php to know; recorded so the",
+    "integrator does not go looking for an item list.",
+    "",
+    "The sententia phase declares its own `items` (6, hand-authored). All 6",
+    "survive js/boss-phases.js fromAuthored() with zero warnings — verified",
+    "against the real gate, not a stub.",
+    "",
+    "The ordina banner is 'RŌMA AN NŌN', 11 characters — inside al5's",
+    "known-good 12 (promptBanner is 260 px at bold 24 px) and shorter than",
+    "al7's flagged 13.",
+    "",
+    "quizKey carries the same three keys per row as al1-al7: rules.php stores",
+    "{q, a}, and `correct` is always 0 against the boss.quiz order in",
+    "content/aeneis-al8.js. Region id 'al8', not 'l8' — rules.php keys regions",
+    "in one flat namespace and 'l8' is Historia's Rēgēs (see a-l1.reg.json).",
+    "",
+    "al8 is a NEW region: its content id IS its progressId, so it needs no",
+    "entry in rule_region_aliases().",
+    "",
+    "XP mirrors al1-al7 exactly."
+  ],
+
+  "track": "aeneis",
+  "region": "al8",
+  "titulus": "Scūtum",
+  "ladder": "S12",
+  "progressId": "al8",
+  "capitula": ["a29", "a30", "a31", "a32"],
+  "boss": "b_al8",
+
+  "quizKey": [
+    { "q": "Ēvander",    "a": "Ēvander",    "correct": 0, "from": "a29" },
+    { "q": "Capitōlium", "a": "Capitōlium", "correct": 0, "from": "a30" },
+    { "q": "Volcānus",   "a": "Volcānus",   "correct": 0, "from": "a31" },
+    { "q": "scūtum",     "a": "scūtum",     "correct": 0, "from": "a32" },
+    { "q": "lupa",       "a": "lupa",       "correct": 0, "from": "a32" }
+  ],
+
+  "xp": {
+    "step": 25,
+    "boss": 40,
+    "quizEach": 10,
+    "quizPassMaxWrong": 1
+  },
+
+  "antiCheat": {
+    "bossMinMs": 15000
+  },
+
+  "manifestEntry": {
+    "id": "al8",
+    "capitula": ["a29", "a30", "a31", "a32"],
+    "boss": "b_al8"
+  }
+}
