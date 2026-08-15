@@ -785,6 +785,166 @@ NOMINATIVE**, which is the form the caught card carries.
 
 ---
 
+# LIBER V · LŪDĪ — `content/aeneis-al5.js` (S12)
+
+> **This is the liber that breathes out.** After the fire of Trōia, the
+> wandering of III and the grief of IV, Vergil gives his reader a week of games
+> on a beach, and this track takes him at his word: Liber V is the happy liber
+> and it is allowed to be funny. Its trial is a sorting game, its moral is
+> *amīcitia maior est quam victōria*, and its closing quotation is the one line
+> in the Aenēid that is about the reader of a learning app.
+
+## a17 · Lūdī Siciliēnsēs · fons Aen. 5,1–113
+
+**CARDS (5):** certāmen · praemium · Acestēs · vincit · honōrat.
+
+The liber's whole vocabulary of contest is laid down here so that a18, a19 and
+the probātiō can spend it. `praemium` is the loaded table (mēnsa + corōna + urna
++ pellis), which makes it the one unmistakable card of the capitulum and the
+carrier of every SONUS set.
+
+**TAUGHT:** lūdī (`certāmina et spectācula quae hominēs deīs aut mortuīs dant`)
+· lēnis (`↔ ferōx`).
+**NŌMEN PROPRIUM:** Acestēs (carded) · Sicilia.
+**RECYCLED:** sepulcrum (a11), serpēns (a6), accipit and hospes and vīnum (a4),
+cibus (a2), fessus (a2), periit (a16), pietās (a8).
+**CONTEXT:** annō superiōre · fundit · dapēs gustat · sine damnō · indīcit ·
+lēx · victōria.
+
+**B RATING.** Anchīsēs' serpent (5,84–93) is kept **exactly as Vergil has it**,
+because it is the gentlest omen in the poem: *dapēs gustat et sine damnō abit.*
+**OMITTED — THE BOXING MATCH, ENTIRELY (5,362–484):** Darēs and Entellus is the
+one genuinely violent episode in the book (a man beaten until his friends carry
+him off; a bull felled with a fist), and no part of the liber's arc needs it.
+The archery (5,485–544) and the lūsus Trōiae (5,545–603) go with it for the
+lexeme cap. **Also omitted:** 5,8–34 (the crossing, already told at the end of
+a12) · 5,64–71 (Beroē and the ninth day).
+
+## a18 · Certāmen nāvium · fons Aen. 5,114–285
+
+**CARDS (4):** rēmus · saxum · gubernātor · celer.
+
+**MISSING ART, reported not substituted:**
+* **No OAR prop** — but the `ship` actor takes `oars: true` (five oars a side),
+  so `rēmus` is carded as a ship with its oars out and the word is honestly
+  pictured rather than approximated.
+* **No TURNING-POST and no ROCK prop** — the rock in the sea is the `mountain`
+  actor at 0.55–0.62 standing in water, which is what a rock in the sea looks
+  like. `mēta` stays a glossed context word.
+
+**TAUGHT:** mēta · puppis (`apud poētās puppis = nāvis tōta` — **poetic diction,
+pre-taught by the charter's own device**) · frangit.
+**NŌMINA PROPRIA:** Gyās · Cloanthus · Mnēstheus · Sergestus.
+**RECYCLED:** hortātur (a2), ōrat (a10), servat (a2), praemium and vincit and
+certāmen (a17), corōna (a19, in ludus/aenigmata only).
+**CONTEXT:** ēliguntur · prōsiliunt · haeret · solvunt · incumbite · prūdēns.
+
+**B RATING.** Sergestus' ship strikes the rock and **breaks its oars** — and the
+next sentence is *nēmō tamen laeditur*, with the crew working the ship free by
+hand and rowing home slowly. **Menoetēs, thrown overboard by Gyās and swimming
+ashore (5,172–182), IS OMITTED:** this track has never put a man in the water
+(al1's charter) and does not start for a joke. **Also omitted for the cap:** the
+crew catalogue (5,116–123) · Cloanthus' vow in full (5,235–238) · the prize list
+in full (5,244–267).
+
+## a19 · Certāmen cursūs · fons Aen. 5,286–361
+
+**CARDS (7):** cursus · amīcus · iuvenis · corōna · pellis · equus *(the word is
+a5's and a14's; the CARD is new, and it is needed as a sortable prize in the
+probātiō)* · cadit.
+
+**NĪSUS AND EURYALUS ARE INTRODUCED IN FRIENDSHIP AND IN NOTHING ELSE.** Vergil's
+own words are the ones kept: *Euryalus fōrmā īnsignis vīridīque iuventā, / Nīsus
+amōre piō puerī* (5,295–296) → *Euryalus fōrmā īnsignis est et flōre iuventae;
+Nīsus eum amōre piō amat* — **the same `pius` the whole track is built on**, and
+the same word a8 carded as `pietās`. The capitulum also plants Liber IX in one
+clause: *ūnā in lūdīs, ūnā posteā in bellō.*
+
+**THE SLIP, and what is dropped with it.** Vergil has Nīsus go down in the blood
+and offal of the sacrifice (5,328–333). This file has ***in locō lūbricō lābitur
+et cadit***. Registered as an adaptation: the slip is Vergil's, the ground is
+not. What is NOT dropped is what he does next — *Salium impedit* — and the liber
+neither hides it nor moralises about it: Aenēās does what Vergil has him do,
+gives everybody a prize, laughs, and the quarrel ends (*īra nūlla manet*).
+
+**MISSING ART:** no helmet and no quiver props, so the third prize becomes an
+`urna` (which a17's `praemium` card already shows); and no shield-prop that
+reads as a gift, so Nīsus' consolation prize — Didymaon's shield, 5,359–361 —
+becomes a `corōna`. Both registered.
+**TAUGHT:** lūbricus.
+**NŌMINA PROPRIA:** Nīsus · Euryalus · Salius.
+**RECYCLED:** certāmen and praemium and vincit (a17), pietās/pius (a8), rīdet,
+lūdī.
+**OMITTED:** the runner catalogue beyond the three who matter (5,294–302) ·
+Diōrēs' claim (5,345–347).
+
+## a20 · Nāvēs ārdentēs · fons Aen. 5,604–778 (+ 5,709 · 5,231)
+
+**CARDS (4):** Iuppiter · imber · condit · remanet.
+
+**IUPPITER IS THE FIRST GOD IN THE TRACK TO GET HIS ATTRIBUTE BIRD OUTRIGHT.**
+The library owns `aquila`, so he is a `king` in cloud-white and gold with the
+eagle beside him — exactly as Iūnō has her `pāvō` in a1 and Venus her `columba`
+in a3 — and the gloss names the device: *avis eius aquila est, ut pāvō Iūnōnis.*
+**No radiance of any kind**: `star` is Historia Sacra's sign for the God who has
+no body, and the two tracks must not teach one picture with two meanings.
+
+**TAUGHT:** taedet (`cum quis rem diū tolerātam ferre iam nōn vult`).
+**NŌMEN PROPRIUM:** Nautēs · Acesta.
+**VERBA VERGILIĪ (5,709):** nāte deā · quō · trahunt · retrahunt · sequāmur.
+**VERBA VERGILIĪ (5,231):** hōs · successus · alit · possunt · videntur.
+**RECYCLED:** Iūnō and pāvō (a1), Ascanius (a8), cēlat (a3), cessat (a13),
+ōrat (a10), somnium (a7), Sibylla (a11 — the hand-off to Liber VI), respicit
+(a16), Acestēs (a17), rēmus (a18), iuvenis (a19), pietās (a8), fātum (a1).
+
+**THE TWO QUOTATIONS.**
+
+```
+nāte deā, quō fāta trahunt retrahuntque sequāmur;        (inline, 5,709)
+hōs successus alit: possunt, quia posse videntur.        (closing, 5,231)
+```
+
+5,709 is **inline**, at the moment old Nautēs says it — the treatment Liber I
+gives 1,203, II gives 2,49 and III gives 3,395. The line IS the scene: the ships
+have burned, the leader does not know whether to stay or sail, and a wise old
+man answers him in one hexameter. The prose of the page before pre-teaches all
+of it (*fāta nōs dūcunt; nōn omnia contrā fāta possumus. Fāta sequāmur!*).
+
+5,231 is the **closing** quotation, brought back from a18's boat race **with
+a18's own scene under it**, and the frame page says why in Latin: *ūnum tamen
+versum huius librī omnēs discipulī meminērunt.* It is quoted last because it is
+the one line in the Aenēid that is about the reader of a learning app, and the
+paraphrase says it twice: *possunt, quia sē posse crēdunt.* That is the whole
+product's thesis in five words of Vergil. (Structurally it is the same move a4
+makes with the proem and a12 with 3,71–72: the closing lines must land on the
+LIBER's picture, not on the last page's plot.)
+
+**B RATING.** **Nobody is hurt, and the text says so out loud twice** — *nēmō
+tamen laeditur* (a18) and *nēmō laesus est: nūlla māter, nūllus puer, nūllus
+nauta* (a20). The women who fire the ships are **not villains and are not
+punished**: they are `fessae maris`, a boy shouting stops them, they hide in the
+woods (*nēminem laedunt, ā nēmine laeduntur*), and the liber ends by GIVING THEM
+A CITY (Acesta) and calling them `laetae`.
+**OMITTED:** Iris in Beroē's shape (5,606–640 — Iūnō's will is enough for the
+arc) · **5,691–693, the thunderbolt half of Aenēās' prayer (*sī mereor, dēmitte
+mortī* is a man asking to be killed, and this file does not put that sentence in
+a child's mouth)** · Palinūrus (5,779–871 — a death at sea that belongs with
+Liber VI's opening and that this liber does not need).
+
+**PROBĀTIŌ b_al5 — Lūdī:** `ordina` (hp 6 / 45 s) + `sententia` (hp 5 / 55 s).
+The ōrdina zones are the liber's own two halves — **CERTĀMEN** (rēmus, saxum,
+cursus, gubernātor: the things of the contest, badged with the `ship` they race)
+against **PRAEMIUM** (praemium, pellis, corōna, equus: the things the contest
+gives away, badged with the `crown` they win) — and `items` is deliberately
+absent so that js/probatio.js draws from the whole liber's vocabulary and drops
+every word no category claims (`zoneOf`), leaving exactly those eight. The
+banner is `LŪDĪ ET DŌNA`, short on purpose (promptBanner is 260 px at bold
+24 px; al2's report records what a long one looks like clipped). The sententia's
+six items carry three ablātīvī absolūtī, a relative clause, a passive and a
+comparative, and every gap is a NOMINATIVE — the form the caught card carries.
+
+---
+
 ## Cross-liber recycling check (LATIN-STYLE §2: "again within the next two capitula")
 
 | taught in | recycled in |
@@ -804,7 +964,24 @@ NOMINATIVE**, which is the form the caught card carries.
 | a5 latet, relinquit, trahit | a6 (`relīquērunt`, `trahitur`), a7 |
 | a6 timet, monet | a7 (`monet`, `timet`), a8 |
 | a7 ignis, ārdet | a8 (`per ignēs`, `urbem ārdentem`, `aurum ārdēre potest`) |
-| a8 pietās | Liber III onward — the track's spine |
+| a8 pietās | **a12** (the Greek suppliant taken aboard) · **a15** (*pietās et amor inter sē pugnant*) · **a16** (*pietās eum vīcit*) · **a19–a20** (*amōre piō*, *pietās mea*) — the track's spine |
+| a8 penātēs, portat, tenet | a9 (the penātēs speak in the dream) · a12 (*per tot maria umerīs portāverat*) |
+| a9 portus | a11 (`ā portū`) · **a12 (`portū`, in Vergil's own line)** · a16 (`ex portū`) |
+| a9 dēdūcit, recēdit | a11 (`nāvēs recēdentēs`) · **a12 (both, in Vergil's own lines)** · a16 (`flamma recēdit`) |
+| a10 mēnsa, praedīcit | a11 (Helenus answers the tables prophecy) · a11 (`praedīcit`) |
+| a11 sepulcrum | **a17** (Anchīsēs' grave, the whole reason Liber V exists) |
+| a11 inānis | a15 (`lacrimae … inānēs`, in Vergil's own line) |
+| a12 procul, moritur | a16 (`procul rogum ārdentem`) · a17 (`ex quō pater periit`) |
+| a13 cessat, turris | a15 (`nēmō cessat`, `turrēs novās aedificat`) · a16 (`ē turre altā`) |
+| a13 amor | a15 (`illa amōrem, ille officium`) · a16 (`amor eum nōn relīquit`) |
+| a14 fāma | a15/a16 (the rumour is why Iuppiter acts) |
+| a15 dolor, classis, properat | a16 (all three, on the departure pages) |
+| a15 immōtus | **a15 itself, in Vergil's own line (4,449)** |
+| a16 respicit | a20 (`quī nāvigant respiciunt`) |
+| a17 certāmen, praemium, vincit | a18, a19 (the two contests spend a17's whole budget) |
+| a18 rēmus | **a20 (`rēmīs contendēbant`, the frame of Vergil's own line)** |
+| a19 amīcus (Nīsus, Euryalus) | **Liber IX** — planted here in one clause: *ūnā in lūdīs, ūnā posteā in bellō* |
+| a11 Sibylla | **Liber VI** — planted in a11 and repeated in a20's dream |
 
 ## Open questions for the line-audit
 
@@ -818,3 +995,31 @@ NOMINATIVE**, which is the form the caught card carries.
 4. **`cibus` and `convīvium` share the 🥚 hint** (a2/a4, inherited from the
    draft). Different capitula, different cards, but a reviewer may want one of
    them changed.
+5. **Aen. 3,71 punctuation.** The draft prints `… lītora complent;` — Mynors
+   prints a full stop in some impressions and a semicolon in others. The words
+   are identical in every edition; only the editorial stop differs. Same class
+   of question as (1) above, and left as the draft has it.
+6. **`nāvīs` (3,71).** Vergil's accusative plural in -īs, kept exactly, with the
+   gloss `nāvīs = nāvēs` so the learner is not left guessing — the same
+   treatment `ferentīs` gets in a6. Flagged because it looks like a nominative
+   singular and is not.
+7. **The al3 transitus wall actor is `mountain`** and has never been tiled by
+   js/probatio.js before (it rasterises the actor into a 130×130 tile). This is
+   the one thing in Librī III–V that could not be verified headlessly; the
+   revert is one word (`wall: 'murusAquae'`).
+8. **MERCURIUS HAS NO WINGS** (a15). The library's only winged role is `angel`,
+   which is Historia Sacra's picture, so the god is composed by what he stands
+   on — a cloud — as al1 composes Neptūnus by the water he stands between. If
+   the audit prefers wings-without-halo, the change is two words in
+   `mercurius()`; the ruling above says why it was not taken.
+9. **The Harpyiae and Fāma share one composition device** (`aquila` in livid
+   grey) across two librī. That is deliberate — both are "the foul bird the
+   poet compares her to" — but a reviewer may want Fāma tinted differently so
+   that a learner who meets both does not read them as the same creature.
+10. **The editorial voice in Latin.** Three pages in Librī III–V speak as the
+    BOOK rather than as the narrator, to mark something deliberately left out:
+    *Plūra Achaemenidēs nōn dīcit* (a12), *quō modō perierit, hīc nōn nārrātur:
+    … nōs autem hīc tacēmus* (a16), and *nōs quoque nōn dīcimus* in a15's gloss
+    on whose tears they are. It is a new device for this product. It is used
+    three times on purpose and never for convenience — each time, what is left
+    out is something DESIGN §8 forbids showing.

@@ -825,7 +825,7 @@
           nova: [{ w: 'cessat', e: '✋', g: 'facere dēsinit; opus quod cessat nōn perficitur; ↔ properat' }] },
 
         /* Aen. 4,86–89 — the liber's true picture of love */
-        { la: 'Turrēs nōn crēscunt; mūrī inceptī manent; hominēs in mediō opere sedent et mōnstrāre alius aliī cessant.',
+        { la: 'Turrēs nōn crēscunt; mūrī inceptī manent; hominēs in mediō opere sedent, neque quisquam alterī opus suum mōnstrat.',
           scene: SC.a13_opera },
 
         { la: 'Nēmō iam aedificat. Ubi rēgīna vigilat et cūrat, ibi tōta urbs cessat.',
@@ -1170,7 +1170,7 @@
           scene: SC.a15_volat },
 
         /* Aen. 4,259–264 */
-        { la: 'Aenēān invenit: turrēs novās aedificat, ēnsem gemmātum gerit, aliēnae urbis opera cūrat.',
+        { la: 'Aenēān invenit: turrēs novās aedificat, ēnsem pulchrum gerit, aliēnae urbis opera cūrat.',
           scene: SC.a15_invenit },
 
         /* Aen. 4,265–276 */
