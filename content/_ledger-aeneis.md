@@ -1023,3 +1023,186 @@ comparative, and every gap is a NOMINATIVE — the form the caught card carries.
     on whose tears they are. It is a new device for this product. It is used
     three times on purpose and never for convenience — each time, what is left
     out is something DESIGN §8 forbids showing.
+
+---
+
+# LIBER VI · ĪNFERĪ — `content/aeneis-al6.js` (S12)
+
+> **The liber the whole poem turns on, and the one this product had to be most
+> careful with.** CURRICULUM §3 names it in four words — *"Apud īnferōs (umbrae,
+> nōn horrōrēs)"* — and that parenthesis is the whole design brief. The shades
+> are quiet grey-robed people who stand and say nothing; the dog is asleep; the
+> queen turns away and is not followed; Tartarus is not visited. Nothing is
+> drawn in this liber that a child would not want to look at twice.
+
+## a21 · Sibylla Cūmāna · fons Aen. 6,1–155
+
+**CARDS (4):** Sibylla · īnferī · lacus · dēscendit.
+
+`īnferī` is **the place with nobody in it** (the a9 `patria` rule): a rock at
+night with a dark hole in its foot. `umbra` (a23) is the card that has people in
+it, and the two are never confused because one of them is empty.
+
+**TAUGHT:** antrum (`spēlunca antrum quoque dīcitur` — **poetic diction,
+pre-taught by the charter's own device off a14's free `spēlunca`, because the
+library has NO CAVE PROP**).
+**NŌMINA PROPRIA:** Cūmae · Apollō · Avernus.
+**RECYCLED:** Sibylla (a11, promised there and paid here) · somnium (a7) ·
+Anchīsēs and pietās (a8) · fātum (a1) · ōrat (a10) · templum (a4) · vātēs (a11).
+**CONTEXT:** sacerdōs · longaeva · praedīcit · tacent · facilis dēscēnsus ·
+labor · revocāre gradum.
+
+**MISSING ART, reported not substituted.** **No CAVE PROP.** The cave mouth is
+composed from two actors the library owns: the `mountain` at 0.92–1.05 with the
+`umbra` prop (a dark ellipse, 22 × 26 at scale) set into its foot. It reads as a
+hole in a rock, which is what it is, and `antrum` is TAUGHT rather than carded
+so that nothing is asserted which is not drawn. **No LEAF/FOLIUM prop**, so the
+Sibyl's leaves (6,74–76) are omitted entirely.
+
+**AEN. 6,86 *bella, horrida bella* IS DELIBERATELY NOT QUOTED.** It is the one
+line of the prophecy everyone remembers, and it is exactly the register this
+liber was commissioned to avoid: a liber that spends four capitula teaching that
+the dead are quiet must not open by teaching the adjective `horridus` on a war.
+The prophecy is kept (*bella vidēbis*), and the Sibyl's real advice, 6,95, is
+given in graded prose — *nōlī malīs cēdere; contrā ī audentius* — because its
+comparative `audentior` has no `quam` until 96 and this track does not quote
+fragments that cannot be parsed (**the a16 ruling**). `horridus` is paid back in
+**al8/a30**, in its harmless botanical sense (*silvestribus horrida dūmīs*,
+8,348), which is the honest place for it. **That debt is now discharged.**
+
+## a22 · Rāmus aureus · fons Aen. 6,156–263
+
+**CARDS (4):** rāmus · geminī · quercus · carpit.
+
+`geminī` is Venus' two doves — **the same pair that will be Rōmulus and Remus on
+al8's shield**, which is why the word is carded here in a liber that has no
+twins in it.
+
+**TAUGHT:** lūcet · obscūrus.
+**NŌMINA PROPRIA:** Mīsēnus (funeral compressed to two sentences) · Prōserpina.
+**RECYCLED:** columba and Venus (a3) · Sibylla and īnferī and lacus (a21) ·
+socius (a2) · ōrat (a10) · aureus (a5's `praemium` gold).
+**CONTEXT:** trīstis · latet · dūcunt · cōnsēdērunt · frōns · alter.
+
+**OMITTED:** Palinūrus at the gate (6,337–383 — a death at sea, already declined
+at the end of al5) · the full rites for Mīsēnus (6,212–235) · Deiphobus
+(6,494–547, a mutilated man: **DESIGN §8, omitted entire and never alluded to**).
+
+## a23 · Apud īnferōs · fons Aen. 6,264–476 (+ 6,471)
+
+**CARDS (4):** umbra · Charōn · Cerberus · āvertit.
+
+**THE FIVE RULINGS OF THIS CAPITULUM, in the order they land.**
+
+1. **UMBRAE, NŌN HORRŌRĒS — and the text says so out loud.** The shades are
+   quiet grey-robed people (`person` in the ash colour `CINIS`, mantle off,
+   standing still), never skeletal, never faceless, never in motion. The page
+   that introduces them says it in Latin so no child has to guess: *umbrae autem
+   nōn horrendae sunt: quiētae stant, tacent, spectant. Nēminem laedunt.*
+2. **THE UNDERWORLD IS A NIGHT, WHICH IS VERGIL'S OWN PICTURE.** Every page
+   below ground is `bgNightSky`, whose moon is not decoration: 6,270–272 compares
+   the walk to a path through woods *sub incertam lūnam*, and the page says that
+   in Latin over a scene with that moon in it.
+3. **CERBERUS HAS NO HEADS ANYWHERE.** Vergil's three throats are OMITTED from
+   the text as well as from the art (the a10 rule: a picture the learner cannot
+   see must not be asserted in a gloss). He is `canis` at 1.9 in the `sleep`
+   pose — a very large dog with its eye shut — he is given a sweet cake
+   (6,420), he eats it, he lies down, and the liber makes a small joke of it:
+   *etiam custōs īnferōrum somnō vincitur.*
+4. **THE MOURNING FIELDS ARE AT DISTANCE, and are one sentence:** *silva magna
+   eās cēlat; procul stant et lacrimant. Aenēās propius nōn accēdit.* The
+   catalogue of the unhappy (6,426–449 — the infants, the falsely condemned, the
+   suicides) is OMITTED ENTIRELY.
+5. **TARTARUS IS OMITTED ENTIRELY (6,548–627).** It is the one passage in the
+   poem that is pure punishment imagery — the wheel, the stone, the vulture, the
+   fifty-fold gate — and DESIGN §8 forbids every line of it. The liber walks
+   from the river to the bright fields and never turns left. Registered, not
+   smuggled: the text does not go there and does not mention it.
+
+**THE DĪDŌ SHADE — the liber's emotional summit, and how it is played.**
+She is a4's crowned queen **drained to the shades' own ash grey** — the same
+figure, colour for colour, with the colour taken out — and she is drawn ONCE,
+TURNED AWAY (`flip`), while Aenēās speaks into a silence. Nothing of Liber IV is
+re-opened: **no sword, no pyre, no mechanism, no reproach.** The sequence is six
+pages and does exactly six things: he barely recognises her (*vix eam agnōscit,
+ut quī lūnam novam per nūbēs videt*, Vergil's own simile, 6,450–455); he weeps
+and says the only thing this product lets him say (*invītus ex terrā tuā
+discessī*, 6,460); he asks her to stop (*siste gradum*, 6,465); **she does not
+answer**; Vergil's line carries the moment; and then she goes back into the wood
+to Sychaeus, *quī eam amat et dolōrī eius respondet* (6,472–474). **The liber's
+last word on her is that somebody was waiting.** There is no scene anywhere in
+this file of Aenēās touching her, following her, or being answered, and the page
+after the quotation says in plain Latin why he says nothing more: *nihil dīcit,
+quia nihil dīcere potest.*
+
+**MISSING ART, reported not substituted.** **No DARK RIVER BACKGROUND.** The
+library's only water-with-a-bank is `bgRiver`, a bright green daylight scene,
+and the crossing needs a boat on water more than it needs the dark. So a23's
+three crossing pages use `bgRiver` with **every figure in ash grey** and the
+boat in `NOX` near-black, and the pages either side of them are `bgNightSky`.
+**Registered as the one place in the liber where the light is wrong.**
+**No SMALL BOAT:** Charōn's skiff is the `ship` at 0.55 with its sail furled and
+its hull recoloured; the word used is a1's own `nāvis`, and the liber never
+names a kind of boat it cannot draw. **No POLE, and none needed:** Charōn is a
+`patriarch`, whose preset `staff` is a long rod in his hand — which is exactly
+what a ferryman on a river holds.
+
+**TAUGHT:** solum (`= terra sub pedibus`) · fīxus · sevērus · dulcis.
+**NŌMINA PROPRIA:** Charōn (carded) · Cerberus (carded) · Sychaeus · Stygius.
+**RECYCLED:** Dīdō and rēgīna (a4) · nāvis (a1) · lūna (a7) · silva (a3) ·
+lacrimat (a16) · agnōscit (a3) · rāmus and Sibylla (a21–a22) · custōs.
+**VERBA VERGILIĪ (6,471):** illa · solō · fīxōs · āversa · tenēbat.
+
+## a24 · Ēlysium et fūtūra Rōma · fons Aen. 6,637–892 (+ 6,851–853)
+
+**CARDS (4):** Ēlysium · Rōma · nepōs · imperium.
+
+**ĒLYSIUM IS COMPOSED, NOT BORROWED:** `bgPlain` with the `sol` actor high in
+it — Vergil's own reason (6,641 *sōlemque suum, sua sīdera nōrunt*) — and
+deliberately **NOT** `bgParadise`, which is Historia Sacra's Eden. The two
+tracks must not teach one picture with two meanings (the same rule that keeps
+`star` out of al5's Iuppiter).
+
+**THE PARADE OF SOULS IS THREE SENTENCES:** Rōmulus who founds the city, Caesar,
+and Augustus who gives the lands peace. The catalogue of 6,756–846 is otherwise
+omitted whole, and **with it Mārcellus (6,860–886), which is a poem about a dead
+boy.** **THE GATES OF SLEEP (6,893–898) ARE OMITTED:** a famous crux that no
+child can be given and no gloss can settle; the return is one neutral sentence
+(*ad lūcem revertuntur*) and the capitulum ends on what Anchīsēs showed him,
+which is what the liber is for.
+
+**TAUGHT:** superbus (taught against a12's carded `supplex`) · parcere (taught
+against a10's carded `laedit`) · ars · mōs.
+**NŌMINA PROPRIA:** Rōmulus · Caesar · Augustus · Anchīsēs (a8, carded there).
+**RECYCLED:** Anchīsēs and pietās (a8) · sōl (a1) · umbra (a23) · rāmus (a22) ·
+fātum (a1) · regere (a18's `gubernātor` gloss, *quī nāvem regit*) · mementō
+(a2's own gloss on 1,203's `meminisse`).
+**VERBA VERGILIĪ (6,851–853):** regere · imperiō · Rōmāne · mementō · hae ·
+artēs · pācī · mōrem · parcere · subiectīs · dēbellāre · superbōs.
+
+**THE CLOSING QUOTATION.**
+
+```
+tū regere imperiō populōs, Rōmāne, mementō
+(hae tibi erunt artēs), pācīque impōnere mōrem,
+parcere subiectīs et dēbellāre superbōs.          (closing, 6,851–853)
+```
+
+851 alone is the famous line, but **852–853 are quoted with it because the
+sentence is not finished without them AND because the half a child should carry
+away is *parcere subiectīs*** — mercy is the first of the two arts Vergil names,
+and the paraphrase page puts it first in Latin as well (*pācī mōrem impōnere,
+victīs parcere, superbōs bellō vincere*). `dēbellāre` is glossed as what the
+word literally is — *dē-bellāre = bellum ad fīnem addūcere* — which is Servius'
+reading and the only reading a children's product may teach.
+
+**PROBĀTIŌ b_al6 — Īnferī:** `sententia` (hp 5 / 55 s) + `sententia` (hp 5 /
+55 s), al4's tuning exactly, because al4 is the track's other reading-only
+trial. CURRICULUM §3 names this trial itself ("underworld riddle-sentences"), so
+this liber's probātiō is twelve quiet Latin sentences with one word missing from
+each and nothing else — no chase, no sorting. Phase 1 (TENEBRAE) draws on
+a21–a23, phase 2 (LŪX) on a23–a24. **Three items of the first draft were
+rewritten under the gap-form rule (below); the twelve that ship carry three
+ablātīvī absolūtī or purpose clauses, four relatives, two passives, an indirect
+question and two plain predications.**
+

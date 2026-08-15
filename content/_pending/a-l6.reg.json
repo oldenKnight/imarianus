@@ -1,0 +1,71 @@
+{
+  "_note": [
+    "Registration snippet — AUTHORING-BRIEF 'Registration protocol'. Content",
+    "agents do not touch content/manifest.js, content/manifest.json or",
+    "server/lib/rules.php; the integrator applies this and deletes the file.",
+    "",
+    "APPLY AFTER al5: al6 is the SIXTH region of the aeneis track and must",
+    "follow al1..al5 in the manifest's regions array — js/app.js regionIndex()",
+    "reads that order and feeds it to the phase engine as the ONE difficulty",
+    "input (DESIGN §6). al7 and al8 land in the same wave from the same agent",
+    "and are ordered al6 → al7 → al8; a parallel agent owns al9..al12 and its",
+    "a-l9 snippet already says to HOLD al9 until these three are in.",
+    "",
+    "al6 is a PROBĀTIŌ liber (kind: 'probatio', boss id b_al6) with TWO",
+    "SENTENTIA phases: sententia (hp 5 / 55 s) + sententia (hp 5 / 55 s) — the",
+    "al4 shape, because al4 is the track's other reading-only trial and the two",
+    "should tune alike. CURRICULUM §3 names this trial itself ('underworld",
+    "riddle-sentences'), so neither phase sorts or steers: nothing in Liber VI",
+    "hurries. Legacy single-phase tuning in the content file is hp 10 / 110 s.",
+    "bossMinMs 15000 matches l2/l3/al1..al5.",
+    "",
+    "Both phases declare their own `items` (6 each, hand-authored per",
+    "AUTHORING-BRIEF 'Boss clamor/sententia items'), so js/probatio.js never",
+    "reaches its derivation fallback. All 12 survive js/boss-phases.js",
+    "fromAuthored() with zero warnings — verified against the real gate, not a",
+    "stub. Nothing here for rules.php to know.",
+    "",
+    "quizKey carries the same three keys per row as al1-al5: rules.php stores",
+    "{q, a}, and `correct` is always 0 against the boss.quiz order in",
+    "content/aeneis-al6.js. Region id 'al6', not 'l6' — rules.php keys regions",
+    "in one flat namespace and 'l6' is Historia's Moyses (see a-l1.reg.json).",
+    "",
+    "al6 is a NEW region: its content id IS its progressId, so it needs no",
+    "entry in rule_region_aliases().",
+    "",
+    "XP mirrors al1-al5 exactly."
+  ],
+
+  "track": "aeneis",
+  "region": "al6",
+  "titulus": "Īnferī",
+  "ladder": "S12",
+  "progressId": "al6",
+  "capitula": ["a21", "a22", "a23", "a24"],
+  "boss": "b_al6",
+
+  "quizKey": [
+    { "q": "Sibylla", "a": "Sibylla", "correct": 0, "from": "a21" },
+    { "q": "rāmus",   "a": "rāmus",   "correct": 0, "from": "a22" },
+    { "q": "Charōn",  "a": "Charōn",  "correct": 0, "from": "a23" },
+    { "q": "umbra",   "a": "umbra",   "correct": 0, "from": "a23" },
+    { "q": "Rōma",    "a": "Rōma",    "correct": 0, "from": "a24" }
+  ],
+
+  "xp": {
+    "step": 25,
+    "boss": 40,
+    "quizEach": 10,
+    "quizPassMaxWrong": 1
+  },
+
+  "antiCheat": {
+    "bossMinMs": 15000
+  },
+
+  "manifestEntry": {
+    "id": "al6",
+    "capitula": ["a21", "a22", "a23", "a24"],
+    "boss": "b_al6"
+  }
+}
