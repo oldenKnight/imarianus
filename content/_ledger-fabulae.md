@@ -410,3 +410,120 @@ Everything above, plus the R1–R3 seed. Regiō V inherits: `testūdō lepus mō
 `celer tardus vincit ciconia patina urna cēna cibus lingua dat haedus mūrus`
 `stat tūtus locus`, the six prepositions `in ex ab cum dē sub`, and the
 **ablative** (locative and instrumental) as constructions.
+
+---
+
+## Regiō V · VIA (S5) — `content/fabulae-r05.js`
+
+Stage ceiling: everything S1–S4 **plus the imperative, the vocative, the
+question words** (`-ne`, `quis`, `quid`, `cūr`, `ubi`) **and the negative
+command `nōlī` + īnfīnītīvus**. AUTHORING-BRIEF ruling 2 also opens the
+īnfīnītīvus with `potest`/`vult`/`dēbet` here; this region uses the bare
+īnfīnītīvus only after `nōlī` has taught the form.
+
+Still forbidden and avoided throughout: the pronouns `is`/`hic`/`ille` (S6),
+the imperfect, the perfect, comparatives, relative clauses.
+
+Two rulings taken in this region, both recorded because Regiō VI and every
+later author will hit them again:
+
+* **SECOND-PERSON PRESENT INDICATIVE, INSIDE DIRECT SPEECH ONLY** (designer
+  ruling). An imperative needs somebody to obey it and a vocative needs
+  somebody to answer; `“Ō pāstor! Cūr semper clāmās?”` is the sentence the
+  region exists to make possible and there is no stage-legal way to write it
+  without `clāmās`. The precedent is shipped and audited — Regiō I f3 puts
+  `turbās` in the wolf's mouth, f1/f3 put `cupiō`, `habeō`, `possum` in
+  quoted speech. Here it is systematic rather than accidental: 2sg is legal
+  in QUOTED SPEECH ONLY, glossed at first use with a morphology hint that
+  derives it from the 3rd person (`pāstor clāmat → “Ō pāstor, clāmās!”`),
+  never in narrative, never in a mōrāle, and only in HAND-AUTHORED exercises
+  that quote the speech verbatim. The FIRST person stays shut.
+* **`nōlī tē movēre` SOLVED BY REWORDING.** `tē` is S6 and `movērī` is S10,
+  so f14 says `“Iacē! Nōlī currere!”` — a positive and a negative command on
+  one page, which is the best gloss `nōlī` could get.
+
+**MISSING ART, reported not worked around (second time — Regiō IV filed the
+same report):** there is still no road/`via` prop or background. The region is
+CALLED Via and the word `via` is taught NOWHERE in it, because teaching it
+would mean approximating a scene (LATIN-STYLE §5). The travelling is carried
+by `ambulat` + `viātor` and by backgrounds that change under the walkers' feet.
+
+### The FUNCTION and MORPHOLOGY words of this region (free against the ≤8 cap, all glossed)
+
+| word | first use | how |
+|---|---|---|
+| ō (vocative particle) | f13 p10 | nova 💬👤, `g: vir pāstōrī dīcit: “Ō pāstor!”` — 2 uses |
+| ubi | f13 p10 | nova 📍❓, `g: ubi? in monte, in silvā, in agrō` — 3 uses (p10, p12, p20) |
+| saepe | f13 p14 | nova 🔁, `g: iterum et iterum: saepe` — 2 uses, both plot-bearing |
+| venīte · iuvāte · vidēte · currite | f13 p6/p11/p13 | **IMPERATIVE PLURAL**, each glossed off the 3rd person the learner reads: `vir venit → “Venī!” · virī veniunt → “Venīte!”`. Every verb under them is R1/R2 vocabulary, so the region's headline construction costs the ≤8 cap NOTHING |
+| iuvā · iacē · salī | f14 p9/p11 (salī: f18 p8) | **IMPERATIVE SINGULAR**, glossed against the plural taught one capitulum earlier |
+| nōlī + īnfīnītīvus | f14 p11 | nova 🚫👉, `g: “Curre!” ↔ “Nōlī currere!”` — 3 uses |
+| currere · ambulāre · clāmāre | f14 p11/p14, f15 p9 | **ĪNFĪNĪTĪVUS**, always after `nōlī`, always derived in the gloss (`vir currit → currere`) |
+| quid | f14 p17 | nova 💬❓ — 1 use here, recycled in f15 p13 (`“Quid est?”`) |
+| -ne (iuvāsne) | f15 p8 | nova 🤝❓, `g: “Iuvās.” ↔ “Iuvāsne?”` |
+| clāmās · iuvās · portās | f13 p15, f15 p8/p15 | **2sg, DIRECT SPEECH ONLY** — see the ruling above. FLAGGED for line-audit |
+| tuum | f15 p9 | direct speech only; `tuus` was shipped the same way in R1 f2. 1 use |
+| duo | f14 p1 | nova 2️⃣, `g: ūnus, duo, multī` |
+
+### f13 Pāstor et Lupus — vocab cards (8)
+
+| lexeme | how |
+|---|---|
+| pāstor | vocab card, scene `v_pastor` (the man ALONE — `v_grex` is the flock alone, so SONUS is never a coin-flip); nova 👨🐑. 17 uses |
+| grex | vocab card, scene `v_grex` — the flock against the DARK stone of `bgStabulum`, because white lambs on bgPlain's cream sky are the Regiō IV ciconia defect again and this is the card SONUS shrinks to ~86 px. 8 uses across `grex`/`gregem`/`grege` |
+| vir | vocab card, scene `v_vir` (TWO men, so it never collides with `pāstor`, who is one man with a crook). 12 uses |
+| rīdet | vocab card, scene `v_ridet`; nova 😀, `g: pāstor nōn trīstis est: pāstor laetus est`. 3 uses. Held OUT of SONUS: `v_ridet` is `v_pastor` with a 😀 bubble |
+| lupus · agnus | **FREE** (f3), emoji 🐺 / 🐑. Cards kept: they are the plot, and the WOLF SPINE returns at this region's boss |
+| clāmat · timet | **FREE** (f3), emoji 📢 / 😨 |
+
+f13 — further new words: `grege`/`gregem` (morphology, `g: grex → in grege`,
+`grex → gregem`) · `sōlus` (nova 1️⃣👤, `g: ūnus pāstor est; virī nōn veniunt`).
+
+**RECORDED CALL — `sōlus` is used 2× in f13, not 3.** The picture that teaches
+it is the empty mountain of p21, and there is no honest second picture of
+loneliness in this fable; the third exposure lands two pages into f14
+(`Viātor sōlus in silvā stat.`), which is the "recycled again within the next
+two capitula" pass. Same kind of call as R3 f8's `cadit` and R4 f12's
+`clāmat`/`īrātus`, and recorded here for the same reason.
+
+### f14 Viātōrēs et Ursus — vocab cards (8)
+
+| lexeme | how |
+|---|---|
+| ursus | vocab card, scene `v_ursus`; nova 🐻, `g: ursus magnus est; ursus nōn lupus est`. 10 uses |
+| ascendit | vocab card, scene `v_ascendit` (a man IN the canopy — feet at y G−104, inside the leaves, not beside them); nova ⬆🌳. 3 uses |
+| iacet | vocab card, scene `v_iacet` — the posture on OPEN ground, no tree and no bear. Scale raised to 1.6: at 1.3 the lying figure covered 2.0 % of the 86 px SONUS tile, below every shipped card but R1's `bibit`. 3 uses |
+| amīcus | **FREE** (f4, where the ledger records it as `amīcus (amīcī)`), emoji 🤝. 6 uses, and `amīce` is the region's MARKED vocative |
+| arbor · silva | **FREE** (f1), scenes `v_arbor` / `v_silva` |
+| vir | **FREE** (f13), card + scene kept |
+| timet | **FREE** (f3), emoji 😨 |
+
+f14 — further new words: `viātor`/`viātōrēs` (nova 🚶🚶, `g: virī ambulant et
+ambulant: viātōrēs sunt`; 14 uses). **`viātor` gets NO vocabulary card on
+purpose**: every picture this art set can make of "traveller" is a picture of
+a man walking, which is already `vir` — the same reasoning that left `locus`
+cardless in R4 f12. It is never asked for by ear.
+
+### f15 Equus et Asinus — vocab cards (8)
+
+| lexeme | how |
+|---|---|
+| equus | vocab card, scene `v_equus`; nova 🐎, `g: equus celer est`. 18 uses (with `equum`/`equō`/`eque`) |
+| asinus | vocab card, scene `v_asinus`. **NO EMOJI**: 🫏 (U+1FACF) renders as TOFU in the fonts this app can count on — measured on the target browser, not assumed. The nova carries the contrastive pair `🐎 ✗` (the device R2 f4 used for `parvus`) and the drawn ass carries the rest. 15 uses |
+| onus | vocab card, scene `v_onus` — TWO different beasts under the SAME pack, so the card teaches the load and not the animal (R2 f6's `aureum` device, R3 f9's `cornua`). Held OUT of SONUS: it contains both of the capitulum's other nouns. 13 uses |
+| dominus | vocab card, scene `v_dominus`; nova 👨. 6 uses |
+| fessus | vocab card, scene `v_fessus`; nova 😓, `g: asinus onus portat et portat: fessus est`. 3 uses |
+| superbus | **FREE** (f8), emoji 😤 |
+| portat | **FREE** (f5), new scene `v_portat` (the ass under the pack, walking) |
+| cadit | **FREE** (f2), emoji ⬇️. Kept out of SONUS: ⬇️ is a symbol, not a picture |
+
+f15 — further new words: `eque` (**MARKED VOCATIVE**, `g: equus → “Ō eque!”`,
+3 uses) · the 2sg forms above.
+
+### Words a later region may now treat as FREE
+
+Everything above, plus the R1–R4 seed. Regiō VI inherits: `pāstor grex vir`
+`rīdet sōlus ursus ascendit iacet viātor equus asinus onus dominus fessus`
+`saepe duo`, and the **imperative**, the **vocative**, the **question words**
+(`-ne quis quid cūr ubi`), **`nōlī` + īnfīnītīvus** and the **2nd person
+singular in quoted speech** as constructions.
