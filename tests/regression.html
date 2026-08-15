@@ -49,6 +49,11 @@
      Scenes only (and on Game.beep being optional), so the three load cleanly
      without data.js, storage.js or the DOM app shell. -->
 <script src="../js/scenes.js"></script>
+<!-- the speaker. It boots nothing (it only asks speechSynthesis for a voice
+     list, which is allowed to be empty) and it exports prep(), which is the
+     last thing every utterance passes through — so GAUNTLET F5's "no verse
+     slash may reach a voice" half is assertable here rather than by ear. -->
+<script src="../js/tts.js"></script>
 <script src="../js/game.js"></script>
 <script src="../js/boss.js"></script>
 <!-- M3 phase engine: boss.js is the engine + registry, these two fill it.
@@ -2197,7 +2202,14 @@
         var scaleOf = make(window.Scenes);
         /* actor, pose and the sceneY bossScene() would use for it */
         var CASES = [
-          { t: 'wolf', pose: 'leap', y: 155 },     /* river bank, not the ground */
+          /* GAUNTLET F2 moved this one. It used to read {pose:'leap', y:155}
+             because bossScene() stood a river boss at 155 — on the SKY, as it
+             turned out, since bgRiver has no far bank — and posed him in a
+             leap that touches nothing. Both are gone: the wolf stands
+             'angry' on the same GROUND every other boss stands on. Keep this
+             case matching bossScene(), or the row goes on measuring a frame
+             the app no longer draws. */
+          { t: 'wolf', pose: 'angry', y: Scenes.GROUND },
           { t: 'leo', pose: 'run', y: Scenes.GROUND },
           { t: 'bos', pose: 'run', y: Scenes.GROUND },
           { t: 'lepus', pose: 'run', y: Scenes.GROUND }
@@ -2520,6 +2532,313 @@
                '(' + JSON.stringify(counts) + ') — the generator needs its warm-up back';
       }
       return null;
+    });
+
+  /* ================= GAUNTLET — the visual-QA pass =================
+     Four of the ten fixes are assertable without a camera. Each row names
+     the picture that was wrong, because that is the thing a future change
+     would silently undo. */
+
+  /* ---- GAUNTLET F1 — the map numeral ----
+     The current node's Roman numeral is set at the badge's own size, and the
+     board's numbering now reaches XLVIII (Aeneis a48) and LVIII (Historia
+     h58). Six letters at that size are ~70 drawing units across, against a
+     38-unit disc, so they ran out over the gold and past the diamond's
+     points. The badge is a cartouche now: it widens to its numeral, capped
+     by what the tile's top face can carry, and only then does the font
+     shrink. The two halves that can rot are opposite: SHORT labels must be
+     untouched (every board shipped so far), LONG ones must actually fit. */
+  check('GAUNTLET-F1', 'a long Roman numeral fits its tile, and a short one is drawn exactly as before',
+    function () {
+      if (!window.WorldMap || !WorldMap.numeralFit) {
+        return 'WorldMap.numeralFit is gone — F1 is unassertable';
+      }
+      var r = WorldMap.TILE ? 19 : 19;                 /* the capitulum badge */
+      var faceRx = WorldMap.TILE.rx;
+      var base = r * 1.05;
+      var i, f;
+
+      /* 1. nothing that fitted before may move. I..XII and LVI are the real
+            labels the shipped boards carry. */
+      var SHORT = ['I', 'II', 'III', 'IV', 'V', 'VIII', 'IX', 'XII', 'XVI', 'LVI'];
+      for (i = 0; i < SHORT.length; i++) {
+        f = WorldMap.numeralFit(SHORT[i], r, faceRx);
+        if (f.fs !== base) {
+          return SHORT[i] + ' had its font changed to ' + f.fs + ' (was ' + base + ') — ' +
+                 'the no-op half of F1 is broken and every shipped board just moved';
+        }
+        if (f.w !== r * 2 + 3 && f.w !== r * 2) {
+          return SHORT[i] + ' grew its badge to ' + f.w + ' — short labels keep the disc';
+        }
+        if (f.squeeze) { return SHORT[i] + ' is being squeezed with textLength and should not be'; }
+      }
+
+      /* 2. the two labels that broke it, plus a longer one than the app can
+            currently produce, must all end up inside the tile's top face. */
+      var LONG = ['LVII', 'XVIII', 'XLVIII', 'LVIII', 'LXXXVIII'];
+      var LIMIT = faceRx * 1.22;
+      for (i = 0; i < LONG.length; i++) {
+        f = WorldMap.numeralFit(LONG[i], r, faceRx);
+        if (f.w > LIMIT + 0.01) {
+          return LONG[i] + ' asks for a ' + f.w.toFixed(1) + '-unit badge, past the ' +
+                 LIMIT.toFixed(1) + ' the tile face can carry';
+        }
+        if (f.fs > base + 0.01) { return LONG[i] + ' was scaled UP'; }
+        if (f.fs < 7) { return LONG[i] + ' fell to ' + f.fs.toFixed(1) + ' units — unreadable'; }
+      }
+
+      /* 3. XLVIII is the one the GAUNTLET photographed. Its badge must be
+            WIDER than the disc (otherwise the text is outside it again) and
+            its numeral must still be near full size. */
+      f = WorldMap.numeralFit('XLVIII', r, faceRx);
+      if (!(f.w > r * 2 + 3)) {
+        return 'XLVIII still gets the plain disc (' + f.w + ') — the text cannot be inside it';
+      }
+      if (f.fs < base * 0.75) {
+        return 'XLVIII shrank to ' + f.fs.toFixed(1) + ' of ' + base + ' — that is the 7px ' +
+               'phone numeral the cartouche exists to avoid';
+      }
+
+      /* 4. and the renderer must actually USE it: the emitted badge carries
+            the computed size, not the old hard-coded r*1.05. */
+      var html = WorldMap.render({
+        titulus: 'T', track: 'aeneis', avatar: 'fox', foxNode: 'n1',
+        nodes: [{ id: 'n1', kind: 'fable', x: 0.5, y: 0.5, label: 'XLVIII',
+                  titulus: 'A', state: 'open' }]
+      });
+      if (html.indexOf('>XLVIII<') < 0) { return 'the numeral is not in the rendered board at all'; }
+      if (html.indexOf('font-size="' + base.toFixed(1) + '"') >= 0 &&
+          html.indexOf('rx="' + r + '"') < 0) {
+        return 'badge() is not going through numeralFit()';
+      }
+      return null;
+    });
+
+  /* ---- GAUNTLET F7 — the labelled cards ----
+     CLĀMOR and SENTENTIA drift three picture-cards at 58px and ask which
+     word fills the gap in a sentence. At that size two of this corpus's
+     scenes can be one brown smudge apiece, so the round was a coin toss.
+     The word now rides under the picture, exactly as ŌRDINĀ's tiles have
+     always carried it — and exactly NOT in caterva/fuga, where the prompt
+     names the word and a label would hand the round over. The `verbum`
+     fallback (no derivable sentence, so the wolf shouts a bare word) is the
+     same giveaway and stays mute. */
+  check('GAUNTLET-F7', 'clāmor and sententia label their drifting cards; caterva, fuga and the bare-word fallback do not',
+    function () {
+      var cv = document.createElement('canvas');
+      cv.width = 360; cv.height = 520;
+      var ctx = cv.getContext('2d');
+      if (!ctx) { return 'no 2d context in this browser'; }
+      var calls = [];
+
+      function fakeEnv() {
+        return {
+          ctx: ctx, W: 360, H: 520, TOP: 40, FIELD: 400, GROUND: 60,
+          drawTile: function (word, x, y, size, opts) { calls.push(opts || {}); },
+          drawBanner: function () {},
+          roundRect: function () { ctx.beginPath(); },
+          imgReady: function () { return false; },
+          wrapText: function (t) { return [String(t)]; }
+        };
+      }
+      /* run one phase implementation's draw() against a fake env and report
+         what it asked drawTile for. Nothing here is a copy of the phase: the
+         SHIPPED draw() runs. */
+      function tilesOf(impl, item) {
+        calls = [];
+        var inst = {
+          env: fakeEnv(), item: item, sceneImg: null,
+          drawGapLine: impl.drawGapLine,
+          items: [{ word: { la: 'ā' }, x: 60, y: 300 }],
+          cards: [{ word: { la: 'ā' }, x: 60, y: 300 },
+                  { word: { la: 'b' }, x: 160, y: 320 },
+                  { word: { la: 'c' }, x: 260, y: 340 }],
+          banner: 'X', zones: [], basket: null,
+          drawBasket: function () {}, drawZones: function () {}
+        };
+        try { impl.draw.call(inst); } catch (e) { return null; }
+        return calls;
+      }
+
+      var SENT = { text: 'Ita in ____ mānsērunt.', verbum: false,
+                   answer: { la: 'ā' }, options: [], scene: null };
+      var WORD = { text: 'lupus', verbum: true,
+                   answer: { la: 'ā' }, options: [], scene: null };
+
+      var pairs = [
+        { name: 'clamor', impl: (window.Boss && Boss.PHASES) ? Boss.PHASES.clamor : null },
+        { name: 'sententia', impl: (window.Probatio && Probatio.PHASES) ? Probatio.PHASES.sententia : null }
+      ];
+      var i, got;
+      for (i = 0; i < pairs.length; i++) {
+        if (!pairs[i].impl) { return pairs[i].name + ' is not in its phase registry'; }
+        got = tilesOf(pairs[i].impl, SENT);
+        if (!got) { return pairs[i].name + '.draw() threw against the fake env'; }
+        if (!got.length) { return pairs[i].name + ' drew no cards at all'; }
+        for (var j = 0; j < got.length; j++) {
+          if (got[j].label !== true) {
+            return pairs[i].name + ' card ' + j + ' is unlabelled — the round is a coin toss again';
+          }
+        }
+        got = tilesOf(pairs[i].impl, WORD);
+        if (!got || !got.length) { return pairs[i].name + ' drew no cards for the verbum fallback'; }
+        for (j = 0; j < got.length; j++) {
+          if (got[j].label) {
+            return pairs[i].name + ' labels its bare-WORD fallback, which prints the answer ' +
+                   'under the prompt that already says it';
+          }
+        }
+      }
+
+      /* the other side of the rule: the duel phases whose prompt IS the word */
+      var caterva = (window.Boss && Boss.PHASES) ? Boss.PHASES.caterva : null;
+      if (caterva) {
+        got = tilesOf(caterva, { la: 'ā', word: { la: 'ā' } });
+        if (got) {
+          for (j = 0; j < got.length; j++) {
+            if (got[j].label) { return 'caterva has started labelling — that is the answer key'; }
+          }
+        }
+      }
+      return null;
+    });
+
+  /* ---- GAUNTLET F4 — the stranded full stop ----
+     A blank carries 0.2rem margin + 0.4rem padding a side, which is right
+     between two words and wrong before a period: a sentence-final gap set as
+     'Tum Moyses ex Aegyptō ____ .' with the stop adrift. joinTerminal() is
+     the split that marks the punctuation for pulling back. */
+  checkAsync('GAUNTLET-F4', 'terminal punctuation after a blank is joined to it, and mid-sentence text is not',
+    function (done) {
+      if (!SERVED) { done(null); return; }
+      withAppJs(done, function (src) {
+        var fn = fnSource(src, 'joinTerminal');
+        /* the literal itself contains a ';' inside its character class, so
+           this must match a regex literal, not "everything up to the semicolon" */
+        var re = /var TERMINAL = (\/[^\n]*\/[gimsuy]*);/.exec(src);
+        if (!fn || !re) {
+          done('app.js no longer defines joinTerminal()/TERMINAL — F4 is unassertable');
+          return;
+        }
+        var joinTerminal = new Function('var TERMINAL = ' + re[1] + ';' + fn + 'return joinTerminal;')();
+
+        /* the shipped item this was found on (historia-l6 h31) */
+        var p = joinTerminal('Tum Moyses ex Aegyptō ___.');
+        if (p.length !== 2) { return done('split changed shape: ' + JSON.stringify(p)); }
+        if (p[0].tight) { return done('the text BEFORE a blank must never be pulled back'); }
+        if (!p[1].tight) { return done('the final "." after the blank is still adrift'); }
+
+        /* every stop the corpus uses */
+        var MARKS = ['.', ',', '!', '?', ';', ':'];
+        for (var i = 0; i < MARKS.length; i++) {
+          if (!joinTerminal('Puer ___' + MARKS[i])[1].tight) {
+            return done('"' + MARKS[i] + '" after a blank is not joined');
+          }
+        }
+        /* and a gap in the MIDDLE of a sentence must be untouched: the part
+           after it starts with a space, not a stop */
+        if (joinTerminal('Puer ___ in silvā est.')[1].tight) {
+          return done('a mid-sentence blank is being pulled tight against the next word');
+        }
+        if (joinTerminal('Nūlla lacūna hīc est.').length !== 1) {
+          return done('a sentence with no blank at all changed shape');
+        }
+        /* and the RENDERER has to go THROUGH it. The condition was written
+           out a second time inside runComple() when this row was first
+           added, which meant the row stayed green while the screen it
+           guards could be broken — the exact failure it exists to catch. */
+        /* stripComments first: runComple's own comment names joinTerminal,
+           and a check that greps the comment explaining the fix instead of
+           the code performing it proves nothing. */
+        var comple = stripComments(fnSource(src, 'runComple') || '');
+        if (comple.indexOf('joinTerminal(') < 0) {
+          return done('runComple() no longer calls joinTerminal() — the split has been ' +
+                      'duplicated again, and this row can no longer see the screen it guards');
+        }
+        if (comple.indexOf('post-blank') < 0) {
+          return done('runComple() no longer emits the .post-blank marker the CSS pulls back');
+        }
+        return done(null);
+      });
+    });
+
+  /* ---- GAUNTLET F5 — quoted hexameter ----
+     A story page whose Latin carries ' / ' is Vergil in his own metre; the
+     slash is a line break, not punctuation. Run together as prose, a48's
+     seven-verse proem — the page the whole Aeneis track arrives at — read as
+     one paragraph with four stray slashes in it. Each segment is its own
+     centred line now, and a page of more than four steps its type down so
+     the play controls stay above a 375x812 fold.
+     The TTS side is guarded here too: nothing may reach the speaker with a
+     slash still in it, or a voice reads a verse break as "slash". */
+  checkAsync('GAUNTLET-F5', 'a multi-verse page sets one line per verse, prose is untouched, and no slash reaches the voice',
+    function (done) {
+      if (!SERVED) { done(null); return; }
+      withAppJs(done, function (src) {
+        var a = fnSource(src, 'verseOf'), b = fnSource(src, 'storyTextHtml');
+        var e = fnSource(src, 'esc');
+        if (!a || !b || !e) {
+          done('app.js no longer defines verseOf()/storyTextHtml() — F5 is unassertable');
+          return;
+        }
+        var make = new Function(a + b + e + 'return { verseOf: verseOf, html: storyTextHtml };');
+        var F = make();
+
+        /* PROSE: unchanged, and still a single .story-text paragraph */
+        var prose = 'Lupus ad rīvum vēnit.';
+        if (F.verseOf(prose) !== null) { return done('prose was mistaken for verse'); }
+        var ph = F.html(prose, '<b id="say"></b>');
+        if (ph !== '<p class="story-text">' + prose + ' <b id="say"></b></p>') {
+          return done('a prose page changed shape: ' + ph);
+        }
+
+        /* THE a48 PROEM, character for character off content/aeneis-al12.js */
+        var proem = 'Arma virumque canō, Trōiae quī prīmus ab ōrīs / ' +
+          'Ītaliam, fātō profugus, Lāvīniaque vēnit / ' +
+          'lītora, multum ille et terrīs iactātus et altō / ' +
+          'vī superum saevae memorem Iūnōnis ob īram; / ' +
+          'multa quoque et bellō passus, dum conderet urbem / ' +
+          'īnferretque deōs Latiō, genus unde Latīnum / ' +
+          'Albānīque patrēs atque altae moenia Rōmae.';
+        var vs = F.verseOf(proem);
+        if (!vs || vs.length !== 7) {
+          return done('the proem split into ' + (vs ? vs.length : 0) + ' verses, not seven');
+        }
+        var vh = F.html(proem, '<b id="say"></b>');
+        var spans = vh.match(/<span class="versus">/g);
+        if (!spans || spans.length !== 7) {
+          return done('seven verses produced ' + (spans ? spans.length : 0) + ' lines');
+        }
+        /* strip the markup first — every closing tag has a slash in it */
+        if (vh.replace(/<[^>]*>/g, '').indexOf('/') >= 0) {
+          return done('a literal verse slash is still in the text the reader sees: ' + vh);
+        }
+        if (vh.indexOf('verse-many') < 0) {
+          return done('a seven-verse page did not take the >4 type step-down — the play ' +
+                      'controls go below the fold at 375x812');
+        }
+        /* four verses or fewer keep the reading size */
+        if (F.html('a / b / c / d', '').indexOf('verse-many') >= 0) {
+          return done('a four-verse page is being stepped down needlessly');
+        }
+        /* the say button rides on the LAST verse, not on every one */
+        if ((vh.match(/id="say"/g) || []).length !== 1) {
+          return done('the speak button was emitted more than once');
+        }
+
+        /* THE VOICE. Tts.prep is the last thing every utterance passes. */
+        if (!window.Tts || typeof Tts.prep !== 'function') {
+          return done('Tts.prep is no longer exported — the slash guard is unassertable');
+        }
+        if (Tts.prep(proem).indexOf('/') >= 0) {
+          return done('Tts.prep left a slash in the utterance — a voice will say "slash"');
+        }
+        if (Tts.prep('ab oris / Italiam').indexOf('oris, Italiam') < 0) {
+          return done('the verse break should become the comma that is the breath, ' +
+                      'not vanish: ' + Tts.prep('ab oris / Italiam'));
+        }
+        return done(null);
+      });
     });
 
   runEngineQueue();      /* start the serialized engine tests */
