@@ -1139,6 +1139,28 @@
       name: 'Lupus Ultimus',
       actor: 'wolf',
       vinceText: 'Lupum vince!',
+      /* GAUNTLET F3 — STAGE THE FINALE APART.
+         Both wolf regions authored no scene keys, so both took the intro
+         defaults and Lupus Ultimus's card came out pixel-identical to
+         Regiō I's: same river, same daylight, same size. Thirty-six fables
+         later, the last meeting looked like the first one.
+
+         The wolf does NOT change — he IS the wolf of Regiōnēs I, V and IX,
+         and the whole arc (and `postWin` below) depends on the child
+         recognising him. What changes is the STAGING, which app.js has
+         always let content override:
+           bg          the night sky, not the river of the first meeting;
+           sceneScale  authored, so it beats the derived fit — 2.2 against
+                       the 1.8 the frame would have chosen, which is the
+                       wolf filling the card instead of sitting in it;
+           pose        'angry', the same planted snarl the intro now uses
+                       everywhere, kept explicit because this card is the
+                       one the whole track ends on and it should not move
+                       if the default ever does.
+         Distinction by staging, not by species. */
+      bg: 'nightSky',
+      sceneScale: 2.2,
+      pose: 'angry',
       /* The last line of the whole Fabulae track. app.js draws boss.postWin
          under "Vīcistī!" once the region is fully cleared (js/boss.js CONFIG,
          "screen-only keys"), and this fight is the one place in thirty-six

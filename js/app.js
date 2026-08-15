@@ -932,6 +932,14 @@
     return Math.max(0.5, Math.min(s, 3));
   }
 
+  /* ---- poses whose art does not touch its own origin ----
+     scenes.js draws every actor standing ON y=0, except that the wolf's
+     'leap' tucks its legs: the lowest ink in that pose is 8 units ABOVE the
+     origin, because a leaping animal is off the ground. Placing the origin
+     on the bank therefore hangs the art 8*scale units over it. The gap is
+     added back so it is the ARTWORK, not the origin, that lands. */
+  var POSE_LIFT = { leap: 8 };
+
   /* one illustrated frame of the boss, for the intro and the defeat screen.
      Content may override every choice (bg / sceneY / sceneScale / pose);
      the defaults are what made Regiō I look right. */
@@ -939,25 +947,45 @@
     var b = (CUR.region && CUR.region.boss) || {};
     var actor = bossActor();
     var bg = b.bg || (actor === 'wolf' ? 'river' : 'plain');
-    /* the river bank is above the ground line — an actor placed on the ground
-       in a river scene is standing in the water. */
-    var y = (typeof b.sceneY === 'number') ? b.sceneY
-          : (bg === 'river' ? 155 : Scenes.GROUND);
+    /* GAUNTLET F2 — GROUND HIM ON THE BANK.
+       This used to read `bg === 'river' ? 155 : GROUND`, on the belief that
+       a river scene has a far bank above the water line. Look at bgRiver():
+       it is sky from the top of the frame down to the water, the water band
+       from y≈167 to y≈197 at centre, and grass below y=210. There is no far
+       bank in that picture. y=155 stood the wolf on SKY, twelve units above
+       the water — and 'leap', whose art floats another 8 units on top of
+       that, lifted him clear into the air over the river. Both Lupus intros
+       (r01 and r12) shipped that way.
+       The bank in bgRiver is the NEAR one, the grass at GROUND, which is
+       also where every other background puts its actors. */
+    var y = (typeof b.sceneY === 'number') ? b.sceneY : Scenes.GROUND;
     /* authored sceneScale always wins: content that has been eyeballed beats
        anything derived. */
     var s = (typeof b.sceneScale === 'number') ? b.sceneScale
           : bossSceneScale(actor, pose, y);
-    return Scenes.render({ bg: bg, items: [{ t: actor, x: 200, y: y, pose: pose, s: s }] });
+    var lift = POSE_LIFT[pose] || 0;
+    return Scenes.render({ bg: bg,
+      items: [{ t: actor, x: 200, y: y + lift * s, pose: pose, s: s }] });
   }
   /* the dramatic pose for the intro, and the sprite pose for the fight
      itself. 'leap' and 'angry' are wolf-only poses; every other actor
-     degrades to 'stand', so the fallback is chosen per actor family. */
+     degrades to 'stand', so the fallback is chosen per actor family.
+
+     GAUNTLET F2: the wolf's INTRO pose was 'leap'. A leaping animal has its
+     legs tucked and no contact with anything, so on the intro card — one
+     actor alone on a wide frame with a river behind him — he read as
+     floating rather than as bounding. Standing him on the bank (see
+     bossScene) fixed the height and not the impression: the pose itself has
+     nothing under it. The default is now 'angry', which plants four feet
+     and bares the teeth, and it frames him the way the Leō of Regiō II is
+     framed. 'leap' is untouched in the art and content may still ask for it
+     by name; POSE_LIFT above is what makes it land when it does. */
   function bossPose(kind) {
     var b = (CUR.region && CUR.region.boss) || {};
     var wolf = (bossActor() === 'wolf');
     if (kind === 'fight') { return b.fightPose || (wolf ? 'angry' : 'stand'); }
     if (kind === 'lost') { return b.calmPose || 'stand'; }
-    return b.pose || (wolf ? 'leap' : 'run');
+    return b.pose || (wolf ? 'angry' : 'run');
   }
   /* "Lupum vince!" is the RIGHT line for a wolf and the wrong one for a lion.
      Content supplies its own accusative (`vinceText: 'Leōnem vince!'`); the
@@ -970,28 +998,29 @@
     return DATA.MAP_UI.bossReadyAny || DATA.MAP_UI.bossReady;
   }
 
-  /* the Latin title of a trial's round, straight off the phase implementation
-     so the header and the title card can never say different things. */
-  function probatioTitulus(type) {
-    var reg = (window.Probatio && Probatio.PHASES) ? Probatio.PHASES : null;
-    var p = (reg && type) ? reg[type] : null;
-    return (p && p.titulus) ? p.titulus : '';
-  }
+  /* (probatioTitulus() lived here: it read Probatio.PHASES[type].titulus so
+     the header could name the round. GAUNTLET F9 took the round name out of
+     the header — the canvas banner owns it — and with it the last caller,
+     so the helper went too rather than sitting here unreferenced.) */
 
   /* The line above the canvas. A DUEL challenges — "Lupum vince!". A TRIAL
      does not: there is nobody to defeat, and telling a child to conquer the
      ark is both wrong and, in Genesis, tonally absurd (DESIGN §6). A probatio
-     is named and instructed instead: "Probātiō: Arca Noe — ŌRDINĀ!".
+     is NAMED instead: "Probātiō: Arca".
+
+     It used to be instructed too — "Probātiō: Arca — ŌRDINĀ!" — and that was
+     the phase name said twice, because the engine's own in-canvas banner
+     already announces ŌRDINĀ two lines below (GAUNTLET F9). The header keeps
+     the part only it can say (which trial this is); the banner keeps the part
+     only it can say (which round is running, and it updates when the round
+     changes, which a header written once never did).
      Content may override either with `boss.headerText`. */
   function bossHeaderText() {
     var b = (CUR.region && CUR.region.boss) || {};
     if (b.headerText) { return b.headerText; }
     if (b.kind !== 'probatio') { return bossVinceText(); }
-    var first = (b.phases && b.phases.length) ? b.phases[0] : null;
-    var titulus = first ? probatioTitulus(first.type) : '';
     var label = DATA.MAP_UI.probatioLabel || 'Probātiō';
-    return label + (b.name ? ': ' + b.name : '') +
-           (titulus ? ' — ' + titulus + '!' : '!');
+    return label + (b.name ? ': ' + b.name : '');
   }
 
   function showBossIntro(nodeId) {
@@ -1524,6 +1553,43 @@
     return out;
   }
 
+  /* ---- VERSE PAGES (GAUNTLET F5) ----
+     A story page whose Latin carries ' / ' is not prose: the slash is the
+     scholarly line-break of a QUOTED HEXAMETER, and every page that uses it
+     is Vergil in his own metre. Run together as one paragraph the a48 proem
+     read as seven clauses with four stray slashes in them — the one page the
+     whole Aeneis track exists to arrive at, set as though the verse did not
+     matter.
+
+     Each segment becomes its own centred line instead. A long verse may still
+     wrap inside its line (a hexameter does not fit a 375 px phone at reading
+     size, and hanging the overflow is what print does too), so a page with
+     more than four verses also steps the type down — seven verses at the
+     prose size pushed the play controls below the fold, which is the same
+     bug wearing a different hat.
+
+     The SPEECH is untouched: verseOf() is display-only, `ttsText` (which the
+     proem already ships, slash-free) still wins, and js/tts.js now drops any
+     '/' that reaches it so no voice can read one as "slash". */
+  function verseOf(la) {
+    var s = String(la);
+    if (s.indexOf(' / ') < 0) { return null; }
+    return s.split(/\s*\/\s*/);
+  }
+
+  function storyTextHtml(la, sayBtn) {
+    var verses = verseOf(la), out, k;
+    if (!verses) {
+      return '<p class="story-text">' + esc(la) + ' ' + sayBtn + '</p>';
+    }
+    out = '<p class="story-text verse' + (verses.length > 4 ? ' verse-many' : '') + '">';
+    for (k = 0; k < verses.length; k++) {
+      out += '<span class="versus">' + esc(verses[k]) +
+             (k === verses.length - 1 ? ' ' + sayBtn : '') + '</span>';
+    }
+    return out + '</p>';
+  }
+
   function runFabula(fi) {
     renderTopbar(true);
     var f = capAt(fi);
@@ -1550,8 +1616,8 @@
       var html = stepHeader(fi, 'fabula') +
         '<article class="story-page">' +
         '<figure class="scene">' + Scenes.render(line.scene) + '</figure>' +
-        '<p class="story-text">' + esc(line.la) +
-          ' <button type="button" id="say" class="speak" aria-label="audī">🔊</button></p>' +
+        storyTextHtml(line.la,
+          '<button type="button" id="say" class="speak" aria-label="audī">🔊</button>') +
         (glosses ? '<ul class="margo">' + glosses + '</ul>' : '') +
         '<div class="auto-row">' +
           '<button id="playpause" class="chip" type="button" aria-label="' +
@@ -2009,6 +2075,22 @@
      Teaching one fixed order would teach a lie about Latin.
      Tapping a filled blank takes the word back out. */
 
+  /* punctuation that must never be left floating after a blank. Latin
+     needs no more than these: the corpus writes . ! ? , ; : and the
+     closing quote. tests/regression.html lifts joinTerminal() out of this
+     file by source, the way it already lifts novaOf/glossesFor. */
+  var TERMINAL = /^[.,!?;:»”)]/;
+
+  /* the sentence-splitting half of GAUNTLET F4, as a pure function a
+     regression row can call: which parts get the tight class. */
+  function joinTerminal(text) {
+    var parts = String(text).split('___'), out = [], i;
+    for (i = 0; i < parts.length; i++) {
+      out.push({ text: parts[i], tight: (i > 0 && TERMINAL.test(parts[i])) });
+    }
+    return out;
+  }
+
   function runComple(fi) {
     renderTopbar(true);
     var f = capAt(fi);
@@ -2024,14 +2106,32 @@
         return;
       }
       var q = ITEMS[qi];
-      var parts = String(q.text).split('___');
+      /* ONE splitter, not two. joinTerminal() decides both how the sentence
+         breaks around its gaps and which pieces are punctuation that must be
+         pulled back against the blank before them; this loop only writes the
+         markup. The condition lived here as well until the regression row for
+         GAUNTLET F4 proved the copy could rot while the row stayed green. */
+      var parts = joinTerminal(q.text);
       var slots = parts.length - 1;              /* how many blanks to fill */
       var filled = [];                           /* words tapped, in tap order */
 
-      /* sentence with one <span class="blank"> per ___ */
-      var sent = '', i;
+      /* sentence with one <span class="blank"> per ___
+         A blank carries 0.2rem of margin and 0.4rem of padding on each
+         side, which is right between two words and wrong before a full
+         stop: a sentence-final gap set as 'Aegyptō ____ .', with the
+         period adrift (GAUNTLET F4). Punctuation that immediately follows
+         a blank is therefore marked `.post-blank` and pulled back against
+         it — the blank's own trailing space, no more. Nothing else in the
+         sentence changes, so every gap mid-sentence is untouched. */
+      var sent = '', i, part;
       for (i = 0; i < parts.length; i++) {
-        sent += '<span>' + esc(parts[i]) + '</span>';
+        part = parts[i].text;
+        if (parts[i].tight) {
+          sent += '<span class="post-blank">' + esc(part.charAt(0)) + '</span>' +
+                  '<span>' + esc(part.slice(1)) + '</span>';
+        } else {
+          sent += '<span>' + esc(part) + '</span>';
+        }
         if (i < slots) {
           sent += '<button type="button" class="blank slot" data-slot="' + i + '">___</button>';
         }

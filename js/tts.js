@@ -83,7 +83,16 @@ var Tts = (function () {
 
   /* Latin → letters an Italian voice pronounces correctly.
      Ecclesiastical adjustments: ae/oe → e, y → i, and the typographic
-     quotation marks dropped so they are not read out as "virgolette". */
+     quotation marks dropped so they are not read out as "virgolette".
+
+     The VERSE SLASH goes the same way. A quoted hexameter is written
+     'ab ōrīs / Ītaliam' — that slash is a line break for the eye, and an
+     engine handed it either says "slash" or, worse, "barra". Callers
+     normally pass a page's own `ttsText`, which has never carried one; this
+     is the backstop for a page that has no ttsText and for anything else
+     that reaches the speaker with a verse in it. It becomes a COMMA, not
+     nothing: punctuation is never voiced, and a verse boundary is exactly
+     where the breath belongs. */
   function prep(text) {
     var out = '', i, c;
     var t = String(text);
@@ -94,6 +103,7 @@ var Tts = (function () {
     out = out.replace(/ae/g, 'e').replace(/Ae/g, 'E')
              .replace(/oe/g, 'e').replace(/Oe/g, 'E')
              .replace(/[“”«»"]/g, '')
+             .replace(/\s*\/\s*/g, ', ')
              .replace(/y/g, 'i').replace(/Y/g, 'I');
     return out;
   }

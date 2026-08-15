@@ -310,6 +310,19 @@ h1, h2, h3 { font-family: var(--serif); }
   line-height: 1.5;
   margin: 0.9rem 0.4rem 0.5rem;
 }
+/* GAUNTLET F5 — quoted hexameter. Each ' / '-separated segment is its own
+   centred line; a verse too long for the width still wraps INSIDE its line,
+   which is what a printed text does with the same problem. (No hanging
+   indent: the page is centred, and an indent on a centred line only pushes
+   the whole block sideways.) `.verse-many` is the >4-verse step-down: seven
+   hexameters at the prose size pushed the play controls off a 375x812
+   screen — the same fold the fix exists to clear. */
+.story-text.verse { margin: 0.7rem 0.3rem 0.4rem; }
+.story-text.verse .versus { display: block; }
+.story-text.verse-many {
+  font-size: 1.05rem;
+  line-height: 1.42;
+}
 .margo {
   list-style: none;
   margin: 0.4rem auto 0.6rem;
@@ -405,6 +418,15 @@ h1, h2, h3 { font-family: var(--serif); }
   margin: 0 0.2rem;
 }
 .blank.filled { color: var(--green); border-color: var(--green); font-weight: bold; }
+/* GAUNTLET F4: a full stop that follows a blank belongs TO the sentence,
+   not to the gap. The blank's trailing 0.2rem margin + 0.4rem padding is
+   pulled back so 'Aegyptō ____.' reads as one clause instead of leaving the
+   period stranded. `display:inline-block` is what makes the negative margin
+   bite on an inline run in every engine. */
+.post-blank {
+  display: inline-block;
+  margin-left: -0.55rem;
+}
 
 /* memory */
 .mem-grid {
@@ -537,6 +559,9 @@ h1, h2, h3 { font-family: var(--serif); }
   .steps { gap: 0.35rem; }
   .node { width: 64px; }
   .story-text, .sentence { font-size: 1.25rem; }
+  /* the verse step-down travels with them: this is the width the >4-verse
+     fold problem was measured at (GAUNTLET F5) */
+  .story-text.verse-many { font-size: 0.98rem; }
 }
 
 /* speak button */
