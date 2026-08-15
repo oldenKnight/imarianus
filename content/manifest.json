@@ -8,7 +8,13 @@
         { "id": "r02", "capitula": ["f4", "f5", "f6"], "boss": "b_r02" }
       ]
     },
-    { "id": "historia", "regions": [] },
+    {
+      "id": "historia",
+      "regions": [
+        { "id": "l1", "capitula": ["h1", "h2", "h3", "h4", "h5"] },
+        { "id": "l2", "capitula": ["h6", "h7", "h8", "h9", "h10"], "boss": "b_l2" }
+      ]
+    },
     { "id": "aeneis", "regions": [] }
   ],
   "steps": ["verba", "fabula", "sonus", "ludus", "aenigmata", "corrige", "comple"]

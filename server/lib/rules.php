@@ -280,6 +280,48 @@ function rule_regions_builtin() {
         array('q' => 'rēte',    'a' => 'rēte'),
         array('q' => 'ōvum',    'a' => 'ōvum')
       )
+    ),
+    /* ---- HISTORIA SACRA -------------------------------------------------
+       Liber I · Creātiō (content id l1). NO BOSS: CURRICULUM §2 gives the
+       first liber of the track no probātiō, so the entry declares an empty
+       boss and an EMPTY answer key. That is not an oversight: the guard in
+       progress_boss_quiz() refuses an empty key with 'quiz_unavailable',
+       which is the right answer for a region with no trial. The entry exists
+       at all so that rule_regions() has a `track` for these five capitula
+       and rule_region_of('h1') answers 'l1'. */
+    'l1' => array(
+      'fables' => array('h1', 'h2', 'h3', 'h4', 'h5'),
+      'track'  => 'historia',
+      'boss'   => '',
+      'fight_xp' => 0,                 // nothing to clear, nothing to grant
+      'quiz_xp_each' => 10,
+      'quiz_pass_max_wrong' => 1,
+      'quiz' => array()                // no trial ⇒ no answer key
+    ),
+    /* Liber II · Dīluvium (content id l2). Its trial is a PROBĀTIŌ, not a
+       duel (js/probatio.js), but the server does not care which engine drew
+       it: a probatio posts the same result payload a duel does, so the
+       reward config is the ordinary one. Like r02 this region was born with
+       the manifest, so its built-in id IS its manifest id and it needs no
+       rule_region_aliases() entry. */
+    'l2' => array(
+      'fables' => array('h6', 'h7', 'h8', 'h9', 'h10'),
+      'track'  => 'historia',
+      'boss'   => 'b_l2',
+      'fight_xp' => 30,
+      'quiz_xp_each' => 10,
+      'quiz_pass_max_wrong' => 1,   // <=1 wrong of 5 passes
+      // ANSWER KEY: mirrors the boss.quiz `la` values in
+      // content/historia-l2.js, one word per capitulum. Word -> pick the
+      // image, so the answer is the same word; stored explicitly so grading
+      // never depends on the order the client drew the options in.
+      'quiz' => array(
+        array('q' => 'clāmat',   'a' => 'clāmat'),
+        array('q' => 'arca',     'a' => 'arca'),
+        array('q' => 'dīluvium', 'a' => 'dīluvium'),
+        array('q' => 'rāmus',    'a' => 'rāmus'),
+        array('q' => 'turris',   'a' => 'turris')
+      )
     )
   );
 }
@@ -388,7 +430,12 @@ function rule_boss_min_ms($regionId) {
     'region1' => 20000,
     // r02 = the Leō duel, tuned identically to region1 (hp 6 / 45 s),
     // so the same floor applies.
-    'r02' => 20000
+    'r02' => 20000,
+    // l2 = the Arca PROBĀTIŌ (js/probatio.js): ONE 'ordina' phase, hp 6 /
+    // 45 s. Six items have to DRIFT down and be caught, and the spawn
+    // interval at regionIndex 1 is ~1.5 s, so the trial is floored by the
+    // item pump rather than by the player: 20 s.
+    'l2' => 20000
   );
   // A renamed region keeps its tuning (see rule_region_aliases).
   $aliases = rule_region_aliases();
