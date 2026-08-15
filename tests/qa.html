@@ -9,7 +9,10 @@
 
         qa.html?screen=landing   logged-out landing page
         qa.html?screen=doors     the three doors (home)
-        qa.html?screen=mox       a track still in fabricā
+        qa.html?screen=historia  the Historia Sacra map (Liber I)
+        qa.html?screen=mox       a track still in fabricā (now Aeneis: as of
+                                 the L1/L2 registration Historia is a REAL
+                                 door and no longer reaches the MOX screen)
         qa.html?screen=ordo      leaderboard (empty-board state)
         qa.html?screen=map       the overworld board
         qa.html?screen=cap       capitulum step list (f2)
@@ -26,6 +29,12 @@
                                  its first one — the app has no UI for
                                  moving between regions yet, so this is the
                                  only way to see Regiō II's Leō boss.
+        &track=historia          which DOOR the route walks through. Defaults
+                                 to fabulae, and to historia when the screen
+                                 or the region id is a Historia one. The step
+                                 routes open h1 on that track instead of f2.
+                                 e.g. &screen=fabula&track=historia   → h1
+                                      &screen=bossintro&region=l2     → Arca
 
      Extra knobs:
         &phase=caterva|clamor|fuga          (screen=boss)
@@ -67,6 +76,11 @@
       window.__QA_SCROLL = /scroll=1/.test(q);
       window.__QA_PHASE = (q.match(/phase=([a-z]+)/) || [])[1] || '';
       window.__QA_REGION = (q.match(/region=([a-z0-9]+)/) || [])[1] || '';
+      /* which DOOR the route walks through. Explicit &track= wins; otherwise
+         a Historia screen or a Historia region id (l1, l2, …) implies it. */
+      window.__QA_TRACK = (q.match(/track=([a-z]+)/) || [])[1] ||
+        ((window.__QA_SCREEN === 'historia' || /^l[0-9]/.test(window.__QA_REGION))
+          ? 'historia' : 'fabulae');
 
       /* f1 finished, f2 in progress. A step is only reachable when the one
          before it is done, so unlock f2 UP TO whichever step was asked for —
@@ -85,18 +99,25 @@
         streak: 3, lastDay: new Date().toISOString().slice(0, 10),
         completed: {
           f1: DONE,
-          f2: f2
+          f2: f2,
+          /* the same partial unlock on Historia's first capitulum, so
+             &track=historia reaches h1's steps by the identical route */
+          h1: f2
         },
         bosses: {}, mapNode: 'f2',
         createdAt: 1700000000000
       };
       /* The boss node only opens once EVERY capitulum of its region is done.
-         Both shipped regions are covered at once (r01 = f1–f3, r02 = f4–f6)
-         because this seed runs before the manifest is even parsed. */
+         Every shipped region is covered at once (r01 = f1–f3, r02 = f4–f6,
+         l1 = h1–h5, l2 = h6–h10) because this seed runs before the manifest
+         is even parsed. l1 has no boss at all, which is the point of the
+         Historia map shot: finishing it must NOT grow a crown. */
       if (window.__QA_SCREEN === 'boss' || window.__QA_SCREEN === 'probatio' ||
           window.__QA_SCREEN === 'bossintro') {
         state.completed = { f1: DONE, f2: DONE, f3: DONE,
-                            f4: DONE, f5: DONE, f6: DONE };
+                            f4: DONE, f5: DONE, f6: DONE,
+                            h1: DONE, h2: DONE, h3: DONE, h4: DONE, h5: DONE,
+                            h6: DONE, h7: DONE, h8: DONE, h9: DONE, h10: DONE };
         state.mapNode = 'b_' + (window.__QA_REGION || 'r01');
       }
       /* the landing screen is the LOGGED-OUT route: no cached name, and a
@@ -218,7 +239,21 @@
         aenigmata: 'Aenigmata', corrige: 'Corrige', comple: 'Complē'
       };
 
+      /* the door this run walks through, and the capitulum its step routes
+         open behind it. One pair of variables is the whole multi-track
+         change: every route below was already track-shaped, it just had
+         'fabulae' spelled into it. */
+      var DOOR = '.door-' + window.__QA_TRACK;
+      var FIRST_CAP = (window.__QA_TRACK === 'historia') ? 'h1' : 'f2';
+
+      /* Historia is a live door now (content/manifest.js), so screen=mox has
+         to ask a track that is still empty — Aeneis is the last one left. */
       if (target === 'mox') {
+        when('.door-aeneis', tap);
+        return;
+      }
+      /* the Historia map itself: open the door and stop there */
+      if (target === 'historia') {
         when('.door-historia', tap);
         return;
       }
@@ -235,7 +270,7 @@
          play. Everything it passes is what app.js passes in real life. */
       function bossConfig(extra) {
         var rid = window.__QA_REGION || 'r01';
-        var reg = window.CONTENT ? CONTENT.region('fabulae', rid) : null;
+        var reg = window.CONTENT ? CONTENT.region(window.__QA_TRACK, rid) : null;
         var boss = (reg && reg.boss) || {};
         var words = [], seen = {}, i, j, v;
         var caps = (reg && reg.capitula) || [];
@@ -270,7 +305,9 @@
          the DUEL's header — a trial captioned "Lupum vince!". Everything the
          screenshot shows now comes from app.js: the header string, the intro
          glyph, and the choice of engine. Real Historia trials will arrive with
-         their own content; this keeps the route testable until they do. */
+         their own content; this keeps the route testable until they do —
+         and it is now SKIPPED on the historia track, whose Liber II ships a
+         real probatio (b_l2 'Arca') that must be photographed as authored. */
       function asTrial(rid) {
         var reg = window.CONTENT ? CONTENT.region('fabulae', rid) : null;
         if (!reg || !reg.boss) { return; }
@@ -286,12 +323,14 @@
         var rid = window.__QA_REGION || 'r01';
         /* the boss node id is per-region content (b_r01, b_r02, …) */
         var bossNode = '.map-node[data-id="b_' + rid + '"]';
-        when('.door-fabulae', function (door) {
+        when(DOOR, function (door) {
           tap(door);
           when(bossNode, function (node) {
             /* the region's content file is registered by the time its map
                node exists, so this is the first safe moment to retune it */
-            if (target === 'probatio') { asTrial(rid); }
+            if (target === 'probatio' && window.__QA_TRACK === 'fabulae') {
+              asTrial(rid);
+            }
             tap(node);
             /* screen=bossintro stops HERE: the intro screen is where the
                boss's own actor and challenge line are on show. */
@@ -316,8 +355,8 @@
         return;
       }
 
-      /* everything else lives behind the FABULAE door */
-      when('.door-fabulae', function (door) {
+      /* everything else lives behind the track's door */
+      when(DOOR, function (door) {
         tap(door);
         when('.map-view', function (view) {
           if (target === 'map') {
@@ -356,7 +395,7 @@
             return;
           }
           /* the capitulum the mascot stands on */
-          when('.map-node[data-id="f2"]', function (node) {
+          when('.map-node[data-id="' + FIRST_CAP + '"]', function (node) {
             tap(node);
             if (target === 'cap') { return; }
             var label = STEP_LABEL[target];
