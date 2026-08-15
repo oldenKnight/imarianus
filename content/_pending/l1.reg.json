@@ -1,0 +1,17 @@
+{
+  "track": "historia",
+  "region": "l1",
+  "titulus": "Creātiō",
+  "ladder": "S1",
+  "file": "content/historia-l1.js",
+  "capitula": ["h1", "h2", "h3", "h4", "h5"],
+  "boss": null,
+  "quizKey": [],
+  "xp": { "step": 10, "boss": 0 },
+
+  "note_boss": "LIBER I HAS NO BOSS (CURRICULUM §2 gives a probātiō only to L2, L6 and later). The manifest entry must therefore carry no \"boss\" field, or a null one — js/app.js only pushes a boss node when the region object declares one, and content/historia-l1.js declares none. server/lib/rules.php needs an 'l1' entry with 'fables' => array('h1','h2','h3','h4','h5'), 'track' => 'historia', NO 'boss', and an EMPTY 'quiz' array (api/boss_quiz.php reports an empty key as 'not available', which is the correct behaviour for a region that has no trial).",
+
+  "note_progress": "progressId is 'l1' — the content id doubles as the key, as r02 does. Nothing pre-existing uses it, so no rule_region_aliases() entry is needed.",
+
+  "note_track": "This is the FIRST region of the 'historia' track. Its manifest \"regions\" array is currently empty, so adding l1 also turns the Historia door from the MOX screen into a live map (js/app.js firstRegionId)."
+}
