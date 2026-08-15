@@ -71,6 +71,13 @@
 <script src="../js/data-core.js"></script>
 <script src="../js/content-loader.js"></script>
 <script src="../content/fabulae-r01.js"></script>
+<!-- M9 offline queue. storage.js + api.js are a PAIR here: the queue lives in
+     storage.js but the event id is minted and replayed by api.js, and the bug
+     class we are guarding (progress silently lost on a dead network) only
+     exists at the seam between them. Loading them in index.html's order also
+     proves storage.js survives being evaluated before Api exists. -->
+<script src="../js/storage.js"></script>
+<script src="../js/api.js"></script>
 
 <script>
 /* eslint-env browser */
@@ -1129,7 +1136,299 @@
       window.setTimeout(function () { Probatio.abort(); done('the trial never ended'); }, 3000);
     });
 
+  /* ================= M9 — OFFLINE QUEUE, PWA =================
+     Guards brief §8: "students are on phones with unreliable connections;
+     today they silently lose progress". The checks below are the contract:
+     an action taken offline is kept, replayed in order, and carries the same
+     event id it was born with (without which a replay double-pays XP). */
+
+  /* These tests share ONE global: localStorage['mariane_queue_v1']. Two of
+     them in flight at once would each be clearing and filling the other's
+     queue, so they are serialized exactly like the engine tests above —
+     rows appear immediately, execution happens one at a time. */
+  var netQueue = [];
+  function checkNet(bug, name, fn) {
+    var set = row(bug, name);
+    pending++;
+    netQueue.push(function () {
+      var settled = false;
+      function done(msg) {
+        if (settled) { return; }
+        settled = true;
+        set(!msg, msg || 'ok');
+        pending--;
+        runNetQueue();
+        finish();
+      }
+      try { fn(done); } catch (e) { done('threw: ' + (e && e.message ? e.message : e)); }
+    });
+  }
+  function runNetQueue() {
+    var next = netQueue.shift();
+    if (next) { next(); }
+  }
+
+  /* Swap Api's network for a recorder. Returns a restore() function — every
+     check that calls this MUST call restore(), including on failure. */
+  function stubApi(onReplay) {
+    var realReplay = Api.replay, realGetCsrf = Api.getCsrf;
+    Api.replay = onReplay;
+    Api.getCsrf = function () { return 'test-csrf'; };   /* flush() waits for one */
+    return function () {
+      Api.replay = realReplay;
+      Api.getCsrf = realGetCsrf;
+      Storage.setOffline(false);
+      Storage.clearQueue();
+    };
+  }
+
+  check('M9-QUEUE', 'an offline POST is queued, not lost, and answers queued:true',
+    function () {
+      Storage.clearQueue();
+      var restore = stubApi(function () { throw new Error('replay must not run while offline'); });
+      try {
+        Storage.setOffline(true);
+        var errs = [];
+        Api.completeStep('f1', 'vocabula', 10, function (err) { errs.push(err); });
+        Api.completeStep('f1', 'quaestio', 5, function (err) { errs.push(err); });
+        Api.sync({ hearts: 3, mapNode: 'f2' }, function (err) { errs.push(err); });
+
+        if (errs.length !== 3) { return 'expected 3 callbacks, got ' + errs.length; }
+        var i;
+        for (i = 0; i < errs.length; i++) {
+          if (!errs[i] || errs[i].queued !== true) {
+            return 'call ' + i + ' did not report queued:true — ' + JSON.stringify(errs[i]);
+          }
+          if (!errs[i].eventId) { return 'call ' + i + ' reported no event id'; }
+        }
+        var q = Storage.queuePeek();
+        if (q.length !== 3) { return 'queue holds ' + q.length + ' items, expected 3'; }
+        if (q[0].path !== 'step_complete.php' || q[1].path !== 'step_complete.php' ||
+            q[2].path !== 'sync.php') {
+          return 'FIFO order broken: ' + q[0].path + ', ' + q[1].path + ', ' + q[2].path;
+        }
+        if (q[0].body.step !== 'vocabula' || q[1].body.step !== 'quaestio') {
+          return 'the payloads were not preserved verbatim';
+        }
+        /* the id must be in BOTH channels — the body mirror is what survives
+           a host that strips X-Event-Id */
+        for (i = 0; i < q.length; i++) {
+          if (q[i].body.eventId !== q[i].id) {
+            return 'item ' + i + ': body.eventId (' + q[i].body.eventId +
+                   ') != item id (' + q[i].id + ')';
+          }
+        }
+        if (q[0].id === q[1].id) { return 'two events minted the same id: ' + q[0].id; }
+        return null;
+      } finally { restore(); }
+    });
+
+  checkNet('M9-QUEUE', 'the queue flushes FIFO on reconnect with the ids intact',
+    function (done) {
+      Storage.clearQueue();
+      var seen = [];
+      var restore = stubApi(function (item, cb) {
+        seen.push({ path: item.path, id: item.id, bodyId: item.body.eventId,
+                    step: item.body.step });
+        cb(null, { ok: true });
+      });
+      Storage.setOffline(true);
+      Api.completeStep('f1', 'vocabula', 10, function () {});
+      Api.completeStep('f1', 'quaestio', 5, function () {});
+      Api.sync({ hearts: 3 }, function () {});
+      var born = Storage.queuePeek();
+
+      Storage.setOffline(false);          /* == the browser's `online` event */
+
+      var waited = 0;
+      (function poll() {
+        if (Storage.queueLength() === 0 || waited > 60) {
+          var msg = null;
+          if (seen.length !== 3) {
+            msg = 'replayed ' + seen.length + ' of 3 (queue left: ' +
+                  Storage.queueLength() + ')';
+          } else if (seen[0].step !== 'vocabula' || seen[1].step !== 'quaestio' ||
+                     seen[2].path !== 'sync.php') {
+            msg = 'replay order was not FIFO: ' + seen[0].step + ', ' + seen[1].step +
+                  ', ' + seen[2].path;
+          } else {
+            var i;
+            for (i = 0; i < 3; i++) {
+              if (seen[i].id !== born[i].id) {
+                msg = 'item ' + i + ' was replayed under a NEW id (' + seen[i].id +
+                      ' != ' + born[i].id + ') — the server cannot dedupe that';
+                break;
+              }
+              if (seen[i].bodyId !== born[i].id) {
+                msg = 'item ' + i + ' lost its body.eventId on replay';
+                break;
+              }
+            }
+          }
+          restore();
+          done(msg);
+          return;
+        }
+        waited++;
+        window.setTimeout(poll, 25);
+      }());
+    });
+
+  checkNet('M9-QUEUE', 'flush stops at the first failure and keeps the order',
+    function (done) {
+      Storage.clearQueue();
+      var calls = 0;
+      var restore = stubApi(function (item, cb) {
+        calls++;
+        /* first item goes through, second dies at the network layer */
+        if (calls === 1) { cb(null, { ok: true }); }
+        else { cb({ status: 0, data: null }, null); }
+      });
+      Storage.setOffline(true);
+      Api.completeStep('f1', 'a', 0, function () {});
+      Api.completeStep('f1', 'b', 0, function () {});
+      Api.completeStep('f1', 'c', 0, function () {});
+      Storage.setOffline(false);
+
+      window.setTimeout(function () {
+        var q = Storage.queuePeek();
+        var msg = null;
+        if (calls !== 2) {
+          msg = 'expected exactly 2 attempts (one ok, one dead), got ' + calls +
+                ' — a failing flush must not spin through the queue';
+        } else if (q.length !== 2) {
+          msg = 'expected 2 survivors, got ' + q.length;
+        } else if (q[0].body.step !== 'b' || q[1].body.step !== 'c') {
+          msg = 'order lost after a failure: ' + q[0].body.step + ', ' + q[1].body.step;
+        } else if (q[0].tries !== 1) {
+          msg = 'the failed attempt was not counted (tries=' + q[0].tries + ')';
+        }
+        restore();
+        done(msg);
+      }, 400);
+    });
+
+  checkNet('M9-QUEUE', 'a permanent 4xx is dropped instead of blocking the queue',
+    function (done) {
+      Storage.clearQueue();
+      var seen = [];
+      var restore = stubApi(function (item, cb) {
+        seen.push(item.body.step);
+        if (item.body.step === 'poison') {
+          cb({ status: 422, data: { error: 'invalid_step' } }, null);
+        } else { cb(null, { ok: true }); }
+      });
+      Storage.setOffline(true);
+      Api.completeStep('f1', 'poison', 0, function () {});
+      Api.completeStep('f1', 'good', 0, function () {});
+      Storage.setOffline(false);
+
+      window.setTimeout(function () {
+        var msg = null;
+        if (Storage.queueLength() !== 0) {
+          msg = 'a rejected head blocked the queue (' + Storage.queueLength() + ' left)';
+        } else if (seen.length !== 2 || seen[1] !== 'good') {
+          msg = 'the good event behind the poison one never went: ' + seen.join(',');
+        }
+        restore();
+        done(msg);
+      }, 400);
+    });
+
+  check('M9-QUEUE', 'the cap evicts a sync before earned progress, never the reverse',
+    function () {
+      Storage.clearQueue();
+      var i;
+      try {
+        /* a full queue of earned progress plus one low-value measurement */
+        for (i = 0; i < 199; i++) {
+          Storage.enqueue('step_complete.php', { fable: 'f1', step: 's' + i });
+        }
+        Storage.enqueue('boss_result.php', { region: 'r01' });
+        if (Storage.queueLength() !== 200) {
+          return 'setup failed: queue holds ' + Storage.queueLength();
+        }
+        /* one more step_complete: the measurement must be the one to go */
+        Storage.enqueue('step_complete.php', { fable: 'f1', step: 'last' });
+        var q = Storage.queuePeek(), results = 0, steps = 0;
+        for (i = 0; i < q.length; i++) {
+          if (q[i].path === 'boss_result.php') { results++; }
+          if (q[i].path === 'step_complete.php') { steps++; }
+        }
+        if (q.length !== 200) { return 'cap not enforced: ' + q.length; }
+        if (results !== 0) { return 'the boss_result survived; something else was evicted'; }
+        if (steps !== 200) { return 'expected 200 step_completes, got ' + steps; }
+        if (q[q.length - 1].body.step !== 'last') { return 'the newcomer was not appended'; }
+
+        /* the mirror image: a sync offered to a queue full of progress is
+           REFUSED rather than costing a step_complete its place */
+        var refused = Storage.enqueue('sync.php', { hearts: 1 });
+        if (refused !== null) { return 'a sync was admitted at the cost of earned progress'; }
+        if (Storage.queueLength() !== 200) { return 'the queue changed size on a refusal'; }
+        return null;
+      } finally { Storage.clearQueue(); }
+    });
+
+  check('M9-QUEUE', 'queued syncs collapse to the newest (they are last-write-wins)',
+    function () {
+      Storage.clearQueue();
+      try {
+        Storage.enqueue('sync.php', { hearts: 5, mapNode: 'f1' });
+        Storage.enqueue('step_complete.php', { fable: 'f1', step: 's' });
+        Storage.enqueue('sync.php', { hearts: 2, mapNode: 'f3' });
+        var q = Storage.queuePeek();
+        if (q.length !== 2) { return 'expected 2 items, got ' + q.length; }
+        if (q[0].path !== 'step_complete.php') { return 'the step was collapsed away'; }
+        if (q[1].path !== 'sync.php' || q[1].body.hearts !== 2) {
+          return 'the surviving sync is not the newest one';
+        }
+        return null;
+      } finally { Storage.clearQueue(); }
+    });
+
+  check('M9-QUEUE', 'reconcile(): the SERVER snapshot wins, it is not merged',
+    function () {
+      var state = Storage.defaultState();
+      /* a local mirror that thinks it is ahead: stale optimistic XP, a step
+         the server never accepted, a boss it never cleared */
+      state.xp = 9999;
+      state.hearts = 1;
+      state.streak = 40;
+      state.completed = { f1: { vocabula: true }, f9: { lectio: true } };
+      state.bosses = { b_r01: true, b_r04: true };
+      state.mapNode = 'f9';
+
+      Storage.reconcile(state, {
+        xp: 120, hearts: 5, maxHearts: 5, streak: 2, lastDay: '2026-08-14',
+        mapNode: 'f2', completed: { f1: { vocabula: true } }, bosses: {}
+      });
+
+      if (state.xp !== 120) { return 'local XP survived reconcile: ' + state.xp; }
+      if (state.hearts !== 5) { return 'local hearts survived reconcile: ' + state.hearts; }
+      if (state.streak !== 2) { return 'local streak survived reconcile: ' + state.streak; }
+      if (state.mapNode !== 'f2') { return 'local mapNode survived: ' + state.mapNode; }
+      if (state.completed.f9) { return 'completed was MERGED — f9 must be gone'; }
+      if (state.bosses.b_r01 || state.bosses.b_r04) { return 'bosses was MERGED'; }
+      if (state.lastDay !== '2026-08-14') { return 'lastDay did not come from the server'; }
+      return null;
+    });
+
+  check('M9-QUEUE', 'logout (Storage.reset) forfeits the queue — never credit the next child',
+    function () {
+      Storage.clearQueue();
+      try {
+        Storage.enqueue('step_complete.php', { fable: 'f1', step: 's' });
+        if (Storage.queueLength() !== 1) { return 'setup failed'; }
+        Storage.reset();
+        if (Storage.queueLength() !== 0) {
+          return 'a logged-out student\'s queue survived into the next session';
+        }
+        return null;
+      } finally { Storage.clearQueue(); }
+    });
+
   runEngineQueue();      /* start the serialized engine tests */
+  runNetQueue();         /* start the serialized offline-queue tests */
   finish();
 }());
 </script>
