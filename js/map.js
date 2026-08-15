@@ -46,14 +46,25 @@ var WorldMap = (function () {
   /* Per-track tint (DESIGN §3). Only these values change between tracks;
      everything else is shared, so a new track is a palette, not a renderer.
      Historia (indigo night) and Aeneis (wine-dark sea) are reserved now so
-     the hook is proven before their content exists. */
+     the hook is proven before their content exists.
+
+     `carve` is the per-track ramp the mmCarved filter maps prop luminance
+     onto (see defs()). It is part of the tint for the same reason the wood is:
+     a figurine carved out of an indigo board is not umber. Each entry is
+     [slopeR, interceptR, slopeG, interceptG, slopeB, interceptB]. */
   var TINTS = {
     fabulae: { wood: '#3c2415', woodDk: '#28160b', woodLt: '#4a2e1c',
-               seam: '#1b0f07', glow: '#f0c268', haze: '#8a5a30', knot: '#2c1a0e' },
+               seam: '#1b0f07', glow: '#f0c268', haze: '#8a5a30', knot: '#2c1a0e',
+               /* warm umber — oak, the original */
+               carve: [0.42, 0.035, 0.27, 0.020, 0.15, 0.012] },
     historia: { wood: '#232a45', woodDk: '#151a2c', woodLt: '#2f3758',
-                seam: '#0f121e', glow: '#e6d79a', haze: '#3d4a78', knot: '#1b2138' },
+                seam: '#0f121e', glow: '#e6d79a', haze: '#3d4a78', knot: '#1b2138',
+                /* cool slate — the same stone the indigo night board is cut from */
+                carve: [0.24, 0.030, 0.30, 0.045, 0.46, 0.075] },
     aeneis: { wood: '#3d1f2a', woodDk: '#26121a', woodLt: '#502936',
-              seam: '#190b11', glow: '#f0c268', haze: '#6b3346', knot: '#301722' }
+              seam: '#190b11', glow: '#f0c268', haze: '#6b3346', knot: '#301722',
+              /* wine — porphyry against the wine-dark board */
+              carve: [0.46, 0.070, 0.22, 0.025, 0.30, 0.042] }
   };
 
   /* shared palette (tile faces, badges, laurel) */
@@ -119,15 +130,23 @@ var WorldMap = (function () {
          '</filter>';
     /* CARVED WOOD: takes any full-colour actor from scenes.js and turns it
        into a piece carved from the same board — desaturate, then map the
-       remaining luminance onto a warm umber ramp. That is what makes a fox
+       remaining luminance onto the TRACK'S ramp. That is what makes a fox
        actor read as a chess figurine instead of a cartoon lying on the
-       floor, and it costs no new artwork. */
+       floor, and it costs no new artwork.
+
+       The ramp used to be hard-coded umber, which was right for the oak
+       board of Fabulae and wrong everywhere else: warm brown palms and
+       amphorae sat on top of the indigo and the wine-dark boards looking
+       like props from another game rather than carvings from this one.
+       t.carve now supplies the ramp, so the figurines are cut from whatever
+       the region's board is made of. */
+    var cv = t.carve || TINTS.fabulae.carve;
     s += '<filter id="mmCarved" x="-10%" y="-10%" width="120%" height="120%">' +
          '<feColorMatrix type="saturate" values="0.1"/>' +
          '<feComponentTransfer>' +
-           '<feFuncR type="linear" slope="0.42" intercept="0.035"/>' +
-           '<feFuncG type="linear" slope="0.27" intercept="0.02"/>' +
-           '<feFuncB type="linear" slope="0.15" intercept="0.012"/>' +
+           '<feFuncR type="linear" slope="' + cv[0] + '" intercept="' + cv[1] + '"/>' +
+           '<feFuncG type="linear" slope="' + cv[2] + '" intercept="' + cv[3] + '"/>' +
+           '<feFuncB type="linear" slope="' + cv[4] + '" intercept="' + cv[5] + '"/>' +
          '</feComponentTransfer>' +
          '</filter>';
     /* the pool of light under the current tile: a real radial gradient, not
@@ -449,11 +468,28 @@ var WorldMap = (function () {
     return s;
   }
 
-  /* the mascot standing ON the current tile */
-  function mascotOn(avatar) {
+  /* ---------- the walker ----------
+     One fox walked all three boards, which read as a Fabulae mascot that had
+     wandered into Genesis and then into the Aeneid. Each track gets its own
+     guide instead: the fox through the fables, a dove over sacred history,
+     a ship down the Aeneid. js/actors-props.js registers 'columbaMascot' and
+     'navisMascot' as drop-in twins of Scenes.mascot() — same 60-unit box,
+     same centred-on-the-origin construction — so this is a name swap and
+     nothing else.
+
+     FALLBACK IS THE POINT: the art file is optional (map.js must render with
+     scenes.js alone), so an unregistered mascot silently becomes the fox
+     head, exactly as before. */
+  var TRACK_MASCOT = { historia: 'columbaMascot', aeneis: 'navisMascot' };
+
+  function mascotOn(avatar, track) {
+    var want = TRACK_MASCOT[track];
     /* nested <svg> is legal SVG and lets us drop scenes.js art in unchanged */
+    var art = (want && hasActor(want))
+      ? Scenes.sprite(want, {}, 52)
+      : Scenes.mascot(52, avatar);
     return '<g class="mm-mascot" pointer-events="none" transform="translate(-26,-76)">' +
-      Scenes.mascot(52, avatar) + '</g>';
+      art + '</g>';
   }
 
   /* ---------- render ---------- */
@@ -539,7 +575,7 @@ var WorldMap = (function () {
       } else {
         s += badge(n, false);
       }
-      if (isHere) { s += mascotOn(model.avatar); }
+      if (isHere) { s += mascotOn(model.avatar, model.track); }
       s += '</g>';
     }
 
