@@ -41,6 +41,25 @@
          hp: 6, seconds: 45        LEGACY: used when `phases` is absent
        }
 
+   SCREEN-ONLY KEYS ON THE SAME `boss` OBJECT. content/<track>-<region>.js
+   writes ONE boss object, and app.js reads several fields off it that the
+   engine never sees — they decorate the screens around the fight, not the
+   fight. They are listed here because this comment is where an author looks
+   for "what may a boss declare?":
+
+       kind: 'probatio'   run the trial engine instead of the duel
+       bg / sceneY / sceneScale / pose / fightPose / calmPose
+                          how the intro and defeat frames draw the actor
+                          (sceneScale absent ⇒ app.js derives one from the
+                          actor's own height, so the frame is filled)
+       headerText / vinceText
+                          the line above the canvas and on the intro card
+       postWin            OPTIONAL one-line Latin coda shown UNDER the
+                          standard victory text when the region is fully
+                          cleared — e.g. r12's 'Lupus līber discēdit.'
+                          Content only: nothing generates it, and an absent
+                          key draws nothing.
+
    BACKWARD COMPATIBILITY: a config with NO `phases` field runs one
    caterva phase with the ORIGINAL v1 tuning. content/fabulae-r02.js
    and any older caller therefore keeps working untouched.
@@ -197,6 +216,47 @@ var Boss = (function () {
       return img;
     }
 
+    /* ---------- POLISH: the tile picture ----------
+       A vocab item's `scene` is a 400x240 stage: sky, ground, and the animal
+       standing somewhere on it. Squeezed into a 52px tile that is mostly sky
+       and grass, and the animal itself is about 14px across — which is why
+       ordina's `ovis` and `capra` tiles were the same beige smudge.
+
+       When the scene is ONE actor on a background, the background is only
+       staging and the actor is the whole meaning, so we can draw the actor
+       through Scenes.sprite() instead: a tight, transparent crop of just the
+       artwork, exactly what the map's zone figurines use. The tile's own
+       parchment face is the background it needed. Anything else — two or more
+       actors, or an actor the art library does not have — still goes through
+       the scene raster, because there the composition IS the meaning
+       (`mare` is two fish IN water; cropping one fish would lie).
+
+       Returns null when the item has no picture at all; drawTile then falls
+       back to the emoji and finally to the word itself. */
+    function soloActorOf(word) {
+      var sc = word && word.scene;
+      if (!sc || !sc.items || sc.items.length !== 1) { return null; }
+      /* bubbles are speech drawn on the STAGE, not on the actor: a scene that
+         carries one would lose it in the crop, so it keeps the raster. */
+      if (sc.bubbles && sc.bubbles.length) { return null; }
+      var it = sc.items[0];
+      if (!it || !it.t) { return null; }
+      var names = (window.Scenes && Scenes.actorNames) ? Scenes.actorNames() : [];
+      var i;
+      for (i = 0; i < names.length; i++) { if (names[i] === it.t) { return it; } }
+      return null;
+    }
+
+    /* the picture for a tile, at the raster size it will actually be drawn */
+    function tileImage(word, px) {
+      var solo = soloActorOf(word);
+      if (solo) {
+        return actorImage(solo.t,
+          { pose: solo.pose, role: solo.role, flip: solo.flip }, px);
+      }
+      return sceneImage(word, px);
+    }
+
     /* a transparent single-actor sprite, cached. BUG-2: never a whole scene
        squeezed into a square — that painted an opaque sky over the arena. */
     function actorImage(name, opts, px) {
@@ -291,6 +351,7 @@ var Boss = (function () {
         imgReady: imgReady,
         sceneImage: sceneImage,
         actorImage: actorImage,
+        tileImage: tileImage,   /* the two above, chosen by the tile rule */
         roundRect: roundRect,
         drawTile: drawTile,
         drawBanner: drawBanner,
@@ -385,8 +446,11 @@ var Boss = (function () {
       ctx.lineWidth = opts.lineWidth || 2;
       roundRect(cx - half, cy - half, size, size, 10);
       ctx.stroke();
-      var img = sceneImage(word);
       var pad = 4;
+      /* Raster at twice the drawn art box: these tiles are 52–58 CSS px and a
+         60px raster blown up was visibly soft. Two sizes in the whole game, so
+         the extra cache keys cost nothing. */
+      var img = tileImage(word, Math.round((size - 2 * pad) * 2));
       if (imgReady(img)) {
         ctx.drawImage(img, cx - half + pad, cy - half + pad, size - 2 * pad, size - 2 * pad);
       } else if (word && word.emoji) {
