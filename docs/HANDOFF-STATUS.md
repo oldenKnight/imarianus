@@ -3,7 +3,7 @@
 Purpose: lets ANY fresh Claude session (new PC, new conversation) resume this
 project with zero context loss. Read MASTER-PLAN.md first, then this. Keep this
 file updated at every milestone; it is the cross-machine continuation point.
-Last updated: 2026-08-14 ~19:00 (America/Mexico_City) by Fable (main agent).
+Last updated: 2026-08-15 ~03:15 (America/Mexico_City) by Fable (main agent).
 
 ## Roles (owner's standing instruction — binding)
 
@@ -26,37 +26,31 @@ Owner is away often; proceed autonomously; PushNotification only when blocked.
   nickname-only privacy in SQL, anti-cheat. NOT yet applied to production DB.
 - M3 boss/probatio engine: 6 commits, phases caterva/clamor/fuga + probatio
   ordina/transitus/sententia, boss-as-data, item validation gates.
-- CONTENT shipped & line-audited: fabulae r01 (pre-existing, f1-f3), r02
-  (f4-f6, audited), historia l1-l2 (h1-h10, audited — 3 fixes with integrator).
+- M9: offline queue with event ids, PWA (manifest/sw/icons/pwa.js), teacher
+  dashboard at teacher/. Regression suite 49/49.
+- CONTENT shipped, LINE-AUDITED and registered: fabulae r01-r06 (f1-f18),
+  historia l1-l4 (h1-h22). Committed+audited awaiting registration: fabulae
+  r07 (one fix queued), r10, aeneis al1/al2 (all in task-13 INT-4 queue).
 
-## IN FLIGHT at last update (relaunch if lost in a PC switch)
+## IN FLIGHT as of 2026-08-15 03:15 (relaunch per finisher pattern if lost)
 
-- INTEGRATOR agent: applying historia audit fixes F1-F3 (see task desc /
-  git log), registering l1+l2 into manifest twins + rules.php, min_ms 15000,
-  r02 vinceText. If its commits (prefix "INT:") are absent from git log,
-  relaunch with the same assignment (recoverable from _pending/*.reg.json
-  and the audit rulings in this file's git blame / conversation task list).
-- M5 wave agent: content/fabulae-r03.js + r04.js (Rīvus S3: f7 Canis et
-  Umbra, f8 Rāna et Bōs no-burst, f9 Cervus ad Fontem; Mōns S4: f10 Testūdō,
-  f11 Vulpēs et Ciconia, f12 Haedus et Lupus wolf-cameo; bosses Bōs/Lepus).
-  If "M5: Fabulae Regio III/IV" commits absent, relaunch per AUTHORING-BRIEF.
+Four FINISHER agents: fabulae r08(draft)+r09(new), fabulae r11(draft)+r12(new,
+finale Lupus Ultimus), historia l5(draft)+l6(draft; perfect-tense landmark),
+historia l7(draft, has known stage violations to fix)+l8(new). Drafts sit
+untracked in content/. If their "M5:"/"M6:" commits are absent, relaunch.
 
-## NEXT WAVES (launch order)
+## NEXT (order)
 
-1. After M5 r03/r04 lands: Fable line-audits the Latin, then second INT pass
-   (r03/r04 snippets → manifest + rules).
-2. Fabulae r05-r06 + r07-r08 (two agents), historia l3-l4 (Abraham/Iacob),
-   aeneis l1-l2 (advanced track: own ledger, S12+, authentic Virgil lines per
-   liber close — see CURRICULUM §3).
-3. Then fabulae r09-r12, historia l5-l9, aeneis l3-l12 in successive waves.
-4. M9: offline queue (storage.js), PWA (manifest.webmanifest + sw.js),
-   teacher dashboard (server endpoints exist: class_roster.php).
-5. Art addendum wave + polish backlog (task #12): arcus rainbow, sol/ventus
-   face:false, later brick, radiance prop; 420px sonus/fabula clip; comple
-   two-blank guard.
-6. M10 final gauntlet: full visual sweep (every screen, 360/375/768/900),
-   whole-corpus Latin audit, blind side-by-side vs commercial apps, fix
-   rounds until it wins. Then owner deploy checklist (below).
+1. Audit each finished wave; INT-4 per task 13 (aeneis al1/al2 registration,
+   queued audit fixes, ledger part2 merges, r07-r12 + l5-l8 registration, push).
+2. Historia L9 IESUS — dedicated agent, most doctrinally sensitive, closest
+   audit (8 capitula per CURRICULUM §2).
+3. Aeneis librī III-XII in three waves (a9+; ids continue al3..al12; 4
+   capitula each; authentic Virgil lines per liber close; charter in the
+   al1/al2 file headers + CURRICULUM §3).
+4. Art addendum + polish backlog (task 12). 5. M10 final gauntlet (visual
+   sweep, whole-corpus Latin audit, side-by-side vs commercial apps), then
+   owner deploy checklist below.
 
 ## AUDIT RULINGS LOG (Latin/design decisions — do not re-litigate)
 
