@@ -24,7 +24,10 @@ http.createServer(function (req, res) {
   /* production serves this repo at /imarianus/ (see .htaccess + <base href>);
      accept that prefix locally so index.html's relative URLs resolve. */
   if (urlPath.indexOf('/imarianus/') === 0) { urlPath = urlPath.slice('/imarianus'.length); }
-  if (urlPath === '/') { urlPath = '/index.html'; }
+  /* DirectoryIndex, as .htaccess does it in production: any path that names a
+     directory gets its index.html. '/' is only the commonest case of this —
+     '/teacher/' used to 404 here while working on the real host. */
+  if (urlPath.charAt(urlPath.length - 1) === '/') { urlPath += 'index.html'; }
   var file = path.join(ROOT, urlPath);
   /* keep requests inside the repo root */
   if (file.indexOf(ROOT) !== 0) { res.writeHead(403); res.end('forbidden'); return; }

@@ -18,6 +18,10 @@
        sw.js and offers the install chip. Both resolve through <base>, so they
        work at /imarianus/ on the shared host and at / in local QA. -->
   <link rel="manifest" href="manifest.webmanifest">
+  <!-- iOS ignores the manifest's icons: without this, an app added to the
+       home screen from Safari gets a screenshot of the page instead of the
+       mascot. Same file the manifest's 192 px entry points at. -->
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
   <link rel="stylesheet" href="css/styles.css">
   <!-- Load order is FIXED and matters (all defer ⇒ executed in document order):
        storage/api/audio/tts are leaf utilities; scenes draws; data-core defines

@@ -2,6 +2,11 @@ DirectoryIndex index.html
 
 Options -Indexes
 
+# The shared host does not know this extension and serves it as
+# application/octet-stream, which makes Chrome ignore the manifest and the app
+# uninstallable. scripts/dev-server.js already sends this type locally.
+AddType application/manifest+json .webmanifest
+
 RewriteEngine On
 
 RewriteRule ^server/lib/ - [F,L]
