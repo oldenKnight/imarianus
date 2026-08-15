@@ -1294,9 +1294,11 @@
       /* SONUS: `umbra` and `āvertit` are both grey people on the night
          ground and are NEVER offered together — the one loud thing in
          `āvertit` is Aenēās' terracotta, which is exactly the kind of
-         difference a 130 px tile loses. `Cerberus` (a very large dog)
-         and `Charōn` (a boat on water) are unmistakable and carry the
-         sets. */
+         difference a 130 px tile loses. `Charōn` (a boat on water) is
+         unmistakable and carries the sets; `Cerberus`, a very large dog,
+         is unmistakable BY SHAPE but not by ground — it is on the same
+         nightSky board as `umbra` and `āvertit`, so it stands beside
+         them only when neither of them is the answer. */
       sonus: [
         /* GAUNTLET F8. This set used to offer `umbra` beside the answer, and
            v_umbra and v_cerberus are BOTH the nightSky board — same stars,
@@ -1317,16 +1319,31 @@
                     { la: 'Cerberus', scene: SC.v_cerberus },
                     { la: 'umbra', scene: SC.v_umbra },
                     { la: 'rāmus', scene: SC.v_ramus }] },
+        /* GAUNTLET FINAL, item 3. The same twin-night fault as item 1, this
+           time with the answer on the other side of it: `umbra` IS the
+           answer here and `Cerberus` sat next to it, and v_umbra and
+           v_cerberus are both the nightSky board — dark sky, same moon, same
+           ground band — so the letterboxed 96 px chip showed two dark
+           rectangles and the pick was a guess. `rāmus` takes the slot: the
+           plain background with the golden bough is the one card in this
+           capitulum that glows, and no size makes it look like night. */
         { la: 'umbra',
           answer: { la: 'umbra', scene: SC.v_umbra },
           options: [{ la: 'umbra', scene: SC.v_umbra },
-                    { la: 'Cerberus', scene: SC.v_cerberus },
+                    { la: 'rāmus', scene: SC.v_ramus },
                     { la: 'Charōn', scene: SC.v_charon }] },
+        /* GAUNTLET FINAL, item 4. `āvertit` is the summit as a card — two
+           figures on the nightSky board — so `Cerberus`, also nightSky, was
+           the same near-miss one step quieter (a dog is not a pair of people,
+           but at chip size it is the same dark rectangle). `lacus` replaces
+           it, and the set now runs one background apiece: night for the
+           answer, the river with its boat, the plain with its oak, the
+           mountain with its spring. */
         { la: 'āvertit',
           answer: { la: 'āvertit', scene: SC.v_avertit },
           options: [{ la: 'āvertit', scene: SC.v_avertit },
                     { la: 'Charōn', scene: SC.v_charon },
-                    { la: 'Cerberus', scene: SC.v_cerberus },
+                    { la: 'lacus', scene: SC.v_lacus },
                     { la: 'quercus', scene: SC.v_quercus }] }
       ],
       overrides: {
