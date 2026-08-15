@@ -281,6 +281,52 @@ function rule_regions_builtin() {
         array('q' => 'ōvum',    'a' => 'ōvum')
       )
     ),
+    /* Regiō III · Rīvus (content id r03). Born with the manifest like r02,
+       so its built-in id IS its manifest id and it needs no entry in
+       rule_region_aliases(). The Bōs duel is tuned identically to r01/r02
+       (hp 6 / 45 s legacy, phases 22+28+20), so the rewards are the
+       ordinary ones. */
+    'r03' => array(
+      'fables' => array('f7', 'f8', 'f9'),
+      'track'  => 'fabulae',
+      'boss'   => 'b_r03',
+      'fight_xp' => 30,
+      'quiz_xp_each' => 10,
+      'quiz_pass_max_wrong' => 1,   // <=1 wrong of 5 passes
+      // ANSWER KEY: must mirror the boss.quiz `la` values in
+      // content/fabulae-r03.js. Word -> pick the image, so the answer is
+      // the same word; stored explicitly so grading never depends on the
+      // order the client happened to draw the options in.
+      'quiz' => array(
+        array('q' => 'canis',  'a' => 'canis'),
+        array('q' => 'umbra',  'a' => 'umbra'),
+        array('q' => 'rāna',   'a' => 'rāna'),
+        array('q' => 'bōs',    'a' => 'bōs'),
+        array('q' => 'cervus', 'a' => 'cervus')
+      )
+    ),
+    /* Regiō IV · Mōns (content id r04). The Lepus boss is a RACE — its
+       phases are fuga/caterva/fuga rather than caterva/clāmor/fuga — but
+       the server does not care which phase types were drawn: the result
+       payload is the same one every duel posts, so the reward config is
+       the ordinary one. Manifest-born, so no alias entry. */
+    'r04' => array(
+      'fables' => array('f10', 'f11', 'f12'),
+      'track'  => 'fabulae',
+      'boss'   => 'b_r04',
+      'fight_xp' => 30,
+      'quiz_xp_each' => 10,
+      'quiz_pass_max_wrong' => 1,   // <=1 wrong of 5 passes
+      // ANSWER KEY: mirrors the boss.quiz `la` values in
+      // content/fabulae-r04.js, same word -> image shape as r03.
+      'quiz' => array(
+        array('q' => 'testūdō', 'a' => 'testūdō'),
+        array('q' => 'lepus',   'a' => 'lepus'),
+        array('q' => 'ciconia', 'a' => 'ciconia'),
+        array('q' => 'urna',    'a' => 'urna'),
+        array('q' => 'haedus',  'a' => 'haedus')
+      )
+    ),
     /* ---- HISTORIA SACRA -------------------------------------------------
        Liber I · Creātiō (content id l1). NO BOSS: CURRICULUM §2 gives the
        first liber of the track no probātiō, so the entry declares an empty
@@ -435,6 +481,14 @@ function rule_boss_min_ms($regionId) {
     // r02 = the Leō duel, tuned identically to region1 (hp 6 / 45 s, the
     // same 22/28/20 phases), so the same floor applies.
     'r02' => 15000,
+    // r03 = the Bōs duel, tuned identically again (hp 6 / 45 s, phases
+    // 22/28/20). Listed explicitly rather than left to the default so a
+    // future retune of THIS region has an obvious place to land.
+    'r03' => 15000,
+    // r04 = the Lepus RACE (fuga/caterva/fuga, 22/26/22). Different shape,
+    // same total: hp 6 and 70 phase-seconds, all of them ceilings, so the
+    // same 15 s floor is the honest one.
+    'r04' => 15000,
     // l2 = the Arca PROBĀTIŌ (js/probatio.js): ONE 'ordina' phase, hp 6 /
     // 45 s. Six items have to DRIFT down and be caught, and the spawn
     // interval at regionIndex 1 is ~1.5 s, so the trial is floored by the

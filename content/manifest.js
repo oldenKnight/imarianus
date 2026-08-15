@@ -30,7 +30,9 @@ var CONTENT_MANIFEST = {
       "id": "fabulae",
       "regions": [
         { "id": "r01", "capitula": ["f1", "f2", "f3"], "boss": "b_r01" },
-        { "id": "r02", "capitula": ["f4", "f5", "f6"], "boss": "b_r02" }
+        { "id": "r02", "capitula": ["f4", "f5", "f6"], "boss": "b_r02" },
+        { "id": "r03", "capitula": ["f7", "f8", "f9"], "boss": "b_r03" },
+        { "id": "r04", "capitula": ["f10", "f11", "f12"], "boss": "b_r04" }
       ]
     },
     {
