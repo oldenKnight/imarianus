@@ -19,18 +19,31 @@ parallel and was therefore NOT available: every word not in the main ledger is
 glossed here as new, even where L5–L6 will turn out to have taught it first.
 The likely collisions, flagged for the merge:
 
-| word | where L5/L6 probably teaches it | if so |
-|---|---|---|
-| `frūmentum` | L5 h?? (Gn 41–42, the corn of Egypt) | not used here; no conflict |
-| `rēx` | L5 (Pharaō is `rēx` in Gn 41) | **glossed again in h42**; keep the earlier entry and mark h42 FREE |
-| `populus` | L6 (Ex 5–14, "populus meus") | **glossed again in h42**; same treatment |
-| `templum` | neither — Ex has `tabernāculum`, which is already free from h11 | no conflict |
-| `sacerdōs` | L6 (Aaron) | **glossed again in h41**; same treatment |
-| `manus` | L6 (Ex 14,16 "extende manum tuam") | **glossed again in h39**; same treatment |
-| `oleum` · `capillus` · `columna` | neither, as far as the assignment lines go | no conflict |
+**VERIFIED AFTER L5 AND L6 LANDED** (both appended to the MAIN ledger, not to
+this file, so nothing here was overwritten). The Librī V–VI sections of
+`content/_ledger-historia.md` were read back and their lexeme headwords
+compared against every word Librī VII–VIII teach. **Seven real collisions, and
+seven only:**
 
-If L5–L6 taught them, the second gloss costs a learner nothing; if the merge
-wants one entry rather than two, keep the EARLIER one and mark these FREE.
+| word | taught first in | taught again here | what the merge should do |
+|---|---|---|---|
+| `rēx` | L5/L6 | **h42** (1 Rg 8,6) | keep the EARLIER entry; mark h42's FREE |
+| `populus` | L5/L6 | **h42** (1 Rg 8,5) | same |
+| `lēx` | L6 (Ex 20, the tabulae lēgis) | **h50** (Dn 6,8) | same |
+| `vitulus` | L6 (Ex 32, the vitulus aureus) | **h49** (3 Rg 12,28) | same — and note the two capitula tell the SAME sin in two centuries, which is the point |
+| `trīstis` | L5/L6 | **h50** (Dn 6,14) | same |
+| `pulcher` | L5/L6 | **h43** (1 Rg 16,12) | same |
+| `dīvidit` | L6 (Ex 14, the sea divided) | **h47** (3 Rg 3,25) | same |
+
+Everything else Librī VII–VIII teach is genuinely new to the track. The words
+this file originally guessed at — `frūmentum · templum · sacerdōs · manus ·
+oleum · capillus · columna` — turned out NOT to collide.
+
+A second gloss costs a learner nothing (it is a recycle at the exact interval
+LATIN-STYLE §2 asks for); if the merge wants one entry rather than two, keep
+the EARLIER one and mark the later capitulum FREE. **No cap recount is needed
+either way:** dropping any of these seven only lowers a count that is already
+at or under 8.
 
 The GRAMMAR of S5–S7 (imperative · vocative · questions · imperfect ·
 is/hic/ille · perfect) is a different matter and was NOT withheld: CURRICULUM
@@ -361,3 +374,405 @@ What is **not** told, and why:
    finding, still true): an authored boss gap on that word is dropped
    outright. Liber VII gaps `tuba · castra · leō · columna · templum · oleum`
    and none of them is on the list.
+
+---
+
+## Liber VIII · RĒGĒS (S9–S10) — `content/historia-l8.js`
+
+Stage ceiling: everything Librī I–VII may use, **plus** this liber's one
+target — **S10, the PASSIVE VOICE and the common DEPONENTS**. Still no
+subjunctive outside an image-glossed fixed formula, no accusative +
+infinitive, no ablative absolute, no gerundive (S11–S12, Liber IX's).
+
+**FREE for this author:** everything the main ledger records for Librī I–IV
+**plus everything `content/historia-l7.js` teaches** — same author, same wave,
+so Liber VII's vocabulary is genuinely available (`hostis · castra · fugit ·
+manus · capillus · longus · potest · columna · domus · capit · stat ·
+templum · sacerdōs · vōx · ōrat · rēx · oleum · populus · monet · trecentī ·
+iūdex/iūdicat · fortitūdō` and the function set `māne · nunc · cēterī ·
+nūllus · ōlim · nihil · prīmō · statim · inter · ter · tamen · quia · bene`).
+L5 and L6 remain unavailable; see the collision table at the head of this file.
+
+### The macron reckoning — the one place this liber departs from its brief
+
+Liber IV settled the rule and Liber VII applied it: **macronise a Vulgate name
+where CURRICULUM §2 prints it AND the Greek gives a CERTAIN quantity (eta,
+omega, ου, or a classical Latin form); leave it bare otherwise.** Applied to
+Liber VIII the rule splits the assignment's own spelling:
+
+| name | written | why |
+|---|---|---|
+| **David** | **BARE** | Δαυίδ has no eta, no omega and no ου. **LATIN-STYLE §1 adjudicates this exact name by name:** *"leave Vulgate names unmacronized except where quantity is certain and classical: **Dāvīd stays David**"*. **DEPARTURE from the brief and from CURRICULUM §2's `Dāvīd`, taken deliberately and flagged.** Reversible with one find-and-replace over three files; `David` is in no answer key |
+| **Goliath** | **BARE** | Γολιάθ fixes nothing. CURRICULUM §2 prints `Goliāth`. Same reversal |
+| **Nathan · Isai** | **BARE** | Ναθάν, Ἰεσσαί fix nothing |
+| Saūl | macronised | Σαούλ, ου = ū — as Liber VII already ships it |
+| Samuēl | macronised | Σαμουήλ, eta |
+| Salomōn | macronised on the final syllable only | Σαλωμών, omega; the middle syllable left bare exactly as CURRICULUM §2 prints it |
+| Daniēl | macronised | Δανιήλ, eta |
+| Raphaēl | macronised | Ῥαφαήλ, eta |
+| Tobiās | macronised on the nominative ending | a Greek -ίας latinises with a long -ās (Aenēās, Anchīsēs); CURRICULUM §2 prints `Tobiās` |
+| Dārīus | macronised | **classical Latin** (Dārīus, Δαρεῖος) — the case LATIN-STYLE §1 explicitly allows |
+| Ierūsalem | only the certain `ū` marked | Ἰερουσαλήμ, ου. The final syllable is left bare because the Clementine's form is indeclinable and no oblique case in this file distinguishes it |
+
+### Name inflection verified in the Clementine text before use
+
+| name | forms used | Vulgate warrant |
+|---|---|---|
+| David | **INDECLINABLE in every case** | 497 occurrences; the only inflected form anywhere is the dative `Davidi` (4×). The Clementine's own genitives are indeclinable: `civitatem David` (11×), `domum David` (10×), `filius David` (4×). This file uses the bare form throughout — the `grex Lot` device of h12 |
+| Goliath | **INDECLINABLE** | 7 occurrences, every one bare: 1 Rg 17,4 "nomine Goliath", 17,23 "Goliath nomine" |
+| Isai | **INDECLINABLE** | nom. 1 Rg 16,5; after *ad*, 16,1 "ad Isai"; gen. 17,58 "filius servi tui Isai" |
+| Nathan | **INDECLINABLE** (the prophet) | "Nathan propheta" 7×, "ad Nathan" 6×, acc. 2 Rg 7,2 "ad Nathan prophetam" |
+| Salomōn | DECLINES | gen. `Salomōnis` (3 Rg 3,1), dat. `Salomōnī` (3,5 "dixit Dominus Salomoni"), acc. `Salomōnem` (3 Rg 8,1 "ad regem Salomonem") |
+| Daniēl | DECLINES | acc. `Daniēlem` (Dn 6,16), dat. `Daniēlī` (6,4), gen. `Daniēlis` (6,26), abl. `Daniēle` (6,20) |
+| Dārīus | DECLINES | nom. `Dārīus` (Dn 6,25), dat. `Dāriō` (6,1 "Placuit Dario") |
+| Tobiās | DECLINES | acc. `Tobiam` (Tb 11,20 "ad Tobiam"), gen./dat. `Tobiae` |
+| Saūl · Samuēl | as verified in Liber VII | unchanged |
+
+### THE PASSIVE — the liber's target, introduced as a PAIR every time
+
+The device is Liber IV's for the ablative: never a new construction on a page
+that also carries a new word, and always beside the ACTIVE sentence the
+learner has just read. Every one of these is glossed `<active> → <passive>`:
+
+| capitulum | the pair | Vulgate warrant |
+|---|---|---|
+| **h43** | `Samuēl David ūnxit` → **`David ā Samuēle ūnctus est`** | 1 Rg 16,13 "unxit eum". **THE FIRST PASSIVE OF THE TRACK**, and the first agent `ā` + ablative, glossed separately on the same page (`quis ūnxit? Samuēl: ā Samuēle`) |
+| h44 | `Deus Goliath superāvit` → `Goliath ā Deō superātus est` | the theology of 1 Rg 17,47, in graded Latin |
+| h45 | `rēx ā Deō ūnctus est` | 1 Rg 24,7 "christus Domini est" |
+| h46 | `populus urbem vocāvit` → `urbs vocāta est` | 2 Rg 5,9 "vocavit eam civitatem David"; also `rēx ūnctus est` (5,3) and `arca portāta est` (6,12) |
+| **h48** | `virī templum aedificāvērunt` → **`templum aedificātum est`** | **the Vulgate's OWN passive for this building**: 3 Rg 6,7 "de lapidibus dolatis atque perfectis ÆDIFICATA EST", 6,37 "FUNDATA EST domus Domini", 6,38 "PERFECTA EST domus" |
+| h49 | `populus rēgnum dīvīsit` → `rēgnum dīvīsum est` | 3 Rg 12,16.20; and it is the capitulum's own title |
+| h50 | `virī lapidem posuērunt` → `lapis positus est` (`pōnit` is taught two capitula earlier, in h48's `mēnsa` gloss, so h50 spends nothing on it) | Dn 6,17 "Allatusque est lapis unus, et POSITUS EST super os laci"; also 1 Esd 3, `templum iterum aedificātum est` |
+
+### THE DEPONENTS — CURRICULUM §0 names two, and both are h46's
+
+| form | how |
+|---|---|
+| **sequitur (secūtus est)** | h46 nova ➡, `g: grex prīmus ambulat, David post gregem: David gregem sequitur`, on **2 Rg 7,8's own participle** — "Ego tuli te de pascuis SEQUENTEM greges". Recycled in h49 on Tb 6,1's own perfect, "canis SECUTUS EST eum" |
+| **loquitur (locūtus est)** | h46 nova `💬⏮`, `g: quī loquitur, dīcit: Deus locūtus est = Deus dīxit`, on **2 Rg 7,17's own perfect** — "sic LOCUTUS EST Nathan ad David". The present and the perfect share no letters after `lo-`, so the pair is drilled once in h46's COMPLĒ (`Nunc Deus loquitur; tum Deus ad Nathan ___ est`), exactly as Liber VII drills `rādit → rāsit`. Also in h50, `dē Daniēle locūtī sunt` (Dn 6,12) |
+
+`intuētur` stands inside h43's fixed formula (1 Rg 16,7 "Dominus autem
+INTUETUR cor"): a third deponent, unparsed and never asked for — and, unlike
+the deponents Liber VII had to refuse in its glosses, one that is now AT stage.
+
+### h43 David pāstor · fons 1 Rg 16 — content lexemes (8)
+
+| lexeme | how |
+|---|---|
+| David | vocab card, scene `v_david` (the `shepherd` staff and crook beside a `grex`); nova 👤. **His costume is fixed for the whole liber**: young, beardless, reddish hair (17,42 "adolescens, RUFUS, et pulcher aspectu"), ochre tunic — and from h46 the SAME face under the `king` preset, so the learner watches one man become a king |
+| cithara (citharā, citharam) | vocab card, scene `v_cithara`; nova 🎵, `g: cithara sonat: cithara pulchram vōcem habet`. 1 Rg 16,16 "hominem scientem psallere cithara", 16,23 "tollebat David citharam". **NO `cithara` ACTOR EXISTS** — see the art register |
+| Isai | vocab card, scene `v_isai` (person `patriarch` + tent); nova 👤. **INDECLINABLE** |
+| cor | vocab card, scene `v_cor` (the radiance on one side, a man on the other, a 💛 between); nova 💛, `g: cor intus est: cor nōn vidēmus`. **The word the chapter turns on**, 1 Rg 16,7 |
+| faciēs (faciem) | nova 👀, `g: faciēs: hominem vidēmus et faciem vidēmus`. Not carded — the contrast with `cor` on the same page is the picture. **THE LIBER'S FIRST 5TH DECLENSION** (`fidēs` in h50 is the second), and 16,7's own opposition |
+| ungit (ūnxit, ūnctus est) | vocab card, scene `v_ungit`; nova 💧, `g: nunc ungit, tum ūnxit: oleum in David vēnit` — which echoes h42's `oleum in Saūlem fūdit` word for word |
+| canit (canēbat, cecinit) | vocab card, scene `v_canit`; nova 🎵, `g: quī canit, pulchram vōcem facit` |
+| pulcher (pulchram, pulcherrimus) | nova 😄, `g: pulcher puer: omnēs eum vident et laetī sunt`. Not carded. 1 Rg 16,12 "et pulcher aspectu". **Booked here on purpose** so that h48's `Templum pulcherrimum erat` costs nothing and teaches only the superlative |
+
+### h43 — morphology, function words and the one fixed formula
+
+| form | how |
+|---|---|
+| **the PASSIVE and the agent `ā` + abl.** | see the passive table above. Two novae on one page, because they are one construction |
+| minimus | nova 1️⃣, `g: parvus · minor · minimus`. 1 Rg 16,11 "Adhuc reliquus est PARVULUS". `parvus` free from h12, so only the morphology is new |
+| alius (alium) | nova 2️⃣, `g: nōn Saūl, sed alius vir` | FUNCTION |
+| ante | nova 👉, `g: fīliī ante Samuēlem: Samuēl eōs videt` | FUNCTION (the accusative preposition, the `inter` class of h40) |
+| **Dominus autem intuētur cor** | **FIXED VULGATE FORMULA** (1 Rg 16,7, verbatim including its `autem`), the ONE in this capitulum, and the page BEFORE it is its first gloss in graded Latin (`Homō faciem videt; Deus autem cor videt`) — the `Fiat lūx` two-page mechanism of h1. nova `✨💛` with the Latin gloss `Deus cor hominis videt`. The deponent is not parsed and is asked for nowhere; the page is quoted, so the generators skip it |
+
+### h44 David et Goliath · fons 1 Rg 17 — content lexemes (5)
+
+Five only, and deliberately: this is the summit of the liber and is carried by
+vocabulary the learner already owns, exactly as h15 carries the sacrifice of
+Isaac on four words.
+
+| lexeme | how |
+|---|---|
+| Goliath | vocab card, scene `v_goliath` (a `soldier` at s 1.62 beside David at 0.98 — the size difference IS the card); nova 👤. **INDECLINABLE** |
+| funda (fundam, fundā) | vocab card, scene `v_funda`; nova 💨, `g: fundā lapidem mittimus`. 1 Rg 17,40 "fundam manu tulit", 17,50 "in funda et lapide". **The `person {sling:true}` prop draws the strap AND its stone** |
+| lapis (lapidem, lapidēs, lapidibus) | vocab card, scene `v_lapis`; nova ⬜, `g: lapis in monte est: lapis nōn lignum est`. **There is no `lapis` ACTOR** (Liber IV's open finding) — but the sling prop draws the stone in the strap, so the word is genuinely pictured at its first use, and h48's temple stones and h50's sealed stone then ride on it free |
+| baculus (baculum) | vocab card, scene `v_baculus` (the shepherd's crook the `person` actor already owns); nova 📏, `g: pāstor baculum in manū tenet`. 1 Rg 17,40 |
+| mīles | nova ⚔, `g: mīles hastam et castra habet`. Not carded — the `soldier` preset is on the page. It exists to say what David was NOT |
+
+### h44 — function words and the one fixed formula
+
+| form | how |
+|---|---|
+| nēmō | nova `🚫👤`, `g: nōn ūnus vir: nēmō` | FUNCTION |
+| tam … quam | nova ⬆, `g: tam altus quam Goliath`, on the comparative frame h42 and h39 have already built | FUNCTION |
+| cotīdiē | nova ☀☀, `g: hodiē, et iterum, et iterum: cotīdiē`. 1 Rg 17,16 | FUNCTION |
+| quīnque | nova 5️⃣, `g: ūnus, duo, trēs, quattuor, quīnque`. 1 Rg 17,40 | FUNCTION |
+| contrā | nova ↔, `g: David ex hōc locō, Goliath ex illō: contrā` | FUNCTION |
+| suus (suam) | nova `👤➡`, `g: vestis Saūlis: vestis sua`. **First gloss of the reflexive possessive in the track**; free thereafter (h47 `fīlium suum`, and `angelum suum` inside h50's formula) | FUNCTION |
+| **Nōn in gladiō nec in hastā salvat Dominus** | **FIXED VULGATE FORMULA** (1 Rg 17,47, verbatim, cut at its `quia`), the ONE in this capitulum. nova `✨💪` with the Latin gloss `David gladium nōn habet: Deus cum David est`. **FLAGGED FOR AUDIT: this is the only place the word `gladius` appears in Liber VIII.** It stands inside a sentence whose entire content is that weapons decide nothing; no sword is drawn on any page of this file; `gladius` is never carded, glossed as a lexeme, recycled or asked for; and 3 Rg 3,24's "Afferte mihi gladium" is omitted from h47 precisely so that this stays the only occurrence. The page is quoted, so the generators skip it |
+
+### h45 David et Saūl · fons 1 Rg 18 · 24 — content lexemes (7)
+
+| lexeme | how |
+|---|---|
+| hasta (hastam) | vocab card, scene `v_hasta` (the `soldier` preset's own spear); nova ⚔, `g: mīles hastam tenet; pāstor baculum` — the contrast with h44's `baculus` is the gloss. **SYNONYM SUBSTITUTION, registered:** 1 Rg 18,10 says `lanceam`; `hasta` is the same object, is the Clementine's own word for it at 17,7 and 17,45, and is the word h44's formula has already put in front of the learner |
+| vestis | vocab card, scene `v_vestis`; nova 👤, `g: vestem portāmus: rēx pulchram vestem habet`. **SYNONYM SUBSTITUTION, registered:** 1 Rg 24,5 says `chlamydis`; `vestis` is the general word and the one the picture can carry |
+| pars (partem, partēs) | vocab card, scene `v_pars` (the same `pellis` prop whole and small); nova `1️⃣2️⃣`, `g: nōn tōta vestis: pars vestis`. Recycled hard in h47 (`in duās partēs`) and h49 (`in duās partēs dīvīsum est`) |
+| abscīdit | vocab card, scene `v_abscidit`; nova ✂, `g: nunc abscīdit, tum abscīdit: pars iam sōla est`. **The Vulgate's own verb** — 1 Rg 24,6 "eo quod ABSCIDISSET oram chlamydis Saul" |
+| parcit (pepercit, pepercerat) | vocab card, scene `v_parcit`; nova 🕊, `g: nunc parcit, tum pepercit: David nihil malī fēcit`. **THE SUMMIT OF THE LIBER.** Takes the DATIVE, like `crēdit` (h13), `pāret` (h15) and `servit` (h20) before it |
+| socius (sociī) | nova 👥, `g: sociī cum David ambulant: amīcī sunt`. Not carded. 1 Rg 24,5 "dixerunt servi David ad eum" |
+| laedit (laesit) | nova 🚫, `g: nōn laesit: rēx integer manet`. Not carded — the word exists only to be negated, which is the whole capitulum |
+
+### h45 — function words and the one fixed formula
+
+| form | how |
+|---|---|
+| prope | nova 👉, `g: nōn procul: prope` | FUNCTION |
+| tacitē | nova `🚫🗣`, `g: sine vōce: tacitē`. 1 Rg 24,5 "præcidit oram chlamydis Saul SILENTER" | FUNCTION (an adverb in -ē, the S8 derivation `bene` opened in h42) |
+| pepercerat (PLUPERFECT) | nova ⏮, `g: prīmō pepercerat, tum Saūl intellēxit`. **The liber's ONE pluperfect**, on the one page whose sense needs the two moments ordered (24,11). Not on the CURRICULUM ladder by name; the perfect is S7 and this is its `-erat` form on a verb glossed two pages earlier, so nothing new is asked. **Flagged for the line audit** |
+| **Propitius sit mihi Dominus** | **FIXED VULGATE FORMULA** (1 Rg 24,7, the clause that opens David's refusal), the ONE in this capitulum. nova `🙏✨` with the Latin gloss `David Deum timet et rēgī parcit`. The jussive subjunctive and `mihi` are on no ladder here, are never parsed, and are asked for nowhere; the page is quoted, so the generators skip it |
+
+### h46 David rēx · fons 2 Rg 5–7 — content lexemes (8)
+
+| lexeme | how |
+|---|---|
+| Ierūsalem | vocab card, scene `v_ierusalem` (the `cityWall` prop); nova 🏛, `g: Ierūsalem urbs magna in monte est`. **INDECLINABLE.** `urbs` is free from h10, so the name rides on a word the learner owns |
+| arca (arcam, arcā) | vocab card, scene `v_arca` (the `arcaFoederis` prop); nova 🏛, **`g: arca Noe nāvis erat; haec arca Deī est`**. **RE-SPECIFICATION, registered:** `arca` is free from h7 with Noe's meaning, and the gloss NAMES the difference instead of pretending there is none. The Clementine's commonest phrase for this object is `arcam Dei` (2 Rg 6,2.3.4.6.7.12), which is what the file writes; `arca foederis` is avoided because `foedus` would have cost a cap slot for a word with no picture |
+| rēgnum | vocab card, scene `v_regnum`; nova 👑, `g: rēx rēgnum habet: rēgnum terra rēgis est`. 2 Rg 7,16 |
+| Nathan | vocab card, scene `v_nathan` (person `priest` + 🗣); nova 👤. **INDECLINABLE.** `prophēta` is NOT taught — the page says `Nathan vir Deī erat. Nathan verba Deī populō dīcēbat`, which is what a prophet is, in words the learner owns |
+| saltat (saltāvit) | vocab card, scene `v_saltat`; nova 🎵, `g: quī saltat, nōn ambulat: laetus movet pedēs`. **2 Rg 6,14's own verb** — "David SALTABAT totis viribus ante Dominum" |
+| loquitur (locūtus est) | vocab card, scene `v_loquitur`; see the deponent table |
+| sequitur (sequēbātur, secūtus est) | vocab card, scene `v_sequitur`; see the deponent table |
+| gaudium (gaudiō) | nova 😄, `g: laetī sumus: gaudium habēmus`. Not carded. **2 Rg 6,12's own word** — "adduxit arcam Dei … in civitatem David CUM GAUDIO", which is the assignment's "arcaFoederis with joy" |
+
+### h46 — function words and the one fixed formula
+
+| form | how |
+|---|---|
+| valdē | nova ⬆, `g: nōn parum: valdē` | FUNCTION |
+| **Dominus tēcum est** | **FIXED VULGATE FORMULA** (2 Rg 7,3, Nathan to David), the ONE in this capitulum — and **THE RETURN of h38's Idc 6,12**, said first to Gedeōn and now to David. nova `✨🤝`, `g: Deus cum David est — ita quoque ad Gedeōn`: the only place in either liber where a formula is glossed by pointing at its own earlier appearance. It costs h46 nothing, because Liber VII already spent the gloss |
+
+### h47 Salomōn sapiēns · fons 3 Rg 3 — content lexemes (7)
+
+| lexeme | how |
+|---|---|
+| Salomōn (Salomōnem, Salomōnī) | vocab card, scene `v_salomon` (person `king`, wine robe, short beard — deliberately NOT David's face); nova 👤. DECLINES |
+| sapiēns (sapientem, sapientia) | vocab card, scene `v_sapiens`; nova 🧠, `g: sapiēns vir bene iūdicat et bene cōnsulit` (`bene` free from h42, `iūdicat` from h39). 3 Rg 3,12 "dedi tibi COR SAPIENS et intelligens" |
+| cōnsilium | vocab card, scene `v_consilium`; nova 🧠, `g: rēx sapiēns bonum cōnsilium habet`. **The word the assignment asked the judgement to turn on** — `sed cōnsilium sapiēns est` |
+| vīvus (vīvum) | vocab card, scene `v_vivus`; nova 💛, `g: vīvus puer rīdet et currit`. **3 Rg 3,26–27's own adjective**, and the word the true mother is found by |
+| dīvidit (dīvidite, dīvīsit, dīvīsum est) | vocab card, scene `v_dividit`; nova ↔, `g: ūnus in duās partēs: rēx dīvidit` (`pars` is one capitulum old). **Taught here so that h49's `rēgnum dīvīsum est` — the passive, and that capitulum's own title — costs nothing** |
+| iuvenis | nova 1️⃣, `g: nōn senex: iuvenis` (`senex` free from h13). Not carded. 3 Rg 3,7 "ego autem sum puer parvulus" |
+| īnfāns (īnfantem) | nova 👤, `g: īnfāns puer minimus est: nōndum ambulat` (`minimus` is h43's). Not carded — the `child` actor is on the page. 3 Rg 3,25 "infantem vivum" |
+
+### h47 — function words, and THE JUDGEMENT in full
+
+| form | how |
+|---|---|
+| altera | nova 2️⃣, `g: ūna mulier, et altera mulier: duae sunt` | FUNCTION |
+| meus | nova `👉👤`, `g: puer mulieris: "puer meus"` — inside 3 Rg 3,22's own quoted claim, on a page the generators skip | FUNCTION |
+| suus (suum) | second gloss, `g: fīlius mātris: fīlius suus`; free since h44 | FUNCTION |
+| **Postulā quod vīs ut dem tibi** | **FIXED VULGATE FORMULA** (3 Rg 3,5, verbatim), the ONE in this capitulum. nova `🎁❓`, `g: Deus dīcit: "Quid petis?"`. The subjunctives and the first person are never parsed and are asked for nowhere |
+| **THE JUDGEMENT — the exact six pages** | 1. `Ōlim duae mulierēs ad rēgem vēnērunt. Ūna īnfantem tenēbat.` · 2. `Ūna dīxit: "Puer meus est." Altera quoque dīxit: "Puer meus est."` · 3. **`Rēx dīxit: "Puerum in duās partēs dīvidite." Sed rēx puerum nōn dīvīsit: cōnsilium enim rēgis sapiēns erat.`** · 4. `Ūna mulier clāmāvit: "Date illī puerum vīvum!"` · 5. `Tum rēx dīxit: "Date huic puerum vīvum: haec est māter ēius."` · 6. `Māter enim fīlium suum amat.` — **3 Rg 3,24's "Afferte mihi gladium" is omitted whole; no sword is named, drawn, glossed or asked for anywhere in h47, and the order that IS given is 3,25's own next sentence. The reassurance stands on the SAME PAGE as the order, so no child sits for one frame believing the child will be hurt.** 3,26's "nolite interficere eum" and 3,27's "et non occidatur" are both omitted: the true mother is found exactly as the chapter finds her, by her cry FOR THE CHILD'S LIFE. **There is no word for killing on any page of h47**, and its scene `SC.h47_dividite` contains a throne, a king, two women and a child, and nothing else |
+
+### h48 Templum · fons 3 Rg 6–8 — content lexemes (7)
+
+| lexeme | how |
+|---|---|
+| nebula (nebulam, nebulā) | vocab card, scene `v_nebula` (the `temple` prop with the `star` radiance over it and a ☁ bubble); nova ☁, `g: nebula in caelō est: nebula nōn aqua, nōn lūx est`. **3 Rg 8,10's own word** — "NEBULA implevit domum Domini". **No `cloud`/`nūbēs` actor exists**; the bubble and the radiance carry it |
+| implet (implēvit) | vocab card, scene `v_implet`; nova ☁☁, `g: nunc implet, tum implēvit: nebula omnem locum tenēbat`. 3 Rg 8,10–11, twice |
+| mēnsa (mēnsam) | vocab card, scene `v_mensa` (the `mensa` prop the art library has owned since Liber IV, where it was scenery and not a word); nova 🏛, `g: in mēnsā cibum pōnimus`. 3 Rg 7,48. **Carded because the boss's ŌRDINĀ sorts it** |
+| coepit | nova 1️⃣, `g: prīmō coepit; tum multōs annōs aedificāvit`. Not carded. 3 Rg 6,1 "ædificari COEPIT domus Domino" |
+| pānis (pānēs) | nova 🍲, `g: pānis cibus est` (`cibus` free from h17). Not carded — the `patina` prop with `food: true` is on the page |
+| glōria | nova ✨, `g: glōria Deī lūx magna est` (`lūx` free from h1). Not carded — the `star` radiance IS the picture, and this is the one page in eight librī where that actor is NAMED rather than only shown. 3 Rg 8,11 |
+| pōnit (positus est) | nova inside the `mēnsa` gloss, `g: in mēnsā cibum pōnimus`, on a picture of a table with food on it. Not carded. **Booked here on purpose** so that h50's `Lapis magnus positus est` — Dn 6,17's own passive — costs that capitulum nothing |
+
+### h48 — re-cards, morphology, function words and the one fixed formula
+
+| form | how |
+|---|---|
+| **`templum` · `altāre` · `arca`** | **RE-CARDED, NOT NEW.** `templum` free from h41, `altāre` from h9, `arca` from h46. None carries a nova or a cap slot; all three keep cards because the boss's ŌRDINĀ sorts `arca`, `mēnsa` and `altāre`, and probatio.js's `zoneOf()` only sees carded words. The h21 precedent of Liber IV, third use |
+| pulcherrimus | nova 😄, `g: pulcher · pulchrior · pulcherrimus` — the superlative on an adjective h43 already taught, so only the morphology is new |
+| super | nova ⬆, `g: super mēnsam: mēnsa sub pāne est` (`sub` free from h19, so the pair teaches itself) | FUNCTION |
+| ibi | nova 📍, `g: in eō locō: ibi` | FUNCTION |
+| illud | nova 👉, `g: templum: illud` — on the memoriā tenē page, the liber's one neuter demonstrative | FUNCTION |
+| **Dominus dīxit ut habitāret in nebulā** | **FIXED VULGATE FORMULA** (3 Rg 8,12, verbatim), the ONE in this capitulum. nova `☁✨`, `g: Deus in templō habitat; nebula templum implet`. The subjunctive is never parsed; the page is quoted, so the generators skip it |
+| **`lignum` and `lapis` for the cedar and the hewn stone** | SIMPLIFICATION, registered: 3 Rg 6,9.15 say `lignis CEDRINIS` and 6,7 `de LAPIDIBUS dolatis`. `cedrus` has no picture and no cap slot; `lignum` is free from h7 and `lapis` from h44, so both materials are named in words the learner owns and the species is simply never mentioned. Nothing is denied |
+
+### h49 Rēgnum dīvīsum et Tobiās · fons 3 Rg 12 · Tb 6 · 11–12 — content lexemes (8)
+
+CURRICULUM §2 pairs these two, and the pairing is stated on the page rather
+than argued: the kingdom is torn and many go after golden calves, and in the
+same years one family keeps faith and is brought home. **This capitulum's
+first draft carried SIXTEEN content lexemes; the recount that trimmed it to
+eight is the single largest edit in either liber.** What went, and why:
+`novus` (→ `alius`, free from h43), `aureus` (→ `ex aurō`, which teaches the
+noun instead), `adōrat` and `relinquit` (→ `ante vitulōs ōrāvērunt`, with
+`ōrat` free from h41 and `ante` from h43), `longinquus` (→ `in aliā terrā`),
+`iter` (→ `longē`, the adverb of a free adjective), `flūmen` (→ `ad aquam`,
+`aqua` free from h8), `comes` (→ `vir ille`), `servat` (dropped with its page).
+
+| lexeme | how |
+|---|---|
+| vitulus (vitulōs) | vocab card, scene `v_vitulus` (the `vitulusAureus` prop + 🚫); nova 🚫, `g: vitulus bōs parvus est; hī vitulī nōn animālia sunt` (`bōs` free from h12). 3 Rg 12,28 "fecit duos vitulos aureos". **Taught ONLY as the golden calf and never as an offering** — no page of Liber VIII mentions a calf sacrifice — which is what makes it safe in the boss's `NŌN IN TEMPLŌ` zone |
+| aurum (aurō) | nova ✨, `g: aurum pretiōsum est: aurum lūcet`. Not carded — **there is no gold prop in the library**, and the `vitulusAureus` on the page is the picture. This is also why `aurum` is NOT one of the boss's temple words, even though 3 Rg 6,22 covers the house in it: a tile the learner cannot see is a translation prompt |
+| facit (fēcit) | nova 🔨, `g: nunc facit, tum fēcit: manibus facimus`. Not carded. Taught late in the track, and only because two chapters need it (3 Rg 12,28 "FECIT duos vitulos"; h50's `rēx aliam lēgem fēcit`) |
+| Tobiās (Tobiam) | vocab card, scene `v_tobias`; nova 👤. DECLINES |
+| Raphaēl | vocab card, scene `v_raphael` (the `angel` preset); nova 👼 |
+| piscis (piscem) | vocab card, scene `v_piscis` (the `piscis` prop on the `river` ground); nova 🐟, `g: piscis in aquā natat` (`natat` free from h8). Tb 6,2 "ecce piscis immanis exivit" |
+| oculus (oculī, oculōs) | vocab card, scene `v_oculus`; nova 👀, `g: oculīs vidēmus: oculī patris malī erant`. **NO `oculus` ACTOR** — carried by the 👀 bubble h3 already ships for `videt` |
+| canis | vocab card, scene `v_canis`; nova 🐕, `g: canis animal est: canis cum hominibus habitat`. **Tb 6,1's own dog** — "Profectus est autem Tobias, et CANIS SECUTUS EST eum" — which is also where the deponent gets its second airing |
+
+### h49 — function words and the one fixed formula
+
+| form | how |
+|---|---|
+| longē | nova ➡, `g: longa via: longē ambulat` — the adverb of `longus`, free from h39, so only the derivation is new | FUNCTION |
+| **Nōlī timēre** | negative imperative (S5, and the Vulgate's own form at Tb 6,4 "noli timere"); nova `🚫😨`, `g: nōn est malum: bonum est` | FUNCTION |
+| **Ego sum Raphaēl angelus** | **FIXED VULGATE FORMULA** (Tb 12,15 "Ego enim sum Raphaël angelus", cut at the `enim`), the ONE in this capitulum. nova `👼✨`, `g: vir nōn erat: angelus Deī erat`. The first person is never parsed and is asked for nowhere; the page is quoted, so the generators skip it |
+
+### h50 Daniēl et leōnēs; reditus · fons Dn 6 · 1 Esd 1 · 3 — content lexemes (8)
+
+The last capitulum of the track's Old Testament, and it closes the arc the
+liber has been walking: a temple built (h48), a kingdom divided (h49), and a
+temple built again.
+
+| lexeme | how |
+|---|---|
+| Daniēl (Daniēlem, Daniēlī, Daniēle) | vocab card, scene `v_daniel` (a kneeling man in indigo + 🙏); nova 👤. DECLINES |
+| Dārīus | vocab card, scene `v_darius` (person `king`, long dark beard); nova 👤. DECLINES |
+| lēx (lēgem, lēgī) | vocab card, scene `v_lex` (the `tabulae` prop); nova 🏛, `g: lēx verba rēgis est: omnēs lēgī pārent` (`pāret` free from h15) |
+| fidēs | vocab card, scene `v_fides`; nova 🙏, `g: quī crēdit, fidem habet: fidēs Daniēlis magna erat` (`crēdit` free from h13). **Dn 6,23's own reason** — "quia CREDIDIT Deo suo" — and **THE LIBER'S SECOND 5TH DECLENSION**. **It is carded on purpose so that the boss's title, `Fundā et Fidē`, is two words the learner has read** (the `HIRCĪ` ruling of Liber IV: a boss name the learner cannot read is a translation prompt) |
+| nocet (nocuērunt, nocuerant) | vocab card, scene `v_nocet`; nova 🚫, `g: nunc nocent, tum nocuērunt: leōnēs Daniēlem nōn laesērunt` (`laedit` free from h45). **Takes the DATIVE** — Dn 6,22 "et NON NOCUERUNT MIHI", the formula's own verb, so the formula becomes half-readable |
+| trīstis | vocab card, scene `v_tristis`; nova 😨, `g: ↔ laetus`. Dn 6,14 "satis CONTRISTATUS EST". **The track's first word for sorrow**, and it is spent on a king's grief for a friend, not on anyone's fear |
+| timor | nova 😨, `g: quī timet, timōrem habet` (`timet` free from h4). Not carded — the noun of a verb the learner has owned since Liber I, on the one page that weighs it against `fidēs` |
+| integer | nova 👍, `g: nihil malī habet: integer est`. Not carded. **Dn 6,23's own verdict** — "et nulla læsio inventa est in eo" |
+
+### h50 — re-cards, function words and the one fixed formula
+
+| form | how |
+|---|---|
+| `leō` | **RE-CARDED, NOT NEW** — free from h7. It keeps a card because the capitulum is named for it and because SONUS needs a picture family the abstract cards (`fidēs`, `lēx`) cannot supply |
+| ūllus (ūllum) | nova 🚫, `g: nōn ūnum deum, nōn multōs: ūllum` | FUNCTION |
+| tuus | nova `👉👤`, `g: Deus Daniēlis: "Deus tuus"` — inside Dn 6,16's own quoted line | FUNCTION |
+| haec (hic haec hoc) | used unglossed: `hic/haec/hoc` is S6 and Liber VII already ships `hōc tempore` and `haec` in its glosses | FUNCTION |
+| **Deus meus mīsit angelum suum** | **FIXED VULGATE FORMULA** (Dn 6,22, **verified VERBATIM** — the assignment's own formula), the ONE in this capitulum. nova `👼✨`, `g: Deus angelum ad Daniēlem mīsit`, which is the page before it in graded Latin. The first person and `suum` are never parsed; the page is quoted, so the generators skip it. Dn 6,22's continuation, "et conclusit ora leonum, et non nocuerunt mihi", is cut at the clause boundary — but `nocet` is this capitulum's own carded lexeme, so the learner meets the verb of the omitted half anyway |
+
+### Words a later liber (L9 IESUS) may treat as FREE after Liber VIII
+
+Everything in Librī I–IV and VII (and whatever L5–L6 add), plus
+`David · Isai · cithara · cor · faciēs · ungit · canit · pulcher ·`
+`Goliath · funda · lapis · baculus · mīles ·`
+`hasta · vestis · pars · abscīdit · parcit · socius · laedit ·`
+`Ierūsalem · arca (Deī) · rēgnum · Nathan · saltat · loquitur · sequitur · gaudium ·`
+`Salomōn · sapiēns · cōnsilium · vīvus · dīvidit · iuvenis · īnfāns ·`
+`nebula · implet · mēnsa · coepit · pānis · glōria ·`
+`vitulus · aurum · facit · Tobiās · Raphaēl · piscis · oculus · canis ·`
+`Daniēl · Dārīus · lēx · fidēs · nocet · trīstis · timor · integer`
+and the function words `alius · ante · nēmō · tam … quam · cotīdiē ·`
+`quīnque · contrā · suus · meus · tuus · prope · tacitē · valdē · super ·`
+`ibi · illud · altera · ūllus · longē · Nōlī + īnfīnītīvus`, plus **the whole
+S10 apparatus this liber teaches**: the PASSIVE in every form it uses
+(`ūnctus est · vocāta est · portāta est · superātus est · aedificātum est ·
+dīvīsum est · positus est`), the AGENT `ā`/`ab` + ablative, the DEPONENTS
+`loquitur` and `sequitur`, the 5th declension (`faciēs`, `fidēs`), and the
+adverb in `-ē` (`tacitē`, `longē`, on the `bene` pattern of h42).
+
+---
+
+## Omissions register — Liber VIII (fidelity: "simplify by OMISSION only")
+
+Everything told in these eight capitula agrees with the Clementine Vulgate.
+The per-capitulum comments in `content/historia-l8.js` carry the same verses;
+this table keeps the ones a rating or fidelity audit will look for.
+
+| fons | omitted | reason |
+|---|---|---|
+| 1 Rg 16,1–3 | Samuel's fear ("audiet enim Saul, et interficiet me") and the heifer taken as a cover | a prophet lying about his errand needs more page than h43 has |
+| 1 Rg 16,6–10 | the seven elder brothers **by name** | genealogy; the picture counts them |
+| **1 Rg 16,14–15** | **"spiritus nequam a Domino" / "spiritus Dei malus exagitat te"** | DESIGN §8 — an evil spirit sent upon a man is not children's imagery. Told as `Saūl rēx nōn laetus erat`, which is 16,23's own "refocillabatur … et levius habebat" read backwards. **Nothing the chapter says is denied; the cause is simply not named** |
+| 1 Rg 16,20–21b | the loaded ass, and "factus est ejus armiger" | an armour-bearer is a weapon by another name; 16,21's other half, "dilexit eum nimis", is the page |
+| 1 Rg 17,4–7 | Goliath's armour piece by piece, and the spear "quasi liciatorium texentium" | the `soldier` preset carries what DESIGN §8 allows and the text names none of it |
+| **1 Rg 17,34–36** | **the lion and the bear: "leonem et ursum INTERFECI"** | DESIGN §8 — the chapter's one body-count, and `leō` is a picture this track has owned since h7, which would have made it vivid. Omitted whole |
+| 1 Rg 17,43–44 | Goliath's curse by his gods, and "dabo carnes tuas volatilibus cæli et bestiis terræ" | DESIGN §8 |
+| 1 Rg 17,46 | David's own "percutiam te, et auferam caput tuum a te" | the next verse, 17,47, is the formula this capitulum keeps instead |
+| **1 Rg 17,49b–51 · 17,54** | **the wound ("percussit in fronte : et infixus est lapis in fronte ejus"), the killing ("percussumque Philisthæum interfecit"), the beheading ("præciditque caput ejus"), and the head carried to Jerusalem** | **DESIGN §8 — the assignment's "BLOODLESS ABSOLUTE".** The page stops at 17,49's own "et cecidit in faciem suam super terram". No wound, no blood, no death, no head. The giant is drawn ONCE, brought down but whole and unmarked, on his knees, with nobody standing over him; the `sleep` pose was refused because it draws a body on the ground and would have said `dormit` where the text says `cecidit`. The next page is the enemies turning and going |
+| 1 Rg 17,52–53 | the pursuit and the plundered camp | battle |
+| 1 Rg 18,1–5 · 19–23 | Jonathas, the covenant, Michol's window, and **22,18–19's priests of Nobe killed** | a whole friendship the liber has no room for, and a massacre it will not tell |
+| **1 Rg 18,6–7** | **"Percussit Saul mille, et David decem millia"** | a body-count set to music |
+| 1 Rg 18,25 | the bride-price of two hundred foreskins | DESIGN §8, absolutely |
+| **1 Rg 24,4** | **"quam ingressus est Saul UT PURGARET VENTREM"** | not tellable to children in any form. The reason Saul was alone is omitted; the chapter is told where 24,1 puts it, "in desertis Engaddi", where Saul comes near and does not see David — which is everything the mercy needs |
+| **1 Rg 24 (the cave itself)** | **`spēlunca`, four times in the chapter** | **MISSING ART** — no cave background exists (Liber VII flagged this forward). Omitted rather than half-drawn, the `lapis` precedent of Liber IV. Art addendum requested |
+| **1 Rg 26,7** | **the SLEEPING Saul, the spear and the water-jug** | **ASSIGNMENT CORRECTION, flagged.** The brief asked for "sleeping Saul spared, robe corner cut"; those are TWO DIFFERENT CHAPTERS, and 1 Rg 26 is not in the brief's own fons list. This file tells 1 Rg 24, so **no page says Saul slept** |
+| 1 Rg 24,9–22 | David's speech, the dead dog and the flea, Saul's weeping, the oath about his seed | first person throughout; the reconciliation is kept as what 24,17–23 amounts to |
+| 2 Rg 1–4 | the deaths of Saul and Jonathas, the lament, the war of the two houses, Abner, Isboseth | four chapters this track will not tell, and 2 Rg 4,12 is nowhere near it |
+| 2 Rg 5,6–8 | "cæcos et claudos" and the proverb | a taunt about the disabled |
+| 2 Rg 5,13 | the concubines and wives | DESIGN §8 |
+| **2 Rg 6,6–8** | **Oza struck dead at the ark** | a death, and one that would need explaining before it could be told. Omitted whole; the ark simply comes up, which is 6,12's own second attempt |
+| 2 Rg 6,13 | the ox and the ram killed every six paces | slaughter |
+| **2 Rg 6,16.20–23** | **Michol at the window, "nudatus est", and her childlessness** | DESIGN §8, outright |
+| 2 Rg 7,6–15 | the long oracle: the tabernacle, the enemies cut off, "dormieris cum patribus tuis", the rod and the stripes of 7,14 | **all of it FUTURE, and the future is not on this ladder at all.** 7,13 and 7,16 survive as the two present-tense facts they amount to: `fīlius tuus domum Deī aedificat, et rēgnum tuum semper manet` |
+| 2 Rg 7,18–29 | David's prayer | first person |
+| 3 Rg 3,1–4 | Pharaoh's daughter; the high places and the thousand victims | a treaty marriage and a compromised worship |
+| 3 Rg 3,6–9 | Solomon's own prayer | first person; its content survives as what he does not ask for and what he does |
+| 3 Rg 3,11 | "nec animas inimicorum tuorum" | a wish for enemies' lives is not put in a child's ear even to be refused; the refused list is told as `nōn multōs annōs, nōn multa dōna` |
+| **3 Rg 3,16** | **"duæ mulieres MERETRICES"** | DESIGN §8. They are `duae mulierēs`, which is all the judgement needs |
+| **3 Rg 3,17–22** | **the two accounts, the child dead in the night, the exchange in the dark** | **a dead infant is not shown, named or implied.** The file says only that two women came, and that each claimed the living child |
+| **3 Rg 3,24** | **"Afferte mihi gladium"** | see the h47 judgement row. The sword is omitted whole so that `gladius` occurs exactly once in Liber VIII, inside 1 Rg 17,47's formula, which denies it |
+| 3 Rg 3,26–27 | "nolite interficere eum" · "et non occidatur" | there is no word for killing on any page of h47 |
+| 3 Rg 5 entire | Hiram of Tyre, the levy of thirty thousand, the cedars floated down | a treaty and a work-roster |
+| 3 Rg 6,2–6.16–20 | every measurement in cubits | numbers |
+| 3 Rg 6,23–35 · 3 Rg 7 entire | the cherubim of olive wood, the carved palms, the doors, Solomon's own house, Hiram's bronze, the two pillars, the sea, the ten bases, the lampstands and the vessels | **MISSING ART** for nearly all of it, and a winged `cherub` would collide with the `angel` preset this track uses for messengers. Only `mēnsa` (7,48) and `altāre` (6,20) survive, because those two have props |
+| 3 Rg 6,7b | "malleus, et securis, et omne ferramentum non sunt audita in domo" | kept as an IDEA in the boss's ŌRDINĀ (iron does not belong in the house), not as a page: `malleus` and `secūris` have neither art nor a cap slot |
+| 3 Rg 8,12b–61 | the dedication prayer | sixty verses of first person, subjunctive and future |
+| 3 Rg 8,62–66 | the twenty-two thousand oxen of the dedication | a number, and a slaughter |
+| 3 Rg 11 entire | Solomon's foreign wives and the gods he built for them | DESIGN §8, and idols this track has no reason to name one by one. **The division is told as what happened, not as a punishment argued** |
+| 3 Rg 12,4–14 | the hard yoke, the two councils, "minimus digitus meus grossior est dorso patris mei", and 12,11's whips and scorpions | a threat of beating |
+| 3 Rg 12,18 | Aduram stoned to death | a death, and a lynching |
+| 3 Rg 12,21–24 | the hundred and eighty thousand mustered for civil war | a war called off is still a war |
+| 3 Rg 12,28b | the calves' own claim, "ecce dii tui Israel, qui te eduxerunt" | **the page says the calves were made and that a golden calf is not God, and puts no lie in anyone's mouth** |
+| Tb 1–5 | Tobit's alms and his burying of the dead; **Tb 2,11's swallows' dung and the blindness it caused**; Sara and Ragūēl; the hiring of "Azarias" | the blindness has no picture and no purpose here — the file says only `oculī ēius iam nōn vidēbant` |
+| **Tb 3,7–8 · 6,13–17 · 8,1–3** | **Sara, the seven husbands, and the demon Asmodeus** | DESIGN §8 absolutely — no horror imagery, and seven deaths besides. Tobias' marriage goes with them |
+| Tb 6,4–9 | the fish's heart, gall and liver as remedies | the anatomy of a fish being cut open is not a page for children. The gall survives only as `Tobiās … oculōs patris tetigit` |
+| Tb 12,6–13 · 13–14 | Raphael's discourse on alms, the canticle, and the deaths of Tobias and Anna | discourse, and two more deaths |
+| Dn 1–5 | the furnace, the dreams, the writing on the wall | CURRICULUM §2 leaves them out and none of it fits one capitulum |
+| Dn 6,7–9 | the decree in full, and "ut non immutetur quod statutum est a Medis et Persis" | told as the one thing it forbade. **The thirty days go with it** (a number), and so does "nisi a te, rex" |
+| Dn 6,10 | "fenestris apertis … contra Jerusalem tribus temporibus in die" | **MISSING ART**, no `fenestra`. The three times a day survives as `ter cotīdiē` |
+| **Dn 6,16–17** | **`lacum leonum`, and the stone sealed with the king's ring** | **MISSING ART** — no `lacus`/`fovea` actor. The word `lacus` is omitted whole (`Rēx Daniēlem ad leōnēs mīsit`), and the stone survives as ONE passive sentence, `Lapis magnus positus est`, in a word the learner has owned since h44. The seal and the ring go with the pit |
+| **Dn 6,24** | **the accusers, with their wives and children, thrown to the lions** | DESIGN §8, absolutely. Omitted whole; the capitulum ends on the king's joy, the return and the rebuilding |
+| Dn 6,25–27 | Darius' decree to all the earth | a proclamation in the first person |
+| 1 Esd 1,7–11 · 3,7–13 · 4 | the temple vessels counted out; the masons and carpenters; the weeping of the old men; the opposition to the building | inventory, and a quarrel. **Cyrus is not named**: the return is told as `Posteā populus Deī in terram Israēl rediit`, and 1 Esd 1,3's own command ("ædificet domum Domini") as `templum Deī iterum aedificātum est` |
+
+## Additions register — Liber VIII (what is on the page but not in the source)
+
+| where | addition | justification |
+|---|---|---|
+| h43 (1 Rg 16,16.23) | **a 🎵 bubble instead of a harp** | **MISSING ART** — there is no `cithara` actor. The `⬆☁` device of h19 and the 🎺 device of h38, third use. **STOP-REPORTED.** Do not read the bubble as a substitute: the moment a `cithara` prop exists, `SC.v_cithara` should become it |
+| h43 · h46 | **David's fixed costume** (young, beardless, reddish hair, ochre tunic; the same face under the `king` preset from h46) | 1 Rg 16,12 and 17,42 both say "rufus, et pulcher aspectu". The `person` actor's `hairColor` is the only handle the library has, and the liber needs one man to be recognisable across eight capitula and two stations of life |
+| h44 (1 Rg 17,4) | **Goliath drawn at s 1.62 beside David at 0.98** | 17,4's "altitudinis sex cubitorum et palmi" is a number the page does not give; the size difference IS the verse, and it lets `omnibus altior` (h42's comparative) land without a translation |
+| h44 (1 Rg 17,49) | **the giant drawn KNEELING, whole and unmarked, alone in the frame** | the verse says he fell. Nobody is drawn standing over him, nothing is drawn in anyone's hand, and the `sleep` pose was refused because it draws a body on the ground and would have said `dormit` where the text says `cecidit`. The h40 discipline (broken columns, empty room) applied to a person |
+| h45 (1 Rg 24) | **the mountain of Engaddi in place of the cave** | 24,1 "in desertis Engaddi" and 24,3 "super abruptissimas petras" are the chapter's own setting; only the cave itself is missing, and it is missing rather than half-drawn |
+| h46 (2 Rg 6,15) | **the ark carried by two `priest` figures** | 3 Rg 8,3 "et tulerunt arcam SACERDOTES" — the Vulgate's own bearers, borrowed from the later chapter that names them |
+| h47 (3 Rg 3,16–28) | **the judgement staged with a throne, a king, two women and a child, and nothing else** | see the h47 judgement row. Every prop the chapter could have supplied and DESIGN §8 forbids is simply absent from the scene spec |
+| h48 (3 Rg 8,11) | **the `star` radiance inside the temple, with a ☁ bubble** | 8,11 "impleverat enim GLORIA DOMINI domum Domini". The radiance is the track's own symbol for God since h1 and asserts only what the verse asserts; the cloud has no actor and is the one thing the bubble carries |
+| h49 (Tb 5–6) | **Raphael drawn with the `angel` preset from his first appearance**, while the TEXT calls him only `angelus` / `vir ille` until Tb 12,15 | the reader is allowed to see what Tobias does not yet know, which is the book's own irony; **the text never claims his name before the verse does**, and the formula page is where it is said |
+| h50 (Dn 6,16–23) | **the lions drawn in the `lie` pose in every frame, and never standing** | Dn 6,22 "conclusit ora leonum". A lion lying down beside a man who is not touched is the whole chapter in one picture |
+| h50 (1 Esd 3) | **the rebuilt temple drawn with the same `temple` prop as h48** | the second house is the same house in the same place, and the repeated prop is what makes the liber's arc visible without a word |
+
+## Art addenda requested by Liber VIII
+
+| actor | needed for | current handling |
+|---|---|---|
+| **`cithara`** (a lyre or harp) | h43, 1 Rg 16,16.23 | 🎵 bubble. **STOP-REPORTED.** With Liber VII's `tuba` this is the SECOND instrument the track has had to draw with a bubble; **a small `mūsica` set — cithara · tuba · tympanum — would close both holes at once** and would also serve 2 Rg 6,5's procession |
+| **`spēlunca`** (a cave background or mouth) | h45, 1 Rg 24 — and Liber VII predicted the need | episode retold on the mountain; the word omitted |
+| `lacus` / `fovea` (a pit) | h50, Dn 6,16 | word omitted; the den drawn as an enclosed interior with lions |
+| `lapis` (a loose stone) | still open from Liber IV | h44 gets round it — the `person {sling:true}` prop draws the stone in the strap — but Dn 6,17's sealed stone has no picture |
+| `oculus` | h49, Tb 11,13 | the 👀 bubble h3 ships for `videt` |
+| `aurum` (ingots or a gold vessel) | h49 · h48 | `aurum` is glossed but NOT carded, and is deliberately absent from the boss's ŌRDINĀ |
+| `cherub` | 3 Rg 6,23–28 | omitted whole; a winged figure would collide with the `angel` preset |
+| `fenestra` | Dn 6,10 | omitted whole |
+
+## Engine notes carried forward from Liber VII (still true in Liber VIII)
+
+1. **`crowdGroup` ignores `pose` and `seed`** (`js/actors-person.js` sets each
+   figure's pose from its index). Liber VIII passes them in one harmless
+   place; **no page's meaning rests on a crowd's posture**.
+2. **`solus` is on `js/boss-phases.js`'s FUNCTIO stoplist.** Liber VIII's
+   sententia gaps `cor · cithara · lapis · vestis · arca` and its ŌRDINĀ
+   sorts `arca · mēnsa · altāre · vitulus · hasta`; none is on the list.
+3. **`probatio.js`'s `zoneOf()` only sees CARDED words** and matches the whole
+   `la` string with macrons stripped. That is why `mēnsa` and `altāre` carry
+   cards in h48 they would not otherwise need, and why every other word of the
+   liber returns −1 and can never spawn.
