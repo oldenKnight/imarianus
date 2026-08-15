@@ -63,7 +63,7 @@ field, e.g. 'Gn 6–9'). Vulgate name forms throughout. Ladder position in ().
                        Probātiōnēs: sententia (plāgae) + trānsitus (mare)
   L7 IŪDICĒS (S8–S9)   1 Gedeōn · 2 Samsōn fortis · 3 Samsōn dēceptus · 4 Samuēl puer ·
                        5 Saūl rēx prīmus
-  L8 RĒGĒS (S9–S10)    1 Dāvīd et Goliāth · 2 Dāvīd et Saūl · 3 Dāvīd rēx ·
+  L8 RĒGĒS (S9–S10)    1 David et Goliath · 2 David et Saul · 3 David rēx ·
                        4 Salomōn sapiēns · 5 Templum aedificātur · 6 Rēgnum dīvīsum ·
                        7 Tobiās · 8 Daniēl et leōnēs; reditus
   L9 IESUS (S11–S12)   1 Nātīvitās · 2 Magī ab oriente · 3 Puer in templō ·
