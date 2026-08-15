@@ -412,7 +412,14 @@ inreparābile · vītae · fāmam · extendere · factīs · hoc … opus · vir
 **MISSING ART, reported:** no BELT prop (§0.8) · no HERCULES and no STYX
 (Pallās' prayer is a young man with his hands up and an empty sky, which is what
 praying looks like) · no CHARIOT (Mezentius fights on foot beside his `equus`) ·
-no BIER (Pallās is carried by two men in `pose: 'carry'`).
+**no BIER, and none composed** — `pose: 'carry'` is the library's SHOULDER-carry
+(a2's Aenēās-and-Anchīsēs), NOT two men bearing a body between them, so it is
+used only where ONE man lifts another, which is exactly what 10,831 says Aenēās
+does. `v_reddit` and `a40_reddit` are therefore Aenēās with Lausus on his
+shoulders in Lausus' own iron (`carryRole`/`carryRobe`/`carryMantle`), walking
+toward the boy's people: the man who carried his father, carrying someone
+else's son. Pallās' cortège in a39 is his own people walking, and the carrying
+is told in the text and not drawn.
 
 **PROBĀTIŌ b_al10 — Fāma Factīs:** `sententia` then `ōrdinā`, **in that order
 and not the other way round**, because the liber's own shape is exactly that:

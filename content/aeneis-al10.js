@@ -153,8 +153,12 @@
        hands up and an empty sky, which is what praying looks like.
      · No CHARIOT. Mezentius fights on foot beside his `equus`, which
        is the honest half of the picture.
-     · No BIER. Pallās is carried in `pose: 'carry'` by two men, which
-       is the pose the library has for carrying.
+     · No BIER, and none composed. `pose: 'carry'` is the library's
+       SHOULDER-carry (a2's Aenēās-and-Anchīsēs), not two men bearing a
+       body between them, so it is used only where ONE man lifts
+       another — which is what 10,831 says Aenēās does. Pallās'
+       cortège in a39 is therefore his own people walking, and the
+       carrying is told in the text, not drawn.
 
    IDS ARE DATABASE KEYS once shipped: a37…a40, progressId 'al10'
    (content/README.md §5). File name per the head of aeneis-al1.js.
@@ -534,10 +538,19 @@
                 ],
                 bubbles: [{ x: 336, y: 66, w: 46, h: 38, text: '🤲', kind: 'thought', tail: 'left', fs: 20 }] },
 
-    /* reddit: two men carrying something back to a waiting crowd */
+    /* reddit: ONE man carrying another BACK to the people waiting for
+       him. `pose: 'carry'` is the library's shoulder-carry — the pose
+       a2 gave Aenēās for Anchīsēs — and it is used here on purpose and
+       not as a substitute: the text says *ipse eum sustulit, ipse ad
+       sociōs eius portāvit*, one man and not a bier, and the man who
+       carried his own father is drawn carrying someone else's son in
+       exactly the same attitude. The rider is dressed in Lausus' iron
+       (`carryRole` + `carryRobe`/`carryMantle`) so the two figures read
+       as Aenēās and Lausus and not as a20's pair. */
     v_reddit:   { bg: 'plain', items: [
-                  troianus(104, G, 1.22, { pose: 'carry', shield: false, spear: false }),
-                  troianus(166, G, 1.22, { pose: 'carry', shield: false, spear: false }),
+                  heros(132, G, 1.32, { pose: 'carry', shield: false, spear: false,
+                                        carryRole: 'soldier',
+                                        carryRobe: FERRUM, carryMantle: FERRUM }),
                   { t: 'crowdGroup', x: 300, y: G, s: 0.9, n: 4,
                     colors: [FERRUM, FERRUM, FERRUM, FERRUM] }
                 ] },
@@ -605,8 +618,9 @@
                 ] },
 
     a40_reddit: { bg: 'plain', items: [
-                  troianus(108, G, 1.22, { pose: 'carry', shield: false, spear: false }),
-                  troianus(170, G, 1.22, { pose: 'carry', shield: false, spear: false }),
+                  heros(136, G, 1.34, { pose: 'carry', shield: false, spear: false,
+                                        carryRole: 'soldier',
+                                        carryRobe: FERRUM, carryMantle: FERRUM }),
                   { t: 'crowdGroup', x: 306, y: G, s: 0.9, n: 4,
                     colors: [FERRUM, FERRUM, FERRUM, FERRUM] }
                 ] },
@@ -1302,7 +1316,7 @@
          young man alone) wear the SAME IRON, which is the capitulum's
          point and a hazard at tile size — they are never offered
          together. `parcit` (a standing man and a kneeling one) and
-         `reddit` (two men carrying, and a crowd) are the two
+         `reddit` (one man carrying another, and a crowd) are the two
          mercy-cards and are also kept apart. */
       sonus: [
         { la: 'Mezentius',
