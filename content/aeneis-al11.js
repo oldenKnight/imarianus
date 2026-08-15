@@ -1396,7 +1396,18 @@
           track's sign (the same ruling that keeps `star` out of al10's
           Iuppiter). al3's `wall: 'mountain'` is the precedent for a
           non-water wall. The water colour is a river green, not a sea
-          blue. The phase's `titulus: 'AMASĒNUS'` is DOCUMENTATION, not
+          blue.
+          *** VERIFIED AT INTEGRATION (wave 5) AND KEPT. Rendered
+          headlessly at exactly the 130 px probatio.js rasterises to,
+          tiled down a wall face over this phase's own #3f7a86, and
+          looked at beside `mountain` and `murusAquae`. It reads as a
+          REED BED: three dark-red seed-maces over olive stems and
+          leaves, unmistakable at tile size. It is the SOFTEST of the
+          three walls — the stems are thin and green-on-teal is the
+          lowest contrast pair of the set — so if a wall is ever
+          re-tuned for a small screen this is the one to look at first;
+          but it is legible, it is not a blob, and the revert to
+          `murusAquae` is NOT taken. *** The phase's `titulus: 'AMASĒNUS'` is DOCUMENTATION, not
           UI: js/boss.js phaseTitle() reads the titulus off the phase
           IMPL, and only js/probatio.js's `ōrdinā` reads
           `cfg.data.titulus`. content/historia-l6.js already ships an

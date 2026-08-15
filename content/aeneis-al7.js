@@ -1539,7 +1539,13 @@
           { text: 'Iūnō portās bellī ___.',
             options: ['aperit', 'aperiunt', 'aperīre'], correct: 0, scene: SC.a28_aperit },
           { text: '___ magnus in campō stat.',
-            options: ['Exercitus', 'Exercitum', 'Exercitūs'], correct: 0, scene: SC.a28_exercitus },
+            /* `Exercitū`, NOT `Exercitūs`, as this item first shipped:
+               normWord() strips macrons, so `Exercitus` and `Exercitūs`
+               are ONE chip to the grader and the wrong tap graded correct
+               (regression BUG-4, the same ruling as al6/a21's `lacus`).
+               The ablative is a real 4th-declension form, wrong in this
+               gap; the accusative distractor stays. */
+            options: ['Exercitus', 'Exercitum', 'Exercitū'], correct: 0, scene: SC.a28_exercitus },
           { text: 'Ultima venit ___, virgō Volsca.',
             options: ['Camilla', 'Camillam', 'Camillae'], correct: 0, scene: SC.a28_camilla },
           { text: 'In summā parte ___ aristae sunt.',

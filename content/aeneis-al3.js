@@ -1700,11 +1700,17 @@
           because two librī in a row must not run the same trial with
           the same art. The water is the calm Ionian blue of bgSea and
           not al1's storm blue, for the same reason.
-          *** FLAGGED FOR THE LINE-AUDIT: this is the one choice in the
-          liber that could not be verified headlessly — the phase
-          rasterises the wall actor into a 130×130 tile and the mountain
-          silhouette has never been tiled before. If it reads badly on a
-          device, the revert is one word: wall: 'murusAquae'. ***
+          *** VERIFIED AT INTEGRATION (wave 5) AND KEPT. The flag this
+          comment used to carry was real — the phase rasterises the wall
+          actor into a 130×130 tile and the mountain silhouette had
+          never been tiled — so the tile was rendered headlessly at
+          exactly 130 px, tiled down a wall face over this phase's own
+          water colour, and LOOKED AT beside `murusAquae` as a control.
+          It reads: two brown peaks with white snow caps on #3d7fa0, a
+          triangular silhouette at full contrast, and stacked it reads
+          as a RANGE. It is the most legible of the three transitus
+          walls in the product. The one-word revert (wall: 'murusAquae')
+          is NOT taken and should not be. ***
        2. SENTENTIA. Six HAND-AUTHORED items (AUTHORING-BRIEF, "Boss
           clamor/sententia items"). Every gap is a picturable content
           lexeme; every distractor is same-POS and wrong IN THE

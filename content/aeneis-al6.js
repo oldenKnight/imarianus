@@ -953,7 +953,13 @@
           { text: 'Facile est ad ___ dēscendere.',
             options: ['īnferōs', 'īnferī', 'īnferīs'], correct: 0, scene: SC.a21_porta },
           { text: 'Prope antrum ___ niger est.',
-            options: ['lacus', 'lacum', 'lacūs'], correct: 0, scene: SC.a21_lacus },
+            /* `lacū`, NOT `lacūs`, as this item first shipped: normWord()
+               strips macrons, so `lacus` and `lacūs` are ONE chip to the
+               grader and the wrong tap graded correct (regression BUG-4,
+               the ruling that fixed the eleven -a/-ā pairs). The ablative
+               is a real 4th-declension form, wrong in this gap, and
+               collides with nothing; the accusative distractor stays. */
+            options: ['lacus', 'lacum', 'lacū'], correct: 0, scene: SC.a21_lacus },
           { text: 'Quī umbrās vidēre volunt, hīc ___.',
             options: ['dēscendunt', 'dēscendit', 'dēscendere'], correct: 0, scene: SC.a21_via },
           { text: 'Aenēās ōrat ut patrem suum ___.',
