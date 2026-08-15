@@ -1,0 +1,82 @@
+{
+  "_note": [
+    "Registration snippet — AUTHORING-BRIEF 'Registration protocol'. Content",
+    "agents do not touch content/manifest.js, content/manifest.json or",
+    "server/lib/rules.php; the integrator applies this and deletes the file.",
+    "",
+    "APPLY LAST. al12 is the TWELFTH and FINAL region of the aeneis track and",
+    "must follow al1..al11 in the manifest's regions array — js/app.js",
+    "regionIndex() reads that order and feeds it to the phase engine as the ONE",
+    "difficulty input (DESIGN §6). This is the hardest region in the product and",
+    "its tuning assumes index 11; inserting it earlier would under-tune it.",
+    "",
+    "al12 is a PROBĀTIŌ liber (kind: 'probatio', boss id b_al12) with THREE",
+    "SENTENTIA PHASES: 4/55s + 4/50s + 4/45s. Legacy single-phase tuning in the",
+    "content file is hp 12 / 150 s. bossMinMs 15000 matches every other region.",
+    "",
+    "THREE PHASES IS NOT A NEW ENGINE FEATURE AND NEEDS NO CODE. js/boss.js",
+    "buildPlan() loops `config.phases` for its whole length and filters only",
+    "unregistered types; js/boss.js ROMAN covers ten. Verified against the",
+    "source. The phases render as 'I — SENTENTIA', 'II — SENTENTIA',",
+    "'III — SENTENTIA'.",
+    "",
+    "THE PER-PHASE `titulus` FIELDS ARE DOCUMENTATION, NOT UI, and must not be",
+    "'fixed'. js/boss.js phaseTitle() reads the titulus off the phase IMPL in",
+    "the registry, not off the config; only js/probatio.js's `ordina` phase",
+    "reads cfg.data.titulus (as its banner). content/historia-l6.js already",
+    "ships an inert transitus titulus on the same understanding.",
+    "",
+    "All three phases declare their own `items` (6 each, 18 total, hand-authored",
+    "per AUTHORING-BRIEF 'Boss clamor/sententia items'), so js/probatio.js never",
+    "reaches its derivation fallback. Six items against hp 4 per phase is",
+    "deliberate slack: this is the track finale and it is tuned generous on",
+    "margin and climactic on clock. Nothing here for rules.php to know.",
+    "",
+    "quizKey carries the same three keys per row as every other aeneis region:",
+    "rules.php stores {q, a}, and `correct` is always 0 against the boss.quiz",
+    "order in content/aeneis-al12.js. Region id 'al12', not 'l12' — rules.php",
+    "keys regions in one flat namespace (see a-l1.reg.json). NOTE: 'al12' must",
+    "not be matched by any prefix rule written for 'al1'; check that pair",
+    "explicitly if rules.php does prefix matching anywhere.",
+    "",
+    "al12 is a NEW region: its content id IS its progressId, so it needs no",
+    "entry in rule_region_aliases().",
+    "",
+    "XP mirrors every other aeneis region exactly. If the product wants a",
+    "track-completion award, THIS is the region to hang it on — but that is a",
+    "product decision and no such field is invented here."
+  ],
+
+  "track": "aeneis",
+  "region": "al12",
+  "titulus": "Ultimum",
+  "ladder": "S12",
+  "progressId": "al12",
+  "capitula": ["a45", "a46", "a47", "a48"],
+  "boss": "b_al12",
+
+  "quizKey": [
+    { "q": "foedus",  "a": "foedus",  "correct": 0, "from": "a45" },
+    { "q": "gladius", "a": "gladius", "correct": 0, "from": "a46" },
+    { "q": "dubitat", "a": "dubitat", "correct": 0, "from": "a47" },
+    { "q": "balteus", "a": "balteus", "correct": 0, "from": "a47" },
+    { "q": "moenia",  "a": "moenia",  "correct": 0, "from": "a48" }
+  ],
+
+  "xp": {
+    "step": 25,
+    "boss": 40,
+    "quizEach": 10,
+    "quizPassMaxWrong": 1
+  },
+
+  "antiCheat": {
+    "bossMinMs": 15000
+  },
+
+  "manifestEntry": {
+    "id": "al12",
+    "capitula": ["a45", "a46", "a47", "a48"],
+    "boss": "b_al12"
+  }
+}

@@ -644,3 +644,232 @@ weight is at its end, not its beginning, and the last thing the learner does
 before the quiz is read a sentence about a girl being praised. The liber's last
 item is *Rogās quid Turnus fēcerit? Virginem nōn culpāvit sed ____* — answer
 `laudat`, under the scene of the quotation.
+
+---
+
+# LIBER XII · ULTIMUM — `content/aeneis-al12.js` (S12)
+
+**THE LAST LIBER OF THE LAST TRACK.** Forty-four capitula ago a learner read
+three lines of the proem in a4 without being able to read them; this file ends by
+giving him all seven and no help.
+
+## a45 · Foedus ruptum · fons Aen. 12,1–310
+
+**CARDS (3):** foedus · omen · Lāvīnia.
+
+`v_foedus` is the two KINGS at an altar, hands out, no weapons — told from al11's
+`vōtum` (ONE old man, arms UP, alone at an altar) by there being two men and by
+the gesture being level.
+**LĀVĪNIA IS CARDED HERE (12,64–70)** because a48 needs her and because **the
+girl the whole war is about should have a face before the war ends**. She is the
+only violet figure in the liber.
+**NOBODY IS NAMED AS KILLED IN THIS CAPITULUM.** The breaking of the treaty is
+told as what it is: an altar with armed men on both sides of it and nobody at it
+any more.
+**AENĒĀS' TERMS ARE KEPT** (12,189–194) because they are the fairest thing in
+the liber: *Sī ego vīcerō, nōn imperābō Ītalīs: aequō foedere vīvēmus.*
+**MISSING ART: NO SWAN.** The omen of 12,244–256 is an eagle carrying off a swan
+and dropping it. `aquila` exists and no swan does, so the eagle is drawn, the men
+are drawn pointing at it, and **the bird it carried is in the TEXT and not in the
+picture** (*avem albam*). Nothing is substituted — a dove would have been a
+different omen, and this track does not invent birds.
+**THE MŌRĀLE IS ABOUT READING**, which is what the product is for: *Omen nōn
+fefellit; augur fefellit.*
+**TAUGHT:** — **NŌMINA PROPRIA:** Latīnus · Iūturna · Tolumnius.
+**OMITTED:** the general fighting of 12,283–310 beyond one sentence.
+
+## a46 · Duellum ultimum · fons Aen. 12,311–790 (+ 12,435–436a)
+
+**CARDS (4):** sānat · discit · spectat · gladius.
+
+**THE WOUND KEEPS THE FACT AND DROPS THE ANATOMY.** Aen. 12,318–323 becomes
+*Aenēās ipse ictus est et ex proeliō recessit.* No arrow in the picture (no arrow
+prop exists), no wound, no blood. **The healing (12,391–429) is then kept nearly
+whole**, because it is the gentlest scene in the liber and because Iapyx — an old
+man who *nōn glōriam sed artem amābat* — is worth a page in a children's book.
+**AMĀTA'S DEATH (12,595–603) IS OMITTED ENTIRELY AND IS NOT EVEN NAMED.** She
+hangs herself; DESIGN §8 is explicit that no suicide is shown or described, and
+this is **the one death in the four librī that does not get a sentence**. The
+queen simply leaves the narrative, and the city's grief at 12,604–613 is told as
+the city's grief. It is an OMISSION, not a refusal: the refusal device announces
+that something is being withheld, and announcing this one would be worse than
+silence.
+**JŪTURNA (12,468–592)** is compressed to the one sentence that names her as
+Turnus' sister — `soror` is a44's card and the word does its own work.
+**THE CITY WATCHES** (12,704–709), which is the brief's own picture and the
+capitulum's card: *omnēs arma dēposuērunt … et dē mūrīs urbs tōta spectābat.*
+**`gladius`** is the `swordShield` prop, which is what the library has; the card
+is the prop alone, and the text never claims the shield is absent.
+**TAUGHT:** — **NŌMEN PROPRIUM:** Iapyx.
+
+**THE INLINE QUOTATION — Aen. 12,435–436a:**
+
+```
+disce, puer, virtūtem ex mē vērumque labōrem,
+fortūnam ex aliīs.
+```
+
+Aenēās to Ascanius before the last fight, and **the only place in the poem where
+the hero says something addressed to a child** — which is why this track, of all
+tracks, quotes it. It runs to the full stop in the middle of 436 for the
+a40/a44 reason (the sentence ends there), and the page says so in Latin, which
+**teaches the enjambment for the THIRD time in four librī**.
+Everything is in hand: `virtūs` is a35's card, `fortūna` is a37's gloss, `labor`
+and `vērus` are cōpia commūnis, and **`disce` is a46's own card `discit`, taught
+two pages earlier** — so the learner meets the imperative of a verb he has just
+learnt, in a line addressed to somebody his own age. The gloss says so out loud:
+*discit → disce! Imperātīvus.*
+
+## a47 · Turnus victus · fons Aen. 12,887–952
+
+**CARDS (3):** supplex · balteus (**RE-CARDED**) · dubitat.
+
+### THE ENDING, IN FULL — the four pages
+
+This is the passage the whole device was built for, and it is the one place in
+the track that spends **four pages** instead of two:
+
+> **(i) THE FACT.** *Turnus victus est. Quid deinde Aenēās fēcerit, Vergilius
+> clārē dīcit: Aenēās Turnum occīdit.*
+>
+> **(ii) THE MANNER, REFUSED.** *Quō modō id fēcerit, hīc nōn nārrātur:
+> Vergilius plūra dīcit, nōs autem hīc tacēmus.*
+>
+> **(iii) THE MOTIVE, LEFT OPEN.** *Quō autem animō id fēcerit — īrā an
+> iūstitiā, prō Pallante an prō sē — hominēs duo mīlia annōrum disputant, nec
+> adhūc cōnsentiunt. Vergilius ipse nōn dīcit. Nec nōs dīcēmus: nam quod poēta
+> apertum relīquit, nēmō claudere dēbet. Tū ipse, cum maior eris, iterum legēs
+> et cōgitābis.*
+>
+> **(iv) THE LAST LINE, NAMED AND WITHHELD.** *Ūnum adhūc restat. Ultimum versum
+> Vergiliī hīc nōn legimus: gravis est. Est tamen, et suō tempore eum legēs.*
+
+**THE FACT IS NEITHER OMITTED NOR SOFTENED.** Turnus is not spared; there is no
+alternative ending; nothing is altered. **OMISSION NEVER ALTERATION**, the rule
+the whole track has run on, holds at the hardest point in the poem.
+**WHAT IS WITHHELD IS THE MECHANISM** (page ii), which DESIGN §8 forbids showing.
+**WHAT IS REFUSED IS THE VERDICT** (page iii) — and this is the new thing this
+capitulum does. Vergil withholds it; twenty centuries of readers have not agreed
+about whether Aenēās was right; **a children's book that settled it would be
+lying about the poem, not protecting the child.** So the file says that grown-ups
+still argue, says that the poet did not tell us, and hands the question forward
+to the learner for when he is older. That is the most honest ending available.
+**PAGE (iv) IS PART OF THE HONESTY.** Aen. 12,952 is NOT quoted — it is too dark
+for this product — but the learner is TOLD that the poem has one more line and
+that it is being kept from him for now. **He is never deceived about what is
+there**, which is the same contract the refusal device has made with him eleven
+times already.
+
+### `dubitat` is a card, and that is the point
+
+Aen. 12,938–941 — *et iam iamque magis cūnctantem flectere sermō / coeperat* —
+is the hinge of the poem: **the speech was beginning to work.** `dubitat` is
+therefore a vocabulary card with its own picture, its own trial items and its own
+place in the finale's probātiō, and the page says what the pause means: *Dubitat
+enim, et dum dubitat, omnia adhūc fierī possunt.* **A child who finishes this
+track will have been made to LEARN THE WORD FOR THE PAUSE**, which is the most
+this product can honestly do about the ending.
+
+### The balteus comes back, and is RE-CARDED
+
+Ledger §0.8 closes here. a38's `v_balteus` was **PALLĀS ALONE** in the gold band;
+a47's `v_balteus` is **TURNUS ALONE** in the same gold band. Two cards, one
+colour, two shoulders — **that pair is the argument of the ending, made in
+pictures**, and it is why the gold was taken off Turnus in al9 in the first
+place. The page names the debt out loud: *Duōs librōs balteus in umerō Turnī
+fuit; nunc Aenēās eum vīdit.*
+**THE DAUNUS APPEAL (12,932–934) IS KEPT**, in graded prose, and it is kept
+because it is not about Turnus: *Sī patris miserī cūra tē tangere potest — et
+tibi tālis pater fuit, Anchīsēs — Daunī senectūtis miserēre, et mē meīs redde.*
+**TAUGHT:** — **NŌMEN PROPRIUM:** Daunus.
+**SONUS:** `supplex` (ONE kneeling man, alone) and `dubitat` (a standing man, a
+kneeling man, and the question bubble) share the kneeling figure and are NEVER
+offered together; `balteus` (one standing man, gold, alone) and `supplex` are the
+same man in two postures and are also kept apart; `gladius` carries the sets.
+
+## a48 · Pāx et fātum Rōmae · fons Aen. 12,791–842 (+ Aen. 1,1–7)
+
+**CARDS (3):** miscet · moenia · coniūnx.
+
+**THE GODS' COMPACT IS READ LAST AND THE FILE SAYS SO.** Aen. 12,791–842 happens
+DURING the duel, and this capitulum opens with *Dum illī in campō pugnant, in
+caelō aliud agēbātur. Hoc nunc audiēs, quamquam eōdem tempore factum est.*
+**Nothing is reordered silently.** The reason for putting it last is the reason
+a36, a40 and a44 put their quotations last: the end of a liber must land on the
+liber's picture, and this liber's picture — and this track's — is **two peoples
+becoming one**.
+**12,834–837 IS KEPT IN FULL** in graded prose because it is the most generous
+thing in the poem: the losers keep their name, their language and their dress,
+and only the war's name is given up. `v_miscet` is **ONE crowd with the two
+colours alternating inside it** — the only two-coloured crowd in the track, and
+the whole ending of the poem in one picture.
+**TAUGHT:** — **NŌMINA PROPRIA:** Alba Longa · Lāvīnium.
+
+### THE PROEM RE-READ — the graduation page design
+
+This is the payoff CURRICULUM §3 promises ("the track's final payoff is the
+famous lines themselves"), and it is built as a **graduation**, not as a
+recitation:
+
+1. **The announcement.** *Meministīne capitulum quārtum, ubi verba Vergiliī
+   prīmum lēgistī? Trēs prīmōs versūs iam tunc lēgistī, et eōs sine ūllō auxiliō
+   nunc legēs. Quattuor sequentēs novī sunt: eīs auxilium dabimus.* The learner
+   is told exactly what is about to be done to him and why.
+2. **Lines 1–3, WITH NO `nova` AT ALL.** Not one gloss on those three pages.
+   **The absence of the gloss IS the graduation** — a4 gave him these three with
+   full Ørberg apparatus, and this is the moment he finds out he no longer needs
+   it. *This must not be "fixed" by a later hand,* and the file header says so.
+3. **Lines 4–7, glossed normally** — `vī`, `superum`, `memorem`, `ob`, `passus`,
+   `conderet`, `īnferret`, `genus`, `unde`, `Albānī patrēs`, `altae … Rōmae`.
+   `memorem` is glossed as *idem verbum quod in librō nōnō lēgistī* (a36's
+   `memorī … aevō`), and **`moenia` in line 7 is a48's own card**, taught before
+   the line needs it, so the proem's last line lands on a word the learner owns.
+4. **All seven together on ONE page, with nothing on it.** No glosses, no
+   apparatus, one block of text. **This is the moment the whole track exists
+   for.**
+5. **The reckoning.** *Septem versūs lēgistī, et prīmōs trēs sine auxiliō. In
+   capitulō quārtō eōsdem versūs vīdistī et nōn intellēxistī. Nunc intellegis.
+   Hoc est quod interim factum est.*
+6. **The roll-call of the twelve librī**, each named by its own picture —
+   tempestās, equus ligneus, Dīdō, lūdī, umbrae, Tiberis, scūtum, duo amīcī,
+   balteus, virgō celeris, and this end.
+7. **`FĪNIS.`**
+
+`Lāvīniaque` in line 2 was a4's and is a45's card as a PERSON, which the file
+connects out loud earlier in the capitulum (the town named from the wife).
+OCT/Mynors text with quantity marks added and NOT ONE LETTER CHANGED.
+
+**VERBA VERGILIĪ (Aen. 1,1–7):** vī · superum · memorem · ob · passus ·
+conderet · īnferret · genus · unde · Albānī patrēs · altae … Rōmae.
+*(Lines 1–3 register NO vocabulary, by design.)*
+
+**PROBĀTIŌ b_al12 — Ultimum:** CURRICULUM §3 asks for the finale to be "the duel
+rendered as a syntax trial — the combat is Latin, not violence". **THREE
+`sententia` PHASES AND NOTHING ELSE** — no sorting, no crossing, no chase. The
+last trial of the last track is READING, three times, and the only thing that
+escalates is the clock.
+
+| phase | hp | seconds | drawn from |
+|---|---|---|---|
+| I · FOEDUS | 4 | 55 | a45 and a46 — the treaty and the wound |
+| II · DUELLUM | 4 | 50 | a46 and a47 — the teaching and the pause |
+| III · RŌMA | 4 | 45 | a47 and a48 — the belt and the city |
+
+**ESCALATION IS BY TIME, NOT BY HP.** Every phase asks for the same four correct
+readings; every phase gives less of the clock. That is the "climactic" half of
+the brief. The **"generous"** half is the totals: hp 4+4+4 = 12 over
+55+50+45 = **150 s, the longest trial in the track** (al9 110 s, al10 100 s,
+al11 100 s), with **six hand-authored items against four required hits in every
+phase**, so a learner may miss two per phase and still pass.
+**ENGINE CHECK, DONE AGAINST THE SOURCE AND NOT ASSUMED:** `js/boss.js`
+`buildPlan()` takes `phases` as an array of ANY length — it loops the whole thing
+and filters only unregistered types — and `js/boss.js` `ROMAN` covers ten, so a
+three-phase plan titles as I/II/III with nothing to change in the engine.
+**NOTE FOR THE INTEGRATOR:** the per-phase `titulus` values are DOCUMENTATION,
+not UI — `phaseTitle()` reads the titulus off the phase IMPL in the registry, and
+only `js/probatio.js`'s `ōrdinā` reads `cfg.data.titulus` (as its banner). They
+render as "I — SENTENTIA" etc. `content/historia-l6.js` already ships an inert
+phase titulus on the same understanding. Nothing to fix.
+**THE LAST ITEM OF THE LAST PHASE OF THE LAST LIBER** is the last three words of
+the proem, with the learner supplying the noun: *Ultima verba prōoemiī sunt:
+"atque altae ____ Rōmae."* — answer `moenia`, under the scene of line 7.

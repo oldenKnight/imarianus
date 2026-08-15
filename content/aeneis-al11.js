@@ -1396,7 +1396,11 @@
           track's sign (the same ruling that keeps `star` out of al10's
           Iuppiter). al3's `wall: 'mountain'` is the precedent for a
           non-water wall. The water colour is a river green, not a sea
-          blue.
+          blue. The phase's `titulus: 'AMASĒNUS'` is DOCUMENTATION, not
+          UI: js/boss.js phaseTitle() reads the titulus off the phase
+          IMPL, and only js/probatio.js's `ōrdinā` reads
+          `cfg.data.titulus`. content/historia-l6.js already ships an
+          inert transitus titulus on the same understanding.
        2. SENTENTIA · CAMILLA. Six HAND-AUTHORED items across all four
           capitula — two from a41, two from a42, one from a43 and, as
           the liber's last item, one from a44. Every gap is a picturable
