@@ -424,7 +424,7 @@ command `nōlī` + īnfīnītīvus**. AUTHORING-BRIEF ruling 2 also opens the
 Still forbidden and avoided throughout: the pronouns `is`/`hic`/`ille` (S6),
 the imperfect, the perfect, comparatives, relative clauses.
 
-Two rulings taken in this region, both recorded because Regiō VI and every
+Three rulings taken in this region, all recorded because Regiō VI and every
 later author will hit them again:
 
 * **SECOND-PERSON PRESENT INDICATIVE, INSIDE DIRECT SPEECH ONLY** (designer
@@ -441,6 +441,18 @@ later author will hit them again:
 * **`nōlī tē movēre` SOLVED BY REWORDING.** `tē` is S6 and `movērī` is S10,
   so f14 says `“Iacē! Nōlī currere!”` — a positive and a negative command on
   one page, which is the best gloss `nōlī` could get.
+* **`tuus` / `meus` ARE SPEECH-ONLY FROM S5** (designer ruling, extended by
+  the wave-3 line audit and binding from here on). The possessive adjective
+  is not a pronoun and the ladder never gated it as one, but it only ever
+  makes sense where there is somebody to be addressed — so it is legal
+  INSIDE DIRECT SPEECH ONLY, exactly like the 2sg above: glossed at first
+  use with a POINTING DEVICE (👉 + the thing owned) that names the owner in
+  words already taught, never in narrative, never in a mōrāle, and in
+  hand-authored exercises only where they quote the speech verbatim. First
+  use here is f15 p9's `“Onus tuum est.”`, nova `👉📦`, `g: onus asinī est,
+  nōn equī` — the ass and the pack are in the picture, so the gloss points
+  rather than translates. R1 f2 shipped `tuus` the same way before the rule
+  was written down; this records the rule.
 
 **MISSING ART, reported not worked around (second time — Regiō IV filed the
 same report):** there is still no road/`via` prop or background. The region is
@@ -462,7 +474,7 @@ by `ambulat` + `viātor` and by backgrounds that change under the walkers' feet.
 | quid | f14 p17 | nova 💬❓ — 1 use here, recycled in f15 p13 (`“Quid est?”`) |
 | -ne (iuvāsne) | f15 p8 | nova 🤝❓, `g: “Iuvās.” ↔ “Iuvāsne?”` |
 | clāmās · iuvās · portās | f13 p15, f15 p8/p15 | **2sg, DIRECT SPEECH ONLY** — see the ruling above. FLAGGED for line-audit |
-| tuum | f15 p9 | direct speech only; `tuus` was shipped the same way in R1 f2. 1 use |
+| tuum | f15 p9 | **SPEECH-ONLY from S5** — see the third ruling above. nova `👉📦`, `g: onus asinī est, nōn equī`; the pointing device is what carries it, and the equus says it with the pack in the frame. Direct speech only; `tuus` was shipped the same way in R1 f2. 1 use |
 | duo | f14 p1 | nova 2️⃣, `g: ūnus, duo, multī` |
 
 ### f13 Pāstor et Lupus — vocab cards (8)
@@ -497,6 +509,15 @@ two capitula" pass. Same kind of call as R3 f8's `cadit` and R4 f12's
 | arbor · silva | **FREE** (f1), scenes `v_arbor` / `v_silva` |
 | vir | **FREE** (f13), card + scene kept |
 | timet | **FREE** (f3), emoji 😨 |
+
+**REFERENT RULING (line audit, integrator wave 3):** in f14 `viātor` in the
+singular is THE MAN IN THE TREE and `amīcus` is THE MAN ON THE GROUND, from
+p8 (`Sed amīcus in arborem nōn ascendit`) to the mōrāle. The play-dead page
+read `Viātor in agrō iacet` — the tree man lying in the field one page after
+he shouted `“Iacē!”` down at the other one — and now reads `Amīcus in agrō
+iacet. Amīcus nōn currit, nōn clāmat.`; the AENIGMATA scramble that quoted it
+was carried with it. `vir` stays the generic word for either of them and is
+used as such on the pages where the picture decides (p16, p18).
 
 f14 — further new words: `viātor`/`viātōrēs` (nova 🚶🚶, `g: virī ambulant et
 ambulant: viātōrēs sunt`; 14 uses). **`viātor` gets NO vocabulary card on

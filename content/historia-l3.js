@@ -44,10 +44,14 @@
               "tabernaculum Saræ matris suæ").
      Lot      INDECLINABLE (nom. Gn 13,5; acc. Gn 13,8 "ad Lot"; the
               oblique cases are the same form), so `grex Lot` is a
-              genitive and `Abraham Lot terram dat` a dative.
+              genitive — but AN INDECLINABLE NAME NEVER CARRIES THE CASE
+              THIS LIBER TEACHES (line audit): the dative of Gn 13,9 is
+              said with `frātrī`, and h12's speech uses the Vulgate's own
+              accusative `ad Lot`.
      Isaac    INDECLINABLE (nom. Gn 21,5; acc. Gn 25,19 "genuit Isaac";
               dat. Gn 24,4 "uxorem filio meo Isaac"; gen. Gn 28,13
-              "Deus Isaac").
+              "Deus Isaac"). Same ruling: Gn 24,4's dative is carried by
+              `fīliō`, the noun the verse itself inflects.
      Rebecca  acc. `Rebeccam` (Gn 25,20), gen./dat. `Rebeccae` (Gn 24,29
               "frater Rebeccæ"). Fully declined, 1st declension.
 
@@ -1109,12 +1113,15 @@
 
         /* FIXED VULGATE FORMULA — Gn 13,8 "fratres enim sumus", the ONE
            in this capitulum. Never parsed; the two men are the gloss. */
-        { la: 'Abraham Lot dīcit: "Frātrēs sumus."', scene: SC.h12_fratres,
+        { la: 'Abraham ad Lot dīcit: "Frātrēs sumus."', scene: SC.h12_fratres,
           nova: [{ w: 'Frātrēs sumus', e: '👥🤝', g: 'Abraham et Lot frātrēs sunt' }],
-          ttsText: 'Abraham Lot dicit: Fratres sumus.' },
+          ttsText: 'Abraham ad Lot dicit: Fratres sumus.' },
 
-        /* Gn 13,9 — "Ecce universa terra coram te est: recede a me" */
-        { la: 'Abraham Lot terram bonam dat.', scene: SC.h12_dat },
+        /* Gn 13,9 — "Ecce universa terra coram te est: recede a me".
+           The DATIVE is carried by `frātrī`, not by indeclinable `Lot`: a
+           child cannot read a case off a form that never moves (line audit). */
+        { la: 'Abraham frātrī terram bonam dat.', scene: SC.h12_dat,
+          nova: [{ w: 'frātrī', e: '➡👬', g: 'frāter → Abraham frātrī terram dat' }] },
 
         /* Gn 13,10–11 — "elevatis itaque Lot oculis, vidit" */
         { la: 'Lot terram bonam videt.', scene: SC.h12_eligit },
@@ -1133,8 +1140,8 @@
         { la: 'Deus Abrahae terram iterum prōmittit.', scene: SC.h12_promittit },
 
         /* memoriā tenē */
-        { la: 'Memoriā tenē: Abraham Lot terram bonam dat.', scene: SC.h12_memoria,
-          ttsText: 'Abraham Lot terram bonam dat.' }
+        { la: 'Memoriā tenē: Abraham frātrī terram bonam dat.', scene: SC.h12_memoria,
+          ttsText: 'Abraham fratri terram bonam dat.' }
       ],
       ludus: {
         words: [
@@ -1211,7 +1218,7 @@
             options: ['ium', 'ēs', 'is'], correct: 0, scene: SC.h12_greges },
           { text: 'Terra pāstōr___ parva est.',
             options: ['ibus', 'ēs', 'em'], correct: 0, scene: SC.h12_parva },
-          { text: 'Abraham Lot terram bonam ___.',
+          { text: 'Abraham frātrī terram bonam ___.',
             options: ['dat', 'videt', 'audit'], correct: 0, scene: SC.h12_dat },
           { text: 'Abraham in agrō ___.',
             options: ['manet', 'discēdit', 'natat'], correct: 0, scene: SC.h12_manet }
@@ -1757,9 +1764,13 @@
         { la: 'Abraham servum vocat.', scene: SC.h16_servus,
           nova: [{ w: 'servum', e: '👤', g: 'servus virō labōrat' }] },
 
-        /* Gn 24,4 — "accipias uxorem filio meo Isaac": DATIVE Isaac */
-        { la: 'Servus Isaac uxōrem quaerit.', scene: SC.h16_quaerit,
-          nova: [{ w: 'uxōrem', e: '👤👤', g: 'Sara uxor Abrahae est' },
+        /* Gn 24,4 — "accipias uxorem FILIO meo Isaac". The dative the verse
+           itself marks is `fīliō`, and that is the one the page says:
+           indeclinable `Isaac` shows the learner no case at all (line
+           audit). `fīlius` is one page old — h16 p1 names him. */
+        { la: 'Servus fīliō uxōrem quaerit.', scene: SC.h16_quaerit,
+          nova: [{ w: 'fīliō', e: '➡👤', g: 'fīlius Abrahae → servus fīliō uxōrem quaerit' },
+                 { w: 'uxōrem', e: '👤👤', g: 'Sara uxor Abrahae est' },
                  { w: 'quaerit', e: '👀', g: 'nōn videt: quaerit' }] },
 
         /* Gn 24,10 — "tulitque decem camelos de grege domini sui" */
@@ -1852,14 +1863,14 @@
             { la: 'quaerit', scene: SC.v_quaerit }
           ],
           scrambles: [
-            { la: 'Servus Isaac uxōrem quaerit.',   scene: SC.h16_quaerit },
+            { la: 'Servus fīliō uxōrem quaerit.',   scene: SC.h16_quaerit },
             { la: 'Rebecca urnam portat.',          scene: SC.h16_urna },
             { la: 'Rebecca servō aquam dat.',       scene: SC.h16_servobibit },
             { la: 'Rebecca camēlīs aquam dat.',     scene: SC.h16_camelis }
           ]
         },
         corrige: [
-          { words: ['Servus', 'Isaac', 'gregem', 'quaerit.'], wrong: 2,
+          { words: ['Servus', 'fīliō', 'gregem', 'quaerit.'], wrong: 2,
             options: ['uxōrem', 'urnam', 'ovem'], correct: 0, scene: SC.h16_quaerit },
           { words: ['Ecce', 'mōns!', 'In', 'puteō', 'aqua', 'est.'], wrong: 1,
             options: ['puteus!', 'urna!', 'arca!'], correct: 0, scene: SC.h16_puteus },
@@ -1873,7 +1884,7 @@
             options: ['bibit.', 'numerat.', 'aedificat.'], correct: 0, scene: SC.h16_servobibit }
         ],
         comple: [
-          { text: 'Servus Isaac ___ quaerit.',
+          { text: 'Servus fīliō ___ quaerit.',
             options: ['uxōrem', 'urnam', 'ovem'], correct: 0, scene: SC.h16_quaerit },
           { text: 'Ecce ___! In puteō aqua est.',
             options: ['puteus', 'urna', 'servus'], correct: 0, scene: SC.h16_puteus },

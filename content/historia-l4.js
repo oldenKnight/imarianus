@@ -996,7 +996,11 @@
         /* Gn 25,34 — "comedit et bibit" */
         { la: 'Ēsau cibum comedit et aquam bibit.', scene: SC.h18_comedit },
 
-        { la: 'Iam locus prīmī fīliī Iacob est.', scene: SC.h18_locus2 },
+        /* `locus … Iacob est` would put the liber's own case on an
+           INDECLINABLE name, where the learner can read nothing (line
+           audit). `habet` says the same thing with a verb he has read
+           since Liber I. */
+        { la: 'Iam Iacob locum prīmī fīliī habet.', scene: SC.h18_locus2 },
 
         /* memoriā tenē */
         { la: 'Memoriā tenē: Ēsau Iacob locum prīmī fīliī dat.', scene: SC.h18_memoria,
@@ -1318,7 +1322,12 @@
           nova: [{ w: 'septem', e: '7️⃣', g: 'ūnus, duo … septem' },
                  { w: 'annīs', e: '☀☀☀', g: 'annus longus est; septem annī sunt' }] },
 
-        { la: 'Septem annī veniunt; Iacob laetus est.', scene: SC.h20_anni },
+        /* Gn 29,20b — "et videbantur illi pauci dies præ amoris magnitudine".
+           The seven years do not "come": the verse's point is that the love
+           made them light, and that is what this page says (line audit).
+           `enim` is the track's first, glossed as Regiō II glossed it. */
+        { la: 'Iacob laetus servit: Iacob enim Rachēl amat.', scene: SC.h20_anni,
+          nova: [{ w: 'enim', e: '➡', g: 'Iacob Rachēl amat: Iacob laetus servit' }] },
 
         /* Gn 29,28 — "Rachel duxit uxorem" */
         { la: 'Postrēmō Rachēl uxor Iacob est.', scene: SC.h20_uxor },
@@ -1490,9 +1499,9 @@
 
         /* Gn 33,4 — the reconciliation */
         { la: 'Ecce pāx! Ēsau et Iacob laetī sunt.', scene: SC.h21_pax,
-          nova: [{ w: 'pāx', e: '🤝', g: 'frātrēs nōn iam īrātī sunt: pāx est' }] },
+          nova: [{ w: 'pāx', e: '🤝', g: 'frātrēs iam nōn īrātī sunt: pāx est' }] },
 
-        { la: 'Iam pāx est. Frātrēs nōn iam clāmant.', scene: SC.h21_laeti },
+        { la: 'Iam pāx est. Frātrēs iam nōn clāmant.', scene: SC.h21_laeti },
 
         /* memoriā tenē */
         { la: 'Memoriā tenē: Ēsau ad frātrem currit; pāx est.', scene: SC.h21_memoria,

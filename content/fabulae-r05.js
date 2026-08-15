@@ -844,7 +844,11 @@
                  { w: 'nōlī', e: '🚫👉', g: '“Curre!” ↔ “Nōlī currere!”' },
                  { w: 'currere', e: '🏃', g: 'vir currit → currere' }] },
 
-        { la: 'Viātor in agrō iacet. Viātor nōn currit, nōn clāmat.', scene: SC.f14_iacet,
+        /* REFERENT: the man on the ground is the AMĪCUS — `viātor` is the
+           one in the tree from p8 on, and he is the one who just shouted
+           "Iacē!" (line audit). The two men are named apart on every page
+           of this fable from here to the mōrāle. */
+        { la: 'Amīcus in agrō iacet. Amīcus nōn currit, nōn clāmat.', scene: SC.f14_iacet,
           nova: [{ w: 'iacet', e: '⬇👤', g: 'nōn stat, nōn sedet: iacet' }] },
 
         { la: 'Ursus ad virum venit. Ursus virum videt et audit.', scene: SC.f14_odor, nova: [] },
@@ -937,7 +941,7 @@
           scrambles: [
             { la: 'Ursus ex silvā venit.',                  scene: SC.f14_ursus },
             { la: 'Viātor in arborem ascendit.',            scene: SC.f14_ascendit },
-            { la: 'Viātor in agrō iacet.',                  scene: SC.f14_iacet },
+            { la: 'Amīcus in agrō iacet.',                  scene: SC.f14_iacet },
             { la: 'Ursus ad virum venit.',                  scene: SC.f14_odor }
           ]
         },

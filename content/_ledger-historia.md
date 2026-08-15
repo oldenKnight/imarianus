@@ -350,7 +350,8 @@ a fuller vocabulary would have buried them.
 | **ovium** (gen. pl.) | nova `🐑🐑➡`, `g: ovēs → gregēs ovium`, on a picture of three flocks |
 | **pāstōribus** (dat. pl.) | nova `➡👥`, `g: pāstōrēs → terra pāstōribus parva est` |
 | **Lot** as genitive | nova `👤➡🐑`, `g: Lot → grex Lot`. The indeclinable name in an oblique case, glossed exactly like a marked ending |
-| **Frātrēs sumus** | **FIXED VULGATE FORMULA** (Gn 13,8 "fratres enim sumus"), the ONE in this capitulum. nova `👥🤝` with the Latin gloss `Abraham et Lot frātrēs sunt`; the picture is two men and nothing else. The first person plural is not on the ladder and is asked for nowhere |
+| **frātrī** (dat. sg.) | nova `➡👬`, `g: frāter → Abraham frātrī terram dat`, on Gn 13,9's page. **LINE-AUDIT FIX (integrator wave 3):** the page read `Abraham Lot terram bonam dat` — an indeclinable name asked to carry the very case the liber exists to teach, which shows the learner nothing. The dative now sits on a form that moves, and the memoriā tenē page and the COMPLĒ stem that echo the sentence verbatim were carried with it (the COMPLĒ blank is still the verb, so no answer key moved) |
+| **Frātrēs sumus** | **FIXED VULGATE FORMULA** (Gn 13,8 "fratres enim sumus"), the ONE in this capitulum. nova `👥🤝` with the Latin gloss `Abraham et Lot frātrēs sunt`; the picture is two men and nothing else. The first person plural is not on the ladder and is asked for nowhere. The page frames it `Abraham ad Lot dīcit: "Frātrēs sumus."` — Gn 13,8's own `ad Lot`, the accusative of direction this liber already ships glossed (line-audit fix, same wave) |
 
 ### h13 Prōmissum Deī · fons Gn 15, 1–6 — content lexemes (5)
 
@@ -426,7 +427,7 @@ child and the story.
 |---|---|
 | **camēlīs** (dat. pl.) | nova `➡🐫🐫`, `g: camēlī → Rebecca camēlīs aquam dat`. THE showcase of the capitulum, in the Vulgate's own words (Gn 24,19–20 "camelis tuis hauriam aquam … haustam omnibus camelis dedit") |
 | **puteī** (gen.) | nova `⛲➡`, `g: puteus → aqua puteī` |
-| **Isaac** as dative | unglossed by design: the form is identical to the nominative the learner met in h14, and the sentence `Servus Isaac uxōrem quaerit` is Gn 24,4's own ("uxorem filio meo Isaac") |
+| **fīliō** (dat. sg.) | nova `➡👤`, `g: fīlius Abrahae → servus fīliō uxōrem quaerit`. **LINE-AUDIT FIX (integrator wave 3):** the page read `Servus Isaac uxōrem quaerit`, resting Gn 24,4's dative on an indeclinable name — the same defect as h12's `Abraham Lot terram dat`, and the same fix. The verse itself inflects the noun ("uxorem FILIO meo Isaac"), and `fīlius` is one page old (h16 p1 `Isaac fīlius Abrahae est`), so nothing new is spent. The AENIGMATA scramble, the CORRIGE row and the COMPLĒ stem that quote the sentence were carried with it; none of their answers moved |
 
 ### Words a later liber may treat as FREE after Liber III
 
@@ -502,6 +503,7 @@ h22. Longest sentence in the liber: **6 words**.
 | form | how |
 |---|---|
 | **Dā mihi** | **FIXED VULGATE FORMULA** (Gn 25,30 "Da mihi de coctione hac rufa"), shortened as h5 shortens Gn 4,9. nova `🤲🍲` with the Latin gloss `Ēsau cibum petit`; the outstretched hand and the bowl are the second gloss. The imperative and `mihi` are neither on the S4 ladder nor ever parsed, and the page is quoted, so the generators skip it by design |
+| **habet**, not `est` + name | **LINE-AUDIT FIX (integrator wave 3):** the trade's closing page read `Iam locus prīmī fīliī Iacob est` — a possessive dative resting on the INDECLINABLE `Iacob`, where the learner can read no case at all (the h12/h16 defect of Liber III, third instance). It now reads `Iam Iacob locum prīmī fīliī habet`: `habet` is free from Liber III and the accusative is the one both brothers' pages already use (`locum petit`, `locum … dat`). No exercise quoted the sentence |
 
 ### h19 Scāla Caelestis · fons Gn 28, 10–19 — content lexemes (4)
 
@@ -543,6 +545,7 @@ carried by the dative instead, as h9 and h13 carry theirs.
 | **septem annīs** (ABLATIVE OF DURATION) | nova on `annīs`, `☀☀☀`. **This is the Clementine's own case**, Gn 29,20 "Servivit ergo Jacob pro Rachel septem annis" (so too 29,18 "septem annis", 29,30 "septem annis aliis"). The assignment proposed the accusative of duration; the ablative was written instead because it is what the source verse has AND because the ablative is this liber's declared target, so the construction teaches the stage instead of borrowing from S1. **Registered as a deliberate departure from the assignment brief** |
 | septem | nova `7️⃣`, `g: ūnus, duo … septem` | FUNCTION |
 | **cum grege** | second gloss of `cum` + abl, `👤🐑`, `g: Rachēl et grex simul ambulant` — verbatim the construction of Gn 29,6 "venit cum grege suo" | FUNCTION |
+| enim | nova `➡`, `g: Iacob Rachēl amat: Iacob laetus servit` — **first use in the HISTORIA track** (Regiō II f4 shipped it in FABULAE with the same `➡`; its gloss `causa` is a fabulae lexeme this track has never taught, so the gloss is the causal pair itself, in words the page has just used) | FUNCTION. **LINE-AUDIT FIX (integrator wave 3):** the page read `Septem annī veniunt; Iacob laetus est` — years that "come" say nothing, where Gn 29,20b says the love made them light. It now reads `Iacob laetus servit: Iacob enim Rachēl amat`, which is that verse, in `servit` and `amat`, both of them two pages old |
 
 ### h21 Iacob Redit · fons Gn 31–33 (abridged) — content lexemes (6)
 
@@ -566,6 +569,7 @@ and `haedus`. They do not count against the cap.
 | form | how |
 |---|---|
 | **ā + ablative** | nova `👤➡`, `g: Iacob cum Laban est, tum ā Laban discēdit`. Written `ā` (not `ab`) before the consonant of `Laban` | FUNCTION |
+| **iam nōn** (= no longer) | **LINE-AUDIT FIX (integrator wave 3):** the reconciliation page read `Frātrēs nōn iam clāmant`; the audited order is `Frātrēs iam nōn clāmant`, and the `pāx` gloss standing beside it on the previous page (`frātrēs nōn iam īrātī sunt`) was carried with it so the two lines do not contradict each other on consecutive frames. **FLAGGED, NOT CHANGED:** `nōn iam` also stands in earlier SHIPPED and audited work — `historia-l2.js` h9's `exspectat` gloss, `fabulae-r02.js` f4's `līberat` gloss, and f14's own `Vir iam nōn iacet` (already in the audited order) — and only the auditor should rule on those | FUNCTION |
 | **cum ovibus** (abl. pl.) | nova `🐐🐑`, `g: hircī et ovēs simul sunt` — the plural of the preposition h17 taught in the singular | FUNCTION |
 | **Revertere in terram patrum tuōrum** | **FIXED VULGATE FORMULA** (Gn 31,3), the ONE in this capitulum, quoted exactly and cut at a clause boundary. nova `↩🌍` with the Latin gloss `Iacob redit ad terram patris`; the road and the radiance are the second gloss. The imperative and the possessive `tuōrum` are on no ladder here, are never parsed, and are asked for nowhere; the page is quoted, so the generators skip it |
 
