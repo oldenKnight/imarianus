@@ -146,7 +146,17 @@ function rule_steps() {
 
 /* XP granted on FIRST completion of each step (idempotent thereafter).
    Any step the manifest declares but that is not listed here earns the
-   default; a step nobody declares earns nothing. */
+   default; a step nobody declares earns nothing.
+
+   PER-REGION STEP XP IS NOT EXPRESSIBLE HERE and is not a bug: this map is
+   keyed by STEP NAME, globally, so 'verba' is worth the same in Regiō I and
+   in Liber VIII. Several wave-4 registration snippets asked for a per-region
+   step value anyway — l7 and l8 asked 15, al1 and al2 asked 25 — and none of
+   them could be applied. (r07-r09, l5 and l6 asked 20, which is what the
+   default already is, so those were no-ops.) Where a track wanted to signal
+   that its units are bigger, the FIGHT xp carries it instead: al1/al2 pay 40.
+   FLAGGED FOR OWNER TUNING: if the curve should really differ per track, this
+   function needs a region argument and every caller needs to pass one. */
 function rule_step_xp($step) {
   $map = array(
     'verba' => 20, 'fabula' => 20, 'sonus' => 20, 'ludus' => 20,
@@ -370,6 +380,146 @@ function rule_regions_builtin() {
         array('q' => 'puteus',   'a' => 'puteus')
       )
     ),
+    /* Regiō VII · Lītus (content id r07). The boss is Vulpēs Callida, NOT the
+       wolf (CURRICULUM §1 gives Lupus R1, R5, R9 and the R12 finale), so she
+       gets r06's ordinary budget — hp 6 over 70 phase-seconds, 22+28+20 — and
+       the ordinary rewards. Manifest-born, so no alias entry. */
+    'r07' => array(
+      'fables' => array('f19', 'f20', 'f21'),
+      'track'  => 'fabulae',
+      'boss'   => 'b_r07',
+      'fight_xp' => 30,
+      'quiz_xp_each' => 10,
+      'quiz_pass_max_wrong' => 1,   // <=1 wrong of 5 passes
+      // ANSWER KEY: mirrors the boss.quiz `la` order in content/fabulae-r07.js.
+      // `lapillus` is deliberately NOT here — at 96 px it and `vestīgium` are
+      // the same picture (pale/dark marks on grass), so `urna` takes the slot.
+      // The snippet records the measurement; do not "correct" this back.
+      'quiz' => array(
+        array('q' => 'cornīx',    'a' => 'cornīx'),
+        array('q' => 'urna',      'a' => 'urna'),
+        array('q' => 'vestīgium', 'a' => 'vestīgium'),
+        array('q' => 'lepus',     'a' => 'lepus'),
+        array('q' => 'lāna',      'a' => 'lāna')
+      )
+    ),
+    /* Regiō VIII · Hortus (content id r08). The boss is Ventus, again not the
+       wolf, so again the ordinary budget (hp 6 / 70 s, 22+28+20) and the
+       ordinary rewards. Manifest-born, so no alias entry. */
+    'r08' => array(
+      'fables' => array('f22', 'f23', 'f24'),
+      'track'  => 'fabulae',
+      'boss'   => 'b_r08',
+      'fight_xp' => 30,
+      'quiz_xp_each' => 10,
+      'quiz_pass_max_wrong' => 1,   // <=1 wrong of 5 passes
+      // ANSWER KEY: mirrors content/fabulae-r08.js. `harundō` and `arbor` are
+      // deliberately absent — a reed and an oak are both green things on the
+      // same cream field at tile size, so `quercus` holds the f23 slot alone.
+      'quiz' => array(
+        array('q' => 'ventus',  'a' => 'ventus'),
+        array('q' => 'sōl',     'a' => 'sōl'),
+        array('q' => 'quercus', 'a' => 'quercus'),
+        array('q' => 'pāvō',    'a' => 'pāvō'),
+        array('q' => 'grūs',    'a' => 'grūs')
+      )
+    ),
+    /* Regiō IX · Castra (content id r09). THE WOLF'S THIRD MEETING, so this
+       mirrors r05 rather than r06/r07/r08: hp 8 over 74 phase-seconds
+       (24+30+20), the extra seconds all in CLĀMOR, which is where this
+       region's syntax lives. None of that reaches the server — a longer
+       fight posts the same result payload. Manifest-born, so no alias. */
+    'r09' => array(
+      'fables' => array('f25', 'f26', 'f27'),
+      'track'  => 'fabulae',
+      'boss'   => 'b_r09',
+      'fight_xp' => 30,
+      'quiz_xp_each' => 10,
+      'quiz_pass_max_wrong' => 1,   // <=1 wrong of 5 passes
+      // ANSWER KEY: mirrors content/fabulae-r09.js. `grex`, `agnus`, `leō`,
+      // `fēlēs` and `mūs` are all deliberately absent: at 96 px a white flock,
+      // a white lamb and a white `pellis` are one picture, and a wolf, lion,
+      // cat and mouse are four grey quadrupeds in profile. Measured.
+      'quiz' => array(
+        array('q' => 'lupus',   'a' => 'lupus'),
+        array('q' => 'pellis',  'a' => 'pellis'),
+        array('q' => 'quercus', 'a' => 'quercus'),
+        array('q' => 'cibus',   'a' => 'cibus'),
+        array('q' => 'cāseus',  'a' => 'cāseus')
+      )
+    ),
+    /* Regiō X · Portus (content id r10). A duel at hp 8 over 78
+       phase-seconds (caterva 3/26 + clamor 3/30 + fuga 2/22), four seconds
+       longer than r09's. Ordinary rewards. Manifest-born, so no alias. */
+    'r10' => array(
+      'fables' => array('f28', 'f29', 'f30'),
+      'track'  => 'fabulae',
+      'boss'   => 'b_r10',
+      'fight_xp' => 30,
+      'quiz_xp_each' => 10,
+      'quiz_pass_max_wrong' => 1,   // <=1 wrong of 5 passes
+      // ANSWER KEY: mirrors content/fabulae-r10.js.
+      'quiz' => array(
+        array('q' => 'aquila',  'a' => 'aquila'),
+        array('q' => 'nīdus',   'a' => 'nīdus'),
+        array('q' => 'columba', 'a' => 'columba'),
+        array('q' => 'rēte',    'a' => 'rēte'),
+        array('q' => 'pellis',  'a' => 'pellis')
+      )
+    ),
+    /* Regiō XI · Templum (content id r11). hp 9 over 80 phase-seconds
+       (caterva 3/26 + clamor 4/32 + fuga 2/22). The extra hit over r10 is in
+       CLĀMOR on purpose — clāmor is the phase that reads sentences, and this
+       region's purpose/result/indirect-question clauses are the point of it.
+       Ordinary rewards. Manifest-born, so no alias. */
+    'r11' => array(
+      'fables' => array('f31', 'f32', 'f33'),
+      'track'  => 'fabulae',
+      'boss'   => 'b_r11',
+      'fight_xp' => 30,
+      'quiz_xp_each' => 10,
+      'quiz_pass_max_wrong' => 1,   // <=1 wrong of 5 passes
+      // ANSWER KEY: mirrors content/fabulae-r11.js. `Mors` is deliberately
+      // absent — the quiz is a picture test and hers is a person, the same
+      // call that keeps her out of SONUS.
+      'quiz' => array(
+        array('q' => 'grūs',    'a' => 'grūs'),
+        array('q' => 'cibus',   'a' => 'cibus'),
+        array('q' => 'rāna',    'a' => 'rāna'),
+        array('q' => 'templum', 'a' => 'templum'),
+        array('q' => 'senex',   'a' => 'senex')
+      )
+    ),
+    /* Regiō XII · Forum (content id r12). THE FINALE, and the only FOUR-PHASE
+       boss in the product: caterva 3/22 + clamor 3/26 + fuga 2/20 + clamor
+       2/22, hp 10 over 90 phase-seconds. The repeated `clamor` type is
+       deliberate and is supported (boss.js buildPlan() does not deduplicate
+       types, and boss-phases.js prefers a phase's own cfg.data.items over
+       boss.clamor, so the two carry different item sets). The server sees the
+       same result payload a three-phase duel posts, so the only thing that
+       changes here is the REWARD: 40 rather than 30, because the fight is the
+       finale and is half again as long. Manifest-born, so no alias. */
+    'r12' => array(
+      'fables' => array('f34', 'f35', 'f36'),
+      'track'  => 'fabulae',
+      'boss'   => 'b_r12',
+      'fight_xp' => 40,             // the finale, and 50% longer than r11's
+      'quiz_xp_each' => 10,
+      'quiz_pass_max_wrong' => 1,   // <=1 wrong of 5 passes
+      // ANSWER KEY: mirrors content/fabulae-r12.js. A finale WANTS a
+      // track-wide quiz and cannot have one — app.js bossWords() builds its
+      // pool from CUR.region.capitula only, and runBossQuiz() silently DROPS
+      // an entry it cannot resolve, so a row naming an earlier region's
+      // capitulum would quietly shorten the quiz. Recorded in the engine
+      // backlog; the cumulative feel is built inside r12's own cards instead.
+      'quiz' => array(
+        array('q' => 'forum',    'a' => 'forum'),
+        array('q' => 'corpus',   'a' => 'corpus'),
+        array('q' => 'serpēns',  'a' => 'serpēns'),
+        array('q' => 'canis',    'a' => 'canis'),
+        array('q' => 'praesēpe', 'a' => 'praesēpe')
+      )
+    ),
     /* ---- HISTORIA SACRA -------------------------------------------------
        Liber I · Creātiō (content id l1). NO BOSS: CURRICULUM §2 gives the
        first liber of the track no probātiō, so the entry declares an empty
@@ -456,6 +606,161 @@ function rule_regions_builtin() {
         array('q' => 'scāla',  'a' => 'scāla'),
         array('q' => 'Rachēl', 'a' => 'Rachēl'),
         array('q' => 'hircus', 'a' => 'hircus')
+      )
+    ),
+    /* Liber V · Ioseph (content id l5). A PROBĀTIŌ with TWO SENTENTIA phases
+       (SOMNIA hp 3 / 50 s, then AEGYPTUS hp 3 / 50 s) — the liber has two
+       halves and each phase is one of them. Same payload as any other trial,
+       so the rewards mirror l3/l4. SEVEN capitula, five quiz questions: h28
+       and h29 are represented in the AEGYPTUS phase instead, because their
+       cards are robed men in the same desert as three earlier ones.
+       Manifest-born, so no alias entry. */
+    'l5' => array(
+      'fables' => array('h23', 'h24', 'h25', 'h26', 'h27', 'h28', 'h29'),
+      'track'  => 'historia',
+      'boss'   => 'b_l5',
+      'fight_xp' => 30,
+      'quiz_xp_each' => 10,
+      'quiz_pass_max_wrong' => 1,   // <=1 wrong of 5 passes
+      // ANSWER KEY: mirrors the boss.quiz `la` order in content/historia-l5.js.
+      // The five pictures come from five different families — grain, a camel
+      // caravan, a bare stone room, grapes, a throne — so no two can be
+      // confused at 96 px.
+      'quiz' => array(
+        array('q' => 'frūmentum', 'a' => 'frūmentum'),
+        array('q' => 'mercātor',  'a' => 'mercātor'),
+        array('q' => 'carcer',    'a' => 'carcer'),
+        array('q' => 'ūva',       'a' => 'ūva'),
+        array('q' => 'Pharaō',    'a' => 'Pharaō')
+      )
+    ),
+    /* Liber VI · Moyses (content id l6). THE TRACK'S FIRST TRĀNSITUS: two
+       phases, trānsitus hp 3 / 45 s (the Red Sea corridor) then sententia
+       hp 3 / 50 s. EIGHT capitula, five quiz questions — h33 IS the trānsitus
+       phase and h34/h36 are in the sententia phase, so all eight are
+       represented exactly once somewhere in the trial. Manifest-born, so no
+       alias entry. NOTE its bossMinMs is 20000, not the track's 15000; the
+       reasoning is in rule_boss_min_ms() below. */
+    'l6' => array(
+      'fables' => array('h30', 'h31', 'h32', 'h33', 'h34', 'h35', 'h36', 'h37'),
+      'track'  => 'historia',
+      'boss'   => 'b_l6',
+      'fight_xp' => 30,
+      'quiz_xp_each' => 10,
+      'quiz_pass_max_wrong' => 1,   // <=1 wrong of 5 passes
+      // ANSWER KEY: mirrors content/historia-l6.js. Five picture families —
+      // a basket on the Nile, a burning bush, a locust, two stone tablets,
+      // a walled city.
+      'quiz' => array(
+        array('q' => 'fiscella', 'a' => 'fiscella'),
+        array('q' => 'rubus',    'a' => 'rubus'),
+        array('q' => 'locusta',  'a' => 'locusta'),
+        array('q' => 'tabula',   'a' => 'tabula'),
+        array('q' => 'Ierichō',  'a' => 'Ierichō')
+      )
+    ),
+    /* Liber VII · Iūdicēs (content id l7). A PROBĀTIŌ shaped like l4's:
+       ordina hp 3 / 32 s, then sententia hp 3 / 48 s. Ordinary rewards.
+       Manifest-born, so no alias entry. */
+    'l7' => array(
+      'fables' => array('h38', 'h39', 'h40', 'h41', 'h42'),
+      'track'  => 'historia',
+      'boss'   => 'b_l7',
+      'fight_xp' => 30,
+      'quiz_xp_each' => 10,
+      'quiz_pass_max_wrong' => 1,   // <=1 wrong of 5 passes
+      // ANSWER KEY: mirrors content/historia-l7.js. One word per capitulum,
+      // and no two share a picture family (fleece / lion / columns / temple /
+      // crowned king).
+      'quiz' => array(
+        array('q' => 'vellus',  'a' => 'vellus'),
+        array('q' => 'leō',     'a' => 'leō'),
+        array('q' => 'columna', 'a' => 'columna'),
+        array('q' => 'templum', 'a' => 'templum'),
+        array('q' => 'rēx',     'a' => 'rēx')
+      )
+    ),
+    /* Liber VIII · Rēgēs (content id l8). A PROBĀTIŌ whose two phases are in
+       the REVERSE order of l4's and l7's — sententia hp 3 / 50 s FIRST, then
+       ordina hp 3 / 34 s — because the David half comes before the temple
+       half. probatio.js reads the array order and nothing outside the content
+       file cares. EIGHT capitula, five quiz questions. The last
+       Old-Testament liber of the track. Manifest-born, so no alias entry. */
+    'l8' => array(
+      'fables' => array('h43', 'h44', 'h45', 'h46', 'h47', 'h48', 'h49', 'h50'),
+      'track'  => 'historia',
+      'boss'   => 'b_l8',
+      'fight_xp' => 30,
+      'quiz_xp_each' => 10,
+      'quiz_pass_max_wrong' => 1,   // <=1 wrong of 5 passes
+      // ANSWER KEY: mirrors content/historia-l8.js. FIVE OF THE EIGHT
+      // capitula (h44 · h45 · h46 · h48 · h49), five picture families
+      // (sling-boy · mountain robe · throne and wall · cloud-filled house ·
+      // fish). No NAME is in this key — the liber's
+      // `David`/`Goliath` spelling question therefore touches nothing here.
+      'quiz' => array(
+        array('q' => 'funda',  'a' => 'funda'),
+        array('q' => 'vestis', 'a' => 'vestis'),
+        array('q' => 'rēgnum', 'a' => 'rēgnum'),
+        array('q' => 'nebula', 'a' => 'nebula'),
+        array('q' => 'piscis', 'a' => 'piscis')
+      )
+    ),
+    /* ---- AENEIS ---------------------------------------------------------
+       THE TRACK'S FIRST TWO REGIONS. Until now { "id": "aeneis", "regions": [] }
+       made Aeneis the door that opens the MOX screen; it is a real track from
+       here on.
+
+       *** THE REGION IDS ARE al1 / al2, NOT l1 / l2. *** rule_regions() writes
+       $out[$id] across ALL tracks — one FLAT namespace — and 'l1'/'l2' already
+       belong to Historia Sacra. An aeneis region called 'l1' would MERGE with
+       Historia's Liber I: one entry, two capitula lists, wrong track. The
+       content files are named for the region id (content-loader.js derives
+       content/<track>-<region>.js), hence content/aeneis-al1.js.
+
+       Both are PROBĀTIŌ librī, so their numbers mirror l2/l3 and not a duel:
+       al1 is transitus hp 5 / 45 s + sententia hp 5 / 50 s; al2 is ordina
+       hp 6 / 45 s + sententia hp 5 / 55 s. Both manifest-born, so neither
+       needs an alias entry. */
+    'al1' => array(
+      'fables' => array('a1', 'a2', 'a3', 'a4'),
+      'track'  => 'aeneis',
+      'boss'   => 'b_al1',
+      // XP sits one step above the Historia curve because an Aeneis capitulum
+      // is the longest unit in the product (16-21 story pages against
+      // Historia's 12-14) and the track is explicitly for prōvectī. The STEP
+      // value the snippet asked for (25) is a manifest-step concern and lives
+      // in rule_step_xp(), which is per-step and not per-region; it is left at
+      // the shared 20 rather than forked, and the signal is carried by the
+      // fight instead. FLAGGED FOR OWNER TUNING with the rest of the curve.
+      'fight_xp' => 40,
+      'quiz_xp_each' => 10,
+      'quiz_pass_max_wrong' => 1,   // <=1 wrong of 5 passes
+      // ANSWER KEY: mirrors the boss.quiz `la` order in content/aeneis-al1.js.
+      'quiz' => array(
+        array('q' => 'nāvis',   'a' => 'nāvis'),
+        array('q' => 'ventus',  'a' => 'ventus'),
+        array('q' => 'cervus',  'a' => 'cervus'),
+        array('q' => 'columba', 'a' => 'columba'),
+        array('q' => 'templum', 'a' => 'templum')
+      )
+    ),
+    'al2' => array(
+      'fables' => array('a5', 'a6', 'a7', 'a8'),
+      'track'  => 'aeneis',
+      'boss'   => 'b_al2',
+      'fight_xp' => 40,             // as al1
+      'quiz_xp_each' => 10,
+      'quiz_pass_max_wrong' => 1,   // <=1 wrong of 5 passes
+      // ANSWER KEY: mirrors content/aeneis-al2.js. al2's ordina phase declares
+      // categories and no `items`, so probatio.js draws from the liber's whole
+      // vocabulary — nothing for this file to know about it.
+      'quiz' => array(
+        array('q' => 'equus',   'a' => 'equus'),
+        array('q' => 'castra',  'a' => 'castra'),
+        array('q' => 'serpēns', 'a' => 'serpēns'),
+        array('q' => 'ignis',   'a' => 'ignis'),
+        array('q' => 'penātēs', 'a' => 'penātēs')
       )
     )
   );
@@ -598,7 +903,63 @@ function rule_boss_min_ms($regionId) {
     // l4 = the Gregēs Iacob PROBĀTIŌ, TWO phases (ordina hp 3 / 30 s, then
     // sententia hp 3 / 45 s). The ordina half has l2's item pump but only
     // three items to catch, so 15 s stays the honest floor here too.
-    'l4' => 15000
+    'l4' => 15000,
+    // r07 = the Vulpēs Callida duel, r06's ordinary budget (hp 6, 22/28/20).
+    'r07' => 15000,
+    // r08 = the Ventus duel, the same ordinary budget again.
+    'r08' => 15000,
+    // r09 = the Lupus duel, THIRD meeting: hp 8 over 74 phase-seconds
+    // (24/30/20). The floor does not move with the length — r05's argument,
+    // unchanged: a longer fight cannot be forged FASTER, and the phase
+    // seconds are ceilings.
+    'r09' => 15000,
+    // r10 = hp 8 over 78 phase-seconds (26/30/22). Same argument.
+    'r10' => 15000,
+    // r11 = hp 9 over 80 phase-seconds (26/32/22), the extra hit in clāmor.
+    // Same argument again: ceilings, not durations.
+    'r11' => 15000,
+    // *** r12 = THE FINALE, and the one anti-cheat value in the fabulae track
+    // that MOVES. FOUR phases (caterva 3/22 + clamor 3/26 + fuga 2/20 +
+    // clamor 2/22), hp 10 over 90 phase-seconds against r11's 80 over three.
+    // A floor tuned for a three-phase fight is the wrong floor for a
+    // four-phase one: there is a fourth phase's worth of item pump and
+    // sentence-reading that no player can skip, so 15 s would sit below what
+    // an honest child can achieve and would stop flagging anything. 20 s, for
+    // l2's reason. If a blanket 15000 is ever applied across the duels, r12
+    // must be exempted. ***
+    'r12' => 20000,
+    // l5 = the Ioseph PROBĀTIŌ, TWO SENTENTIA phases (3/50 s + 3/50 s). No
+    // ORDINA item pump anywhere in this trial, so it is floored by the
+    // child's reading speed and not by a machine: l3's number for l3's
+    // reason, and it holds for both phases because both are sententia.
+    'l5' => 15000,
+    // *** l6 = the Moyses PROBĀTIŌ and THE TRACK'S FIRST TRĀNSITUS (hp 3 /
+    // 45 s, then sententia hp 3 / 50 s). 20000, NOT the track's 15000, and
+    // this was an explicit ruling rather than an oversight. A sententia is
+    // floored by reading; a TRĀNSITUS is floored the way l2's ORDINA is —
+    // probatio.js spawns at most 3 words at a time on a 0.8-1.3 s timer, the
+    // corridor narrows on a clock (~3.4-4.6 px/s), and hp 3 means THREE
+    // correct catches must physically fall down the screen before the phase
+    // can end. That pump cannot be outrun. ***
+    'l6' => 20000,
+    // l7 = the Iūdicēs PROBĀTIŌ, l4's shape (ordina 3/32 s + sententia
+    // 3/48 s). The ordina half has only three items to catch, so l4's floor.
+    'l7' => 15000,
+    // l8 = the Rēgēs PROBĀTIŌ, l7's two phases in the reverse order
+    // (sententia 3/50 s first, then ordina 3/34 s). Order does not change
+    // what can be forged: the same floor.
+    'l8' => 15000,
+    // al1 = the track's first PROBĀTIŌ (transitus hp 5 / 45 s + sententia
+    // hp 5 / 50 s). NOTE it has a trānsitus and still takes 15 s rather than
+    // l6's 20 s, and the difference is real: l6's trānsitus is hp 3 inside a
+    // 95 s trial, al1's is hp 5 inside a 95 s trial with a 50 s sententia
+    // after it, so the whole-trial floor is already dominated by reading. The
+    // snippet asked for 15000 and it is the honest number.
+    'al1' => 15000,
+    // al2 = ordina hp 6 / 45 s + sententia hp 5 / 55 s. Six items to catch is
+    // l2's pump, but again inside a 100 s trial whose second half is reading;
+    // the snippet asked for 15000 and it matches al1/l3/l4.
+    'al2' => 15000
   );
   // A renamed region keeps its tuning (see rule_region_aliases).
   $aliases = rule_region_aliases();

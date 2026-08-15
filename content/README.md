@@ -6,12 +6,20 @@ One file per **region** (Fabulae) or **liber** (Historia Sacra, Aeneis):
     content/manifest.js      the index the CLIENT reads   ─┐ EDIT BOTH
     content/manifest.json    the same index for the SERVER ┘ TOGETHER
     content/fabulae-r01.js   FĀBULAE · Regiō I · Silva
-    content/historia-l1.js   (not written yet)
-    content/aeneis-l1.js     (not written yet)
+    content/historia-l1.js   HISTORIA SACRA · Liber I · Creātiō
+    content/aeneis-al1.js    AENĒIS · Liber I · Arma Virumque
 
 File name is **derived by convention**: `content/<track>-<region>.js`.
 `content-loader.js` builds that path from the manifest, so a new region is
 (1) an entry in both manifests, (2) a file with the matching name. Nothing else.
+
+Note the Aeneis line: the file is `aeneis-al1.js`, not `aeneis-l1.js` (an
+earlier draft of this list said the latter, before any Aeneis region existed).
+The name is the REGION ID, and the Aeneis region ids carry the `a` because
+`server/lib/rules.php` keys regions in ONE FLAT NAMESPACE across all tracks —
+`rule_regions()` writes `$out[$id]` — and `l1`/`l2` already belong to Historia
+Sacra. An Aeneis region called `l1` would merge with Historia's Liber I into a
+single entry with two capitula lists and the wrong track.
 
 Read `docs/LATIN-STYLE.md` before writing a single Latin word, and
 `docs/CURRICULUM.md` for which grammar stage the region may use.
