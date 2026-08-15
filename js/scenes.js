@@ -368,7 +368,30 @@ var Scenes = (function () {
       var dir = (b.tail === 'right') ? 14 : -14;
       s += '<path d="M' + tx + ',' + (y + h / 2 - 1) + ' l' + dir + ',16 l' + (dir > 0 ? -2 : 2) + ',-16 Z" fill="' + C.bubble + '" stroke="' + C.ink + '" stroke-width="2"/>';
     }
-    s += '<text x="' + x + '" y="' + (y + fs / 3) + '" text-anchor="middle" font-size="' + fs + '" font-family="Palatino, Georgia, serif" fill="' + C.ink + '" font-weight="bold">' + esc(b.text) + '</text>';
+    /* AUTO-FIT. Bubble widths are authored by eye against an estimate of how
+       wide the Latin will set, and 21 of the shipped bubbles simply lost that
+       bet — 'Revertere in terram patrum tuōrum' set 186px inside a 148px box,
+       the words running out over the artwork on both sides. Nothing in SVG
+       wraps text, so the two levers are a smaller font and textLength.
+
+       est is a cheap advance estimate: Palatino bold averages ~0.56em per
+       character across this corpus. When the estimate already fits the inner
+       box (w minus the 5px stroke-and-breathing margin per side) NOTHING is
+       emitted that was not emitted before — which is what keeps every short
+       emoji bubble byte-identical: '😠' at fs 20 estimates 22px inside a 44px
+       inner box and never reaches this branch. Only when it does not fit is
+       the size scaled down by the overflow ratio (floored at 7px, below which
+       the text stops being readable at all) and textLength asked to squeeze
+       the remainder, spacing and glyphs together so the letterforms stay
+       even rather than the gaps collapsing. */
+    var inner = w - 10;
+    var est = String(b.text).length * fs * 0.56;
+    var fit = '';
+    if (inner > 0 && est > inner) {
+      fs = Math.max(7, fs * (inner / est));
+      fit = ' textLength="' + inner + '" lengthAdjust="spacingAndGlyphs"';
+    }
+    s += '<text x="' + x + '" y="' + (y + fs / 3) + '" text-anchor="middle" font-size="' + fs + '" font-family="Palatino, Georgia, serif" fill="' + C.ink + '" font-weight="bold"' + fit + '>' + esc(b.text) + '</text>';
     return s;
   }
 

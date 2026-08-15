@@ -2381,6 +2381,65 @@
       });
     });
 
+  /* ================= CHECK 9 =================
+     INT pass 6 — bubble auto-fit and the crowd seed.
+
+     bubble() is private to scenes.js, so both bubble rows drive it the way the
+     app does: through Scenes.render() with a one-bubble spec, and read the
+     <text> element back out of the emitted string. That is the shipped path,
+     not a restatement of it. */
+
+  function bubbleText(b) {
+    var s = Scenes.render({ bg: 'plain', items: [], bubbles: [b] });
+    var a = s.indexOf('<text');
+    return (a < 0) ? '' : s.substring(a, s.indexOf('</text>') + 7);
+  }
+
+  /* ---- INT6-FIT ----
+     21 of the 1088 shipped bubbles set WIDER than the box drawn behind them
+     — worst of all this one, 'Revertere in terram patrum tuōrum', which laid
+     out at 186px inside a 148px rect and ran out over the artwork on both
+     sides. SVG does not wrap text, so bubble() estimates the advance and,
+     when it overruns, scales the font down and pins the rest with textLength.
+     This is the SHIPPED spec, character for character. */
+  check('INT6-FIT', 'a bubble too narrow for its Latin shrinks the font and pins it with textLength',
+    function () {
+      var t = bubbleText({ x: 176, y: 116, w: 148, h: 46, fs: 10,
+                           text: 'Revertere in terram patrum tuōrum',
+                           kind: 'speech', tail: 'right' });
+      if (t.indexOf('textLength="138"') < 0) {
+        return 'no textLength="138" (w 148 minus the 10px inner margin): ' + t.substring(0, 150);
+      }
+      if (t.indexOf('lengthAdjust="spacingAndGlyphs"') < 0) {
+        return 'textLength without lengthAdjust="spacingAndGlyphs" collapses the word gaps ' +
+               'instead of condensing the glyphs';
+      }
+      var m = /font-size="([\d.]+)"/.exec(t);
+      if (!m) { return 'no font-size on the emitted <text>'; }
+      var fs = parseFloat(m[1]);
+      if (!(fs < 10)) { return 'font-size was not reduced from the authored 10: ' + fs; }
+      if (fs < 7) { return 'font-size ' + fs + ' is below the 7px readability floor'; }
+      return null;
+    });
+
+  /* ---- INT6-FITNOOP ----
+     The other half of that fix, and the half that can rot silently: a bubble
+     whose text ALREADY fits must come out of bubble() exactly as it did
+     before the auto-fit existed — no textLength, no rescaled font, not one
+     byte moved. The expected string below is the PRE-FIX output written out
+     in full, so a future tweak to the estimate that starts firing on short
+     emoji bubbles turns this row red instead of silently condensing 1000
+     bubbles that were never broken. */
+  check('INT6-FITNOOP', 'a short emoji bubble is byte-identical to its pre-auto-fit markup',
+    function () {
+      var t = bubbleText({ x: 62, y: 88, w: 54, h: 40, text: '😠',
+                           kind: 'thought', tail: 'right', fs: 20 });
+      var want = '<text x="62" y="94.66666666666667" text-anchor="middle" font-size="20"' +
+                 ' font-family="Palatino, Georgia, serif" fill="#3a2417" font-weight="bold">' +
+                 '😠</text>';
+      return (t === want) ? null : 'emitted   ' + t + '\nexpected  ' + want;
+    });
+
   runEngineQueue();      /* start the serialized engine tests */
   runNetQueue();         /* start the serialized offline-queue tests */
   finish();
