@@ -1,0 +1,78 @@
+{
+  "_note": [
+    "Registration snippet — AUTHORING-BRIEF 'Registration protocol'. Content",
+    "agents do not touch content/manifest.js, content/manifest.json or",
+    "server/lib/rules.php; the integrator applies this and deletes the file.",
+    "",
+    "Liber V · Ioseph is a PROBĀTIŌ liber (kind: 'probatio', boss id b_l5), so",
+    "every number below mirrors the l3/l4 blocks in rules.php and not a",
+    "fabulae duel: no combat, a generous clock, and here TWO SENTENTIA phases",
+    "(SOMNIA hp 3 / 50 s, then AEGYPTUS hp 3 / 50 s) — the liber has two",
+    "halves and each phase is one of them.",
+    "",
+    "Legacy single-phase tuning in the content file is hp 6 / 55 s, kept for",
+    "the same reason l2-l4 keep theirs: a client without js/probatio.js must",
+    "still run something, and rule_boss_min_ms('l5') is derived from it.",
+    "",
+    "bossMinMs 15000 is l3's and l4's floor, and for l3's reason exactly:",
+    "there is no ORDINA item pump in this trial at all. A sententia asks the",
+    "child to READ the sentence and choose, so the honest floor is the duel",
+    "floor. Both phases are sententia, so 15 s holds for the whole trial.",
+    "",
+    "SEVEN capitula, five quiz questions. h28 and h29 are represented in the",
+    "AEGYPTUS phase instead: the five quiz pictures are deliberately chosen",
+    "from five different families — grain, a camel caravan, a bare stone room,",
+    "grapes and a throne — so no two can be confused at 96 px, and h28's and",
+    "h29's cards are robed men in the same desert as three earlier ones.",
+    "",
+    "quizKey carries the same {q, a} pair per row that r03-r07, l3 and l4 use:",
+    "rules.php stores the question word and the vocab key that must be picked,",
+    "so grading never depends on the order the client drew the options in. For",
+    "a word -> pick-the-image quiz the answer IS the question word, and",
+    "`correct` is always 0 against the boss.quiz order in",
+    "content/historia-l5.js.",
+    "",
+    "l5 is a NEW region: its content id IS its progressId, so it needs no",
+    "entry in rule_region_aliases().",
+    "",
+    "*** ONE ITEM FOR THE INTEGRATOR TO CARRY FORWARD, not to act on here:",
+    "content/historia-l4.js line 1081 ships a COMPLĒ whose distractor is also",
+    "accepted — options ['ā','am','a'] on 'Cibus in patin___ ruber est.', and",
+    "content-loader.js compares answers through normWord(), which strips",
+    "macrons, so 'a' grades as correct. Found while validating this wave; l4",
+    "is not this agent's file and was not touched. ***"
+  ],
+
+  "track": "historia",
+  "region": "l5",
+  "titulus": "Ioseph",
+  "ladder": "S5–S6",
+  "progressId": "l5",
+  "capitula": ["h23", "h24", "h25", "h26", "h27", "h28", "h29"],
+  "boss": "b_l5",
+
+  "quizKey": [
+    { "q": "frūmentum", "a": "frūmentum", "correct": 0, "from": "h23" },
+    { "q": "mercātor",  "a": "mercātor",  "correct": 0, "from": "h24" },
+    { "q": "carcer",    "a": "carcer",    "correct": 0, "from": "h25" },
+    { "q": "ūva",       "a": "ūva",       "correct": 0, "from": "h26" },
+    { "q": "Pharaō",    "a": "Pharaō",    "correct": 0, "from": "h27" }
+  ],
+
+  "xp": {
+    "step": 20,
+    "boss": 30,
+    "quizEach": 10,
+    "quizPassMaxWrong": 1
+  },
+
+  "antiCheat": {
+    "bossMinMs": 15000
+  },
+
+  "manifestEntry": {
+    "id": "l5",
+    "capitula": ["h23", "h24", "h25", "h26", "h27", "h28", "h29"],
+    "boss": "b_l5"
+  }
+}

@@ -615,6 +615,184 @@ every case.
 
 ---
 
+## Liber V · IOSEPH (S5–S6) — `content/historia-l5.js`
+
+Stage ceiling: everything above, **plus** S5's IMPERATIVE, VOCATIVE, question
+words (`-ne · quis · quid · cūr · ubi`), negative command (`nōlī/nōlīte` +
+īnfīnītīvus) and `potest/vult` + īnfīnītīvus (AUTHORING-BRIEF ruling 2); and
+S6's IMPERFECT and personal/demonstrative pronouns. Still **no perfect** —
+that is Liber VI's whole subject and no page here anticipates it — no
+comparative, no adverb system, no relative clause, no passive, no deponent.
+
+Three rulings inherited from FĀBULAE and simply obeyed, all three already
+shipped and audited there:
+
+1. **Second person inside direct speech only** (r05 ruling 1). Used exactly
+   twice, both times on the copula: h26 `Cūr trīstēs estis?` and h28
+   `Vīvitne pater senex?`. **The first person is not opened** — every page
+   that wanted one is written as an imperative or as narrative, except the
+   one fixed formula the liber exists for, `Ego sum Ioseph`, which is never
+   parsed.
+2. **The imperfect is not a narrative past** (r06 ruling 4). Latin tells a
+   story in the perfect, which S7 places one rung higher precisely so that
+   S7 can CONTRAST the two; writing Gn 39 as `-bat` would teach an equation
+   Liber VI then has to unteach. Every imperfect in this liber is a STATE or
+   a BACKGROUND, and every one of them is `erat` — the copula, the gentlest
+   possible first imperfect, and the one form whose present the learner has
+   read on every page since h1. **No verb but `sum` is put into it at all.**
+3. **`ōlim` carries the tense, not the picture** (r06 ruling 2). A drawing
+   cannot show pastness. `ōlim` is introduced on the same page as the first
+   `erat` and every later imperfect sits under it or one page after it.
+
+Longest sentence in the liber: **7 words**.
+
+### Name forms verified in the Clementine text before use
+
+| name | forms used | Vulgate warrant |
+|---|---|---|
+| Ioseph | **INDECLINABLE** in every case | 186 bare occurrences and **not one inflected form of the patriarch**. nom. Gn 39,1 "Igitur Joseph ductus est"; acc. Gn 37,36 "vendiderunt Joseph in Ægypto" and Gn 41,41 "ad Joseph"; dat. Gn 41,50 "Nati sunt autem Joseph filii duo"; gen. Gn 46,27 "Filii autem Joseph". (The `Josephum/Josepho/Josephus` in the text belong to **Josephus son of Zacharias**, 1 Mcc 5,18.56 · 2 Mcc 8,22 · 10,19 — a different man and a different, Latinised name.) Treated exactly as `Iacob` and `Ēsau` are in Liber IV: `frātrēs Ioseph` is a genitive and `Ioseph frūmentum dat` a dative, and **both are avoided wherever the case is what the page is teaching** (the h12/h16/h18 line-audit rulings) |
+| Pharaō | nom. `Pharaō` · gen. `Pharaōnis` · dat. `Pharaōnī` · acc. `Pharaōnem` | **DECLINED**, Greek 3rd declension. gen. Gn 37,36 "eunucho Pharaonis" (73×); acc. Gn 41,55 "clamavit populus ad Pharaonem" (33×); dat. Gn 41,25 "ostendit Pharaoni" (27×); nom. 59×. The ablative `Pharaone` (23×) is not needed and is not used. MACRONS: Greek Φαραώ, omega — the "quantity is certain" case LATIN-STYLE §1 allows, and the same ground on which CURRICULUM prints `Ēsau` and `Israēl` |
+| Putiphar | **NOT USED** | The Clementine does decline him (dat. `Putiphari` Gn 37,36), and the man is `dominus` throughout this liber instead — which is the Vulgate's own word for him (Gn 39,2 "in domo domini sui") and which keeps the whole Gn 39,7–18 episode off the page (DESIGN §8) |
+| Iacob · Israēl · Isaac | as verified in Librī III–IV | unchanged, indeclinable |
+
+### h23 Somnia Ioseph · fons Gn 37, 1–11 — content lexemes (5)
+
+| lexeme | how |
+|---|---|
+| Ioseph | vocab card, scene `v_ioseph`; nova 👤. **The costume is the handle**: beardless in every frame (a boy among long-bearded brothers, a young man among bearded Egyptians), the STRIPED `tunica` (`stripes: true`, the art library's own option for Gn 37,3 "tunicam polymitam") in h23–h24 only, plain linen from h25, and the GOLD MANTLE of Gn 41,42 from h27. Three costumes, one face, one continuous person |
+| frūmentum | vocab card, scene `v_frumentum`; nova 🌾, `g: frūmentum in agrō est; hominēs cibum habent`. Gn 37,7 `manipulos` |
+| lūna | vocab card, scene `v_luna`; nova 🌙, `g: nocte lūna in caelō est`. Gn 37,9 |
+| pulcher | vocab card, scene `v_pulcher`; nova ✨, `g: tunica Ioseph pulchra; tunica frātris nōn`. **A SIMPLIFICATION, registered**: Gn 37,3's `polymitam` is a weaver's term with no S5 word, and `varius` would need a colour vocabulary this track has never built. The file says `pulchra` and **DRAWS the many colours**. Nothing says the coat was only beautiful, and nothing denies that it was of many colours |
+| adōrat | vocab card, scene `v_adorat`; nova 🙇, `g: ūnus stat; aliī adōrant`. **Taught two pages before the sheaves**, on a picture of a man kneeling before a man — no actor can be tilted, so nothing is drawn bowing that is not bowing, and the frame gives one tall `frumentum` against four small ones |
+
+### h23 — the S5 openings and function words
+
+| form | how |
+|---|---|
+| **Audīte** (IMPERATIVE) | **THE FIRST IMPERATIVE OF THE TRACK**, on `audit`, free since h6, in the Vulgate's own word (Gn 37,6 "Audite somnium meum"). nova `👂❗`, `g: frāter audit; Ioseph dīcit: "Audīte!"` — FUNCTION |
+| **Quid** (QUESTION WORD) | nova ❓, `g: Quid est? — Somnium est.` Gn 37,10 "Quid sibi vult hoc somnium" — FUNCTION |
+| hoc | nova 👉, `g: pater somnium audit et dīcit: hoc somnium!` — the first demonstrative of the track. FUNCTION |
+
+### h24 Frātrēs Invidī · fons Gn 37, 12–36 — content lexemes (4)
+
+| lexeme | how |
+|---|---|
+| mercātor (mercātōrēs, mercātōribus) | vocab card, scene `v_mercator`; nova 🐫, `g: mercātōrēs cum camēlīs ambulant`. Gn 37,25 "Ismaëlitas viatores … et camelos eorum" |
+| trīstis | vocab card, scene `v_tristis`; nova 😢, `g: ↔ laetus`. Gn 37,34 "lugens filium suum" |
+| invidet | vocab card, scene `v_invidet`; nova 😠, `g: Ioseph tunicam pulchram habet; frātrēs nōn habent`. Gn 37,11 "Invidebant ei igitur fratres sui" — **takes the DATIVE**, and the sentence is `Frātrēs Ioseph invident` where `Ioseph` is indeclinable, so no case rests on a form the learner cannot read |
+| vēndit (vēndunt) | vocab card, scene `v_vendit`; nova ➡, `g: frātrēs Ioseph dant; mercātōrēs eum habent`. Gn 37,28 "vendiderunt eum Ismaëlitis" |
+
+### h24 — the one fixed formula
+
+| form | how |
+|---|---|
+| **Ioseph!** | **FIXED VULGATE NAME-CALL** on Gn 37,13's errand ("dixit ad eum Israël … veni, mittam te ad eos"), the `Abraham!` mechanism of h15. nova `💬👤`, `g: pater fīlium nōmine vocat`. Safe for the reason h15's was: the name is **indeclinable**, so its vocative is the form the learner has read on every page of h23. The page is quoted, so the generators skip it by design |
+
+### h25 Vēnditus in Aegyptum · fons Gn 37,36 · Gn 39 — content lexemes (4)
+
+| lexeme | how |
+|---|---|
+| Aegyptus (Aegyptō, Aegyptum) | vocab card, scene `v_aegyptus` (`pyramis` on `desert`); nova 🔺, `g: Aegyptus terra est; nōn terra Iacob` |
+| dominus (dominō) | vocab card, scene `v_dominus`; nova 👤, `g: dominus servum habet; servus dominō servit` (`servus`/`servit` free from h16/h20). **The Vulgate's own word for Putiphar** (Gn 39,2) and the reason his name is never needed |
+| carcer (carcere, carcerem) | vocab card, scene `v_carcer`; nova 🔒, `g: in carcere hominēs manent et nōn exeunt`. **MISSING ART** — there is no `carcer` actor; the prison is built from `interior` + two `columna` + a seated man, which reads as a bare stone room and not as a cell, and the 🔒 hint carries the rest. Art addendum requested: a barred door or a grating |
+| accūsat (accūsant) | vocab card, scene `v_accusat`; nova 😠, `g: accūsat: dīcit "hic vir malus est"`. Gn 39,19, **with no agent named** |
+
+### h25 — the imperfect arrives (S6)
+
+| form | how |
+|---|---|
+| **ōlim** | nova ⏪, `g: ōlim: tum, nōn iam`. **Carries the tense, because a picture cannot** (r06 ruling 2). FUNCTION |
+| **erat** (THE FIRST IMPERFECT OF THE TRACK) | nova ⏱, `g: iam est ➡ ōlim erat`, on the page `Ōlim Ioseph puer erat; iam vir est.` — the `ōlim ↔ iam` pair doing the whole job. Spent on exactly three states and no events: `Ioseph iūstus erat et pulcher` (Gn 39,6), `Deus cum Ioseph erat` (Gn 39,2.21, twice) and h28's `sīc in somniō erat`. FUNCTION |
+
+### h26 In Carcere · fons Gn 40 — content lexemes (4)
+
+| lexeme | how |
+|---|---|
+| pincerna | vocab card, scene `v_pincerna`; nova 🍇, `g: pincerna urnam portat; dominus bibit`. Gn 40,11 "tradidi poculum Pharaoni" — the office told as **what he DOES**, which is what the picture shows |
+| pistor | vocab card, scene `v_pistor`; nova 🍲, `g: pistor cibum parat; pincerna nōn parat`. Gn 40,17 "omnes cibos qui fiunt arte pistoria" |
+| ūva (ūvae, ūvās) | vocab card, scene `v_uva`; nova 🍇, `g: ūva pōmum parvum est` (`pōmum` free from h3). Gn 40,10 "post flores uvas maturescere" |
+| respondet | vocab card, scene `v_respondet`; nova 💬, `g: ūnus dīcit; alter respondet` |
+
+### h26 — the second person, and the function words
+
+| form | how |
+|---|---|
+| **estis** (2nd person, inside speech only) | nova 👥, `g: ūnus est; virī sunt; Ioseph ad virōs: estis`, on Gn 40,7's own question with its comparative removed: `Cūr trīstēs estis?` (the Clementine has "Cur tristior est hodie solito facies vestra?" — the comparative is S8 and is omitted; the question is not). FUNCTION |
+| **Cūr** | the S5 question word, on the same page. FUNCTION |
+| alter (alterī) | nova 2️⃣, `g: ūnus … et alter …`. FUNCTION |
+| māne | nova ☀, `g: nox exit; māne lūx venit`. FUNCTION |
+
+### h27 Somnia Pharaōnis · fons Gn 41 — content lexemes (4)
+
+| lexeme | how |
+|---|---|
+| Pharaō | vocab card, scene `v_pharao`; nova 👑, `g: Pharaō nōmen rēgis Aegyptī est` |
+| rēx (rēgis) | vocab card, scene `v_rex`; nova 👑, `g: rēx magnus est; omnēs eī pārent` |
+| fāmēs | vocab card, scene `v_fames`; nova 🍽, `g: fāmēs: cibus nōn est`. Gn 41,27 |
+| servat | vocab card, scene `v_servat`; nova 🌾, `g: servat: nōn dat, sed tenet`. Gn 41,35 "congreget in horrea … serveturque in urbibus" |
+
+### h27 — the pronoun, and the kine
+
+| form | how |
+|---|---|
+| **eum** (the first personal pronoun of the track) | nova `👉👤`, `g: Pharaō ➡ eum: Ioseph Pharaōnem audit`, **on the picture that already says it** — one man speaking, one man listening, and the gloss naming the antecedent. FUNCTION |
+| **tibi** | nova 👉, `g: Ioseph ad Pharaōnem: tibi`, inside speech only (Gn 41,16.25). FUNCTION |
+| **`crassæ` ↔ `macilentæ` → `magnae` ↔ `parvae`** | **MISSING ART, and the decision it forced.** There is no fat and no lean variant of the `bos` actor, so Gn 41,2–4's contrast could not be drawn. It is told with two adjectives free since h12 and **PICTURED BY SCALE** (s 1.15 against s 0.62, three big kine against four small ones in one frame) — a real picture of a real difference, and Gn 41,26–27 itself equates the two sevens with the two sevens of years, which is the only thing the chapter needs the kine for. **`macer` is never used.** Registered as a simplification |
+
+### h28 Frātrēs Veniunt · fons Gn 42–44 (abridged) — content lexemes (4)
+
+| lexeme | how |
+|---|---|
+| emit (emunt) | vocab card, scene `v_emit`; nova ↩, `g: ↔ vēndit: Ioseph vēndit, frātrēs emunt` |
+| cognōscit | vocab card, scene `v_cognoscit`; nova 👀, `g: cognōscit: videt et nōmen dīcit`. Gn 42,7–8 |
+| temptat | vocab card, scene `v_temptat`; nova ⚖, `g: temptat: Ioseph vidēre vult num frātrēs bonī`. Gn 42,15 |
+| vīvit | vocab card, scene `v_vivit`; nova 💓, `g: vīvit: est et ambulat et comedit`. Gn 43,27–28 |
+
+### h28 — the marked vocative and the `-ne` question
+
+| form | how |
+|---|---|
+| **Domine** (THE LIBER'S ONE MARKED VOCATIVE) | nova `🙇👤`, `g: dominus ➡ "Domine!"`, on a lexeme h25 carded, in the Clementine's own words (Gn 42,10 "Non est ita, domine"), and **in a second-declension ending that MOVES** — which is exactly what the indeclinable `Ioseph!` of h24 could not show |
+| **Vīvitne** (`-ne`) | nova ❓, `g: Vīvitne? — Vīvit!`. Gn 43,27 "Salvusne est pater vester senex? adhuc vivit?" with the possessive dropped and the two halves fused into the one the chapter answers. FUNCTION |
+| **Īte** (IMPERATIVE) | nova `➡❗`, `g: fīlius it; pater dīcit: "Īte!"`. Gn 42,2 "descendite". FUNCTION |
+| eōs | second gloss of the pronoun, `👉👥`, `g: frātrēs ➡ eōs: Ioseph frātrēs amat`. FUNCTION |
+| **`sīc in somniō erat`** | the imperfect h25 taught, reaching back **across five capitula** to the dream of h23. Gn 42,9 makes the connection itself ("Recordatusque somniorum, quae aliquando viderat") |
+
+### h29 Ioseph sē Aperit · fons Gn 45 · 46,29 — content lexemes (2)
+
+| lexeme | how |
+|---|---|
+| populus (populum) | vocab card, scene `v_populus`; nova 👥, `g: populus: multī hominēs simul`. Gn 45,7 |
+| aperit | vocab card, scene `v_aperit`; nova 🔓, `g: sē aperit: iam nōn latet` (`latet` free from h3) |
+
+Only two, deliberately: this capitulum's work is the FORMULA and the
+reconciliation, and every other word on its eighteen pages is already free.
+
+### h29 — THE FORMULA OF THE LIBER
+
+| form | how |
+|---|---|
+| **Ego sum Ioseph** | **FIXED VULGATE FORMULA** (Gn 45,3, quoted exactly and cut at the colon), handled like `Fiat lūx`: one page, one picture (Ioseph alone, arms open, his brothers before him), a Latin gloss made only of words the capitulum has just taught (`Ioseph sē aperit et nōmen dīcit`), **no parsing, no translation**, and the first person opened NOWHERE else in the liber. The page is quoted, so the generators skip it by design |
+| **Nōlīte timēre** (S5 negative command) | nova `🚫😨`, `g: nōlī timēre! nōlīte timēre!`. Gn 50,19.21 "Nolite timere" — the same speech-act by the same speaker to the same men as Gn 45,5's "Nolite pavere", whose `pavēre` is a verb this track has never taught. Registered as a substitution |
+| **Vocāte** (IMPERATIVE) | nova `💬❗`, `g: ūnus vocat; Ioseph dīcit: "Vocāte!"`. Gn 45,9.13. FUNCTION |
+
+### Words a later liber may treat as FREE after Liber V
+
+Everything in Librī I–IV, plus
+`Ioseph · frūmentum · lūna · pulcher · adōrat · mercātor · trīstis ·`
+`invidet · vēndit · Aegyptus · dominus · carcer · accūsat · pincerna ·`
+`pistor · ūva · respondet · Pharaō · rēx · fāmēs · servat · emit ·`
+`cognōscit · temptat · vīvit · populus · aperit`
+and the function words `ōlim · alter · māne · hoc · eum · eōs · tibi ·
+Quid · Cūr · -ne`, plus **everything S5 and S6 opened**: the IMPERATIVE
+(`Audīte · Īte · Vocāte · Dā`), the VOCATIVE (`Domine!`), the negative
+command (`Nōlīte timēre`), the question words, the 2nd person of the
+copula inside speech (`estis`), and **the IMPERFECT of `sum` alone**
+(`erat`) — no other verb is in the imperfect anywhere in Librī I–V, which
+is the whole point of the contrast Liber VI then draws.
+
+---
+
 ## Omissions register (fidelity — "simplify by OMISSION only")
 
 Everything told in these ten capitula agrees with the Clementine Vulgate. What
@@ -717,7 +895,50 @@ is **not** told, and why:
 | Gn 30,32 | `capra` → the zone label `HIRCĪ` | synonym substitution, registered: the Vulgate sorts "tam in ovibus quam in capris", but there is no `capra` actor in the art library and no `capra` lexeme in this track. The boss's two zones are labelled `OVĒS` and `HIRCĪ`, both of them words the learner has read — a zone label the learner cannot read is a translation prompt |
 | Gn 32,14 | `arietes` → `ovēs` | **MISSING ART** — no `aries` actor, exactly as in h15. The animal is drawn with `lamb`/`grex` and named `ovis`, which a ram is. The word `aries` appears nowhere |
 
-## Additions register (what is on the page but not in Gn)
+
+### Liber V · IOSEPH (Gn 37–45)
+
+| fons | omitted | reason |
+|---|---|---|
+| Gn 37,2 | `crimine pessimo` — the boy's report against his brothers | an accusation a child is not asked to weigh, and the chapter's own hostility is carried by Gn 37,4 |
+| Gn 37,4 | "nec poterant ei quidquam pacifice loqui" | told as `Frātrēs Ioseph nōn amant` |
+| Gn 37,8 · 37,10 | "Numquid rex noster eris?" and "num ego et mater tua … adorabimus te" | **FUTURES**, illegal at S6, and first person besides. An approximation would have made the brothers ASSERT what the chapter has them only fear |
+| Gn 37,9 | the eleven stars counted | a number; the sun and the moon carry the dream |
+| **Gn 37,20 · 37,21–22 · 37,26–27** | **"occidamus eum", Ruben's rescue, "nec effundatis sanguinem", and the bargaining** | **DESIGN §8.** The pit is DRY AND EMPTY and nothing is done to anyone in it: the whole act is `Frātrēs Ioseph in puteum mittunt.` — five words, all of them read since Liber II. Ruben and Judas go with the plot they answer |
+| Gn 37,28 | the twenty pieces of silver | a number, which this track omits on sight, **and MISSING ART** — there is no coin/`argentum` prop, and 🪙 is the tofu glyph the Liber IV ledger banned. 🥈 was considered and dropped with the lexeme. The sale is told with `vēndunt` alone |
+| **Gn 37,31–33** | **the kid killed and the tunic dipped in its blood, and the father's own "fera pessima comedit eum"** | **DESIGN §8, and the assignment's softening was declined in favour of a clean OMISSION.** Gn 37,32–34 already has the two acts that matter — the brothers SHOW the tunic and the father GRIEVES — so the file says `Frātrēs patrī tunicam mōnstrant.` / `Pater tunicam videt et trīstis est.` / `Pater Ioseph iam nōn videt.` **No animal is killed, no blood appears anywhere in the liber, and nothing states a death that did not happen**: the last line says only what is true. (Gn 37,33 is also the one sentence in the chapter that asserts a falsehood, which is a second reason to leave it out) |
+| Gn 37,34–35 | the sackcloth and `infernum` | a rite and a word with no picture |
+| Gn 37,14 · 37,17 · 37,25 | Sichem, Dothain, Galaad, Madian | place-names whose sense is a phrase and not a picture |
+| Gn 37,36 · 39,1 | **Putiphar by name and his office** | the man is `dominus` throughout, which is the Vulgate's own word for him (Gn 39,2 "in domo domini sui") and which keeps the whole Gn 39,7–18 episode off the page |
+| **Gn 39,7–18 ENTIRE** | **the master's wife, the advances, the seized pallium, the accusation she makes** | **DESIGN §8 names this episode explicitly** ("Potiphar episode = 'falso accusatus est' without the wife's advances"). What survives is Gn 39,19–20, the two facts the chapter ends on, in eight words with **no agent named and no detail whatever**: `Sed hominēs Ioseph accūsant.` / `Sed Ioseph malus nōn est.` / `Dominus Ioseph in carcerem mittit.` **The woman is not mentioned, not alluded to, not denied**, and the child is never left holding the charge |
+| Gn 39,6b | "erat autem Joseph pulchra facie" **as a CAUSE** | the adjective is kept, on the page where the Vulgate first gives it, and **nothing is built on it** |
+| Gn 39,22–23 | the prison administration | pure administration |
+| Gn 40,10 · 40,16 | the three vine-branches and the three baskets | numbers, and the baskets have no actor |
+| Gn 40,14–15 | Ioseph's request to be remembered | first person throughout |
+| Gn 40,17 | the birds eating from the baker's basket | it belongs to the fate below |
+| **Gn 40,19 · 40,22** | **the baker hanged** | **DESIGN §8, BY OMISSION.** The file says `Ioseph alterī bona dīcit, alterī mala.` — the two interpretations exactly as Gn 40,12–19 divides them — and then **follows only the butler out of the door**. The frame shows one thumb up and one thumb down and no third picture; no page in the capitulum contains a cross, a gallows or a bird. **Nothing is softened and nothing is contradicted: the Latin says exactly what Ioseph said, and stops** |
+| Gn 40,20 | the birthday feast | a number and a rite |
+| Gn 41,2–4 | `crassæ` ↔ `macilentæ` → `magnae` ↔ `parvae` | **MISSING ART** — no fat/lean variant of the `bos` actor. **Pictured by SCALE** (s 1.15 against s 0.62), which is a real picture of a real difference; Gn 41,26–27 equates the two sevens with the two sevens of years, which is the only thing the chapter needs the kine for. `macer` is never used. Registered as a simplification |
+| Gn 41,8 · 41,24 | the magicians and wise men (`conjectores`) | needs a word for divination this track will never own. The file says `Virī somnia nōn intellegunt`, which is the verse's fact |
+| Gn 41,9–13 | the butler's confession | first person |
+| Gn 41,14 | the shaving | a detail with no picture value |
+| Gn 41,33–36 | the whole administrative plan | a proposal in the subjunctive |
+| Gn 41,42–43 · 41,45 | the ring, the chariot, the herald, the Egyptian name, Aseneth and Putiphare of Heliopolis | props with no actor and names with no picture value. **The gold mantle of 41,42 is kept, drawn** |
+| Gn 41,50–52 | Ioseph's two sons | a genealogy |
+| Gn 42,9–17 · 42,24b | the charge of spying, the three days in custody, Simeon bound | a false accusation the file has already declined to raise, and a man in chains |
+| Gn 42,25–28 · 42,35 | the money returned in the sacks | a plot device that needs the silver the file has already omitted |
+| **Gn 42,29–38 · 43,1–14 · 44,18–34** | **Benjamin and the whole struggle over him, including Juda's speech** | the longest and most verbal stretch of the story; every part of it is dialogue or a first-person plea. **Gn 44's machinery is compressed to `Ioseph frātrēs temptat.` and one frame of an `urna` standing in the grain. Nobody is threatened with slavery on the page** |
+| Gn 44,2 | `scyphum … argenteum` → `urna` | **MISSING ART** — no `scyphus`. The same synonym substitution h16 registered for Gn 24,15's `hydria`; the word `scyphus` appears nowhere |
+| Gn 43,31–34 | the meal, the seating and the portions | a scene of pure courtesy |
+| Gn 45,4b–5 | "quem vendidistis in Ægyptum" and the whole exculpation | first person throughout, and the file has already declined to have anyone accuse anyone |
+| Gn 45,5 | `Nolite pavere` → `Nōlīte timēre` (Gn 50,19.21) | `pavēre` is a verb this track has never taught. **The same speech-act by the same speaker to the same men**, in the Clementine's own words four chapters later. Registered as a substitution |
+| Gn 45,10 | Gessen and every place-name | as above |
+| **Gn 45,14–15** | **the embrace and the kisses** | **MISSING ART** — there is still no embrace pose (the Liber IV report filed this against Gn 33,4). Gn 46,29 is carried by `tenet` (free from h22) and by proximity. Art addendum requested: an embrace pose |
+| Gn 45,19–23 | the wagons, the garments and the asses | an inventory |
+| Gn 46 (genealogy) · Gn 47–50 | the seventy souls, and everything after the reunion | a list of names; and **Iacob's death and Ioseph's are DEATHS, and this track has told none** (Liber VI tells its first) |
+
+
+## Additions register (what is on the page but not in the fōns)
 
 | where | addition | justification |
 |---|---|---|
@@ -734,3 +955,7 @@ is **not** told, and why:
 | h19 (Gn 28,12) | `Angelī dē caelō dēscendunt` | Gn 28,12 has the angels "ascendentes et descendentes **per eam**" — by the ladder, without naming where from. `dē caelō` says where a descending angel comes from and lets the liber teach `dē` + abl on a second picture. Nothing the verse denies |
 | h22 (Gn 32,24) | the `vir` drawn with the **`angel` preset and its WINGS TURNED OFF** | Gn 32,24 says `vir` and the file says `vir`. The white robe, the gold mantle and the halo of the messengers of h4 and h19, on a man's body: the picture says exactly what the text says — a man, and more than a man. **No wings are asserted**, and God still has no body anywhere in the track (Gn 32,30's "Vidi Deum" is drawn as the `star` radiance, as h1 established) |
 | h17 · h21 (Gn 25,27 · 32,14) | Ēsau's **long beard and terracotta robe**, and Iacob's household staged with `tent`, `grex`, `hircus` and `camelus` | the twins must be told apart in nine shared frames and the art library has no other handle; Gn 25,25 makes Ēsau the hairy one, so the beard is the verse's own. The livestock is itemised by Gn 30,43 ("greges multos … camelos et asinos") and Gn 32,14 |
+| h23 (Gn 37,3) | Ioseph's **striped tunica** (`stripes: true`) and his **beardlessness in every frame** | Gn 37,3's `tunicam polymitam` is a many-coloured coat and the art library has the option written for exactly this verse; the text says only `pulchra` (see the h23 row of the ledger). The beardlessness is the HANDLE — he is a boy among long-bearded brothers and a young man among bearded Egyptians, and the eye must find him in ninety frames. Nothing is asserted in the text |
+| h27 (Gn 41,42) | Ioseph's **gold mantle** from h27 on | Gn 41,42 "collo torquem auream" — the torque itself has no actor, and the mantle renders the same promotion the verse describes. Nothing is asserted in the text |
+| h25 (Gn 39) | the prison drawn as `interior` + two `columna` + a seated man | **MISSING ART** — there is no `carcer`. It reads as a bare stone room and not as a cell, and the 🔒 hint carries the rest. `Carcer bonus locus nōn est` is all the text claims |
+| h28 (Gn 44,2) | the silver cup drawn as an **`urna`** | **MISSING ART** — no `scyphus`. The h16 substitution for Gn 24,15's `hydria`, registered again; the word `scyphus` appears nowhere and the frame shows only a jar standing in the grain |
