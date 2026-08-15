@@ -1,0 +1,67 @@
+{
+  "_note": [
+    "Registration snippet — AUTHORING-BRIEF 'Registration protocol'. Content",
+    "agents do not touch content/manifest.js, content/manifest.json or",
+    "server/lib/rules.php; the integrator applies this and deletes the file.",
+    "",
+    "APPLY AFTER al2: al3 is the THIRD region of the aeneis track and must",
+    "follow al1 and al2 in the manifest's regions array — js/app.js",
+    "regionIndex() reads that order and feeds it to the phase engine as the ONE",
+    "difficulty input (DESIGN §6), so a wrong order makes Liber III easier than",
+    "Liber II.",
+    "",
+    "al3 is a PROBĀTIŌ liber (kind: 'probatio', boss id b_al3) with TWO phases:",
+    "transitus (hp 5 / 45 s) + sententia (hp 5 / 55 s). Legacy single-phase",
+    "tuning in the content file is hp 10 / 100 s. bossMinMs 15000 matches",
+    "l2/l3/al1/al2.",
+    "",
+    "The transitus phase declares wall: 'mountain' and water: '#3d7fa0' (this",
+    "liber's danger is rock, not water — see the ledger). Nothing for rules.php",
+    "to know; recorded so the integrator does not go looking for an item list.",
+    "",
+    "quizKey carries the same three keys per row as al1/al2: rules.php stores",
+    "{q, a}, and `correct` is always 0 against the boss.quiz order in",
+    "content/aeneis-al3.js — note the file name, and see the FILE NAME block in",
+    "a-l1.reg.json for why the region id is 'al3' and not 'l3' (rules.php keys",
+    "regions in one flat namespace and 'l3' is Historia's).",
+    "",
+    "al3 is a NEW region: its content id IS its progressId, so it needs no",
+    "entry in rule_region_aliases().",
+    "",
+    "XP mirrors al1/al2 exactly; see a-l1.reg.json for why it sits above the",
+    "Historia numbers."
+  ],
+
+  "track": "aeneis",
+  "region": "al3",
+  "titulus": "Errōrēs",
+  "ladder": "S12",
+  "progressId": "al3",
+  "capitula": ["a9", "a10", "a11", "a12"],
+  "boss": "b_al3",
+
+  "quizKey": [
+    { "q": "portus",    "a": "portus",    "correct": 0, "from": "a9" },
+    { "q": "avis",      "a": "avis",      "correct": 0, "from": "a10" },
+    { "q": "sepulcrum", "a": "sepulcrum", "correct": 0, "from": "a11" },
+    { "q": "Aetna",     "a": "Aetna",     "correct": 0, "from": "a12" },
+    { "q": "grex",      "a": "grex",      "correct": 0, "from": "a12" }
+  ],
+
+  "xp": {
+    "step": 25,
+    "boss": 40,
+    "quizEach": 10,
+    "quizPassMaxWrong": 1
+  },
+
+  "antiCheat": {
+    "bossMinMs": 15000
+  },
+
+  "manifestEntry": {
+    "id": "al3",
+    "capitula": ["a9", "a10", "a11", "a12"],
+    "boss": "b_al3"
+  }
+}

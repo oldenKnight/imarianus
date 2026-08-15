@@ -31,6 +31,18 @@ recycled **≥ 3×** inside its own capitulum. The shipped counts:
 | a2 Ad Āfricae ōram | 10 | a6 Sinōn et Lāocoōn | 8 |
 | a3 Venus māter | 10 | a7 Trōia ārdet | 8 |
 | a4 Rēgīna Dīdō | 10 | a8 Fuga Aenēae | 8 |
+| a9 Errōrēs per maria | 7 | a15 Mercurius monet | 5 |
+| a10 Harpyiae | 7 | a16 Discessus et rogus | 5 |
+| a11 Andromachē | 6 | a17 Lūdī Siciliēnsēs | 5 |
+| a12 Cyclōpēs | 6 | a18 Certāmen nāvium | 4 |
+| a13 Dīdō amōre capta | 6 | a19 Certāmen cursūs | 7 |
+| a14 Vēnātiō et fāma | 6 | a20 Nāvēs ārdentēs | 4 |
+
+From Liber III on the counts sit BELOW the cap on purpose. The ≤10 is a
+ceiling, not a quota, and by a9 the track owns 76 cards: a capitulum that
+spends its budget re-reading a5's `latet`, a6's `monet`, a7's `somnium` and
+a8's `penātēs` in a new story teaches more than one that adds ten strangers.
+Every capitulum below lists what it RECYCLES as well as what it adds.
 
 ### 0.3 CŌPIA COMMŪNIS — what this track assumes without teaching
 
@@ -77,6 +89,9 @@ changed**.
 |---|---|---|---|
 | I | Aen. 1,203 (a2) · the aposiopesis 1,135 "Quōs ego—" (a1) | **Aen. 1,1–3** (a4) | aeneis-al1.js |
 | II | Aen. 2,49 (a6) | **Aen. 2,723–724** (a8) | aeneis-al2.js |
+| III | Aen. 3,395 (a11) | **Aen. 3,71–72** (a12) | aeneis-al3.js |
+| IV | Aen. 4,449 (a15) | **Aen. 4,296–297** (a16) | aeneis-al4.js |
+| V | Aen. 5,709 (a20) | **Aen. 5,231** (a20) | aeneis-al5.js |
 
 ### 0.6 Categories used in the tables below
 
@@ -372,6 +387,179 @@ which carries an abl. abs., an acc.+inf. or a passive, so the learner must read
 the construction to know which noun can fill the slot. Creūsa is deliberately
 kept out of the sorting: she is neither carried nor left, and the trial must not
 say she was.
+
+---
+
+# LIBER III · ERRŌRĒS — `content/aeneis-al3.js` (S12)
+
+## a9 · Errōrēs per maria · fons Aen. 3,1–191
+
+**CARDS (7)**
+
+| lexeme | how |
+|---|---|
+| portus | card `v_portus` (ships AT REST beside a headland, sails furled — `errat` is the same two ships with sails set on empty water, and the two never meet in one SONUS set). Carded HERE, three capitula early, because Vergil's own closing line needs it: *prōvehimur **portū*** |
+| īnsula | card `v_insula` (land with water all round it and NO ship: the card must mean the island, not the voyage) |
+| ōrāculum | card `v_oraculum` (temple + a priest with his hands up + a speech bubble) |
+| patria | card `v_patria` — the city itself on bgTroy's burning ground, **with nobody in it**: what they left, not who left it *(cōpia commūnis, carded)* |
+| frūmentum | card `v_frumentum` (two `frumentum` sheaves) |
+| exsul | card `v_exsul` (a man walking AWAY from a wall that is already small) |
+| errat | card `v_errat` (two ships on open water, ⬅ and ➡ in thought bubbles — a1's own ⬆⬇ device) |
+
+**TAUGHT (glossed, no card):** classis (`multae nāvēs simul`, with a1's `ratis
+= nāvis` recalled in the same gloss) · dēdūcit (`nāvem ex terrā in mare dūcit`
+— **pre-teaching for 3,71**) · recēdit (`longius abit; minor fit et tandem nōn
+vidētur` — **pre-teaching for 3,72**) · condit · error (the capitulum's own
+title noun, glossed off the carded verb) · māiōrēs.
+**NŌMINA PROPRIA:** Dēlos · Apollō · Crēta · Hesperia.
+**RECYCLED (the capitulum's real vocabulary work):** penātēs, somnium, monet,
+agnōscit, spēs, servat, fātum, patria/urbs/silva, aequor and ratis as glosses.
+**CONTEXT:** vēre novō · obscūrus · siccus · crēscit · perit · cīvis.
+
+**B RATING. POLYDŌRUS (3,19–68) IS OMITTED ENTIRELY** — a bleeding bush over a
+murdered boy is exactly the horror imagery DESIGN §8 forbids, and no later page
+needs him. **The plague of Crete (3,137–142) keeps only its harmless half:**
+*agrī siccī sunt et frūmentum nōn crēscit*; no sick person appears, and the
+`pestis` is never named. **Also omitted for the cap:** the Thracian landfall,
+the Delian topography (3,73–83), Anchīsēs' second reading (3,143–171).
+
+## a10 · Harpyiae · fons Aen. 3,192–277
+
+**CARDS (7):** avis · mēnsa *(cōpia commūnis, carded: the whole prophecy turns
+on it)* · armentum · rapit · fugat · praedīcit · ōrat.
+
+**MISSING ART — THE HARPIES. Reported, not substituted.** There is no harpy
+actor in the library and none can be honestly composed. The obvious compose —
+an `aquila` body with a veiled `person` head laid on it — was rejected twice
+over: it is the horror imagery DESIGN §8 forbids, and at tile size a floating
+head on a bird reads as a wound, not a face. The Harpyiae are therefore drawn
+as **what the text calls them**, `avēs foedae`: the `aquila` actor with its
+colour overridden to a livid grey (`FOEDUM = #6f6a5c`), always in flight,
+always ABOVE every other figure in the frame, and never touching anything.
+**The maidens' faces of 3,216 are omitted from the TEXT as well as the art** —
+a picture the learner cannot see must not be asserted in a gloss. If the audit
+wants the faces, the honest fix is a new actor, not a new sentence.
+
+**TAUGHT:** famēs (`cum cibus dēest`) · foedus (`↔ pulcher`) · foedat · laedit
+(`malum corporī facit` — the word the B rating turns on) · ōmen · Harpyia.
+**NŌMINA PROPRIA:** Strophadēs · Celaenō.
+**RECYCLED:** tempestās, iactat, aequor, altum (all a1/a4), cibus, famēs↔spēs,
+hortātur (a2), hasta and timet and monet (a6), arma (a7), īnsula (a9).
+**CONTEXT:** epulae · plūmae · sēcrētus · saxum · trānsferunt · significat.
+
+**B RATING.** The one fight in the whole liber ends with **nobody hurt on
+either side** — *hastae tamen avēs nōn laedunt* is Vergil's own (3,242–244),
+and it is the reason this episode is tellable at all. **The capitulum also
+DEFUSES ITS OWN MENACE before it ends:** the memoria page tells the learner, in
+Latin, what the tables turn out to be (Aen. 7,109–117 — bread eaten from under
+the food, and Iūlus laughing), so no child carries a fright out of the trial.
+**OMITTED:** 3,209–212 (the catalogue) · 3,239 (Mīsēnus' trumpet) · 3,270–289.
+
+## a11 · Andromachē · fons Aen. 3,294–505 (+ 3,395)
+
+**CARDS (6):** Andromachē · vātēs · sepulcrum · flūmen · lacrimat · similis.
+
+**TAUGHT:** inānis (`= vacuus`) · Simoīs.
+**NŌMINA PROPRIA:** Būthrōtum · Helenus · Sibylla (planted for Liber VI).
+**VERBA VERGILIĪ (Aen. 3,395):** fāta · viam · invenient · aderit · vocātus.
+**RECYCLED:** coniūnx and imāgō (a8 — `imāgō` does the work Astyanax used to
+do), Hector (a7), accipit and hospes (a4), ostendit (a3), portus and patria and
+errōrēs (a9), praedīcit and mēnsa (a10).
+**CONTEXT:** arx · sacra facit · valedīcunt · dōnec.
+
+**THE INLINE QUOTATION.**
+
+```
+fāta viam invenient aderitque vocātus Apollō.
+```
+
+Quoted **whole**, at the exact moment Helenus speaks it — the treatment Liber I
+gives 1,203 and Liber II 2,49. It is quotable here and nowhere else, because
+the line is an ANSWER: what the Trōiānī are afraid of is a10's prophecy of the
+tables, and Vergil's own next-but-one line (3,394 *nec tū mēnsārum morsūs
+horrēsce futūrōs*) is pre-taught as the prose of the page before (*Nōlī timēre
+mēnsās! Fāta ipsa viam inveniunt*). `fātum` is a1's gloss, `Apollō` is a9's,
+and `via` is cōpia commūnis, so only `invenient`, `aderit` and `vocātus` are
+new, each with its own gloss on the page.
+
+**B RATING — GRIEF WITH DIGNITY.** The tomb is `ināne` and the text says so:
+*in quō nēmō iacet*. Andromachē weeps, asks after the living, gives a child a
+gift, and stands on the shore watching the ships until they cannot be seen.
+Nothing is depicted. **OMITTED for the rating:** Pyrrhus and everything
+Andromachē suffered (3,321–336) — she is `Hectoris coniūnx` and now Helenus'
+queen, and the liber says no more; **the death of Astyanax (3,489)** — Ascanius
+simply *imāgō fīliī* is, and a8's own word carries the whole of it.
+**MISSING ART, reported:** the white sow with thirty young (3,389–393) is
+**dropped, not told** — there is no pig in the library, and a sign that cannot
+be shown must not be asserted. **Also omitted for the cap:** Iūnō's rites
+(3,433–440) and the Scylla/Charybdis warning (3,410–432), whose one useful
+sentence moves into a12 as `saxa perīculōsa`.
+
+## a12 · Cyclōpēs · fons Aen. 3,506–718 (+ 3,71–72)
+
+**CARDS (6):** Cyclōps · grex · Aetna · perīculum · supplex · caecus.
+
+**POLYPHĒMUS — the whole ruling.** He is shown **ONCE**, on the far side of the
+frame, as a `patriarch` at scale 1.95–2.1 with his `grex` behind him and **his
+eyes CLOSED** (`eyes: 'closed'`, the library's own option, so that no eye is
+ever counted on the page). He is blind BEFORE he appears: Achaemenidēs says it
+first, in two words — `caecus est` — and the narrative then refuses, in Latin,
+on the page, to say any more: ***Plūra Achaemenidēs nōn dīcit.*** Aen.
+3,622–638 — the blinding and the eating of Ulysses' men — **IS OMITTED
+ENTIRELY**: not shown, not told, not alluded to beyond *Ulixēs eum dolō
+superāvit*. His single eye lives in the `Cyclōps` vocabulary gloss, where it is
+a fact about a kind of giant, and nowhere else. The one physical detail kept is
+Vergil's own and is harmless: *truncus pīnūs manum eius regit* (3,659).
+
+**TAUGHT:** complētur (**pre-teaching for `complent` in 3,71**) · procul ·
+moritur (`vīvere dēsinit; ↔ vīvit`) · nāvigātiō.
+**NŌMINA PROPRIA:** Achaemenidēs · Ulixēs · Polyphēmus · Sicilia.
+**VERBA VERGILIĪ (Aen. 3,71–72):** dēdūcunt · nāvīs (acc. pl.) · lītora ·
+complent · prōvehimur · portū · recēdunt.
+**RECYCLED:** portat (a8), servat (a2), hostis (a7), accipit (a4), dolus and
+relinquit (a5), monitum (a6), portus and exsul (a9), perīculōsus (a6).
+**CONTEXT:** fervet · tacitus · fūnēs incīdunt · secundus · tremit · tūtus.
+
+**THE CLOSING QUOTATION.**
+
+```
+dēdūcunt sociī nāvīs et lītora complent;
+prōvehimur portū terraeque urbēsque recēdunt.
+```
+
+Two whole hexameters, one per page. **They are quoted OUT OF NARRATIVE
+SEQUENCE** — they belong to a9's departure — for the reason Liber I quotes the
+proem in a4: the closing lines must land on the LIBER's own picture, and this
+liber's picture is not any one landfall but the leaving of all of them. The
+frame page says exactly that in Latin: *tōtus hic liber ūna nāvigātiō est.*
+Every content word is in hand at the point of quotation — `sociī` (a2),
+`nāvis` (a1), `lītus` (glossed under a2's `ōra`), `terra`/`urbs` (cōpia
+commūnis), `portus` (a9, carded three capitula early precisely for this) — and
+`dēdūcunt`, `recēdunt` and `complent` were each pre-taught in prose (a9 p3, a9
+p4, a12 p4), so only `prōvehimur` is met cold, with its own gloss on its own
+page. Reading `nāvīs` (acc. pl. in -īs) is Vergil's own, kept exactly, with the
+gloss `nāvīs = nāvēs` so the learner is not left guessing — the same treatment
+`ferentīs` gets in a6.
+
+**B RATING — ANCHĪSĒS' DEATH (3,708–715).** Acknowledged in one dignified
+sentence — *Anchīsēs pater moritur* — over a scene of his son alone on an empty
+shore, with no body anywhere and no funeral described. It is told because Liber
+V is built on his grave; it is told in six words because that is all a child
+needs. **OMITTED for the cap:** the first Italian landfall's omens
+(3,537–547) · Charybdis by name (3,554–569 → `saxa perīculōsa`) · Aetna's
+eruption described (3,570–587) · the Sicilian harbour catalogue (3,687–707).
+
+**PROBĀTIŌ b_al3 — Errōrēs:** `transitus` (hp 5 / 45 s) + `sententia` (hp 5 /
+55 s, six hand-authored items, each carrying an abl. abs., an acc.+inf., a
+deponent, a passive or a relative clause). **The transitus wall actor is
+`mountain`, not al1's `murusAquae`**, because this liber's danger is rock and
+not water (*inter saxa perīculōsa iter faciunt*) and because two librī running
+the same trial with the same art teach the picture, not the Latin; the water is
+bgSea's Ionian blue and not al1's storm blue for the same reason. **FLAGGED FOR
+THE LINE-AUDIT:** this is the one choice in the liber that could not be
+verified headlessly — js/probatio.js rasterises the wall actor into a 130×130
+tile and the mountain silhouette has never been tiled before. If it reads badly
+on a device the revert is one word: `wall: 'murusAquae'`.
 
 ---
 
