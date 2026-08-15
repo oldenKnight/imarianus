@@ -1,0 +1,70 @@
+{
+  "_note": [
+    "Registration snippet — AUTHORING-BRIEF 'Registration protocol'. Content",
+    "agents do not touch content/manifest.js, content/manifest.json or",
+    "server/lib/rules.php; the integrator applies this and deletes the file.",
+    "",
+    "HISTORIA SACRA · Liber VII · IŪDICĒS, content/historia-l7.js.",
+    "",
+    "ORDERING: l5 and l6 are being written in the same wave by other agents",
+    "and their snippets are not this agent's to write. l7 must be inserted",
+    "AFTER them in both manifest twins, so that the Historia door reads",
+    "l1 l2 l3 l4 l5 l6 l7 l8. If l5/l6 have not landed when this is applied,",
+    "append l7 anyway — the client reads the array order, so a later insert",
+    "of l5/l6 in front of it is a pure array edit with no id churn.",
+    "",
+    "l7 is a PROBĀTIŌ liber (kind: 'probatio', boss id b_l7), so its numbers",
+    "mirror the l4 block in rules.php, not a fabulae duel: no combat, two",
+    "phases (ordina hp 3 / 32 s, then sententia hp 3 / 48 s), legacy",
+    "single-phase fallback hp 6 / 55 s. bossMinMs 15000 is the floor the",
+    "integrator applied to l2, l3 and l4.",
+    "",
+    "quizKey carries the same three keys per row as l3/l4/al1: rules.php",
+    "stores {q, a} — the question word and the vocab key that must be picked",
+    "— so grading never depends on the order the client drew the options in;",
+    "`correct` is always 0 against the boss.quiz order in",
+    "content/historia-l7.js. For a word -> pick-the-image quiz the answer IS",
+    "the question word. The five words are one per capitulum and no two share",
+    "a picture family (fleece / lion / columns / temple / crowned king).",
+    "",
+    "l7 is a NEW region: its content id IS its progressId, so it needs no",
+    "entry in rule_region_aliases().",
+    "",
+    "XP matches the Historia curve (step 15, boss 30, quizEach 10) rather",
+    "than the Aeneis one: a Liber VII capitulum is 13–18 story pages, the",
+    "same unit as l3/l4."
+  ],
+
+  "track": "historia",
+  "region": "l7",
+  "titulus": "Iūdicēs",
+  "ladder": "S9",
+  "progressId": "l7",
+  "capitula": ["h38", "h39", "h40", "h41", "h42"],
+  "boss": "b_l7",
+
+  "quizKey": [
+    { "q": "vellus",  "a": "vellus",  "correct": 0, "from": "h38" },
+    { "q": "leō",     "a": "leō",     "correct": 0, "from": "h39" },
+    { "q": "columna", "a": "columna", "correct": 0, "from": "h40" },
+    { "q": "templum", "a": "templum", "correct": 0, "from": "h41" },
+    { "q": "rēx",     "a": "rēx",     "correct": 0, "from": "h42" }
+  ],
+
+  "xp": {
+    "step": 15,
+    "boss": 30,
+    "quizEach": 10,
+    "quizPassMaxWrong": 1
+  },
+
+  "antiCheat": {
+    "bossMinMs": 15000
+  },
+
+  "manifestEntry": {
+    "id": "l7",
+    "capitula": ["h38", "h39", "h40", "h41", "h42"],
+    "boss": "b_l7"
+  }
+}
