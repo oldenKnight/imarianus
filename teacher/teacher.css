@@ -1,0 +1,256 @@
+/* ============================================================
+   teacher/teacher.css — LAYOUT ONLY
+   ------------------------------------------------------------
+   css/styles.css is loaded first and owns the identity: the umber wall, the
+   fresco red, the ochre, the serif, .btn, .auth-err. This file adds nothing
+   but arrangement, and every colour below is a var() from that palette — if
+   a value here is ever a literal hex, it is a bug.
+
+   Mobile first, because that is how it will actually be used: a teacher
+   opening the join code on her phone in front of the class. The roster table
+   scrolls sideways inside its own box so the PAGE never does.
+   ============================================================ */
+
+.teacher-body { padding: 0 0 2rem; }
+
+.t-wrap {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0.9rem 0.8rem 0;
+}
+
+/* ---------- screen 1: intrā ---------- */
+
+.t-login { text-align: center; padding-top: 2.2rem; }
+
+.t-brand {
+  font-family: var(--serif);
+  font-size: 2.4rem;
+  letter-spacing: 0.28em;
+  color: var(--ochre);
+  margin: 0 0 0.1rem;
+  text-indent: 0.28em;              /* re-centre against the letter-spacing */
+}
+.t-brand-sub {
+  font-family: var(--serif);
+  color: var(--cream-dim);
+  letter-spacing: 0.14em;
+  margin: 0 0 1.6rem;
+  font-size: 0.9rem;
+}
+
+.t-form {
+  max-width: 340px;
+  margin: 0 auto;
+  text-align: left;
+}
+.t-field { display: block; margin-bottom: 0.8rem; }
+.t-field span {
+  display: block;
+  color: var(--cream-dim);
+  font-size: 0.82rem;
+  margin-bottom: 0.25rem;
+}
+.t-field input {
+  width: 100%;
+  padding: 0.7rem 0.8rem;
+  font-size: 1rem;
+  font-family: var(--sans);
+  color: var(--cream);
+  background: var(--wall-soft);
+  border: 1px solid rgba(224, 169, 62, 0.35);
+  border-radius: var(--radius);
+}
+.t-field input:focus-visible {
+  outline: 3px solid var(--ochre);
+  outline-offset: 1px;
+}
+.t-wide { width: 100%; margin-top: 0.2rem; }
+
+/* ---------- screen 2: tabula ---------- */
+
+.t-wait, .t-empty {
+  text-align: center;
+  color: var(--cream-dim);
+  font-family: var(--serif);
+  font-style: italic;
+  padding: 1.2rem 0.4rem;
+  margin: 0;
+}
+
+.t-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding-bottom: 0.7rem;
+  margin-bottom: 0.9rem;
+  border-bottom: 2px solid var(--fresco-deep);
+}
+.t-bar-id { display: flex; flex-direction: column; min-width: 0; }
+.t-bar-title {
+  font-family: var(--serif);
+  color: var(--ochre);
+  letter-spacing: 0.12em;
+  font-size: 1.05rem;
+}
+.t-bar-sub {
+  color: var(--cream-dim);
+  font-size: 0.8rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.t-bar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+.t-auto {
+  color: var(--cream-dim);
+  font-size: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  white-space: nowrap;
+}
+.t-refresh { white-space: nowrap; }
+/* .btn ships with 2rem of side padding for thumb-sized lesson buttons; in a
+   toolbar that is simply too fat, so the bar trims it back. */
+.t-bar-actions .btn { padding: 0.45rem 0.95rem; border-bottom-width: 3px; }
+.t-bar-actions .btn.ghost { padding: 0.4rem 0.9rem; }
+
+/* ---------- one class ---------- */
+
+.t-class {
+  background: var(--wall-soft);
+  border: 1px solid rgba(224, 169, 62, 0.22);
+  border-left: 4px solid var(--fresco);
+  border-radius: var(--radius);
+  padding: 0.8rem 0.8rem 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.t-class-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.7rem;
+}
+
+.t-kicker {
+  margin: 0;
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  color: var(--cream-dim);
+}
+.t-class-name {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  color: var(--cream);
+  margin: 0.1rem 0 0.15rem;
+}
+.t-count { margin: 0; font-size: 0.8rem; color: var(--cream-dim); }
+
+.t-codex { text-align: right; min-width: 9.5rem; }
+.t-code {
+  font-family: Menlo, Consolas, "Courier New", monospace;
+  font-size: 1.9rem;
+  letter-spacing: 0.12em;
+  color: var(--ochre);
+  margin: 0.1rem 0 0.3rem;
+  /* a code exists to be read across a room and copied by hand if need be */
+  user-select: all;
+  -webkit-user-select: all;
+  word-break: break-all;
+}
+.t-code-sub {
+  margin: 0.3rem 0 0;
+  font-size: 0.72rem;
+  color: var(--cream-dim);
+  font-style: italic;
+}
+
+/* ---------- roster ---------- */
+
+.t-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-top: 1px solid rgba(224, 169, 62, 0.18);
+}
+.t-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  min-width: 460px;              /* below this the columns become unreadable */
+}
+.t-table th {
+  text-align: left;
+  font-family: var(--serif);
+  font-weight: normal;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--cream-dim);
+  padding: 0.5rem 0.4rem 0.35rem;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  background: var(--wall-soft);
+}
+.t-table td {
+  padding: 0.45rem 0.4rem;
+  border-top: 1px solid rgba(224, 169, 62, 0.12);
+  vertical-align: middle;
+}
+.t-table tbody tr:nth-child(even) { background: rgba(0, 0, 0, 0.12); }
+
+.t-num { text-align: right; white-space: nowrap; }
+.t-xp { color: var(--ochre); font-weight: bold; }
+.t-last { color: var(--cream-dim); font-size: 0.8rem; }
+
+.t-name { min-width: 8rem; }
+.t-name-main { display: block; }
+.t-name-nick {
+  display: block;
+  color: var(--cream-dim);
+  font-size: 0.75rem;
+  font-family: var(--serif);
+  font-style: italic;
+}
+
+/* ---------- toast ---------- */
+
+.t-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 1.2rem;
+  transform: translateX(-50%) translateY(12px);
+  background: var(--green);
+  color: var(--ink);
+  padding: 0.5rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease-out, transform 0.18s ease-out;
+  z-index: 20;
+  max-width: 90vw;
+  word-break: break-all;
+}
+.t-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ---------- phones ---------- */
+
+@media (max-width: 480px) {
+  .t-wrap { padding: 0.7rem 0.6rem 0; }
+  .t-class-head { flex-direction: column; }
+  .t-codex { text-align: left; }
+  .t-code { font-size: 2.2rem; }        /* the classroom-readable size */
+  .t-bar { flex-direction: column; align-items: stretch; }
+  .t-bar-actions { justify-content: space-between; }
+}

@@ -1559,6 +1559,51 @@
       return null;
     });
 
+  /* ================= M9 — TEACHER DASHBOARD ================= */
+
+  checkAsync('M9-TEACHER', 'teacher/ ships, and it can never post student progress',
+    function (done) {
+      if (!SERVED) { done(null); return; }
+      var files = ['index.html', 'teacher.js', 'teacher.css'];
+      var left = files.length, bad = [], src = '';
+      var i;
+      for (i = 0; i < files.length; i++) {
+        (function (f) {
+          var xhr = new XMLHttpRequest();
+          xhr.open('GET', '../teacher/' + f, true);
+          xhr.onreadystatechange = function () {
+            if (xhr.readyState !== 4) { return; }
+            if (xhr.status < 200 || xhr.status >= 300) {
+              bad.push('teacher/' + f + ' → HTTP ' + xhr.status);
+            } else if (f === 'teacher.js') { src = xhr.responseText; }
+            left--;
+            if (left) { return; }
+            if (bad.length) { done(bad.join('; ')); return; }
+            /* THE INVARIANT: a teacher session must not be able to grant XP.
+               The dashboard talks to exactly three endpoints; anything from
+               the student progress surface appearing here is a design break,
+               not a typo. */
+            var forbidden = ['step_complete.php', 'boss_fight.php',
+                             'boss_quiz.php', 'boss_result.php', 'sync.php'];
+            var j;
+            for (j = 0; j < forbidden.length; j++) {
+              if (src.indexOf(forbidden[j]) >= 0) {
+                done('teacher.js references ' + forbidden[j] +
+                     ' — the dashboard must never post progress');
+                return;
+              }
+            }
+            if (src.indexOf('class_roster.php') < 0 || src.indexOf('teacher_login.php') < 0) {
+              done('teacher.js no longer calls the two endpoints it exists for');
+              return;
+            }
+            done(null);
+          };
+          xhr.send(null);
+        }(files[i]));
+      }
+    });
+
   runEngineQueue();      /* start the serialized engine tests */
   runNetQueue();         /* start the serialized offline-queue tests */
   finish();
