@@ -658,7 +658,7 @@
       fons: 'Aen. 12,1–310',
       vocab: [
         { la: 'foedus',   scene: SC.v_foedus,  pars: 'nomen' },
-        { la: 'omen',     scene: SC.v_omen,    pars: 'nomen' },
+        { la: 'ōmen',     scene: SC.v_omen,    pars: 'nomen' },
         { la: 'Lāvīnia',  scene: SC.v_lavinia, pars: 'nomen' }
       ],
       story: [
@@ -697,14 +697,14 @@
         { la: 'Tum in caelō signum vīsum est: aquila avem albam ex flūmine sustulit; sed aliae avēs eam pressērunt, et aquila avem dīmīsit.',
           scene: SC.a45_omen },
 
-        { la: 'Hoc omen erat. Sed omen legere difficile est, et quī male legit, male facit.',
+        { la: 'Hoc ōmen erat. Sed ōmen legere difficile est, et quī male legit, male facit.',
           scene: SC.a45_omen,
-          nova: [{ w: 'omen', e: '🦅', g: 'signum quod dī mittunt, ex quō hominēs futūra legunt' }] },
+          nova: [{ w: 'ōmen', e: '🦅', g: 'signum quod dī mittunt, ex quō hominēs futūra legunt' }] },
 
         /* Aen. 12,257–276 */
-        { la: 'Augur Tolumnius omen male lēgit: "Ecce! Aquila est Aenēās, et avis alba sumus nōs. Currite!" Hoc dīxit et hastam prīmus mīsit.',
+        { la: 'Augur Tolumnius ōmen male lēgit: "Ecce! Aquila est Aenēās, et avis alba sumus nōs. Currite!" Hoc dīxit et hastam prīmus mīsit.',
           scene: SC.a45_augur,
-          nova: [{ w: 'Tolumnius', e: '👤', g: 'augur Rutulōrum, quī omen legit' }] },
+          nova: [{ w: 'Tolumnius', e: '👤', g: 'augur Rutulōrum, quī ōmen legit' }] },
 
         /* Aen. 12,283–310 */
         { la: 'Ita foedus ruptum est. Āra sōla stetit, et circum eam iterum arma fuērunt.',
@@ -720,14 +720,14 @@
       ludus: {
         words: [
           { la: 'foedus',   scene: SC.v_foedus,   emoji: '🤝' },
-          { la: 'omen',     scene: SC.v_omen,     emoji: '🦅' },
+          { la: 'ōmen',     scene: SC.v_omen,     emoji: '🦅' },
           { la: 'Lāvīnia',  scene: SC.v_lavinia,  emoji: '👤' },
           { la: 'gladius',  scene: SC.v_gladius,  emoji: '⚔' },
           { la: 'spectat',  scene: SC.v_spectat,  emoji: '👀' },
           { la: 'moenia',   scene: SC.v_moenia,   emoji: '🏛' }
         ]
       },
-      /* SONUS: `foedus` (two men at an altar) and `omen` (two men and a
+      /* SONUS: `foedus` (two men at an altar) and `ōmen` (two men and a
          bird in the sky) both have two men, but only one has an altar
          and only one has a bird, so they may meet. `Lāvīnia` is the
          only single female figure in the liber and carries the sets. */
@@ -735,18 +735,18 @@
         { la: 'foedus',
           answer: { la: 'foedus', scene: SC.v_foedus },
           options: [{ la: 'foedus', scene: SC.v_foedus },
-                    { la: 'omen', scene: SC.v_omen },
+                    { la: 'ōmen', scene: SC.v_omen },
                     { la: 'Lāvīnia', scene: SC.v_lavinia }] },
-        { la: 'omen',
-          answer: { la: 'omen', scene: SC.v_omen },
-          options: [{ la: 'omen', scene: SC.v_omen },
+        { la: 'ōmen',
+          answer: { la: 'ōmen', scene: SC.v_omen },
+          options: [{ la: 'ōmen', scene: SC.v_omen },
                     { la: 'foedus', scene: SC.v_foedus },
                     { la: 'gladius', scene: SC.v_gladius },
                     { la: 'Lāvīnia', scene: SC.v_lavinia }] },
         { la: 'Lāvīnia',
           answer: { la: 'Lāvīnia', scene: SC.v_lavinia },
           options: [{ la: 'Lāvīnia', scene: SC.v_lavinia },
-                    { la: 'omen', scene: SC.v_omen },
+                    { la: 'ōmen', scene: SC.v_omen },
                     { la: 'moenia', scene: SC.v_moenia }] },
         { la: 'gladius',
           answer: { la: 'gladius', scene: SC.v_gladius },
@@ -758,7 +758,7 @@
         aenigmata: {
           pairs: [
             { la: 'foedus',  scene: SC.v_foedus },
-            { la: 'omen',    scene: SC.v_omen },
+            { la: 'ōmen',    scene: SC.v_omen },
             { la: 'Lāvīnia', scene: SC.v_lavinia },
             { la: 'gladius', scene: SC.v_gladius },
             { la: 'spectat', scene: SC.v_spectat },
@@ -768,14 +768,14 @@
             { la: 'In mediō āra posita est.',        scene: SC.a45_ara },
             { la: 'Aquila avem albam sustulit.',     scene: SC.a45_omen },
             { la: 'Ambō rēgēs foedus fēcērunt.',     scene: SC.a45_ara },
-            { la: 'Augur omen male lēgit.',          scene: SC.a45_augur }
+            { la: 'Augur ōmen male lēgit.',          scene: SC.a45_augur }
           ]
         },
         corrige: [
-          { words: ['Augur', 'omen', 'bene', 'lēgit.'], wrong: 2,
+          { words: ['Augur', 'ōmen', 'bene', 'lēgit.'], wrong: 2,
             options: ['male', 'numquam', 'iūxtā'], correct: 0, scene: SC.a45_augur },
           { words: ['Ambō', 'rēgēs', 'sepulcrum', 'fēcērunt.'], wrong: 2,
-            options: ['foedus', 'omen', 'pulverem'], correct: 0, scene: SC.a45_ara },
+            options: ['foedus', 'ōmen', 'pulverem'], correct: 0, scene: SC.a45_ara },
           { words: ['Lāvīnia', 'audīvit', 'et', 'rīsit.'], wrong: 3,
             options: ['flēvit.', 'volāvit.', 'iūrāvit.'], correct: 0, scene: SC.a45_lavinia },
           { words: ['Aquila', 'avem', 'albam', 'ex', 'flūmine', 'dedit.'], wrong: 5,
@@ -787,11 +787,11 @@
           { text: 'Ambō rēgēs ad āram ____ fēcērunt.',
             options: ['foedus', 'foederis', 'foedere'], correct: 0, scene: SC.a45_ara },
           { text: 'Signum quod dī mittunt ____ vocātur.',
-            options: ['omen', 'omine', 'ominis'], correct: 0, scene: SC.a45_omen },
+            options: ['ōmen', 'omine', 'ominis'], correct: 0, scene: SC.a45_omen },
           { text: 'Aderat ____, fīlia rēgis, propter quam bellum coeperat.',
             options: ['Lāvīnia', 'Lāvīniam', 'Lāvīniae'], correct: 0, scene: SC.a45_lavinia },
           { text: 'Augur ____ male lēgit et hastam mīsit.',
-            options: ['omen', 'foedus', 'gladium'], correct: 0, scene: SC.a45_augur },
+            options: ['ōmen', 'foedus', 'gladium'], correct: 0, scene: SC.a45_augur },
           { text: 'Foedus ūnō verbō fit et ūnā hastā ____.',
             options: ['rumpitur', 'rumpit', 'rūpit'], correct: 0, scene: SC.a45_rumpit },
           { text: 'Iūturna soror Turn___ erat.',
@@ -915,7 +915,7 @@
           { la: 'spectat', scene: SC.v_spectat, emoji: '👀' },
           { la: 'gladius', scene: SC.v_gladius, emoji: '⚔' },
           { la: 'foedus',  scene: SC.v_foedus,  emoji: '🤝' },
-          { la: 'omen',    scene: SC.v_omen,    emoji: '🦅' }
+          { la: 'ōmen',    scene: SC.v_omen,    emoji: '🦅' }
         ]
       },
       /* SONUS: `sānat` (a healer over a SEATED man, indoors) and
@@ -939,7 +939,7 @@
           answer: { la: 'discit', scene: SC.v_discit },
           options: [{ la: 'discit', scene: SC.v_discit },
                     { la: 'gladius', scene: SC.v_gladius },
-                    { la: 'omen', scene: SC.v_omen }] },
+                    { la: 'ōmen', scene: SC.v_omen }] },
         { la: 'sānat',
           answer: { la: 'sānat', scene: SC.v_sanat },
           options: [{ la: 'sānat', scene: SC.v_sanat },
@@ -1133,7 +1133,7 @@
             { la: 'balteus', scene: SC.v_balteus },
             { la: 'dubitat', scene: SC.v_dubitat },
             { la: 'gladius', scene: SC.v_gladius },
-            { la: 'omen',    scene: SC.v_omen },
+            { la: 'ōmen',    scene: SC.v_omen },
             { la: 'spectat', scene: SC.v_spectat }
           ],
           scrambles: [
@@ -1147,7 +1147,7 @@
           { words: ['Turnus', 'fūgit', 'et', 'clāmāvit.'], wrong: 1,
             options: ['nōn', 'iterum', 'iūxtā'], correct: 0, scene: SC.a47_supplex },
           { words: ['In', 'umerō', 'victī', 'gladius', 'aureus', 'fulsit.'], wrong: 3,
-            options: ['balteus', 'omen', 'foedus'], correct: 0, scene: SC.a47_balteus },
+            options: ['balteus', 'ōmen', 'foedus'], correct: 0, scene: SC.a47_balteus },
           { words: ['Aenēās', 'statim', 'ēgit', 'nec', 'umquam', 'dubitāvit.'], wrong: 1,
             options: ['prīmum', 'numquam', 'iūxtā'], correct: 0, scene: SC.a47_dubitat },
           { words: ['Quī', 'genibus', 'positīs', 'petit', 'victor', 'est.'], wrong: 4,
@@ -1478,12 +1478,12 @@
                at it */
             { text: 'Ārā positā, ____ inter duōs rēgēs factum est.',
               answer: 'foedus',
-              options: ['foedus', 'omen', 'gladius'],
+              options: ['foedus', 'ōmen', 'gladius'],
               scene: SC.a45_ara },
             /* relative clause: only one of the three comes from the gods */
             { text: '____, quod dī mittunt, difficile est legere.',
-              answer: 'omen',
-              options: ['omen', 'foedus', 'moenia'],
+              answer: 'ōmen',
+              options: ['ōmen', 'foedus', 'moenia'],
               scene: SC.a45_omen },
             /* the girl the whole war is about */
             { text: 'Aderat ____, fīlia rēgis, propter quam bellum coeperat.',
@@ -1498,7 +1498,7 @@
             /* result clause: the thing that broke */
             { text: 'Tam graviter percussus est ut ____ Turnī frangerētur.',
               answer: 'gladius',
-              options: ['gladius', 'balteus', 'omen'],
+              options: ['gladius', 'balteus', 'ōmen'],
               scene: SC.a46_gladius },
             /* abl. abs.: arms down, so the city does the other thing */
             { text: 'Armīs dēpositīs, urbs tōta dē mūrīs ____.',
@@ -1556,7 +1556,7 @@
             /* relative clause, and the object that judged the ending */
             { text: 'Ille ____, quem Aenēās in umerō victī vīdit, Pallantis fuerat.',
               answer: 'balteus',
-              options: ['balteus', 'gladius', 'omen'],
+              options: ['balteus', 'gladius', 'ōmen'],
               scene: SC.a47_balteus },
             /* indirect question: who she was */
             { text: 'Rogās propter quam bellum coeperit? ____ fuit, fīlia Latīnī.',
@@ -1566,7 +1566,7 @@
             /* purpose clause: the city that had to exist */
             { text: 'Nōn ut Aenēās vinceret fāta ēgērunt, sed ut ____ Rōmae starent.',
               answer: 'moenia',
-              options: ['moenia', 'foedus', 'omen'],
+              options: ['moenia', 'foedus', 'ōmen'],
               scene: SC.a48_roma },
             /* THE LAST ITEM OF THE LAST PHASE OF THE LAST LIBER:
                the last three words of the proem, and the learner puts in
