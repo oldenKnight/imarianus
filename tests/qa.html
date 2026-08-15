@@ -84,6 +84,14 @@
   <title>QA — MARIANE</title>
   <base href="/">
   <link rel="stylesheet" href="css/styles.css">
+  <!-- The manifest loads SYNCHRONOUSLY, ahead of the seed below, because the
+       seed needs to know which capitula exist. A classic <script> in <head>
+       runs during parsing and therefore before every deferred script, so
+       CONTENT_MANIFEST is defined by the time the seed runs and content-loader
+       (deferred, further down) still finds it exactly where it expects. This
+       is the ONLY copy: the deferred one was removed, or the file would be
+       evaluated twice. -->
+  <script src="content/manifest.js"></script>
   <script>
     /* seed BEFORE storage.js loads: a mid-progress student */
     (function () {
@@ -133,29 +141,48 @@
         bosses: {}, mapNode: 'f2',
         createdAt: 1700000000000
       };
-      /* The boss node only opens once EVERY capitulum of its region is done.
-         EVERY shipped region is covered at once — this seed runs before the
-         manifest is even parsed, so the ranges are spelled out: fabulae
-         f1–f36 (r01–r12), historia h1–h50 (l1–l8) and aeneis a1–a8
-         (al1–al2). l1 has no boss at all, which is the point of the Historia
-         map shot: finishing it must NOT grow a crown. Extend these ranges
-         whenever a wave registers a new region. */
+      /* EVERY capitulum the manifest declares, marked done.
+
+         The boss node only opens once every capitulum of its region is
+         finished, so the boss/probatio/bossintro routes and the &cap= knob
+         both need an "everything is done" map. That map used to be three
+         hand-written ranges (f1–f18, h1–h22, …) which went stale the moment a
+         wave registered a new region: f19+ and the whole Aeneis track were
+         missing, so their boss nodes stayed locked and the screenshot showed a
+         padlock instead of the boss. It is now READ OFF THE MANIFEST — the
+         same list the app itself walks — which is why manifest.js is loaded
+         above this script. A new region needs no edit here, ever.
+
+         (l1 still has no boss at all, which is the point of the Historia map
+         shot: finishing it must NOT grow a crown.) */
+      function allCapsDone() {
+        var out = {};
+        var tracks = (window.CONTENT_MANIFEST && CONTENT_MANIFEST.tracks) || [];
+        var ti, ri, ci, regs, caps;
+        for (ti = 0; ti < tracks.length; ti++) {
+          regs = tracks[ti].regions || [];
+          for (ri = 0; ri < regs.length; ri++) {
+            caps = regs[ri].capitula || [];
+            for (ci = 0; ci < caps.length; ci++) { out[caps[ci]] = DONE; }
+          }
+        }
+        if (window.console && !tracks.length) {
+          console.warn('qa.html: CONTENT_MANIFEST is empty or absent — the ' +
+            '"everything done" seed is empty and every boss node will be shut.');
+        }
+        return out;
+      }
+
       if (window.__QA_SCREEN === 'boss' || window.__QA_SCREEN === 'probatio' ||
           window.__QA_SCREEN === 'bossintro') {
-        state.completed = {};
-        for (var fi = 1; fi <= 36; fi++) { state.completed['f' + fi] = DONE; }
-        for (var hi = 1; hi <= 50; hi++) { state.completed['h' + hi] = DONE; }
-        for (var ai = 1; ai <= 8; ai++) { state.completed['a' + ai] = DONE; }
+        state.completed = allCapsDone();
         state.mapNode = 'b_' + (window.__QA_REGION || 'r01');
       }
       /* &cap=X: everything before X is finished and X itself is unlocked up
          to the step being photographed — the same shape the default seed
          gives f2, just moved. Only applies when the knob is used. */
       if (window.__QA_CAP) {
-        var all = {}, ci;
-        for (ci = 1; ci <= 36; ci++) { all['f' + ci] = DONE; }
-        for (ci = 1; ci <= 50; ci++) { all['h' + ci] = DONE; }
-        for (ci = 1; ci <= 8; ci++) { all['a' + ci] = DONE; }
+        var all = allCapsDone();
         all[window.__QA_CAP] = f2;
         state.completed = all;
         state.mapNode = window.__QA_CAP;
@@ -190,7 +217,7 @@
   <script src="js/actors-props.js" defer></script>
   <script src="js/backgrounds2.js" defer></script>
   <script src="js/data-core.js" defer></script>
-  <script src="content/manifest.js" defer></script>
+  <!-- content/manifest.js is loaded ABOVE, before the seed script -->
   <script src="js/content-loader.js" defer></script>
   <script src="js/auth-ui.js" defer></script>
   <script src="js/game.js" defer></script>

@@ -88,6 +88,14 @@ Probatio phase types (same registry, non-combat):
   - sententia: plagues/oracles as sentence completion under gentle time pressure.
 Wolf duels are tonally wrong in Genesis — Historia and Aeneis bosses are trials.
 
+CITATION-FORM RULE (sententia / clamor gaps): the answer that fills a gap is always
+the word's CARD CITATION FORM — the nominative singular of a noun, the 3rd-person
+singular present of a verb — because the learner picks it from a picture card that
+shows exactly that form; a gap whose answer is `arcam` or `dedit` asks the child to
+inflect a form nobody has shown them. Oblique-case and other inflected constructions
+belong in the STORY PAGES, where the surrounding sentence teaches them by repetition.
+Hand-authored boss items are held to the same rule.
+
 Input: keyboard arrows + pointer/touch X everywhere; touch is primary.
 
 ## 7. Gamification

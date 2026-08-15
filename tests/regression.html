@@ -78,6 +78,11 @@
      proves storage.js survives being evaluated before Api exists. -->
 <script src="../js/storage.js"></script>
 <script src="../js/api.js"></script>
+<!-- The overworld board. map.js is a pure renderer over scenes.js — it takes a
+     model and returns an HTML string, and boots nothing — so it loads here
+     exactly as it does in index.html and the POLISH-MAP rows below can call
+     WorldMap.render() directly instead of screenshotting a phone. -->
+<script src="../js/map.js"></script>
 
 <script>
 /* eslint-env browser */
@@ -2082,6 +2087,298 @@
         }
       };
       mx.send(null);
+    });
+
+  /* ================= POLISH — the engine/CSS backlog =================
+     Seven fixes, each with the failure it guards spelled out. They are the
+     last block on the page because several of them fetch a shipped FILE and
+     read it: app.js and qa.html cannot be executed here (one boots itself
+     against the DOM app shell, the other seeds localStorage and drives a
+     whole app), so the guard is the real bytes, not a restatement of them. */
+
+  /* fetch any repo file, relative to tests/ */
+  function withFile(path, done, body) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', path, true);
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState !== 4) { return; }
+      if (xhr.status < 200 || xhr.status >= 300) {
+        done(path + ' did not load: HTTP ' + xhr.status); return;
+      }
+      try { body(xhr.responseText); } catch (e) {
+        done('threw: ' + (e && e.message ? e.message : e));
+      }
+    };
+    xhr.send(null);
+  }
+
+  /* ---- POLISH-TILE ----
+     A probatio/duel tile is 52–58 px. Drawing a 400x240 SCENE into it left
+     the animal about 14 px across, so `ovis`, `bōs` and `camēlus` were three
+     identical beige smudges and ORDINA became a guessing game. drawTile now
+     asks tileImage(), which takes the tight Scenes.sprite() crop whenever the
+     scene is exactly one registered actor and keeps the raster otherwise
+     (a two-actor scene is a composition: cropping `pāstor` to its flock
+     deletes the shepherd the word names).
+
+     The engine is real: the probe registers a phase, lets the engine hand it
+     the same `env` every shipped phase gets, and asks that env for the two
+     images. No canvas sampling — an SVG-backed Image decodes asynchronously,
+     so a pixel test here would be a coin toss. The data: URI IS the answer:
+     a sprite carries the actor's own tight viewBox, a scene carries 0 0 400
+     240. */
+  Boss.registerPhase('__tileprobe', {
+    titulus: 'PROBE',
+    /* whenPhase() below waits on impl.env, exactly as the shipped phases in
+       js/boss-phases.js expose it */
+    init: function (env) { this.env = env; },
+    update: function () {}, draw: function () {},
+    teardown: function () { this.env = null; }
+  });
+
+  function srcViewBox(img) {
+    if (!img || !img.src) { return null; }
+    var svg = decodeURIComponent(img.src.replace(/^data:image\/svg\+xml;charset=utf-8,/, ''));
+    var m = /viewBox="([^"]+)"/.exec(svg);
+    return m ? m[1].replace(/\s+/g, ' ') : null;
+  }
+
+  checkBoss('POLISH-TILE', 'drawTile crops a ONE-ACTOR scene and keeps a TWO-ACTOR one whole',
+    function (done) {
+      var cv = document.createElement('canvas');
+      var solo = { la: '__solo__', scene: { bg: 'plain', items: [{ t: 'lamb', x: 200, y: 210, s: 1.5 }] } };
+      var duo = { la: '__duo__', scene: { bg: 'plain', items: [
+        { t: 'person', x: 150, y: 210, s: 1 }, { t: 'lamb', x: 250, y: 210, s: 1 }] } };
+      Boss.start(cv, { words: [solo], hp: 3, seconds: 30,
+        phases: [{ type: '__tileprobe', hp: 3, seconds: 30 }] }, { onEnd: function () {} });
+      whenPhase('__tileprobe', function (p) {
+        var env = p && p.env;
+        Boss.abort();
+        if (!env) { done('the probe phase never received an env'); return; }
+        if (!env.tileImage) { done('env.tileImage is gone — drawTile cannot be routing through it'); return; }
+        var vbSolo = srcViewBox(env.tileImage(solo, 96));
+        var vbDuo = srcViewBox(env.tileImage(duo, 96));
+        var stage = '0 0 ' + Scenes.W + ' ' + Scenes.H;
+        if (vbDuo !== stage) {
+          done('a TWO-actor scene was cropped (viewBox ' + vbDuo + '); the composition is the meaning there');
+          return;
+        }
+        if (vbSolo === stage) {
+          done('a ONE-actor scene still rasterises the whole 400x240 stage — the tile is a smudge again');
+          return;
+        }
+        if (vbSolo !== viewBoxOf(Scenes.sprite('lamb', {}, 96))) {
+          done('the one-actor tile is not the actor\'s own sprite crop: ' + vbSolo);
+          return;
+        }
+        done(null);
+      });
+    });
+
+  /* ---- POLISH-BOSSFRAME ----
+     bossScene() drew every boss at one scale (1.3 for the wolf, 1.0 for
+     everyone else), and the actors are not one size: Lupus is 80 units tall
+     and Lepus is 46, so Regiō IV's intro card was a hare the size of a
+     thumbnail in an empty field. The scale is now derived from the actor's
+     own height. app.js cannot be loaded here, so the two helpers are pulled
+     out of the SHIPPED file and run — if someone re-inlines a constant, this
+     goes red. */
+  checkAsync('POLISH-BOSSFRAME', 'every boss actor is framed at 50–68% of the intro card',
+    function (done) {
+      if (!SERVED) { done(null); return; }
+      withAppJs(done, function (src) {
+        var fill = /var BOSS_FILL = ([0-9.]+);/.exec(src);
+        var a = fnSource(src, 'actorBounds');
+        var b = fnSource(src, 'bossSceneScale');
+        if (!fill) { done('BOSS_FILL is gone from app.js'); return; }
+        if (!a || !b) { done('actorBounds/bossSceneScale are no longer top-level functions in app.js'); return; }
+        var make = new Function('Scenes',
+          'var BOSS_FILL = ' + fill[1] + ';' + a + b + 'return bossSceneScale;');
+        var scaleOf = make(window.Scenes);
+        /* actor, pose and the sceneY bossScene() would use for it */
+        var CASES = [
+          { t: 'wolf', pose: 'leap', y: 155 },     /* river bank, not the ground */
+          { t: 'leo', pose: 'run', y: Scenes.GROUND },
+          { t: 'bos', pose: 'run', y: Scenes.GROUND },
+          { t: 'lepus', pose: 'run', y: Scenes.GROUND }
+        ];
+        var bad = [], i, s, h, frac, vb;
+        var have = {}, names = Scenes.actorNames();
+        for (i = 0; i < names.length; i++) { have[names[i]] = true; }
+        for (i = 0; i < CASES.length; i++) {
+          /* an actor the art library does not have keeps the old hand-tuned
+             default by design; there is nothing to measure */
+          if (!have[CASES[i].t]) { bad.push(CASES[i].t + ' is not a registered actor'); continue; }
+          vb = viewBoxOf(Scenes.sprite(CASES[i].t, { pose: CASES[i].pose }, 100)).split(' ');
+          h = parseFloat(vb[3]);
+          s = scaleOf(CASES[i].t, CASES[i].pose, CASES[i].y);
+          frac = (h * s) / Scenes.H;
+          if (frac < 0.50 || frac > 0.68) {
+            bad.push(CASES[i].t + ' fills ' + (frac * 100).toFixed(0) + '% of the frame (scale ' + s.toFixed(2) + ')');
+          }
+        }
+        done(bad.length ? bad.join(' | ') : null);
+      });
+    });
+
+  /* ---- POLISH-POSTWIN ----
+     A region may close its own story with one authored Latin line. The hook
+     has to stay CONTENT-ONLY (nothing may synthesise Latin) and it has to be
+     rendered — a config key that no screen reads is worse than none. */
+  checkAsync('POLISH-POSTWIN', 'boss.postWin is read from content and shown on the victory screen',
+    function (done) {
+      if (!SERVED) { done(null); return; }
+      withAppJs(done, function (src) {
+        var fn = fnSource(src, 'bossPostWin');
+        if (!fn) { done('bossPostWin() is gone from app.js'); return; }
+        var get = new Function('CUR', fn + 'return bossPostWin;');
+        if (get({ region: { boss: { postWin: 'Lupus līber discēdit.' } } })() !== 'Lupus līber discēdit.') {
+          done('bossPostWin() does not return the region\'s authored line');
+          return;
+        }
+        if (get({ region: { boss: {} } })() !== '') { done('an absent postWin must render nothing'); return; }
+        if (get({})() !== '') { done('bossPostWin() throws or invents a line with no region'); return; }
+        var body = fnSource(src, 'showBossResult');
+        if (!body || body.indexOf('bossPostWin()') < 0 || body.indexOf('post-win') < 0) {
+          done('showBossResult() no longer renders the postWin line');
+          return;
+        }
+        withFile('../css/styles.css', done, function (css) {
+          done(/\.post-win\s*\{/.test(css) ? null : 'css has no .post-win rule, so the line is unstyled');
+        });
+      });
+    });
+
+  /* ---- POLISH-MAP (mascot) ----
+     One fox walked all three boards. Each track now has its own guide, and
+     the fallback matters as much as the swap: js/actors-props.js is optional
+     art, so an unregistered mascot must quietly become the fox head rather
+     than leaving an empty tile. */
+  check('POLISH-MAP', 'each track walks its OWN mascot, and an unknown track falls back to the fox',
+    function () {
+      function board(track) {
+        return WorldMap.render({
+          nodes: [{ id: 'n1', kind: 'fable', x: 0.3, y: 0.8, label: 'I', titulus: 'I', state: 'open' }],
+          foxNode: 'n1', track: track, titulus: 'T', avatar: 'fox'
+        });
+      }
+      var fox = Scenes.mascot(52, 'fox');
+      var want = { fabulae: fox, historia: Scenes.sprite('columbaMascot', {}, 52),
+                   aeneis: Scenes.sprite('navisMascot', {}, 52) };
+      var k, html;
+      for (k in want) {
+        if (!Object.prototype.hasOwnProperty.call(want, k)) { continue; }
+        html = board(k);
+        if (html.indexOf(want[k]) < 0) { return k + ' does not draw its own mascot on the current tile'; }
+        if (k !== 'fabulae' && html.indexOf(fox) >= 0) { return k + ' is still drawing the fox as well'; }
+      }
+      /* a track nobody has written art for yet must still show a walker */
+      if (board('nondum').indexOf(fox) < 0) { return 'an unknown track lost its mascot instead of falling back to the fox'; }
+      return null;
+    });
+
+  /* ---- POLISH-MAP (prop tint) ----
+     mmCarved turns any scenes.js actor into a figurine cut from the board.
+     Its ramp was hard-coded umber, which is right for the oak board of
+     Fabulae and wrong on the indigo and wine-dark ones: warm brown palms sat
+     on top of them looking like props from another game. The ramp is part of
+     the track tint now, so the three boards must produce three ramps. */
+  check('POLISH-MAP', 'the carved-prop ramp follows the track tint (three boards, three ramps)',
+    function () {
+      function ramp(track) {
+        var html = WorldMap.render({
+          nodes: [{ id: 'n1', kind: 'fable', x: 0.3, y: 0.8, label: 'I', titulus: 'I', state: 'open' }],
+          foxNode: 'n1', track: track, titulus: 'T', avatar: 'fox'
+        });
+        var m = /<filter id="mmCarved"[\s\S]*?<feFuncR type="linear" slope="([0-9.]+)" intercept="([0-9.]+)"[\s\S]*?<feFuncG type="linear" slope="([0-9.]+)" intercept="([0-9.]+)"[\s\S]*?<feFuncB type="linear" slope="([0-9.]+)" intercept="([0-9.]+)"/.exec(html);
+        if (!m) { return null; }
+        /* the props really are inside the filtered layer, or the ramp is decoration */
+        if (!/<g class="mm-parallax" filter="url\(#mmCarved\)"/.test(html)) { return 'unfiltered'; }
+        return [+m[1], +m[2], +m[3], +m[4], +m[5], +m[6]].join(',');
+      }
+      var seen = {}, tracks = ['fabulae', 'historia', 'aeneis'], i, r;
+      for (i = 0; i < tracks.length; i++) {
+        r = ramp(tracks[i]);
+        if (!r) { return tracks[i] + ': no mmCarved filter in the board'; }
+        if (r === 'unfiltered') { return tracks[i] + ': the scenery layer is not carved at all'; }
+        if (r !== (WorldMap.TINTS[tracks[i]].carve || []).join(',')) {
+          return tracks[i] + ': the filter ramp (' + r + ') is not the tint\'s carve ramp';
+        }
+        if (seen[r]) { return tracks[i] + ' shares its prop ramp with ' + seen[r] + ' — the boards look alike again'; }
+        seen[r] = tracks[i];
+      }
+      return null;
+    });
+
+  /* ---- POLISH-QASEED ----
+     tests/qa.html seeded "everything finished" from three HAND-WRITTEN id
+     ranges. Every content wave made them stale, and a stale range does not
+     error: the boss node just stays locked and the screenshot quietly shows a
+     padlock where the boss should be. The seed reads the manifest now. */
+  checkAsync('POLISH-QASEED', 'qa.html seeds completion from CONTENT_MANIFEST, not from hard-coded ranges',
+    function (done) {
+      if (!SERVED) { done(null); return; }
+      withFile('../tests/qa.html', done, function (html) {
+        if (html.indexOf('CONTENT_MANIFEST') < 0 || html.indexOf('allCapsDone') < 0) {
+          done('the seed no longer derives the completed map from the manifest');
+          return;
+        }
+        /* the manifest must be loaded BEFORE the seed can read it, and exactly once */
+        var tags = html.match(/<script src="content\/manifest\.js"[^>]*>/g) || [];
+        if (tags.length !== 1) { done('expected exactly one manifest.js tag, found ' + tags.length); return; }
+        if (/defer/.test(tags[0])) { done('manifest.js is deferred again, so the seed runs before it exists'); return; }
+        if (html.indexOf(tags[0]) > html.indexOf('seed BEFORE storage.js')) {
+          done('manifest.js loads AFTER the seed script');
+          return;
+        }
+        /* the ranges that went stale must not creep back */
+        if (/for\s*\([^)]*\bci\s*<=\s*\d+/.test(html) || /'f'\s*\+\s*fi/.test(html)) {
+          done('a hand-written capitulum range is back in the seed');
+          return;
+        }
+        done(null);
+      });
+    });
+
+  /* ---- POLISH-OPTROW ----
+     A SONUS question offers up to four picture tiles at 108 px each: 460 px
+     of tiles in a 343 px column at 375, so the row wrapped and orphaned the
+     last tile, and the third one sat within 7 px of the right edge. The tile
+     art is capped by the viewport under 480 px so all four fit one row. */
+  checkAsync('POLISH-OPTROW', 'picture options shrink with the viewport so four fit one row on a phone',
+    function (done) {
+      if (!SERVED) { done(null); return; }
+      withFile('../css/styles.css', done, function (css) {
+        var m = /@media\s*\(max-width:\s*480px\)\s*\{([\s\S]*?)\n\}/.exec(css);
+        if (!m) { done('the <=480px block that caps the option thumbnails is gone'); return; }
+        var block = m[1];
+        if (!/\.emoji-opt \.scn-thumb\s*\{[^}]*width:\s*\d+vw/.test(block)) {
+          done('.emoji-opt .scn-thumb is no longer sized in vw, so four tiles cannot fit');
+          return;
+        }
+        if (!/max-width:\s*72px/.test(block)) {
+          done('the vw thumbnail has no 72px cap, so it grows past the desktop size');
+          return;
+        }
+        /* The arithmetic the fix rests on, recomputed from the SHIPPED
+           numbers: four tiles plus three gaps must fit the content column at
+           the narrowest width the app supports (360px). Every term is parsed
+           out of the block, so nudging any of them re-runs the sum instead of
+           quietly invalidating this row. */
+        function rem(re, fallback) {
+          var m = re.exec(block);
+          return m ? parseFloat(m[1]) * 16 : fallback;
+        }
+        var vw = parseFloat(/width:\s*([\d.]+)vw/.exec(block)[1]);
+        var thumb = 360 * vw / 100;
+        var padX = rem(/\.emoji-opt\s*\{[^}]*padding:\s*[\d.]+rem\s+([\d.]+)rem/, 16);
+        var gap = rem(/\.opt-row\s*\{[^}]*gap:\s*([\d.]+)rem/, 9.6);
+        var border = 4;                /* .opt is 2px each side */
+        var rowW = 4 * (thumb + 2 * padX + border) + 3 * gap;
+        var column = 360 - 32;         /* .screen padding, both sides */
+        done(rowW <= column ? null :
+          'four tiles need ' + rowW.toFixed(0) + 'px in a ' + column + 'px column at 360px');
+      });
     });
 
   runEngineQueue();      /* start the serialized engine tests */
