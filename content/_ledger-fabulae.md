@@ -527,3 +527,119 @@ Everything above, plus the R1–R4 seed. Regiō VI inherits: `pāstor grex vir`
 `saepe duo`, and the **imperative**, the **vocative**, the **question words**
 (`-ne quis quid cūr ubi`), **`nōlī` + īnfīnītīvus** and the **2nd person
 singular in quoted speech** as constructions.
+
+---
+
+## Regiō VI · URBS (S6) — `content/fabulae-r06.js`
+
+Stage ceiling: everything S1–S5 **plus the imperfect and the personal and
+demonstrative pronouns `is` / `hic` / `ille`**. Still forbidden and avoided:
+the perfect (S7), comparatives and `-ē`/`-iter` adverbs as a system (S8),
+relative clauses (S9), the passive (S10).
+
+Four rulings, recorded because a later author will hit them again:
+
+1. **NO NEW VERB IS INTRODUCED IN THE IMPERFECT.** Every `-bat`/`-bant`/
+   `-ēbat` in this region is built on a verb Regiōnēs I–V already taught with
+   a picture (habitat, dēvorat, ambulat, dat, portat, quaerit, cupit, venit,
+   dormit, iacet, clāmat, salit, ascendit). LATIN-STYLE §2: a sentence that
+   introduces new grammar uses known vocabulary, so the learner never has to
+   guess a word AND a tense at once.
+2. **`ŌLIM` CARRIES THE TENSE, NOT THE PICTURE.** A drawing cannot show
+   pastness. Every imperfect sits under an explicit `ōlim` or follows a page
+   that did, and **every hand-authored CORRIGE/COMPLĒ item that asks for an
+   imperfect keeps `Ōlim` inside the item text**, so the cue is on screen and
+   the exercise is never a coin-flip.
+3. **`hic` AND `ille` ARE TAUGHT AS A PAIR, IN ONE PICTURE** (f16 p2: two mice
+   in one frame, one in the field and one in the city). Neither is ever used
+   alone before that page. `is` waits for f16 p7, where `eī dat` lands in a
+   dative slot the learner has had since Regiō III.
+4. **THE IMPERFECT IS NOT A NARRATIVE PAST HERE, AND MUST NOT BE.** Latin does
+   not tell a story in the imperfect; it tells it in the perfect, which
+   CURRICULUM §0 places at S7 precisely so S7 can CONTRAST the two. So this
+   region keeps the NARRATIVE PRESENT for events and spends the imperfect on
+   what the imperfect is for: habitual/durative background (`ōlim … habitābat`,
+   `frūmentum dēvorābat`) and states going on when something happened
+   (`Bōs ad praesēpe venit. Bōs ēsuriēbat.`). That last pair is the region's
+   real lesson and the exact shape S7 will re-use with the perfect.
+
+### The IMPERFECT and the PRONOUNS (free against the ≤8 cap, all glossed)
+
+| form | first use | how |
+|---|---|---|
+| erant · erat | f16 p1, p5 | nova 🕰, `g: iam sunt; ōlim erant` — the marked ending first, the present standing beside it. 9 + 6 uses across the region |
+| habitābat · habitābant | f16 p2, f17 p1 | nova 🕰🏠, `g: iam habitat; ōlim habitābat` |
+| dēvorābat · dabat · ambulābant · ascendēbant · veniēbat · dīcēbat · cupiēbat | f16 p4–p11, f18 p5–p6 | each nova'd as `iam X; ōlim Xbat` on a verb the learner already reads |
+| iacēbat · dormiēbat · ēsuriēbat | f17 p5, p6 | same device; `ēsuriēbat` is the state-during-an-event page (ruling 4) |
+| ambulābat · quaerēbat | f18 p1 | same device |
+| poterat | f18 p4 | nova 🕰🚫, `g: iam nōn potest; ōlim nōn poterat`. posse + īnfīnītīvus appears twice in the region, once in each tense and on the SAME verb — f18 p4 `ascendere nōn poterat` (the fox, trapped) and p12 `ascendere nōn potest` (the goat, trapped). Not a new construction: a second tense of the one BRIEF ruling 2 opened at S5 |
+| hic · ille | f16 p2 | nova 👈 / 👉, taught as a PAIR in one frame (ruling 3). 3 + 5 uses, `ille` recycled as a subject in f17 and f18 |
+| eius | f16 p5 | nova 👉🐭, `g: … frūmentum cibus eius est`. **GENITIVE of is**; 1 use here, recycled in f17 p3 and drilled in both capitula's CORRIGE/COMPLĒ |
+| eī | f16 p7 | nova ➜🐭, `g: mūs rūsticus mūrī urbānō dat: eī dat`. **DATIVE of is**, in the slot R3 built |
+| eōs | f16 p17 | nova 👉🐭🐭, `g: fēlēs mūrēs nōn capit: eōs nōn capit`. **ACC. PL.** |
+| eum | f17 p11 | nova 👉🐂, `g: canis bovem prohibet: eum prohibet`. **ACC. SG.**, in a room with exactly two animals so the reference is never in doubt |
+| mē | f18 p13 | nova 👉🐐, direct speech only. 1 use |
+| mēcum | f16 p8 | nova 🐭🤝🐭, written as ONE token per BRIEF ruling 3 (generators skip cum+pronoun; never author a cloze that splits it). 1 use |
+| prīmum | f18 p14 | nova 1️⃣, `g: prīmum, posteā`. Pre-taught ONE page before the mōrāle stands on it — the fox says `“Prīmum vidē, posteā salī!”` and the mōrāle repeats it, which is R2 f4's `iuvat` device at closer range. Recorded |
+
+### f16 Mūs Rūsticus et Mūs Urbānus — vocab cards (8)
+
+| lexeme | how |
+|---|---|
+| fēlēs | vocab card, scene `v_feles`; nova 🐱, `g: fēlēs mūrēs capit et dēvorat`. 8 uses. She returns as the region's BOSS |
+| mēnsa | vocab card, scene `v_mensa`; nova 🍽, `g: in mēnsā cibus est: mēnsa nōn praesēpe est` — the contrast that keeps it apart from f17's trough. 4 uses |
+| urbs | vocab card, scene `v_urbs` — the PLACE and nothing else in it, because a card with an actor on it would teach the actor. 7 uses across `urbs`/`urbe`/`urbem` |
+| cibus | **FREE** (f11), scene `v_cibus`. Card kept: the whole fable is about whose food is better |
+| rūsticus · urbānus | vocab cards, scenes `v_rusticus` / `v_urbanus` — the SAME animal in two places, so the card teaches the quality and not the mouse (R2 f6's `aureum` device). BOTH held out of SONUS and AENIGMATA for exactly that reason. 7 + 3 uses |
+| mūs | **FREE** (f4), scene `v_mus` |
+| frūmentum | **FREE** (f5), emoji 🌾 |
+
+### f17 Canis in Praesēpī — vocab cards (8)
+
+| lexeme | how |
+|---|---|
+| praesēpe | vocab card, scene `v_praesepe`; nova 🥣, `g: in praesēpī cibus bovis est`. 8 uses with `praesēpī` |
+| stabulum | vocab card, scene `v_stabulum` (the barn EMPTY); nova 🏚. 5 uses with `stabulō`. **Held OUT of SONUS and AENIGMATA**: a stable with a manger in it is also a stable, and by ear the learner would be choosing between two true answers |
+| prohibet | vocab card, scene `v_prohibet`; nova 🚫, `g: bōs venit; canis lātrat: bōs frūmentum nōn dēvorat`. 4 uses |
+| canis · bōs | **FREE** (f7 / f8), scenes `v_canis` / `v_bos` |
+| lātrat · dormit | **FREE** (f7 / f4), scenes `v_latrat` / `v_dormit`. `dormit` appears in the story only as the imperfect `dormiēbat`; the card and the boss's clāmor item carry the citation form |
+| frūmentum | **FREE** (f5), emoji 🌾 |
+
+**ONE DEPARTURE FROM THE FABLE AS COMMONLY TOLD, recorded:** Aesop's dog
+neither eats the hay nor lets the ox eat, and "lets … eat" is accusative +
+īnfīnītīvus (S12). The Latin here says what the picture shows instead —
+`canis bovem prohibet` — the same fact with a construction the learner has (a
+plain accusative object), and it is what the mōrāle then stands on. `faenum`
+was also dropped in favour of `frūmentum`: the fodder is drawn by the
+`frumentum` prop the learner met in R2, so the fable costs no ninth lexeme
+and gains a recycled one.
+
+### f18 Vulpēs et Hircus — vocab cards (8)
+
+| lexeme | how |
+|---|---|
+| puteus | vocab card, scene `v_puteus`; nova 🕳💧, `g: puteus altus est: in puteō aqua est`. 13 uses. IN the well: the animal is drawn BEFORE the `well` prop, so the stones paint over its body and only the head shows above the rim — no new art |
+| hircus | vocab card, scene `v_hircus` — against the ROCK of bgMountain, because #cbbba0 on bgPlain's cream sky is the R4 `haedus` defect and this is the card SONUS shrinks. nova 🐐, `g: hircus cornua habet; hircus nōn haedus est`. 17 uses; `hirce` is the region's marked vocative |
+| vulpēs | **FREE** (f1), emoji 🦊 |
+| cornua | **FREE** (f9), scene `v_cornua` — a goat AND an ox, so the card teaches the horns and not the beast. 1 use in the body (a FREE word; the ≥3 rule binds new lexemes) |
+| aqua | **FREE** (f3), emoji 💧 |
+| agricola | **FREE** (f6), scene `v_agricola`. 4 uses — he is the humane ending |
+| salit | **FREE** (f1), scene `v_salit` |
+| ascendit | **FREE** (f14) — the "again within the next two capitula" pass |
+
+f18 — further new words: `manet` (nova 📍, `g: hircus nōn discēdit: in puteō
+manet`; 2 uses) · `prīmum` (above).
+
+**B-RATING AND THE ASSIGNMENT'S HUMANE ENDING (DESIGN §8):** the goat is NOT
+left in the well. The `agricola` of Regiō II comes, calls `“Ō hirce! Nōlī
+timēre! Nōlī clāmāre!”`, and lifts him out. **Aesop's moral is untouched** and
+is spoken by the fox one page earlier, where it belongs — `“Prīmum vidē,
+posteā salī!”` — so the humane ending changes what happens to the goat, not
+what the fable teaches. The mōrāle then states it as fact: `hircus prīmum
+salit, posteā videt.`
+
+### Words a later region may now treat as FREE
+
+Everything above, plus the R1–R5 seed. Regiō VII inherits: `fēlēs mēnsa urbs`
+`rūsticus urbānus praesēpe stabulum prohibet puteus hircus manet prīmum`, and
+the **imperfect** and the pronouns **`is` / `hic` / `ille`** as constructions.
