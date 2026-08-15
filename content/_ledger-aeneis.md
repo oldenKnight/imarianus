@@ -1206,3 +1206,198 @@ rewritten under the gap-form rule (below); the twelve that ship carry three
 ablātīvī absolūtī or purpose clauses, four relatives, two passives, an indirect
 question and two plain predications.**
 
+# LIBER VII · LATIUM — `content/aeneis-al7.js` (S12)
+
+> **The liber in which everything goes wrong for the gentlest possible reason:**
+> a boy shoots at a deer he does not know is somebody's pet. It opens with the
+> track's best joke (the tables), spends one wholly peaceful capitulum on an old
+> king with no son, and closes — in a liber whose subject is a war starting — on
+> a girl so fast she could run over standing corn without bending it.
+
+## a25 · Latium · fons Aen. 7,1–147 (+ 7,116)
+
+**CARDS (4):** Tiberis · Latium · mēnsa · cōnsūmit.
+
+`mēnsa` is a10's word **re-carded**, because the probātiō needs it as a sortable
+and because the joke needs a picture: `mēnsa` is the loaded table and `cōnsūmit`
+is the same table empty with the boy who emptied it. **The two are never offered
+together in one SONUS set** — the difference between them is a child and a bare
+top, which a 130 px tile loses.
+
+**THE TABLES ARE THE JOKE, AND THE JOKE IS QUOTED.** Celaenō's prophecy in a10
+was the one genuinely frightening thing in Liber III, and a10's own memoria page
+already promised the learner in Latin that it would turn out to be nothing. a25
+pays that debt: the Trojans eat their bread-plates, a small boy laughs, and the
+terrible prophecy is over.
+**NOTE FOR THE AUDIT.** Vergil at 7,122–127 has Aenēās credit the prophecy to
+**Anchīsēs**, not to Celaenō (3,255–257) — the poem's most famous small
+inconsistency. This file follows **LIBER III**, because a10 and a11 are what
+this learner has actually read, and a track that answered a prophecy the reader
+never met would be answering nothing. **Registered as a deliberate departure.**
+
+**TAUGHT:** flāvus · pānis · ōmen.
+**NŌMINA PROPRIA:** Tiberis (carded) · Latium (carded) · Celaenō (a10) · Iūlus.
+**RECYCLED:** mēnsa (a10) · Celaenō and praedīxerat (a10) · Ascanius/Iūlus (a8)
+· ōra and lītus (a2) · patria (a9) · āra (a6) · corōna (a19) · famēs (a10).
+**VERBA VERGILIĪ (7,116):** heus · etiam · cōnsūmimus · Iūlus.
+
+```
+"heus, etiam mēnsās cōnsūmimus?" inquit Iūlus,        (inline, 7,116)
+```
+
+**It is the only line in the poem spoken by a child, and it is child-perfect.**
+Every content word is already carded before it lands; only the interjection
+`heus` is new.
+
+## a26 · Rēx Latīnus et Lāvīnia · fons Aen. 7,45–285
+
+**CARDS (3):** Latīnus · Lāvīnia · lūcus.
+
+**Three cards on purpose** (charter §0.2: the ≤10 is a ceiling, not a quota).
+The one wholly peaceful capitulum in the liber, and its vocabulary work is
+RECYCLING: a9's `ōrāculum`, a11's `vātēs`, a14's `coniugium`, a4's `rēgīna` and
+`hospes` and `solium`, a6's `āra` and a5's `dōnum` are all re-read here in a new
+story. Nothing is threatened anywhere on this page.
+
+**MISSING ART, therefore OMITTED FROM THE TEXT AS WELL:** **no BEE and no
+LAUREL**, so the two omens at Latīnus' palace (7,59–70 — the bees on the laurel,
+the flame in Lāvīnia's hair) are dropped entirely, the a10 rule again. **The
+oracle of Faunus is kept instead**, because a voice out of a wood is a thing this
+library CAN draw: a grove, an altar, a sleeping king and a speech bubble with
+nobody under it — the same composition a7 uses for Hector's shade. **No CHARIOT
+(currus)**, so Latīnus' gift to the envoys (7,274–279) is horses only.
+**ALSO OMITTED:** Īlioneus' speech in full (7,212–248, compressed as a4
+compressed his first one) and the sceptre and robe of Priam (7,243–248).
+
+**TAUGHT:** gener · externus · advena.
+**NŌMINA PROPRIA:** Latīnus (carded) · Lāvīnia (carded) · Faunus · Amāta.
+**RECYCLED:** ōrāculum (a9) · vātēs (a11) · coniugium (a14) · rēgīna and hospes
+and solium (a4) · āra (a6) · dōnum (a5) · Tiberis and Latium (a25).
+
+## a27 · Furor bellī · fons Aen. 7,286–539
+
+**CARDS (4):** Alēctō · Turnus · pastor · mānsuētus.
+
+**ALĒCTŌ IS A DARK-VEILED FIGURE, NOT A THIRD LIVID BIRD.** The obvious
+composition was al3's `aquila` in the livid `FOEDUM` grey, which al3 uses for
+the Harpyiae and al4 for Fāma — and **open question 9 of this ledger already
+asks whether TWO uses of that device is one too many. A third would settle the
+question the wrong way.** So Alēctō is composed fresh out of what the library
+owns: a tall `woman` in near-black (`ATER`) with the veil up and the mantle the
+same colour, on `bgNightSky`, **always alone in her half of the frame and never
+touching anyone.** No snakes (7,346–353 omitted), no torch, no wings, no face
+beyond the library's two ink dots. Her `furor` is **taught as a word, not drawn
+as a picture**: *furor est īra caeca* — which recycles a12's carded `caecus` and
+quietly answers al4's own `ignis caecus` metaphor.
+
+**THE STAG OF SILVIA — the liber's B-handling flag, in full.**
+Vergil's stag is hit by Ascanius' arrow, runs home *saucius* (7,500) and
+*cruentus* (7,501), and its owner's grief starts the war. This file keeps
+exactly as much of that as DESIGN §8 allows and no more:
+
+* **The animal is shown three times and is never shown hurt.** The library has
+  no wound, and none would be drawn if it had one.
+* **The shot is ONE CLAUSE, unpictured**, and the scene under it holds the boy
+  and his hounds with **the stag not in frame**: *Ascanius cervum mānsuētum esse
+  nescit. Sagittam mittit — et cervum ferit.*
+* **`saucius` is Vergil's own word** (7,500) and is glossed to say the one thing
+  a child needs: *quī ictum accēpit sed vīvit; ↔ integer.*
+* **`cruentus` (7,501) IS OMITTED. There is no blood anywhere in this liber.**
+* **The next sentence says it outright** — *Nōn perit: vīvit* — and the picture
+  is Silvia holding him. Vergil has her call the shepherds first (7,504); this
+  file has her hold the stag first and call them second. **That is staging, not
+  a change of fact, and it is registered as staging.**
+* **The fight that follows is a5's treatment exactly:** arms are taken up on both
+  sides and **nobody is struck** — *nēmō tamen ictum dat: sed īra iam nōn
+  sānātur. Sīc ex ūnō cervō magnum bellum nāscitur.*
+
+**MISSING ART:** **no BOW and no ARROW** (the a3 ruling stands), so the shot is a
+clause and the scene holds the boy and his hounds; `sagitta` is a context word,
+exactly as it was in a17's list of contests.
+
+**TAUGHT:** furor (`īra caeca`) · saucius · nūtrīvit.
+**NŌMINA PROPRIA:** Alēctō (carded) · Turnus (carded) · Silvia · Amāta.
+**RECYCLED:** caecus (a12) · Ascanius (a8) · cervus (a4's hunt) · canis (a14) ·
+īra (a19's quarrel, and the word the capitulum ends on) · Lāvīnia (a26) ·
+corōna (a19, on the stag's horns).
+
+**AEN. 7,312 (*flectere sī nequeō superōs, Acheronta movēbō*) IS DELIBERATELY
+NOT QUOTED**, although it is the most famous line in the liber and although
+villain-speech is quotable in principle. Two reasons, and the second is the real
+one:
+1. Liber VII already carries five authentic lines (one inline, four closing) —
+   the same count Liber I carries — and a sixth would be past every precedent.
+2. **THE LINE WOULD UNDO LIBER VI.** Its whole force depends on Acheron being a
+   horror that a goddess can throw at the living, and al6 has just spent four
+   capitula teaching, on purpose and out loud, that the underworld is *umbrae,
+   nōn horrōrēs* — quiet grey people, an old ferryman, a dog that can be got
+   past with a cake. Quoting 7,312 in the very next liber would tell the learner
+   that al6 was being kind rather than being true. **Iūnō's will is fully
+   present in a27 without it:** *pācem ferre nōn potest*, and she calls Alēctō.
+
+## a28 · Bellum incipit · fons Aen. 7,572–817 (+ 7,808–811)
+
+**CARDS (4):** exercitus · Camilla · seges · aperit.
+
+**THE CATALOGUE IS THREE MEN AND THE TEXT SAYS SO.** 7,641–817 is compressed to
+Messāpus (harmless, a horse-tamer, and a son of the Neptūnus a1 carded), Turnus,
+and Camilla — and the page that does it **admits the compression in Latin**:
+*Vergilius omnēs ducēs nōmināvit; nōs trēs tantum nōmināmus.*
+**MEZENTIUS IS OMITTED ENTIRELY (7,648–654):** Vergil calls him *contemptor
+dīvum* and Liber VIII tells what he did to his prisoners, which is the one thing
+in the whole Aenēid this product will not paraphrase. **He belongs to Liber X's
+agent, who will have to make the same call — and al8 has already declined him a
+second time.**
+
+**MISSING ART:** the gates of war are the `cityWall` actor's own `open: true`,
+which paints the archway black. That is the whole picture of 7,620–622, and it
+is enough.
+
+**TAUGHT:** arista · grāmen · planta · tingit · tumet · silvester · intāctus.
+**NŌMINA PROPRIA:** Camilla (carded) · Messāpus · Iānus.
+**RECYCLED:** celer (a18) · laedit (a10) · cursus (a19) · aequor (a1's own
+poetic gloss) · fluctus (a1) · Neptūnus (a1) · equus (a5, a19) · Turnus (a27).
+**VERBA VERGILIĪ (7,808–811):** illa · vel…vel · intāctae · summa · volāret ·
+grāmina · tenerās · cursū · laesisset · fluctū · suspēnsa · tumentī · ferret
+iter · celeris · aequore · plantās.
+
+**THE CLOSING QUOTATION.**
+
+```
+illa vel intāctae segetis per summa volāret
+grāmina nec tenerās cursū laesisset aristās,
+vel mare per medium fluctū suspēnsa tumentī
+ferret iter celeris nec tingeret aequore plantās.   (closing, 7,808–811)
+```
+
+**WHY FOUR, AND WHY THESE.** They are Vergil's own last picture of Liber VII —
+Camilla closes the catalogue and therefore the book — and they are the most
+purely harmless four lines in the second half of the poem. In a liber whose
+subject is a war starting, **the closing image this product gives a child is a
+wonder.** `vel … vel` is one period and cannot be halved, so all four are quoted
+(the a16 ruling on fragments). `celeris` pays back a18's carded `celer`,
+`laesisset` a10's `laedit`, `cursū` a19's `cursus`, `aequore` a1's poetic gloss.
+
+**READING NOTE, flagged for the line-audit:** `celeris` in 811 is taken here as
+**nominative singular feminine agreeing with `illa`** (Conway, Williams), not as
+the accusative plural `celerīs = celerēs` with `plantās` — hence no macron on
+the i. The gloss says which reading it is.
+
+**PROBĀTIŌ b_al7 — Mēnsae:** `ordina` (hp 6 / 45 s) + `sententia` (hp 5 / 55 s),
+the al2/al5 shape. Named for the liber's own emblem: the prophecy everyone was
+afraid of turned out to be lunch. The ōrdina zones are the liber's own two
+halves — **PĀX** (mēnsa, seges, pastor, mānsuētus, badged with the `mensa` they
+ate) against **BELLUM** (Turnus, Camilla, exercitus, Alēctō, badged with the
+`swordShield` a7 carded as `arma`) — and `items` is deliberately absent so that
+js/probatio.js draws from the whole liber's vocabulary and drops every word no
+category claims (`zoneOf`), leaving exactly those eight. **Tiberis, Latium,
+cōnsūmit, Latīnus, Lāvīnia, lūcus and `aperit` are unclaimed on purpose: a rēx
+who refuses the war and a gate that opens it belong to neither pile, and the
+trial must not say they do.** The banner is `PĀX AN BELLUM` (13 characters) —
+al5's shipped banner is 12, so this one is **one character over the known-good
+width: FLAGGED for the line-audit, and the one-word revert is `PĀX ET ARMA`.**
+**Three items of the first draft were rewritten under the gap-form rule (below)
+and one uncarded distractor replaced; the six that ship carry two ablātīvī
+absolūtī, two relatives (one of them a passive), a purpose clause and a temporal
+clause.**
+
