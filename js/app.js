@@ -1439,6 +1439,29 @@
     return Math.max(FABULA_MIN_MS, Math.min(FABULA_MAX_MS, ms));
   }
 
+  /* BUG-3: `nova` IS OPTIONAL ON A STORY PAGE.
+     content/README.md makes the key optional and the shipped regions use it
+     that way — a page that introduces no new word simply omits it (r02 f4
+     `Mūs timet…`, most of r03/r04, and every "memoriā tenē" page). The
+     renderer used to read `line.nova.length` straight, so the FIRST such page
+     threw TypeError mid-FĀBULA and left the reader on a dead screen with no
+     way forward but the back arrow. Every read of nova goes through these two
+     helpers now, so a missing key is a page without glosses, not a crash. */
+  function novaOf(line) {
+    return (line && line.nova) || [];
+  }
+
+  function glossesFor(line) {
+    var nova = novaOf(line);
+    var out = '', k, n;
+    for (k = 0; k < nova.length; k++) {
+      n = nova[k];
+      out += '<li><strong>' + esc(n.w) + '</strong> <span class="g-emoji">' + (n.e || '') + '</span>' +
+        (n.g ? ' <em>= ' + esc(n.g) + '</em>' : '') + '</li>';
+    }
+    return out;
+  }
+
   function runFabula(fi) {
     renderTopbar(true);
     var f = capAt(fi);
@@ -1456,13 +1479,7 @@
         return;
       }
       var line = f.story[i];
-      var glosses = '';
-      var k, n;
-      for (k = 0; k < line.nova.length; k++) {
-        n = line.nova[k];
-        glosses += '<li><strong>' + esc(n.w) + '</strong> <span class="g-emoji">' + n.e + '</span>' +
-          (n.g ? ' <em>= ' + esc(n.g) + '</em>' : '') + '</li>';
-      }
+      var glosses = glossesFor(line);
       /* in-card back: lets the reader re-read the previous story page without
          going all the way to home. Disabled (greyed) on the first page. */
       var backBtn = '<button id="prev" class="btn ghost small" type="button"' +

@@ -1604,6 +1604,97 @@
       }
     });
 
+  /* ================= CHECK 8 =================
+     Guards BUG-3 — the FĀBULA crash on a page without `nova`.
+     app.js read `line.nova.length` straight out of the story page, but the
+     key is OPTIONAL (content/README.md) and most shipped pages omit it: the
+     reader threw TypeError on the first such page and the story stopped dead.
+
+     app.js cannot be LOADED here — it is an IIFE that reads DATA.UI at parse
+     time and boots itself against #app/#topbar — so this pulls the two
+     helpers it now funnels every nova read through OUT of the shipped file
+     and runs them. That is the real shipped source, not a restatement of it:
+     if someone re-inlines the loop, the static row below goes red. */
+
+  /* The source text of one top-level `function NAME(` in app.js. Everything
+     in that file lives inside one IIFE at TWO-space indentation, so a line
+     that is exactly "  }" closes a top-level function and nothing else — a
+     nested block always closes deeper. Deliberately not a brace counter:
+     app.js contains regex literals holding quotes (`.replace(/"/g, …)`),
+     which is precisely what a naive scanner gets wrong. */
+  function fnSource(src, name) {
+    var start = src.indexOf('\n  function ' + name + '(');
+    if (start < 0) { return null; }
+    var end = src.indexOf('\n  }', start);
+    return (end < 0) ? null : src.substring(start + 1, end + 4);
+  }
+
+  /* comments are not code: a check that greps for a defunct expression must
+     not be fooled by the comment that explains why it is defunct */
+  function stripComments(src) {
+    return src.replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/(^|[^:])\/\/[^\n]*/g, '$1');
+  }
+
+  function withAppJs(done, body) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '../js/app.js', true);
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState !== 4) { return; }
+      if (xhr.status < 200 || xhr.status >= 300) {
+        done('js/app.js did not load: HTTP ' + xhr.status); return;
+      }
+      try { body(xhr.responseText); } catch (e) { done('threw: ' + (e && e.message ? e.message : e)); }
+    };
+    xhr.send(null);
+  }
+
+  checkAsync('BUG-3', 'a story page WITHOUT nova renders its glosses without throwing',
+    function (done) {
+      if (!SERVED) { done(null); return; }
+      withAppJs(done, function (src) {
+        var a = fnSource(src, 'novaOf'), b = fnSource(src, 'glossesFor');
+        if (!a || !b) {
+          done('app.js no longer defines novaOf()/glossesFor() — the fabula ' +
+               'renderer must funnel every nova read through them');
+          return;
+        }
+        /* esc is the only closure dependency of the pair; app.js's own */
+        var esc = fnSource(src, 'esc');
+        var make = new Function(a + '\n' + b + '\n' + esc + '\nreturn glossesFor;');
+        var glossesFor = make();
+
+        /* THE CRASHING PAGE: r03 p3's shape — scene + la, no nova key */
+        var out = glossesFor({ la: 'Canis carnem portat.', scene: {} });
+        if (out !== '') { return done('a page with no nova produced markup: ' + out); }
+        /* the other omissions the content files actually ship */
+        if (glossesFor({ la: 'x', nova: [] }) !== '') { return done('nova: [] must render nothing'); }
+        if (glossesFor({ la: 'x', nova: null }) !== '') { return done('nova: null must render nothing'); }
+        if (glossesFor({}) !== '') { return done('an empty page object must render nothing'); }
+        /* and the guard must not have eaten the feature itself */
+        var one = glossesFor({ la: 'x', nova: [{ w: 'lupus', e: '🐺', g: 'lupus malus est' }] });
+        if (one.indexOf('lupus') < 0 || one.indexOf('🐺') < 0 || one.indexOf('lupus malus est') < 0) {
+          return done('a page WITH nova lost its gloss: ' + one);
+        }
+        if (one.indexOf('<li>') !== 0) { return done('gloss markup changed shape: ' + one); }
+        return done(null);
+      });
+    });
+
+  checkAsync('BUG-3', 'app.js never reads line.nova directly again',
+    function (done) {
+      if (!SERVED) { done(null); return; }
+      withAppJs(done, function (src) {
+        /* self-contained on purpose: it re-reads app.js rather than depending
+           on the previous check having finished first. */
+        var bad = stripComments(src).match(/line\.nova\s*(\.|\[)/g);
+        if (bad) {
+          done('unguarded read(s) of line.nova are back: ' + bad.join(' '));
+          return;
+        }
+        done(null);
+      });
+    });
+
   runEngineQueue();      /* start the serialized engine tests */
   runNetQueue();         /* start the serialized offline-queue tests */
   finish();
