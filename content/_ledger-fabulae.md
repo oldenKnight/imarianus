@@ -1088,3 +1088,280 @@ Everything above, plus the R1–R7 seed. Regiō IX inherits: `ventus sōl palliu
 `volat prope nūlla quam tū`, and **comparatives, superlatives and the adverb**
 — positive, comparative and superlative of both — as constructions, with
 `maior` and `minor` as the only irregulars opened.
+
+---
+
+## Regiō IX · CASTRA (S9) — `content/fabulae-r09.js`
+
+**THE WOLF IS BACK, AND THAT IS THE POINT OF THE REGION.** CURRICULUM §1 gives
+the same Lupus the bosses of R1, R5, R9 and the R12 finale. R1 met him at the
+stream, R5 let him take an agnus the pāstor had cried wolf over, and R9 is
+where he stops being strong and starts being CLEVER — which is exactly what a
+region about relative clauses needs, because a relative clause is how Latin
+says *the one who is not what he looks like*.
+
+Six rulings are recorded in the file header. The four that bind later authors:
+
+1. **`quam` IS NOT USED AS A RELATIVE PRONOUN ANYWHERE IN THIS REGION.**
+   Regiō VIII taught `quam` as the particle of comparison and the learner has
+   just spent three fables on it; the feminine accusative relative is spelled
+   the same way, and an exercise in which one spelling is two different words
+   is the ambiguity LATIN-STYLE §4 rejects. Every feminine relative here is
+   NOMINATIVE (`pellis quae alba erat`, `pars quae prīma est`, `fēlēs quae
+   celeris erat`), and where the Latin wanted a feminine accusative the
+   SENTENCE was changed, never the grammar. The masculine accusative `quem` is
+   safe and is taught in f26. **Later authors: this is a permanent collision,
+   not a Regiō IX one.**
+2. **THE TRIO IS TAUGHT ON THREE ADJACENT PAGES AND THE THIRD GLOSS PRINTS THE
+   SERIES** — `lupus quī · pellis quae · vestīgium quod` — which is R8's
+   fortis/fortior/fortissimus device applied to gender instead of degree. Each
+   gender arrives on a noun the learner has had for regions, so the only new
+   thing on the page is the joining word.
+3. **THE RELATIVE IS GLOSSED BY JUXTAPOSITION, NEVER BY TRANSLATION:**
+   `{ w: 'quī', g: 'lupus callidus est: lupus quī callidus est' }`. Two
+   sentences, one above the other, the second built from the first. It is the
+   only Latin-only device that can teach a SUBORDINATOR, because a
+   subordinator has no picture.
+4. **`quis` ASKS, `quī` JOINS**, and f27 p12 puts them in ONE sentence on
+   purpose — `Quis est mūs quī tintinnābulum pōnit?` The learner has had `quis`
+   since Regiō V and will otherwise read the new word as the old one; the page
+   where the two stand together IS the gloss. `quis` is also used as a
+   deliberate distractor in three of f25's CORRIGE items.
+
+**NO NEW VERB IS INTRODUCED IN A RELATIVE CLAUSE.** Every verb inside a
+`quī`/`quae`/`quod` clause in this region is R1–R8 vocabulary (erat, est,
+invēnit, dīxit, audīvērunt, sunt, capit, habet, facit). It is R6's imperfect
+rule and R7's perfect rule one stage on.
+
+**THE 4TH AND 5TH DECLENSIONS ARE CONSOLIDATED, NOT INTRODUCED.** CURRICULUM
+§0 says consolidated and it means it. The learner already owns two
+4th-declension nouns used in nominative and accusative only, because those two
+forms are indistinguishable from the 2nd declension — `cornua` (R3 f9, flagged
+there) and `quercus` (R8 f23, flagged there). **R9 is where they finally
+decline:** `sub quercū` and `umbra quercūs` in f26, on the tree the learner
+watched fall one region ago. `manus` is the one NEW 4th-declension noun and it
+earns its place because f25's climax is a hand.
+
+**MISSING ART AND OTHER THINGS REPORTED, NOT WORKED AROUND** (the fifth such
+report; IV, V, VII and VIII filed the others):
+
+* **THERE IS NO BELL.** No `tintinnābulum`, no bell, no chime and nothing that
+  could honestly stand for one — checked against every name in
+  js/actors-props.js and js/scenes.js. **STOP-REPORTED, and then solved,
+  because this fable can carry it and almost no other could:** in Mūrēs et
+  Fēlēs the bell is a PROPOSAL THAT NEVER EXISTS. Nobody ever puts it on the
+  cat. So the bell is drawn where a proposal belongs — inside a SPEECH BUBBLE,
+  as 🔔 — and it never once appears in the world of the picture, which is
+  precisely the fable's own logic rather than a workaround for it.
+  `tintinnābulum` is TAUGHT BY GLOSS ONLY, has NO card, and is held out of
+  SONUS, AENIGMATA and the boss. Precedent: R5's `sōlus`, R7's `sal`, R8's
+  `cauda`. **The glyph was rendered and measured before it shipped** — 🔔, ✋
+  and 🤐 all render on the target browser.
+* **THERE IS NO CAMP — but for the OPPOSITE reason to R5's `via`, R7's `lītus`
+  and R8's `hortus`, and the difference is worth inheriting.** The art EXISTS
+  this time: `tent`, `cityWall`, `turris` and `person role:'soldier'` would
+  draw an honest `castra`. What is missing is a REASON — not one of the three
+  fables CURRICULUM §1 gives this region is set in a camp, and a word taught on
+  one page and never used again is exactly the defect this ledger exists to
+  catch (R7 cut `terra` for it, R8 cut `spectat`). The region is called Castra
+  on the map header and the learner is taught nothing false.
+* **THE 5TH DECLENSION IS ONLY `diēs`.** `rēs`, `fidēs` and `spēs` are the
+  other members a learner would meet and all three are abstract nouns no
+  picture in this library can carry. `diēs` is GLOSS-ONLY and gets NO CARD
+  either, because the one picture this art set can make of "day" is a picture
+  of the sun, which the learner met as `sōl` one region ago. Its forms are
+  shown instead: `ūnō diē` in all three capitula, and `ūnus diēs, duo diēs` in
+  the gloss.
+* **THE BOSS INTRO CANNOT COMPOSE THE FLEECE.** js/app.js `bossScene()` renders
+  exactly ONE actor — `Scenes.render({ bg, items: [{ t: actor, x: 200, y,
+  pose, s }] })` — and content may override only `bg`, `sceneY`, `sceneScale`
+  and the poses. Putting the pellis on the boss's portrait would need an engine
+  change and content agents do not make those. **REPORTED.** The
+  wolf-in-the-fleece is composed in the CLĀMOR scenes instead, which are full
+  scene specs, and the intro keeps the default river the same Lupus stood on at
+  R1 and R5.
+
+**ART THAT TURNED OUT TO EXIST, worth inheriting: `pellis` drawn AFTER `wolf`
+at a small negative x offset covers the wolf's body and leaves his head
+clear** — measured at `wolfX − 16`, s 0.85 against a wolf at s 1.1. That is the
+whole of f25 with no new art, and it is the same trick R6 f18 used to put the
+hircus down a well. Two things follow and both are the fable rather than a
+defect: the READER sees through the disguise and the pāstor does not, which is
+how this fable has always been told to children; and every undisguised page is
+the SAME wolf actor with the pellis simply absent, so the picture can never
+disagree with the Latin about whether he is still wearing it.
+
+**A PICTURE MUST AGREE WITH ITS SENTENCE'S NUMBER, and this region caught
+itself twice.** f25's neuter antecedent is a SINGULAR `vestīgium`, and the
+first draft drew R7's scatter of three `umbra` marks under it — three tracks
+for one word. It is now ONE PAW: a large pad with three small toes above it,
+still `umbra` at w/h/color/opacity, still no new art. (It has to stay singular:
+the neuter plural relative is `quae`, which ruling 1 already spends on the
+feminine.) Likewise f25 p17 says the fleece was `in manū pāstōris` and its
+scene had no pāstor in it; he is in the frame now.
+
+### The RELATIVE PRONOUN and the FUNCTION words (free against the ≤8 cap, all glossed)
+
+| form | first use | how |
+|---|---|---|
+| quī (m nom sg) | f25 p6 | nova ➡, `g: lupus callidus est: lupus quī callidus est` — the juxtaposition device (ruling 3). 3 uses in f25, and it carries the mōrāle |
+| quae (f nom sg) | f25 p8 | nova ➡, `g: pellis alba est: pellis quae alba est`. NEVER accusative (ruling 1) |
+| quod (n nom/acc sg) | f25 p11 | nova ➡, `g: lupus quī · pellis quae · vestīgium quod` — the third gloss prints the series (ruling 2). Its ACCUSATIVE IS ITS NOMINATIVE, which is why f27 p11's `Cōnsilium quod mūs dīxit` costs nothing extra |
+| quem (m acc sg) | f26 p5 | nova ➡, `g: asinus cibum invēnit: cibus quem asinus invēnit` |
+| quī (m nom PL) | f26 p14 | nova ➡➡, `g: ūnus quī, multī quī: sociī quī cum leōne sunt` — R2's `mūs → mūrēs` device applied to a pronoun |
+| quī without an antecedent | f26 p13, p17 | `“Quī tertiam partem capit, inimīcus meus est!”` and the mōrāle `quī cum leōne partem facit, nihil habet`. The headless relative is PRE-TAUGHT four pages before the mōrāle stands on it, which is R6 f18's `prīmum` device at the same range. **FLAGGED FOR LINE-AUDIT** |
+| diēs (diē) | f25 p5 | **5TH DECLENSION**, FUNCTION and gloss-only. nova ☀, `g: diēs: sōl in caelō est. Ūnus diēs, duo diēs` (`duo` from R5). 1 use per capitulum, all three — which is the "recycled again within the next two capitula" pass rather than three uses in one place. Recorded call, same shape as R5's `sōlus` |
+| trēs | f26 p8 | **FUNCTION**, nova 3️⃣, `g: ūnus, duo, trēs` (both FREE). 2 story uses plus the AENIGMATA scramble and two exercises — the R7 `subitō` treatment |
+| prīma · secunda · tertia | f26 p9, p10, p12 | ONE MORPHOLOGY FAMILY, one per page, each gloss printing the run so far and all three anchored on the `prīmum` R6 taught. 6 uses between them. It is R8's fortiter/fortius/fortissimē device, and like that one it exists because the story genuinely counts to three |
+| perfect forms glossed | throughout | `cēlāvit · numerāvit · timuērunt · invēnērunt · sēdērunt · fēcit · discessērunt · habuērunt · audīvērunt · clāmāvērunt · tacuērunt · fūgērunt · cēpērunt`. Morphology, not lexemes: every underlying verb is R1–R8 vocabulary |
+
+### f25 Lupus in Pelle Ovīnā — vocab cards (7), THREE new carded lexemes
+
+| lexeme | how |
+|---|---|
+| pellis | vocab card, scene `v_pellis` — the hide ALONE and LAID FLAT, on the DARK stone of **bgStabulum**. nova 🐑, `g: pellis ovīna = pellis agnī: lāna alba, sed agnus nōn est` (`lāna` from R7 f21). 9 uses |
+| manus | vocab card, **EMOJI ✋** (rendered and verified, like R1's `agnus` 🐑 and R2's `hiems` ❄️). **4TH DECLENSION**, nova ✋, `g: manus: vir manū tenet et capit`. 3 uses across `manū` (instrumental, p15), `manus` (nominative, p16) and `in manū` (p17) |
+| numerat | vocab card, scene `v_numerat` (the shepherd's arm out and the count in a bubble). **Held out of SONUS and AENIGMATA** — it is a second shepherd. 3 uses |
+| albus | nova ⬜, `g: lāna alba est; agnī quoque albī sunt`. **NO CARD** — every picture of "white" this art set can make is a picture of `agnus`, `grex` or `pellis`. 3 uses |
+| cēlat | nova 🚫👀, `g: pāstor lupum nōn videt: pellis lupum cēlat`. **NO CARD** — its picture is the wolf in the fleece, which is `lupus` and `pellis` at once. 3 uses (`cēlāvit` p8, `cēlābat` p9 and p17) |
+| lupus · grex · pāstor · agnus | **FREE** (R1 f3 / R5 f13 / R5 f13 / R1 f3). 18 · 7 · 10 · 10 uses. `agnus` keeps R1's EMOJI card 🐑 — see the camouflage note |
+| vestīgium | **FREE** (R7 f20). The region's NEUTER antecedent, drawn as one paw out of four `umbra` ellipses |
+
+**THREE NEAR-WHITE THINGS is this region's real camouflage risk** (the Regiō IV
+ciconia lesson at its worst), and they are held apart three different ways:
+`pellis` stands on the dark stone of **bgStabulum**, `grex` moves off it to
+**bgMountain** (R5 had it on the stone; `pellis` needs it more now), and
+`agnus` stays an EMOJI card, which makes the third white thing a different KIND
+of object on the board. Even so none of the three is ever offered against
+another in SONUS, AENIGMATA or the boss quiz.
+
+**THE TITLE IS KEPT AND THE WORD IS GLOSSED**, which is the ruling R7 took for
+`cornīx = corvus`. CURRICULUM §1 names this fable `Lupus in Pelle Ovīnā`, but
+the track has never taught `ovis` — the learner's sheep are `agnus` (R1) and
+`grex` (R5). Rather than retitle the authoritative content map or buy a ninth
+lexeme for one page, **`ovīna` appears ONCE, inside a gloss**, as
+`pellis ovīna = pellis agnī` (a Regiō III genitive, recycled), and the body of
+the fable says `pellis` alone throughout. **FLAGGED FOR LINE-AUDIT.**
+
+**B-RATING (DESIGN §8), and it is the assignment's own ruling: THE WOLF IS
+EXPOSED AND DRIVEN OFF, NOT KILLED.** In many tellings the shepherd butchers
+him in the fleece. Here the pāstor pulls the fleece off with his hand, calls
+`“Ō lupe! Discēde! Tū agnus nōn es!”`, and the wolf walks out of the frame
+alive with nothing. It costs the fable nothing — its point is the exposure and
+not the killing, and the mōrāle says so — and it is the humane ending R6 gave
+the hircus and R7 the asinus. **FLAGGED.**
+
+**`trāxit` WAS CUT** from a late draft of p16, where it had been glossed and
+then used exactly once. `cēpit` does the work instead, and it is better than a
+substitute: the wolf `pellem cēpit` on p6 and the shepherd's `manus pellem
+cēpit` on p16 are the same verb closing the same loop.
+
+### f26 Leō et Sociī — vocab cards (6), ONE new carded lexeme
+
+| lexeme | how |
+|---|---|
+| socius | vocab card, scene `v_socius` — the ass AND the fox and NOT the lion, so the card teaches the relation and not the leader. **Held out of SONUS and AENIGMATA**: it contains both of the capitulum's other animals, which is the device R5 used to hold `onus` out. nova 🤝, `g: sociī sunt amīcī quī cum leōne ambulant` — the gloss itself uses the region's relative. 7 uses |
+| pars | nova 1️⃣2️⃣3️⃣ (on `partēs`), `g: ūnus cibus; iam trēs partēs in agrō sunt`. **NO CARD**, and the reason is a rule: every picture of "a part" this art set can make is a picture of `frūmentum`, which the learner has owned since Regiō II, and **a card that teaches the wrong word is worse than no card**. It is carried by the gloss and by the three heaps the story pages show. Treatment precedent: R4's `locus`. 10 uses |
+| facit | nova ✋ (on `fēcit`), `g: iam facit; tum fēcit: asinus partēs facit`. **NO CARD**. 3 uses, and it is recycled in f27 p17 — the "again within the next two capitula" pass |
+| inimīcus | nova 😠, `g: inimīcus ↔ amīcus` (`amīcus` from R2 f4). **NO CARD** — it is a relation, not a thing. 2 uses plus the exercises; recorded call, same shape as R7's `prōcul` |
+| leō · asinus · vulpēs · cibus · quercus | **FREE** (R2 f4 / R5 f15 / R1 f1 / R4 f11 / R8 f23). 14 · 5 · 3 · 2 · 2 uses |
+
+**ONE DEPARTURE FROM THE FABLE AS COMMONLY TOLD, recorded and deliberate.** In
+Phaedrus (I.5) and in Aesop the animals HUNT and the lion divides a carcass; in
+the harsher Aesopic version he kills the ass for dividing fairly. Neither can
+be drawn or told here (DESIGN §8), and the change is not a softening but a
+simplification: the three FIND FOOD — the `cibus` R4 taught and the `frūmentum`
+R2 drew — and the lion takes all three parts of it. Nothing is hunted, nothing
+is killed, nobody is harmed, and **the fable's mechanism is untouched**: the
+strong partner's share is all of it, and the mōrāle says exactly what
+Phaedrus's says.
+
+**`rēx` WAS DELIBERATELY NOT USED HERE**, and the note is for the integrator
+rather than for the learner. The lion's obvious justification is `rēx sum`, and
+`rēx` is genuinely a good S9 word — but `content/_ledger-fabulae-part2.md`
+records R11 f32 (*Rānae Rēgem Petunt*) introducing it with a card built on
+`person role:'king'`, and that author was writing in parallel and could not know
+what R9 would do. R9 gives the lion `fortissimus sum` (R8's own superlative)
+instead, so R11's entry stays the first and only one and the merge needs no
+reconciliation.
+
+### f27 Mūrēs et Fēlēs — vocab cards (5), ONE new carded lexeme
+
+| lexeme | how |
+|---|---|
+| cōnsilium | vocab card, scene `v_consilium` (mice in a ring with speech between them). **Held out of SONUS and AENIGMATA** — it is three more mice. nova 💬, `g: mūrēs cōnsilium habent: mūrēs dīcunt et audiunt`. 6 uses |
+| tintinnābulum | nova 🔔, `g: tintinnābulum parvum est; tintinnābulum in fēle: mūrēs fēlem audiunt`. **NO CARD, NO SONUS, NO BOSS** — see the STOP-REPORT above. 3 uses, every one of them with the bell in a bubble |
+| facile · difficile | nova 👌 / 😓, `g: facile est cōnsilium dīcere; facile ↔ difficile` and `difficile ↔ facile: nēmō tintinnābulum in fēle pōnit`. **NEITHER HAS A CARD**: they are a pair of opposites and a card would have to be two pictures. 3 and 2 uses; `difficile` is a recorded call, and its third and fourth encounters are CORRIGE[3] and COMPLĒ[4] |
+| tacet | nova 🤐, `g: mūrēs nōn dīcunt: mūrēs tacent`. **NO CARD** — a picture of silence is a picture of mice. 3 uses (`tacuērunt` p13, `tacuit` p14, `tacēbant` p15) |
+| fēlēs · mūs · cāseus · mēnsa | **FREE** (R6 f16 / R2 f4 / R1 f2 / R6 f16), all four re-carded on **bgInterior**, which is a room with a window and is where mice and a cat and a table and a cheese belong. 8 · 7 · 3 · 3 uses |
+
+**AN ĪNFĪNĪTĪVUS THAT IS THE SUBJECT OF ITS OWN SENTENCE.** `facile est dīcere,
+difficile facere` is this fable's mōrāle in every language it has ever been told
+in, and there is no way to write it that does not put an infinitive in a
+nominative slot. **This is NOT accusative + īnfīnītīvus (S12):** there is no
+accusative subject and no verb of saying — it is the bare infinitive the learner
+has read after `potest`, `vult`, `dēbet` and `nōlī` since Regiō V, standing
+where a neuter noun would. It is PRE-TAUGHT one page before the mōrāle stands on
+it (p15 `dīcere facile erat, sed facere difficile erat`), which is R6 f18's
+`prīmum` device at the same range. **FLAGGED FOR LINE-AUDIT.**
+
+**`bonum` and `id` WERE BOTH CUT** from a late draft of p17: each had been
+glossed and then used exactly once — the defect R7 cut `terra` for and R8 cut
+`spectat` for. `Nēmō cōnsilium fēcit` does the work instead, on f26's own verb.
+`quia` was cut from f26 p7 for the same reason, and `eam` from f27 p9 (R6
+taught `eum`, `eōs`, `eī` and `eius`, never `eam`, and one page is not worth a
+new pronoun form).
+
+**B-RATING (DESIGN §8):** no mouse is caught on the page. The cat hunts and the
+mice run — `mūrēs fugiēbant`, `mūrēs fūgērunt` — and an animal that has run is
+simply somewhere else in the next frame, which is R7 f20's rule and this
+fable's own discretion.
+
+### Boss b_r09 · Lupus
+
+**THE WOLF'S THIRD DUEL.** The tuning steps once more and stops short of r10's,
+which the parallel author already shipped at hp 8 / 78 phase-seconds: hp 8 over
+74 (24 + 30 + 20), against r05's 72. Everything the phase engine tunes already
+scales off regionIndex (DESIGN §6); what content controls is LENGTH, and the
+extra four seconds all go to CLĀMOR, which is where this region's syntax lives.
+
+Hand-authored clāmor, five items, all three capitula represented. **Every frame
+carries a relative clause or the region's own 4th declension**: the gap stays a
+picturable noun (the BRIEF's rule) and the syntax does its work in the words
+around it, so the learner reads five relative clauses under time pressure.
+`tintinnābulum`, `pars`, `diēs`, `facile` and `difficile` are absent from the
+gap list on purpose — none of them has a card.
+
+**A CLĀMOR DEFECT THE GATE CAUGHT, and it is a new shape.** The second item
+read `____, quī gregem numerat, lupum invēnit.` — and the token to the RIGHT of
+the gap was `quī`, which this region's own Latin puts after `Lupus,` (f25 p6)
+and after `Mūs,` (f27 p7). **Both distractors were therefore standing exactly
+where the story stands them**, which is the one thing js/boss-phases.js checks
+derived items for. The lesson generalises: *in a region whose headline
+construction is a subordinator, the subordinator is a high-frequency right
+neighbour, and any gap placed immediately before it will collide with the
+region's own bigrams.* The frame was turned around to `____ lupum manū cēpit.`,
+which keeps the 4th declension and has no attested collision.
+
+**SHARED-PICTURE CHECK ACROSS CAPITULA (R7's rule, and this is the hardest case
+of it yet).** FOUR words are excluded from the boss quiz for it. `grex` is out
+because `pellis` is in — a white flock and a white hide are the same picture at
+96 px, and moving them to different backgrounds only fixes them INSIDE their
+own capitulum. `agnus` is out for the same reason. **`leō`, `fēlēs` and `mūs`
+are all out because `lupus` is in:** at 96 px a wolf, a lion, a cat and a mouse
+are four grey-or-tawny quadrupeds seen from the side, and only the lion's mane
+really separates them. What is left is five pictures that share nothing at all
+— a grey wolf on the plain, a white hide on dark stone, a green oak, a dish of
+food, and a yellow cheese in a room. Measured, not guessed.
+
+### Words a later region may now treat as FREE
+
+Everything above, plus the R1–R8 seed. Regiō X inherits: `pellis manus numerat`
+`albus cēlat socius pars facit inimīcus cōnsilium tintinnābulum facile`
+`difficile tacet diēs trēs prīma secunda tertia`, the **relative pronoun**
+(`quī quae quod quem`, singular and plural, with and without an antecedent),
+the **4th and 5th declensions** as full paradigms, and the bare **īnfīnītīvus
+as a subject**. Note for the merge with `_ledger-fabulae-part2.md`: **`pellis`
+is FIRST TAUGHT HERE**, in f25, and R10 f30's entry for it is the second
+exposure — that file's own head predicted this and says to keep the earlier
+entry.

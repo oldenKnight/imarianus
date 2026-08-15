@@ -1,0 +1,91 @@
+{
+  "_note": [
+    "Registration snippet — AUTHORING-BRIEF 'Registration protocol'. Content",
+    "agents do not touch content/manifest.js, content/manifest.json or",
+    "server/lib/rules.php; the integrator applies this and deletes the file.",
+    "",
+    "ORDER MATTERS: r09 is the NINTH region of the fabulae track and must sit",
+    "after r08 and before r10 in the manifest's regions array — js/app.js",
+    "regionIndex() reads that order and feeds it to the phase engine as the ONE",
+    "difficulty input (DESIGN §6). Apply r07, then r08, then r09, then r10.",
+    "",
+    "Regiō IX · Castra is a WOLF region. CURRICULUM §1 gives the same Lupus the",
+    "bosses of R1, R5, R9 and the R12 finale, so this block mirrors r05's rather",
+    "than r06/r07/r08's: hp 8 over 74 phase-seconds (24 caterva + 30 clamor + 20",
+    "fuga) against r05's 72, and short of the r10 block the parallel author",
+    "already shipped at hp 8 / 78. The extra seconds are all in CLAMOR, which is",
+    "where this region's syntax lives. Legacy single-phase tuning in the content",
+    "file is hp 8 / 52 s, kept because rules.php reads it and because a client",
+    "without js/boss-phases.js must still be able to fight.",
+    "",
+    "bossMinMs 15000 — the same floor every duel region uses (region1, r02-r08,",
+    "r10). The fight is LONGER than r08's, and a longer fight cannot be forged",
+    "FASTER: the phase seconds are ceilings, not durations, so the floor does",
+    "not move. This is the reasoning rules.php already records against r05.",
+    "",
+    "XP mirrors the fabulae track exactly: step 20 is the global default",
+    "(RULE_DEFAULT_STEP_XP) and is listed here only so the value is visible;",
+    "fight 30 and quizEach 10 with quizPassMaxWrong 1 are what r01-r08 use.",
+    "",
+    "quizKey carries the same {q, a} pair per row that r03-r08 use: rules.php",
+    "stores the question word and the vocab key that must be picked, so grading",
+    "never depends on the order the client drew the options in. For a word ->",
+    "pick-the-image quiz the answer IS the question word, and `correct` is",
+    "always 0 against the boss.quiz order in content/fabulae-r09.js.",
+    "",
+    "*** THREE CONTENT NOTES THE INTEGRATOR DOES NOT NEED TO ACT ON, recorded",
+    "so nothing here is 'corrected' back later.",
+    "(1) The obvious f25 words are `grex` and `agnus` and BOTH are deliberately",
+    "absent from the quiz: the boss quiz is the only screen that puts cards from",
+    "all three capitula on one board, and at 96 px a white flock, a white lamb",
+    "and the white `pellis` are one picture. `leō`, `fēlēs` and `mūs` are absent",
+    "for the same kind of reason against `lupus` — four grey-or-tawny quadrupeds",
+    "in profile. The five that remain share nothing at all.",
+    "(2) f26 ships SIX vocabulary cards and f27 ships FIVE, not eight: `pars`,",
+    "`tintinnābulum`, `facile`, `difficile`, `tacet`, `diēs`, `albus`, `cēlat`,",
+    "`facit` and `inimīcus` are all taught by GLOSS with no card, each for a",
+    "recorded reason (no bell exists in the art library; a picture of 'a part'",
+    "would be a picture of `frūmentum`; a picture of 'day' would be `sōl`).",
+    "(3) THE BOSS INTRO CANNOT COMPOSE THE FLEECE and none is requested here:",
+    "js/app.js bossScene() renders exactly one actor and content may override",
+    "only bg / sceneY / sceneScale / poses. The wolf-in-the-fleece is composed",
+    "in the clamor SCENES, which are full scene specs. Recorded as an engine",
+    "limitation, not a content gap. See content/_ledger-fabulae.md, Regiō IX. ***",
+    "",
+    "r09 is a NEW region: its content id IS its progressId, so it needs no",
+    "entry in rule_region_aliases()."
+  ],
+
+  "track": "fabulae",
+  "region": "r09",
+  "titulus": "Castra",
+  "ladder": "S9",
+  "progressId": "r09",
+  "capitula": ["f25", "f26", "f27"],
+  "boss": "b_r09",
+
+  "quizKey": [
+    { "q": "lupus",   "a": "lupus",   "correct": 0, "from": "f25" },
+    { "q": "pellis",  "a": "pellis",  "correct": 0, "from": "f25" },
+    { "q": "quercus", "a": "quercus", "correct": 0, "from": "f26" },
+    { "q": "cibus",   "a": "cibus",   "correct": 0, "from": "f26" },
+    { "q": "cāseus",  "a": "cāseus",  "correct": 0, "from": "f27" }
+  ],
+
+  "xp": {
+    "step": 20,
+    "boss": 30,
+    "quizEach": 10,
+    "quizPassMaxWrong": 1
+  },
+
+  "antiCheat": {
+    "bossMinMs": 15000
+  },
+
+  "manifestEntry": {
+    "id": "r09",
+    "capitula": ["f25", "f26", "f27"],
+    "boss": "b_r09"
+  }
+}
