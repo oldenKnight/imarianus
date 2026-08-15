@@ -813,10 +813,10 @@
             options: ['discēdit.', 'dat.', 'pōnit.'], correct: 0, scene: SC.f11_abUrna }
         ],
         comple: [
-          { text: 'Vulpēs lingu___ cibum dēvorat.', options: ['ā', 'a', 'am'], correct: 0, scene: SC.f11_lingua },
+          { text: 'Vulpēs lingu___ cibum dēvorat.', options: ['ā', 'ae', 'am'], correct: 0, scene: SC.f11_lingua },
           { text: 'Ciconia rōstr___ cibum capit.', options: ['ō', 'um', 'a'], correct: 0, scene: SC.f11_exUrna },
           { text: 'Ciconia rōstrō cibum ___ urnā capit.', options: ['ex', 'sub', 'cum'], correct: 0, scene: SC.f11_exUrna },
-          { text: 'Cibus in urn___ est.', options: ['ā', 'a', 'am'], correct: 0, scene: SC.f11_urnaAlta },
+          { text: 'Cibus in urn___ est.', options: ['ā', 'ae', 'am'], correct: 0, scene: SC.f11_urnaAlta },
           /* Regiō III's dative, carried forward as the ledger requires */
           { text: 'Vulpēs ciconi___ cēnam dat.', options: ['ae', 'a', 'ās'], correct: 0, scene: SC.f11_dat },
           { text: 'Posteā ciconia vulp___ cēnam dat.', options: ['ī', 'ēs', 'em'], correct: 0, scene: SC.f11_urna }

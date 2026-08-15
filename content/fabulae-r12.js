@@ -1097,7 +1097,7 @@
           { text: 'Canis dīcit ___ cotīdiē cibum dare.',
             options: ['dominum', 'dominus', 'dominō'], correct: 0, scene: SC.f36_rogat },
           { text: '___ vīsā, lupus iam nōn ambulat.',
-            options: ['Catēnā', 'Catēna', 'Catēnam'], correct: 0, scene: SC.f36_liber },
+            options: ['Catēnā', 'Catēnae', 'Catēnam'], correct: 0, scene: SC.f36_liber },
           { text: 'Catēnā ___, lupus in silvam redit.',
             options: ['vīsā', 'vidētur', 'vidēre'], correct: 0, scene: SC.f36_liber },
           { text: 'Lībertās ___ est.',

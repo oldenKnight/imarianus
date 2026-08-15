@@ -1176,7 +1176,7 @@
         ],
         comple: [
           { text: 'Septem nāvēs ad ___ ignōtam veniunt.',
-            options: ['ōram', 'ōra', 'ōrā'], correct: 0, scene: SC.a2_ora },
+            options: ['ōram', 'ōrae', 'ōrā'], correct: 0, scene: SC.a2_ora },
           { text: 'Sociī fess___ sunt.',
             options: ['ī', 'us', 'ās'], correct: 0, scene: SC.a2_fessi },
           { text: 'Aenēās Trōiānōrum ___ est.',

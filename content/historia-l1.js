@@ -872,7 +872,7 @@
             options: ['terrā', 'caelō', 'sōle'], correct: 0, scene: SC.h1_homo2 }
         ],
         comple: [
-          { text: 'Deus caelum et terr___ creat.', options: ['am', 'a', 'ā'], correct: 0, scene: SC.h1_initium },
+          { text: 'Deus caelum et terr___ creat.', options: ['am', 'ae', 'ā'], correct: 0, scene: SC.h1_initium },
           { text: 'Iam ___ est.', options: ['lūx', 'mare', 'homō'], correct: 0, scene: SC.h1_lux },
           { text: 'Deus ___ creat.', options: ['mare', 'marī', 'maris'], correct: 0, scene: SC.h1_mare },
           { text: 'Sōl in cael___ est.', options: ['ō', 'um', 'ī'], correct: 0, scene: SC.h1_sol2 },
@@ -1328,7 +1328,7 @@
         comple: [
           { text: 'Adam et Eva ___.', options: ['timent', 'timet', 'creant'], correct: 0, scene: SC.h4_timent },
           { text: 'Adam ___. Eva quoque latet.', options: ['latet', 'labōrat', 'exit'], correct: 0, scene: SC.h4_latent },
-          { text: 'Deus tunic___ dat.', options: ['am', 'a', 'ā'], correct: 0, scene: SC.h4_tunica },
+          { text: 'Deus tunic___ dat.', options: ['am', 'ae', 'ā'], correct: 0, scene: SC.h4_tunica },
           { text: 'Adam ___. Eva quoque exit.', options: ['exit', 'dormit', 'creat'], correct: 0, scene: SC.h4_exeunt },
           { text: 'Angelus hort___ custōdit.', options: ['um', 'ō', 'us'], correct: 0, scene: SC.h4_angelus },
           { text: 'Adam in terrā ___.', options: ['labōrat', 'latet', 'dormit'], correct: 0, scene: SC.h4_laborat }

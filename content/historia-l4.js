@@ -1079,7 +1079,7 @@
           { text: 'Ecce ___! In patinā cibus est.',
             options: ['patina', 'urna', 'scāla'], correct: 0, scene: SC.h18_patina },
           { text: 'Cibus in patin___ ruber est.',
-            options: ['ā', 'am', 'a'], correct: 0, scene: SC.h18_ruber },
+            options: ['ā', 'am', 'ae'], correct: 0, scene: SC.h18_ruber },
           { text: 'Cibus in patinā ___ est.',
             options: ['ruber', 'rubra', 'rubrum'], correct: 0, scene: SC.h18_ruber },
           { text: 'Ēsau cibum ___.',

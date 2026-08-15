@@ -1695,6 +1695,111 @@
       });
     });
 
+  /* ================= BUG-4 — the macron-homograph distractor =================
+     CONTENT.checkComple() grades through normWord(), which STRIPS MACRONS.
+     So a COMPLĒ/CORRIGE item whose options contain two forms that differ
+     only by a macron has a distractor that grades as CORRECT: shipped in
+     historia-l4 h18 as `Cibus in patin___ ruber est.` with options
+     ['ā','am','a'] — tapping the bare `a` passed. It was not one item: the
+     same shape had reached eleven items in six files, because "decline the
+     ending" is the natural thing to author and -a / -ā is the commonest
+     pair in the first declension.
+
+     This sweep is the guard. It reads the SHIPPED content (every region the
+     manifest declares, not a fixture) and normalises through CONTENT's OWN
+     exported normWord, so if the normaliser ever changes the test follows it
+     instead of drifting from it. The generators need no guard: their
+     distractor pickers already skip a candidate whose normWord equals the
+     answer's (content-loader.js, pickDistractors) — it is only the
+     hand-authored `overrides` that can express the collision. */
+  checkAsync('BUG-4', 'no shipped complē/corrige item has two options equal under macron-stripping',
+    function (done) {
+      if (!SERVED) { done(null); return; }
+      if (!CONTENT || typeof CONTENT.normWord !== 'function') {
+        done('CONTENT.normWord is no longer exported — this check must use the ' +
+             'SAME normaliser checkComple() grades with, never a copy of it');
+        return;
+      }
+      var mx = new XMLHttpRequest();
+      mx.open('GET', '../content/manifest.json', true);
+      mx.onreadystatechange = function () {
+        if (mx.readyState !== 4) { return; }
+        if (mx.status < 200 || mx.status >= 300) {
+          done('content/manifest.json did not load: HTTP ' + mx.status); return;
+        }
+        var man;
+        try { man = JSON.parse(mx.responseText); }
+        catch (e) { done('manifest is not valid JSON: ' + e.message); return; }
+
+        /* every (track, region) the manifest ships */
+        var want = [], t, r, i;
+        for (t = 0; t < (man.tracks || []).length; t++) {
+          for (r = 0; r < (man.tracks[t].regions || []).length; r++) {
+            want.push({ track: man.tracks[t].id, region: man.tracks[t].regions[r].id });
+          }
+        }
+        if (!want.length) { done('the manifest declares no regions at all'); return; }
+
+        /* CONTENT.loadRegion() resolves 'content/…' against the PAGE, and this
+           page lives in tests/, so the scripts are injected by hand with the
+           same '../content/' prefix the fixtures at the top of this file use.
+           Each file self-registers via CONTENT.registerRegion on evaluation. */
+        var left = want.length, failedSrc = null;
+        function loaded() {
+          left--;
+          if (left > 0) { return; }
+          if (failedSrc) { done('content file did not load: ' + failedSrc); return; }
+
+          var problems = [], i, c, s, k, j, n, seen, cap, items, it, reg;
+          var STEPS = ['comple', 'corrige'];
+          var scanned = 0;
+          for (i = 0; i < want.length; i++) {
+            reg = CONTENT.region(want[i].track, want[i].region);
+            if (!reg) { problems.push(want[i].track + '/' + want[i].region + ' registered nothing'); continue; }
+            for (c = 0; c < (reg.capitula || []).length; c++) {
+              cap = reg.capitula[c];
+              for (s = 0; s < STEPS.length; s++) {
+                items = (cap.overrides && cap.overrides[STEPS[s]]) || [];
+                for (k = 0; k < items.length; k++) {
+                  it = items[k];
+                  if (!it || !it.options || it.options.length < 2) { continue; }
+                  scanned++;
+                  seen = {};
+                  for (j = 0; j < it.options.length; j++) {
+                    n = CONTENT.normWord(it.options[j]);
+                    if (seen[n] !== undefined) {
+                      problems.push(want[i].region + '/' + cap.id + ' ' + STEPS[s] +
+                        ' "' + it.text + '" options [' + it.options.join(', ') +
+                        '] — "' + it.options[seen[n]] + '" and "' + it.options[j] +
+                        '" are both "' + n + '" after macron-stripping');
+                      break;
+                    }
+                    seen[n] = j;
+                  }
+                }
+              }
+            }
+          }
+          if (!scanned) { done('scanned 0 items — the walk stopped matching the content shape'); return; }
+          if (problems.length) { done(problems.length + ' collision(s): ' + problems.join(' | ')); return; }
+          done(null);
+        }
+
+        for (i = 0; i < want.length; i++) {
+          (function (w) {
+            if (CONTENT.region(w.track, w.region)) { loaded(); return; }  /* fixture already in */
+            var src = '../content/' + w.track + '-' + w.region + '.js';
+            var el = document.createElement('script');
+            el.src = src; el.async = false;
+            el.onload = loaded;
+            el.onerror = function () { failedSrc = src; loaded(); };
+            document.head.appendChild(el);
+          }(want[i]));
+        }
+      };
+      mx.send(null);
+    });
+
   runEngineQueue();      /* start the serialized engine tests */
   runNetQueue();         /* start the serialized offline-queue tests */
   finish();

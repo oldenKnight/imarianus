@@ -1388,7 +1388,7 @@
           { text: 'Pharaō ___ timēbat.',
             options: ['Hebraeōs', 'Hebraeī', 'Hebraeus'], correct: 0, scene: SC.h30_timebat },
           { text: 'Māter puerum in ___ mīsit.',
-            options: ['fiscellam', 'fiscella', 'fiscellā'], correct: 0, scene: SC.h30_misit },
+            options: ['fiscellam', 'fiscellae', 'fiscellā'], correct: 0, scene: SC.h30_misit },
           { text: 'Fiscella in flūmin___ est.',
             options: ['e', 'a', 'ēs'], correct: 0, scene: SC.h30_flumen },
           { text: '___ puerī stat et videt.',

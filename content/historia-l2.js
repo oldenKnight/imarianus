@@ -951,11 +951,11 @@
             options: ['intrant.', 'clāmant.', 'dormiunt.'], correct: 0, scene: SC.h7_noe }
         ],
         comple: [
-          { text: 'Noe arc___ aedificat.', options: ['am', 'a', 'ā'], correct: 0, scene: SC.h7_aedificat },
+          { text: 'Noe arc___ aedificat.', options: ['am', 'ae', 'ā'], correct: 0, scene: SC.h7_aedificat },
           { text: 'Arca in terrā ___.', options: ['est', 'sunt', 'intrat'], correct: 0, scene: SC.h7_arca },
           { text: 'Noe lignum ___.', options: ['videt', 'intrat', 'clāmat'], correct: 0, scene: SC.h7_lignum },
           { text: 'Ecce ___! Leō in arcam intrat.', options: ['leō', 'ursus', 'equus'], correct: 0, scene: SC.h7_leo },
-          { text: 'Ursus in arc___ intrat.', options: ['am', 'ā', 'a'], correct: 0, scene: SC.h7_ursus },
+          { text: 'Ursus in arc___ intrat.', options: ['am', 'ā', 'ae'], correct: 0, scene: SC.h7_ursus },
           { text: 'Leō et ursus in arcā ___.', options: ['sunt', 'est', 'intrat'], correct: 0, scene: SC.h7_intus1 }
         ]
       }
@@ -1097,7 +1097,7 @@
         ],
         comple: [
           { text: 'Ecce ___! Pluvia cadit.', options: ['pluvia', 'mōns', 'arca'], correct: 0, scene: SC.h8_pluvia },
-          { text: 'Pluvia in terr___ cadit.', options: ['am', 'ā', 'a'], correct: 0, scene: SC.h8_cadit },
+          { text: 'Pluvia in terr___ cadit.', options: ['am', 'ā', 'ae'], correct: 0, scene: SC.h8_cadit },
           { text: 'Aqua ___.', options: ['crēscit', 'cadit', 'natat'], correct: 0, scene: SC.h8_crescit },
           { text: 'Aqua mont___ operit.', options: ['em', 'ēs', 'is'], correct: 0, scene: SC.h8_mons },
           { text: 'Dīluvium mont___ operit.', options: ['ēs', 'em', 'is'], correct: 0, scene: SC.h8_montes },
