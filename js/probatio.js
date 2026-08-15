@@ -672,8 +672,15 @@ var Probatio = (function () {
     draw: function () {
       var env = this.env, ctx = env.ctx, i;
       if (!this.item) { return; }
+      /* labelled for the same reason clāmor's cards are — see the note in
+         js/boss-phases.js. The prompt is a gapped sentence, so reading the
+         three candidate WORDS is the exercise, not a shortcut past it; and
+         a 50 px picture cannot carry the distinction on its own (GAUNTLET
+         F7). `verbum` items, whose prompt IS the word, stay mute. */
+      var labelled = !this.item.verbum;
       for (i = 0; i < this.cards.length; i++) {
-        env.drawTile(this.cards[i].word, this.cards[i].x, this.cards[i].y, 58);
+        env.drawTile(this.cards[i].word, this.cards[i].x, this.cards[i].y, 58,
+                     { label: labelled });
       }
       var x = 8, y = env.TOP + 2, w = env.W - 16, h = 92;
       env.drawBanner(x, y, w, h);

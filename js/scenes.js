@@ -374,8 +374,14 @@ var Scenes = (function () {
        the words running out over the artwork on both sides. Nothing in SVG
        wraps text, so the two levers are a smaller font and textLength.
 
-       est is a cheap advance estimate: Palatino bold averages ~0.56em per
-       character across this corpus. When the estimate already fits the inner
+       est is a cheap advance estimate: Palatino bold averages ~0.585em per
+       character across this corpus. (It was 0.56 until the GAUNTLET pass
+       measured every shipped bubble against its rect: one line — 'Ūnum Deum
+       adōrā!' — set 1.5px wider than its box, which is exactly the margin
+       0.56 was under-reading by. 0.585 is the smallest coefficient that
+       leaves NO bubble wider than its rect, and it still leaves the emoji
+       bubbles an order of magnitude clear of the branch.) When the estimate
+       already fits the inner
        box (w minus the 5px stroke-and-breathing margin per side) NOTHING is
        emitted that was not emitted before — which is what keeps every short
        emoji bubble byte-identical: '😠' at fs 20 estimates 22px inside a 44px
@@ -385,7 +391,7 @@ var Scenes = (function () {
        the remainder, spacing and glyphs together so the letterforms stay
        even rather than the gaps collapsing. */
     var inner = w - 10;
-    var est = String(b.text).length * fs * 0.56;
+    var est = String(b.text).length * fs * 0.585;
     var fit = '';
     if (inner > 0 && est > inner) {
       fs = Math.max(7, fs * (inner / est));

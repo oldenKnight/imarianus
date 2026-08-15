@@ -754,8 +754,23 @@
     draw: function () {
       var env = this.env, ctx = env.ctx, i;
       if (!this.item) { return; }
+      /* LABELLED, like ordina's tiles (GAUNTLET F7). A clāmor card is a
+         58 px picture whose art box is 50 px, and at that size two of this
+         corpus's scenes can be one brown smudge apiece — the round became
+         "tap something and hope". The word under the picture is not a
+         giveaway here the way it would be in caterva or fuga: THERE the
+         prompt names the word and the picture is the answer, so a label
+         hands the round over. HERE the prompt is a sentence with a hole in
+         it and the player must decide which word FITS — reading the three
+         candidates is the exercise, and word+picture is the vocab card's
+         own identity (DESIGN §4).
+         The one exception is the `verbum` fallback, where no sentence was
+         derivable and the wolf shouts a bare word: that prompt does name
+         the answer, so its cards stay mute. */
+      var labelled = !this.item.verbum;
       for (i = 0; i < this.cards.length; i++) {
-        env.drawTile(this.cards[i].word, this.cards[i].x, this.cards[i].y, 58);
+        env.drawTile(this.cards[i].word, this.cards[i].x, this.cards[i].y, 58,
+                     { label: labelled });
       }
 
       /* the shout: full-width banner, scene at the left, gap marked in gold */

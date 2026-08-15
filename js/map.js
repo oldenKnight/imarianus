@@ -413,18 +413,78 @@ var WorldMap = (function () {
     return s;
   }
 
+  /* ---------- the numbered badge ----------
+
+     A Roman numeral is not one glyph wide. The board's own numbering now
+     reaches XLVIII (Aeneis a48) and LVIII (Historia h58), and six letters
+     set at the badge's own size are ~65 drawing units across — nearly twice
+     the 38-unit disc — so they ran out over the gold and past the diamond's
+     points. That is GAUNTLET F1.
+
+     Shrinking the font ALONE cannot fix it: squeezed inside the 38-unit
+     disc, XLVIII lands at 11 drawing units, which is 7 CSS px on a 375 px
+     phone — fitted and unreadable. So the badge is a CARTOUCHE, not a
+     circle: it grows sideways to whatever its numeral needs, up to the
+     width the tile's own top face can carry, and only when even that is not
+     enough does the font scale down (with textLength pinning the result,
+     the same belt-and-braces scenes.js uses on bubbles). A rounded rect of
+     width 2r and corner radius r IS the old circle, so every label of four
+     letters or fewer draws exactly the pixels it drew before. */
+
+  /* advance width in em of the seven numeral letters, in the bold
+     Palatino/Georgia the badge sets. Calibrated against a rendered XLVIII;
+     anything else (an emoji crown, a stray letter) takes the average. */
+  var NUM_EM = { I: 0.42, V: 0.78, X: 0.78, L: 0.68, C: 0.78, D: 0.82, M: 1.02 };
+
+  function numeralEm(label) {
+    var em = 0, i, c;
+    for (i = 0; i < label.length; i++) {
+      c = label.charAt(i).toUpperCase();
+      em += (NUM_EM[c] === undefined) ? 0.70 : NUM_EM[c];
+    }
+    return em;
+  }
+
+  /* how wide the numeral may be drawn, and at what size — the whole of F1
+     in one function, so a regression row can call it directly. */
+  function numeralFit(label, r, faceRx) {
+    var fs = r * 1.05;
+    var est = numeralEm(String(label)) * fs;
+    /* what the round badge carries: the disc plus its rim. */
+    var box = r * 2 + 3;
+    var fit = '';
+    if (est > box) {
+      /* grow the cartouche, but never past what the tile's top face is wide
+         at the height the text sits at (the diamond narrows fast) */
+      box = Math.min(est + r * 0.35, faceRx * 1.22);
+      if (est > box) {
+        fs = fs * (box / est);
+        fit = box;
+      }
+    }
+    return { w: box, fs: fs, squeeze: fit };
+  }
+
   function badge(n, big) {
     var r = big ? 22 : 19;
+    var faceRx = big ? BOSS.rx : TILE.rx;
     var s = '<g class="mm-badge">';
-    s += '<circle cx="0" cy="-1" r="' + r + '" fill="' + C.badge + '" stroke="' + C.badgeRim + '" stroke-width="2.5"/>';
+    var f = (n.state === 'shut')
+      ? { w: r * 2, fs: r * 1.05, squeeze: '' }
+      : numeralFit(n.label == null ? '' : n.label, r, faceRx);
+    /* rx = r, so at w = 2r this is the circle it has always been */
+    s += '<rect x="' + (-f.w / 2).toFixed(1) + '" y="' + (-1 - r) + '" width="' + f.w.toFixed(1) +
+         '" height="' + (r * 2) + '" rx="' + r + '" fill="' + C.badge +
+         '" stroke="' + C.badgeRim + '" stroke-width="2.5"/>';
     if (n.state === 'shut') {
       s += '<text x="0" y="' + (r * 0.34).toFixed(0) + '" text-anchor="middle" font-size="' +
            (r * 1.05).toFixed(0) + '" opacity="0.8">🔒</text>';
     } else {
       s += '<text x="0" y="' + (r * 0.36).toFixed(0) + '" text-anchor="middle" ' +
-           'font-family="Palatino, Georgia, serif" font-size="' + (r * 1.05).toFixed(0) +
-           '" font-weight="bold" fill="' + (n.state === 'done' ? C.badgeRim : C.cream) + '">' +
-           escXml(n.label) + '</text>';
+           'font-family="Palatino, Georgia, serif" font-size="' + f.fs.toFixed(1) +
+           '" font-weight="bold" fill="' + (n.state === 'done' ? C.badgeRim : C.cream) + '"' +
+           (f.squeeze ? ' textLength="' + f.squeeze.toFixed(1) + '" lengthAdjust="spacingAndGlyphs"' : '') +
+           '>' + escXml(n.label) + '</text>';
     }
     s += '</g>';
     return s;
@@ -683,5 +743,10 @@ var WorldMap = (function () {
     });
   }
 
-  return { render: render, bind: bind, TINTS: TINTS };
+  /* numeralFit is exported for the regression suite: GAUNTLET F1 is a
+     numbers fix, and a row that asserts the numbers beats one that squints
+     at a screenshot. TILE/BOSS go with it so a row can name the real geometry
+     instead of copying magic numbers that would rot the moment TILE changes. */
+  return { render: render, bind: bind, TINTS: TINTS,
+           numeralFit: numeralFit, TILE: TILE, BOSS: BOSS };
 })();
