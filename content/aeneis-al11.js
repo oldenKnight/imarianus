@@ -296,7 +296,12 @@
     /* ============ a41 · story ============ */
 
     a41_lux:    { bg: 'plain', items: [
-                  { t: 'sol', x: 320, y: 70, s: 1.0 },
+                  /* GAUNTLET F6: faceless here, in a41_dies and in
+                     a44_memoria. Liber XI opens on Pallās going home dead
+                     and spends its middle on the twelve-day truce for
+                     burying the fallen; it closes on Camilla. A funeral
+                     sun does not have a face. */
+                  { t: 'sol', x: 320, y: 70, s: 1.0, face: false },
                   heros(140, G, 1.45)
                 ] },
 
@@ -332,7 +337,7 @@
                 bubbles: [{ x: 200, y: 54, w: 54, h: 40, text: '❗', kind: 'speech', tail: 'right', fs: 22 }] },
 
     a41_dies:   { bg: 'plain', items: [
-                  { t: 'sol', x: 200, y: 68, s: 1.05 },
+                  { t: 'sol', x: 200, y: 68, s: 1.05, face: false },
                   { t: 'cityWall', x: 84,  y: G, s: 0.85 },
                   { t: 'tent', x: 316, y: G, s: 0.9 }
                 ] },
@@ -674,7 +679,7 @@
 
     a44_memoria: { bg: 'plain', items: [
                   camilla(196, G, 1.5, { spear: true }),
-                  { t: 'sol', x: 330, y: 72, s: 0.9 }
+                  { t: 'sol', x: 330, y: 72, s: 0.9, face: false }
                 ] }
   };
 

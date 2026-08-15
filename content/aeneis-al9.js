@@ -718,7 +718,11 @@
     /* versus II — nūlla diēs … memorī aevō: the sun that will rise on
        every one of those days, and the two of them still there */
     a36_versus2: { bg: 'plain', items: [
-                  { t: 'sol', x: 328, y: 74, s: 1.0 },
+                  /* GAUNTLET F6: faceless here and in a36_memoria below.
+                     These two frames are the elegy for Nīsus and Euryalus,
+                     both of them dead; the sun that will rise on every one
+                     of those days must not be smiling about it. */
+                  { t: 'sol', x: 328, y: 74, s: 1.0, face: false },
                   nisus(122, G, 1.28),
                   euryalus(204, G, 1.26, { flip: true })
                 ] },
@@ -729,7 +733,7 @@
                 ] },
 
     a36_memoria: { bg: 'plain', items: [
-                  { t: 'sol', x: 330, y: 72, s: 0.9 },
+                  { t: 'sol', x: 330, y: 72, s: 0.9, face: false },
                   nisus(130, G, 1.32, { pose: 'point' }),
                   euryalus(214, G, 1.3, { pose: 'point', flip: true })
                 ] }

@@ -594,8 +594,13 @@
                   { t: 'fire', x: 200, y: G, s: 1.45, pyre: true }
                 ] },
 
+    /* GAUNTLET F6: faceless here and in a16_aurora. This is the dawn the
+       fleet sails on, seen from the tower Dīdō is standing in — the frame
+       sits between v_rogus (the pyre) and v_respicit. The sun in it is the
+       one that will not wait for her, not a friendly one. (a14_mane keeps
+       its face: that sun is Carthage going up, and it is meant to be glad.) */
     v_aurora:   { bg: 'sea', items: [
-                  { t: 'sol',      x: 70,  y: 74, s: 1.05 },
+                  { t: 'sol',      x: 70,  y: 74, s: 1.05, face: false },
                   { t: 'palmTree', x: 300, y: G, s: 0.85 }
                 ] },
 
@@ -644,7 +649,7 @@
                 ] },
 
     a16_aurora: { bg: 'sea', items: [
-                  { t: 'sol',  x: 70,  y: 74, s: 1.05 },
+                  { t: 'sol',  x: 70,  y: 74, s: 1.05, face: false },
                   { t: 'ship', x: 232, y: 202, s: 0.95 },
                   { t: 'ship', x: 336, y: 216, s: 0.68 }
                 ] },

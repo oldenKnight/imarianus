@@ -567,9 +567,16 @@
                   { t: 'temple', x: 294, y: G, s: 1.0 }
                 ] },
 
+    /* GAUNTLET F6 — `face: false` on every sun in a48. The smiling sol is
+       the art library's FABLE sun: it argues with the wind in Regiō VIII
+       and it belongs there. These three scenes are the founding of Rome
+       and the poet's own proem, and a cartoon face grinning over the walls
+       is the one thing on the page that is not in the register the Latin
+       is written in. Same sun, no face; the option is the library's own
+       (ART2, and Historia Sacra already uses it for Gn 1). */
     a48_roma:   { bg: 'city', items: [
                   { t: 'temple', x: 296, y: G, s: 1.0 },
-                  { t: 'sol', x: 90, y: 70, s: 1.0 }
+                  { t: 'sol', x: 90, y: 70, s: 1.0, face: false }
                 ] },
 
     /* VERBA VERGILIĪ — the poet's own frame, a4's grammar exactly */
@@ -619,11 +626,11 @@
     a48_totum:  { bg: 'city', items: [
                   { t: 'temple', x: 300, y: G, s: 1.0 },
                   { t: 'columna', x: 92, y: G, s: 1.0 },
-                  { t: 'sol', x: 200, y: 66, s: 0.9 }
+                  { t: 'sol', x: 200, y: 66, s: 0.9, face: false }
                 ] },
 
     a48_finis:  { bg: 'city', items: [
-                  { t: 'sol', x: 200, y: 68, s: 1.05 },
+                  { t: 'sol', x: 200, y: 68, s: 1.05, face: false },
                   { t: 'temple', x: 300, y: G, s: 0.95 },
                   { t: 'cityWall', x: 92, y: G, s: 0.95 }
                 ] }

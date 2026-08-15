@@ -631,7 +631,12 @@
        picture with two meanings — the rule that keeps `star` and
        `angel` out of this track. */
     v_elysium:  { bg: 'plain', items: [
-                  { t: 'sol',     x: 306, y: 76, s: 1.05 },
+                  /* GAUNTLET F6: `face: false` on every sun in the ĪNFERĪ,
+                     here and in a24 below. Elysium's own sun (6,641) shines
+                     on the DEAD; the library's smiling fable-sun turns the
+                     land of the shades into a nursery poster, which is the
+                     same tonal error a48 was flagged for. */
+                  { t: 'sol',     x: 306, y: 76, s: 1.05, face: false },
                   { t: 'quercus', x: 108, y: G, s: 0.95 },
                   { t: 'tree',    x: 246, y: G, s: 0.62 }
                 ] },
@@ -655,14 +660,14 @@
     /* ============ a24 · story ============ */
 
     a24_campi:  { bg: 'plain', items: [
-                  { t: 'sol',     x: 316, y: 74, s: 1 },
+                  { t: 'sol',     x: 316, y: 74, s: 1, face: false },
                   { t: 'quercus', x: 96,  y: G, s: 0.9 },
                   sibylla(206, G, 1.2, { pose: 'walk' }),
                   heros(276, G, 1.2, { pose: 'walk', shield: false })
                 ] },
 
     a24_sol:    { bg: 'plain', items: [
-                  { t: 'sol',  x: 298, y: 72, s: 1.15 },
+                  { t: 'sol',  x: 298, y: 72, s: 1.15, face: false },
                   { t: 'tree', x: 110, y: G, s: 0.75 }
                 ] },
 
@@ -673,7 +678,7 @@
                 ] },
 
     a24_boni:   { bg: 'plain', items: [
-                  { t: 'sol', x: 60, y: 70, s: 0.9 },
+                  { t: 'sol', x: 60, y: 70, s: 0.9, face: false },
                   { t: 'crowdGroup', x: 230, y: G, s: 1, n: 5 }
                 ] },
 
@@ -760,7 +765,7 @@
                 ] },
 
     a24_reditus: { bg: 'plain', items: [
-                  { t: 'sol', x: 312, y: 76, s: 1 },
+                  { t: 'sol', x: 312, y: 76, s: 1, face: false },
                   sibylla(140, G, 1.24, { pose: 'walk' }),
                   heros(216, G, 1.26, { pose: 'walk', shield: false })
                 ] },
@@ -1293,11 +1298,19 @@
          and `Charōn` (a boat on water) are unmistakable and carry the
          sets. */
       sonus: [
+        /* GAUNTLET F8. This set used to offer `umbra` beside the answer, and
+           v_umbra and v_cerberus are BOTH the nightSky board — same stars,
+           same moon in the same corner, same ground band — so at the ~40 px
+           the sonus chips are drawn on a phone the two options were one blue
+           rectangle apiece, and the round came down to a coin toss. `lacus`
+           is a23's own vocabulary (it is on this capitulum's aenigmata grid)
+           and it is the mountain background, which cannot be mistaken for
+           either at any size. */
         { la: 'Cerberus',
           answer: { la: 'Cerberus', scene: SC.v_cerberus },
           options: [{ la: 'Cerberus', scene: SC.v_cerberus },
                     { la: 'Charōn', scene: SC.v_charon },
-                    { la: 'umbra', scene: SC.v_umbra }] },
+                    { la: 'lacus', scene: SC.v_lacus }] },
         { la: 'Charōn',
           answer: { la: 'Charōn', scene: SC.v_charon },
           options: [{ la: 'Charōn', scene: SC.v_charon },

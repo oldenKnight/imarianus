@@ -640,7 +640,11 @@
     /* versus I — stat sua cuique diēs: the sun, and one small figure
        under it. Every man has his day, and this is a day. */
     a40_versus1: { bg: 'plain', items: [
-                  { t: 'sol', x: 320, y: 72, s: 1.0 },
+                  /* GAUNTLET F6: faceless here and in a40_memoria below.
+                     "stat sua cuique diēs" is Iuppiter on the death of
+                     Pallās, and the second frame is Lausus dead at Aenēās's
+                     feet. Neither is a page for a smiling sun. */
+                  { t: 'sol', x: 320, y: 72, s: 1.0, face: false },
                   pallas(140, G, 1.3)
                 ] },
 
@@ -663,7 +667,7 @@
                 ] },
 
     a40_memoria: { bg: 'plain', items: [
-                  { t: 'sol', x: 328, y: 70, s: 0.9 },
+                  { t: 'sol', x: 328, y: 70, s: 0.9, face: false },
                   heros(122, G, 1.4, { shield: false }),
                   lausus(232, G, 1.15, { pose: 'kneel', shield: false, spear: false })
                 ] }
