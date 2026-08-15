@@ -478,7 +478,7 @@ h1, h2, h3 { font-family: var(--serif); }
   font-style: italic;
   font-size: 1.15rem;
   color: var(--cream-dim);
-  margin: 0.9rem auto 0;
+  margin: 0.9rem auto 1.1rem;   /* space under it too: the map button follows */
   max-width: 22em;
   padding: 0 0.6rem;
   overflow-wrap: break-word;

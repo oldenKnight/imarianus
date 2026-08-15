@@ -1139,6 +1139,13 @@
       name: 'Lupus Ultimus',
       actor: 'wolf',
       vinceText: 'Lupum vince!',
+      /* The last line of the whole Fabulae track. app.js draws boss.postWin
+         under "Vīcistī!" once the region is fully cleared (js/boss.js CONFIG,
+         "screen-only keys"), and this fight is the one place in thirty-six
+         fables that has an ending to give: the wolf of Regiōnēs I, V, IX and
+         XII is beaten and walks away FREE — not killed, which the B rating
+         would not have anyway (DESIGN §8). */
+      postWin: 'Lupus līber discēdit.',
       /* LEGACY single-phase tuning (rules.php reads it; a client without
          js/boss-phases.js must still be able to fight), kept lower than
          the phase sum exactly as r10 and r11 keep theirs */
