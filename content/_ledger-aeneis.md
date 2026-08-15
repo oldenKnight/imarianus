@@ -32,7 +32,7 @@ recycled **≥ 3×** inside its own capitulum. The shipped counts:
 | a3 Venus māter | 10 | a7 Trōia ārdet | 8 |
 | a4 Rēgīna Dīdō | 10 | a8 Fuga Aenēae | 8 |
 | a9 Errōrēs per maria | 7 | a15 Mercurius monet | 5 |
-| a10 Harpyiae | 7 | a16 Discessus et rogus | 5 |
+| a10 Harpyiae | 7 | a16 Discessus et rogus | 4 |
 | a11 Andromachē | 6 | a17 Lūdī Siciliēnsēs | 5 |
 | a12 Cyclōpēs | 6 | a18 Certāmen nāvium | 4 |
 | a13 Dīdō amōre capta | 6 | a19 Certāmen cursūs | 7 |
