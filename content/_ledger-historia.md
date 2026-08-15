@@ -44,7 +44,7 @@ plural is Liber II's target.
 | creat | vocab card, scene `v_creat`; nova `✨ ➡ 🌍`; **9 uses** — the spine of the capitulum |
 | caelum | vocab card, scene `v_caelum`; nova ☁ |
 | terra (terram, terrā) | vocab card, scene `v_terra`; nova 🌍 + morphology `terra, terram` |
-| lūx (lūcem) | vocab card, scene `v_lux` (light on a night ground); nova ✨ |
+| lūx (lūcem) | vocab card, scene `v_lux` (light on the dark water of Gn 1,2 — the `stormSea` ground, deliberately NOT `nightSky`, whose painted moon is not made until day IV); nova ✨ |
 | mare (marī) | vocab card, scene `v_mare`; nova 🌊 |
 | sōl (sōlem) | vocab card, scene `v_sol`; nova ☀ + morphology `sōl, sōlem` |
 | homō (hominem) | vocab card, scene `v_homo`; nova 👤 + morphology `homō, hominem` |
@@ -209,7 +209,7 @@ tongues), then glossed with the singular/plural pair.
 
 | lexeme | how |
 |---|---|
-| pluvia | vocab card, scene `v_pluvia`; nova 🌧, `g: aqua ē caelō`. **No rain actor exists** — the card is the stormSea background + `ventus` + the sign bubble (reported) |
+| pluvia | vocab card, scene `v_pluvia`; nova 🌧, `g: aqua ē caelō`. **No rain ACTOR exists**, but `bgStormSea` paints falling rain itself, so the rain is genuinely pictured; the card adds `ventus` and the sign bubble to make it a composition rather than a bare backdrop (reported) |
 | aqua (aquam, aquā) | vocab card, scene `v_aqua` (a SPRING, `fons` — deliberately not the open sea, which is `mare` from h1); nova 💧 |
 | dīluvium | vocab card, scene `v_diluvium`; nova 🌊, `g: aqua omnem terram operit` |
 | mōns (montem, montēs, monte) | vocab card, scene `v_mons`; nova ⛰ + morphology `mōns, montem, montēs` |
