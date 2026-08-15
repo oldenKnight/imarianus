@@ -1648,12 +1648,21 @@
               answer: 'classis',
               options: ['classis', 'turris', 'aurōra'],
               scene: SC.a15_classis },
-            /* the adjective agrees with `animus`, and only one card is
-               an adiectīvum at all */
-            { text: 'Ventīs pulsantibus, animus ducis ____ manet.',
-              answer: 'immōtus',
-              options: ['immōtus', 'vigilat', 'properat'],
-              scene: SC.a15_immotus },
+            /* abl. abs.: the god has spoken, so the man who was
+               building someone else's city now does the opposite of
+               a13's `cessat`.
+               NOTE FOR THE AUDIT: the obvious item here was the oak —
+               "Ventīs pulsantibus, animus ducis ____ manet" with
+               `immōtus` — and it was CUT, because `immōtus` is the
+               region's only adiectīvum and every distractor available
+               to it is a verbum, which js/boss-phases.js rightly warns
+               "can be ruled out without reading the Latin". The oak
+               keeps its drill in a15's CORRIGE and COMPLĒ, where the
+               distractors are its own endings. */
+            { text: 'Deō monente, dux ipse ad nāvēs ____.',
+              answer: 'properat',
+              options: ['properat', 'vigilat', 'mōnstrat'],
+              scene: SC.a15_properant },
             { text: 'Rēgīnae ____ maximus est, sed dux abīre dēbet.',
               answer: 'dolor',
               options: ['dolor', 'rogus', 'vēlum'],

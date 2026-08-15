@@ -1516,7 +1516,11 @@
               scene: SC.a19_praemia },
             /* abl. abs. + the liber's moral: who comes first when the
                fastest man is on the ground */
-            { text: 'Nīsō lāpsō, ____ eius prīmus ad fīnem venit.',
+            /* `eius` was the first draft's word here and js/boss-phases.js
+               caught it: a18 attests "gubernātor eius", so the distractor
+               sat in the gap's own context. `fidēlis` collocates with the
+               answer and with nothing else in the liber. */
+            { text: 'Nīsō lāpsō, ____ fidēlis prīmus ad fīnem venit.',
               answer: 'amīcus',
               options: ['amīcus', 'gubernātor', 'iuvenis'],
               scene: SC.a19_cadit },
