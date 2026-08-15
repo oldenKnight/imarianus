@@ -943,6 +943,11 @@
          R1/R5/R9/R12 — CURRICULUM §1 — so R2 gets its own beast) */
       name: 'Leō',
       actor: 'leo',
+      /* js/app.js bossVinceText(): "Lupum vince!" is the right line for a
+         wolf and the wrong one for a lion, and a Latin accusative cannot be
+         derived from a nominative safely — so the content supplies its own.
+         Without this the header falls back to the objectless generic line. */
+      vinceText: 'Leōnem vince!',
       /* LEGACY single-phase tuning, kept for the same two reasons r01 keeps
          it: server/lib/rules.php derived rule_boss_min_ms('r02') from these
          numbers, and a client without js/boss-phases.js must still be able

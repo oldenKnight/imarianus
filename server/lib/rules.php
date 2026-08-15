@@ -425,12 +425,16 @@ function rule_region_of($fable) {
    record than to reject a real child's genuinely fast run). */
 function rule_boss_min_ms($regionId) {
   $map = array(
-    // region1 = the three-phase Lupus duel (25 s + 30 s + 20 s of phases);
-    // even a perfect run cannot finish the three phases under ~20 s.
-    'region1' => 20000,
-    // r02 = the Leō duel, tuned identically to region1 (hp 6 / 45 s),
-    // so the same floor applies.
-    'r02' => 20000,
+    // region1 = the three-phase Lupus duel. The phases as CONTENT ACTUALLY
+    // SHIPS them are 22 s + 28 s + 20 s (content/fabulae-r01.js), not the
+    // 25/30/20 an earlier draft of this comment quoted. A phase ENDS the
+    // moment its hp is dealt, so those seconds are CEILINGS, not durations:
+    // three clean phases at a few seconds each is a fast child, not a
+    // forgery, and 20 s was rejecting real runs. 15 s is the floor.
+    'region1' => 15000,
+    // r02 = the Leō duel, tuned identically to region1 (hp 6 / 45 s, the
+    // same 22/28/20 phases), so the same floor applies.
+    'r02' => 15000,
     // l2 = the Arca PROBĀTIŌ (js/probatio.js): ONE 'ordina' phase, hp 6 /
     // 45 s. Six items have to DRIFT down and be caught, and the spawn
     // interval at regionIndex 1 is ~1.5 s, so the trial is floored by the
