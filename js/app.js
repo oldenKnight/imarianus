@@ -886,6 +886,52 @@
     return 'wolf';
   }
 
+  /* ---- how big the boss should be drawn in its own intro frame ----
+     Every boss is ONE actor on the shared 400x240 stage, and the actors are
+     not the same size: the wolf's artwork is 80 units tall, the hare's is 46
+     and the ox's is well over 100. A single fixed scale therefore gave Lupus
+     a portrait and Lepus a speck in the middle of an empty field. Scale from
+     the actor's OWN height instead, so every region's intro card frames its
+     boss the same way.
+
+     Scenes keeps its bounds table private, but sprite() writes exactly those
+     bounds into the viewBox of the SVG it returns — so the measurement is
+     read back from the one string we already know how to build, rather than
+     duplicated here where it would silently rot when art changes. */
+  function actorBounds(name, pose) {
+    if (!window.Scenes || !Scenes.sprite) { return null; }
+    var m;
+    try {
+      m = /viewBox="(-?[0-9.]+)\s+(-?[0-9.]+)\s+(-?[0-9.]+)\s+(-?[0-9.]+)"/
+        .exec(Scenes.sprite(name, { pose: pose }, 100));
+    } catch (e) { return null; }
+    if (!m) { return null; }
+    return { x: +m[1], y: +m[2], w: +m[3], h: +m[4] };
+  }
+
+  /* the share of the frame's height the boss should occupy: big enough to be
+     a portrait, small enough to leave sky above and ground below. */
+  var BOSS_FILL = 0.60;
+
+  function bossSceneScale(actor, pose, sceneY) {
+    var b = actorBounds(actor, pose);
+    /* no bounds (no art library, or an unregistered actor): keep the old
+       hand-tuned defaults rather than guessing. */
+    if (!b || !b.h || !b.w) { return (actor === 'wolf') ? 1.3 : 1.0; }
+    var s = (Scenes.H * BOSS_FILL) / b.h;
+    /* three ceilings, all of them "do not crowd the stage":
+         width  — never wider than 82% of the frame;
+         height — the art above the actor's ground point must fit above
+                  sceneY and still leave a seventh of the frame as sky. This
+                  is what keeps the wolf civil: it stands on a RIVER BANK at
+                  y=155, not on the ground at y=210, so 60% of the frame would
+                  put its ears against the top edge;
+         sanity — no actor is ever blown up past 3x its drawn size. */
+    s = Math.min(s, (Scenes.W * 0.82) / b.w);
+    if (b.y < 0) { s = Math.min(s, (sceneY - Scenes.H * 0.14) / (-b.y)); }
+    return Math.max(0.5, Math.min(s, 3));
+  }
+
   /* one illustrated frame of the boss, for the intro and the defeat screen.
      Content may override every choice (bg / sceneY / sceneScale / pose);
      the defaults are what made Regiō I look right. */
@@ -897,8 +943,10 @@
        in a river scene is standing in the water. */
     var y = (typeof b.sceneY === 'number') ? b.sceneY
           : (bg === 'river' ? 155 : Scenes.GROUND);
+    /* authored sceneScale always wins: content that has been eyeballed beats
+       anything derived. */
     var s = (typeof b.sceneScale === 'number') ? b.sceneScale
-          : (actor === 'wolf' ? 1.3 : 1.0);
+          : bossSceneScale(actor, pose, y);
     return Scenes.render({ bg: bg, items: [{ t: actor, x: 200, y: y, pose: pose, s: s }] });
   }
   /* the dramatic pose for the intro, and the sprite pose for the fight
@@ -1170,6 +1218,17 @@
     ask();
   }
 
+  /* OPTIONAL narrative coda on the victory screen. A region may close its own
+     story with one line of Latin — r12's `postWin: 'Lupus līber discēdit.'`
+     lets the Fabulae finale end with the wolf walking away free instead of
+     with a bare "Vīcistī!". It is CONTENT, never generated: no Latin sentence
+     is safe to invent from a boss name (see bossVinceText above for the same
+     rule applied to the challenge line). Absent ⇒ nothing is drawn. */
+  function bossPostWin() {
+    var b = (CUR.region && CUR.region.boss) || {};
+    return (typeof b.postWin === 'string' && b.postWin) ? b.postWin : '';
+  }
+
   function showBossResult(nodeId, won) {
     renderTopbar(false);
     var fullyClear = bossCleared();
@@ -1178,6 +1237,9 @@
       html += '<p class="euge">' + esc(DATA.MAP_UI.vicisti) + ' 👑</p>' +
         '<figure class="mascot">' + Scenes.mascot(96) + '</figure>' +
         '<p class="bonus">+30 ⭐</p>';
+      if (bossPostWin()) {
+        html += '<p class="post-win">' + esc(bossPostWin()) + '</p>';
+      }
     } else if (won) {
       /* won the fight but quiz not yet passed, or vice-versa */
       html += '<p class="euge">' + esc(UI.euge) + ' 🎉</p>' +
