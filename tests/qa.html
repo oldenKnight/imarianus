@@ -10,9 +10,18 @@
         qa.html?screen=landing   logged-out landing page
         qa.html?screen=doors     the three doors (home)
         qa.html?screen=historia  the Historia Sacra map (Liber I)
-        qa.html?screen=mox       a track still in fabricā (now Aeneis: as of
-                                 the L1/L2 registration Historia is a REAL
-                                 door and no longer reaches the MOX screen)
+        qa.html?screen=mox       NO TRACK REACHES THIS SCREEN ANY MORE. The
+                                 MOX screen is what a door with an empty
+                                 `regions` array opens, and as of the AL1/AL2
+                                 registration all three tracks ship content:
+                                 Fabulae r01-r12, Historia l1-l8, Aeneis
+                                 al1-al2. Historia stopped reaching it at the
+                                 L1/L2 registration and Aeneis has now
+                                 followed. The route below still opens the
+                                 Aeneis door, which lands on the al1 MAP; it
+                                 is kept so the URL does not 404, and it warns
+                                 in the console. Re-point it at the next
+                                 track that is added empty.
         qa.html?screen=ordo      leaderboard (empty-board state)
         qa.html?screen=map       the overworld board
         qa.html?screen=cap       capitulum step list (f2)
@@ -90,10 +99,14 @@
       window.__QA_CAP = (q.match(/cap=([a-z0-9]+)/) || [])[1] || '';
       window.__QA_PAGE = parseInt((q.match(/page=([0-9]+)/) || [])[1] || '0', 10);
       /* which DOOR the route walks through. Explicit &track= wins; otherwise
-         a Historia screen or a Historia region id (l1, l2, …) implies it. */
+         the region id implies it. Test `al…` BEFORE `l…`: the Aeneis ids are
+         al1/al2 (rules.php keys regions in one flat namespace, so they cannot
+         be l1/l2 — those are Historia's), and /^l[0-9]/ does not match them
+         but a careless /l[0-9]/ would. */
       window.__QA_TRACK = (q.match(/track=([a-z]+)/) || [])[1] ||
-        ((window.__QA_SCREEN === 'historia' || /^l[0-9]/.test(window.__QA_REGION))
-          ? 'historia' : 'fabulae');
+        (/^al[0-9]/.test(window.__QA_REGION) ? 'aeneis'
+          : ((window.__QA_SCREEN === 'historia' || /^l[0-9]/.test(window.__QA_REGION))
+            ? 'historia' : 'fabulae'));
 
       /* f1 finished, f2 in progress. A step is only reachable when the one
          before it is done, so unlock f2 UP TO whichever step was asked for —
@@ -122,15 +135,17 @@
       };
       /* The boss node only opens once EVERY capitulum of its region is done.
          EVERY shipped region is covered at once — this seed runs before the
-         manifest is even parsed, so the list is spelled out: fabulae f1–f18
-         (r01–r06) and historia h1–h22 (l1–l4). l1 has no boss at all, which
-         is the point of the Historia map shot: finishing it must NOT grow a
-         crown. Extend this range whenever a wave registers a new region. */
+         manifest is even parsed, so the ranges are spelled out: fabulae
+         f1–f36 (r01–r12), historia h1–h50 (l1–l8) and aeneis a1–a8
+         (al1–al2). l1 has no boss at all, which is the point of the Historia
+         map shot: finishing it must NOT grow a crown. Extend these ranges
+         whenever a wave registers a new region. */
       if (window.__QA_SCREEN === 'boss' || window.__QA_SCREEN === 'probatio' ||
           window.__QA_SCREEN === 'bossintro') {
         state.completed = {};
-        for (var fi = 1; fi <= 18; fi++) { state.completed['f' + fi] = DONE; }
-        for (var hi = 1; hi <= 22; hi++) { state.completed['h' + hi] = DONE; }
+        for (var fi = 1; fi <= 36; fi++) { state.completed['f' + fi] = DONE; }
+        for (var hi = 1; hi <= 50; hi++) { state.completed['h' + hi] = DONE; }
+        for (var ai = 1; ai <= 8; ai++) { state.completed['a' + ai] = DONE; }
         state.mapNode = 'b_' + (window.__QA_REGION || 'r01');
       }
       /* &cap=X: everything before X is finished and X itself is unlocked up
@@ -138,8 +153,9 @@
          gives f2, just moved. Only applies when the knob is used. */
       if (window.__QA_CAP) {
         var all = {}, ci;
-        for (ci = 1; ci <= 18; ci++) { all['f' + ci] = DONE; }
-        for (ci = 1; ci <= 22; ci++) { all['h' + ci] = DONE; }
+        for (ci = 1; ci <= 36; ci++) { all['f' + ci] = DONE; }
+        for (ci = 1; ci <= 50; ci++) { all['h' + ci] = DONE; }
+        for (ci = 1; ci <= 8; ci++) { all['a' + ci] = DONE; }
         all[window.__QA_CAP] = f2;
         state.completed = all;
         state.mapNode = window.__QA_CAP;
@@ -269,11 +285,22 @@
          'fabulae' spelled into it. */
       var DOOR = '.door-' + window.__QA_TRACK;
       var FIRST_CAP = window.__QA_CAP ||
-        ((window.__QA_TRACK === 'historia') ? 'h1' : 'f2');
+        ((window.__QA_TRACK === 'historia') ? 'h1'
+          : (window.__QA_TRACK === 'aeneis') ? 'a1' : 'f2');
 
-      /* Historia is a live door now (content/manifest.js), so screen=mox has
-         to ask a track that is still empty — Aeneis is the last one left. */
+      /* THERE IS NO LONGER AN EMPTY TRACK. Historia stopped being one at the
+         L1/L2 registration and Aeneis stopped at AL1/AL2, so nothing in
+         content/manifest.js opens the MOX screen any more. The route is kept
+         (a QA URL that 404s is worse than one that lands somewhere sensible)
+         but it now reaches the Aeneis MAP, not MOX, and it says so rather
+         than letting a screenshot be quietly mislabelled. */
       if (target === 'mox') {
+        if (window.console && console.warn) {
+          console.warn('qa.html?screen=mox: no track has an empty `regions` ' +
+            'array any more — every door is live. This opens the AENEIS MAP ' +
+            '(al1), not the MOX screen. Re-point this route when a track is ' +
+            'next added empty.');
+        }
         when('.door-aeneis', tap);
         return;
       }
