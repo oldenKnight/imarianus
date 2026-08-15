@@ -1,0 +1,70 @@
+{
+  "_note": [
+    "Registration snippet — AUTHORING-BRIEF 'Registration protocol'. Content",
+    "agents do not touch content/manifest.js, content/manifest.json or",
+    "server/lib/rules.php; the integrator applies this and deletes the file.",
+    "",
+    "APPLY AFTER al8: al9 is the NINTH region of the aeneis track and must",
+    "follow al1..al8 in the manifest's regions array — js/app.js regionIndex()",
+    "reads that order and feeds it to the phase engine as the ONE difficulty",
+    "input (DESIGN §6). al6, al7 and al8 are authored by a parallel agent; if",
+    "they have not landed when this is applied, HOLD al9 rather than inserting",
+    "it at index 5, which would tune it as if it were Liber VI.",
+    "",
+    "al9 is a PROBĀTIŌ liber (kind: 'probatio', boss id b_al9) with TWO",
+    "SENTENTIA phases: sententia (hp 5 / 55 s) + sententia (hp 5 / 55 s) — the",
+    "al4 shape, because al4 is the track's other liber built on a death and the",
+    "two should tune alike. Neither phase sorts or steers: this liber's trial is",
+    "reading. Legacy single-phase tuning in the content file is hp 10 / 110 s.",
+    "bossMinMs 15000 matches l2/l3/al1..al5.",
+    "",
+    "Both phases declare their own `items` (6 each, hand-authored per",
+    "AUTHORING-BRIEF 'Boss clamor/sententia items'), so js/probatio.js never",
+    "reaches its derivation fallback. Nothing here for rules.php to know.",
+    "",
+    "quizKey carries the same three keys per row as al1-al5: rules.php stores",
+    "{q, a}, and `correct` is always 0 against the boss.quiz order in",
+    "content/aeneis-al9.js. Region id 'al9', not 'l9' — rules.php keys regions",
+    "in one flat namespace and 'l9' is Historia's (see a-l1.reg.json). NOTE for",
+    "the integrator: a Historia Sacra Liber IX is landing in the same wave, so",
+    "this collision is live and not theoretical.",
+    "",
+    "al9 is a NEW region: its content id IS its progressId, so it needs no",
+    "entry in rule_region_aliases().",
+    "",
+    "XP mirrors al1-al5 exactly."
+  ],
+
+  "track": "aeneis",
+  "region": "al9",
+  "titulus": "Amīcitia",
+  "ladder": "S12",
+  "progressId": "al9",
+  "capitula": ["a33", "a34", "a35", "a36"],
+  "boss": "b_al9",
+
+  "quizKey": [
+    { "q": "Turnus",   "a": "Turnus",   "correct": 0, "from": "a33" },
+    { "q": "amīcitia", "a": "amīcitia", "correct": 0, "from": "a34" },
+    { "q": "lūna",     "a": "lūna",     "correct": 0, "from": "a34" },
+    { "q": "virtūs",   "a": "virtūs",   "correct": 0, "from": "a35" },
+    { "q": "carmen",   "a": "carmen",   "correct": 0, "from": "a36" }
+  ],
+
+  "xp": {
+    "step": 25,
+    "boss": 40,
+    "quizEach": 10,
+    "quizPassMaxWrong": 1
+  },
+
+  "antiCheat": {
+    "bossMinMs": 15000
+  },
+
+  "manifestEntry": {
+    "id": "al9",
+    "capitula": ["a33", "a34", "a35", "a36"],
+    "boss": "b_al9"
+  }
+}
