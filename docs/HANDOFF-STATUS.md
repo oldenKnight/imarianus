@@ -93,5 +93,7 @@ Owner is away often; proceed autonomously; PushNotification only when blocked.
   "http://localhost:8124/tests/qa-frame.html?w=375&screen=<name>".
 - Session-limit deaths: agents die in groups at the account cap; relaunch
   after reset (check clock), preserve uncommitted work via a finisher agent.
+  STANDING OWNER PERMISSION (2026-08-14): auto-restart everything after any
+  usage wall, no confirmation needed. No PC migration planned.
 - Agent transcripts expire fast — put full assignments in prompts, not
   follow-ups; audit fixes go to a NEW agent if resume fails.
