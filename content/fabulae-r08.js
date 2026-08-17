@@ -550,10 +550,21 @@
                  ] },
     /* flat: the cloud AND what its gusts do, so the card is the blowing
        and not the wind. One more cloud than `ventus` — held out of
-       SONUS and AENIGMATA. */
+       SONUS and AENIGMATA.
+
+       GAP (region sweep): this card used to blow a BENT REED, and f23's
+       `flectit` is the wind bending a reed too — same background, same two
+       actors, the same `bend` flag. Inside f22 nothing could see it, because
+       `flectit` lives in f23; the boss of Regiō VIII draws its caterva, its
+       clāmor cards and its quiz options from the WHOLE region's vocabulary,
+       so the two met there as one picture. The reed was never f22's anyway
+       (there is no harundō in Ventus et Sōl); the gusts now strip a bare
+       tree, which is f22's own winter — `hiems` is on this very card list —
+       and `arbor` keeps the leafy `tree`, so the two cannot be confused
+       either. No Latin moved. */
     v_flat:      { bg: 'plain', items: [
-                   { t: 'ventus',  x: 96,  y: 152, s: 1.35 },
-                   { t: 'harundo', x: 292, y: G,   s: 1, bend: true }
+                   { t: 'ventus',    x: 96,  y: 152, s: 1.35 },
+                   { t: 'arborNuda', x: 292, y: G,   s: 1.05 }
                  ] },
     v_arbor:     { bg: 'plain', items: [{ t: 'tree', x: 200, y: G, s: 1.15 }] },
     /* hiems: the SEASON and nothing in it (the r06 v_urbs device) */

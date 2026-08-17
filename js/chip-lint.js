@@ -401,6 +401,123 @@ var CHIP = (function () {
     return res;
   }
 
+  /* ============================================================
+     GAP: the REGION-WIDE pools
+
+     THE HOLE THIS BLOCK CLOSES. Every sweep above walks ONE capitulum at a
+     time, because every screen above is one capitulum's screen. The BOSS is
+     not. app.js bossWords() unions the vocabulary of the WHOLE region — every
+     capitulum, deduplicated by `la` — and hands that one list to the engine as
+     env.words, from which
+
+       caterva   spawns its falling tiles (any word, any frame)
+       fuga      spawns its counter-word tiles
+       clamor    draws the distractors for its gapped sentences
+       ordina / transitus / sententia   (js/probatio.js, same env.words)
+       the boss quiz   picks two distractors per question (js/app.js ask())
+
+     all draw. So two look-alike words from DIFFERENT capitula of one region
+     never met on a capitulum screen and could not be flagged — and then met,
+     unswept, in the air of the boss arena, where there is no picture→word
+     flip to fall back on and a wrong catch costs a heart.
+
+     The machinery is the machinery: same fingerprints, same comparePair, same
+     CRITICAL/WARN semantics. Only the POOL is new.
+
+     THE DEDUPE IS PART OF THE RULE, not an optimisation. bossWords() keeps the
+     FIRST entry for a given `la` and drops later ones, so two capitula that
+     both teach `agnus` over different art put exactly one of them in the
+     arena. A sweep that skipped the dedupe would report a critical pair that
+     can never co-occur — and, worse, would go on reporting it after the
+     content was "fixed".
+     ============================================================ */
+
+  /* the region-wide boss pool — exactly app.js bossWords(). */
+  function regionPool(region) {
+    var out = [], seen = {}, caps = (region && region.capitula) || [];
+    var i, j, vocab, v;
+    for (i = 0; i < caps.length; i++) {
+      vocab = (caps[i] && caps[i].vocab) || [];
+      for (j = 0; j < vocab.length; j++) {
+        v = vocab[j];
+        if (!v || !(v.emoji || v.scene)) { continue; }
+        if (Object.prototype.hasOwnProperty.call(seen, v.la)) { continue; }
+        seen[v.la] = true;
+        out.push(v);
+      }
+    }
+    return out;
+  }
+
+  /* Every REGION-level option set, so the sweep and the runtime see the same
+     inventory. Returns [{ step, item, options }] in the shape optionSets()
+     uses, one row per genuinely distinct pool.
+
+     The boss quiz gets its own row ONLY when its option universe differs from
+     the arena's. Today it cannot: ask() picks its two distractors from the
+     same bossWords() list, so the quiz's co-occurrence set IS the pool and a
+     second identical row would double every flag. The row is emitted anyway
+     when a quiz names a word the pool does not carry — that word is dropped by
+     findWord() at runtime, and a sweep that silently agreed would hide it. */
+  function regionSets(region) {
+    var out = [], pool = regionPool(region), i;
+    if (pool.length >= 2) {
+      out.push({ step: 'boss', item: 'region pool', options: pool });
+    }
+    /* the quiz's own resolved questions, for the diagnostic above */
+    var quiz = (region && region.boss && region.boss.quiz) || [];
+    var missing = [];
+    for (i = 0; i < quiz.length; i++) {
+      if (!quiz[i] || !quiz[i].la) { continue; }
+      if (!inPool(pool, quiz[i].la)) { missing.push(quiz[i].la); }
+    }
+    if (missing.length) {
+      out.push({ step: 'quiz', item: 'unresolved: ' + missing.join(', '), options: [] });
+    }
+    return out;
+  }
+
+  function inPool(pool, la) {
+    var i;
+    for (i = 0; i < pool.length; i++) { if (pool[i].la === la) { return true; } }
+    return false;
+  }
+
+  /* the whole-product REGION sweep, in one call so the regression page and any
+     future authoring tool ask the identical question. `regionList` is a list of
+     region definitions (what CONTENT.region() returns), each optionally
+     carrying an `id` used only to name a flag. Returns
+       { regions, pools, words, critical, warn, unresolved,
+         flags:[{region, set, level, a, b, why}] } */
+  function lintRegions(regionList) {
+    var res = { regions: 0, pools: 0, words: 0, critical: 0, warn: 0,
+                unresolved: [], flags: [] };
+    var i, s, j, reg, name, sets, lint, f;
+    for (i = 0; i < (regionList || []).length; i++) {
+      reg = regionList[i];
+      if (!reg) { continue; }
+      res.regions++;
+      name = reg.id || reg.progressId || ('#' + (i + 1));
+      sets = regionSets(reg);
+      for (s = 0; s < sets.length; s++) {
+        if (sets[s].step === 'quiz') {
+          res.unresolved.push(name + ' ' + sets[s].item);
+          continue;
+        }
+        res.pools++;
+        res.words += sets[s].options.length;
+        lint = lintOptions(sets[s].options);
+        for (j = 0; j < lint.flags.length; j++) {
+          f = lint.flags[j];
+          if (f.level === 'critical') { res.critical++; } else { res.warn++; }
+          res.flags.push({ region: name, set: sets[s].step, level: f.level,
+                           a: f.a, b: f.b, why: f.why });
+        }
+      }
+    }
+    return res;
+  }
+
   return {
     soloActor: soloActor,
     actorKey: actorKey,
@@ -412,6 +529,10 @@ var CHIP = (function () {
     visuals: visuals,
     /* LUDUS: the fox-catcher's falling pool */
     ludusPool: ludusPool,
-    lintLudus: lintLudus
+    lintLudus: lintLudus,
+    /* GAP: the boss arena's region-wide pool */
+    regionPool: regionPool,
+    regionSets: regionSets,
+    lintRegions: lintRegions
   };
 })();

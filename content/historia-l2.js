@@ -118,7 +118,14 @@
     v_leo:      { bg: 'plain', items: [{ t: 'leo',   x: 190, y: G, s: 1.1 }] },
     v_ursus:    { bg: 'plain', items: [{ t: 'ursus', x: 195, y: G, s: 1.15 }] },
     v_equus:    { bg: 'plain', items: [{ t: 'equus', x: 195, y: G, s: 1.05 }] },
-    v_columba:  { bg: 'plain', items: [{ t: 'columba', x: 195, y: 156, s: 1.5, pose: 'fly' }] },
+    /* columba: the BIRD, standing. GAP (region sweep): this card used to be a
+       dove in flight, and h9's `volat` is a dove in flight — the crop rule
+       throws the background away for a lone registered actor, so `columba` on
+       the plain and `volat` over the sea resolved to the SAME sprite. Nothing
+       inside h7 could see it: `volat` is two capitula further on, and the
+       Arca boss pools all of Liber II's vocabulary. A perched dove is also
+       the better noun card — the flying one is what `volat` is FOR. */
+    v_columba:  { bg: 'plain', items: [{ t: 'columba', x: 195, y: G, s: 1.5 }] },
 
     /* pluvia: no rain actor exists (reported). The storm sky and the wind
        carry it, and the bubble is the sign, as f5 does for its seasons. */
@@ -168,8 +175,17 @@
                   { t: 'ventus',   x: 232, y: 156, s: 0.85 }
                 ] },
 
+    /* natat: the ark ON THE WATER. GAP (region sweep) — and it is exactly the
+       v_mons / v_operit bug two entries up, one capitulum further apart. This
+       was ONE ark and nothing else, so it took the sprite-crop path, which
+       throws the background away; `arca` is one ark and nothing else too, and
+       the SEA was the entire difference between the ark built on dry ground
+       and the ark afloat. A second actor keeps the raster, and a fish is the
+       one creature the flood did not drown — it is also what `natat` means,
+       swimming, said twice in one frame. No Latin moved. */
     v_natat:    { bg: 'sea', items: [
-                  { t: 'ark', x: 200, y: 208, s: 0.95 }
+                  { t: 'ark',    x: 216, y: 208, s: 0.95 },
+                  { t: 'piscis', x: 86,  y: 214, s: 1.1 }
                 ] },
 
     v_corvus:   { bg: 'sea', items: [

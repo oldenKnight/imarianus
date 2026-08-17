@@ -271,8 +271,18 @@
                   { t: 'person', x: 250, y: G, s: 1.1,  role: 'child' }
                 ] },
 
+    /* Rebecca AT THE WELL — h16_rebecca's own composition, borrowed for the
+       card. GAP (region sweep): this used to be one woman alone on the desert
+       and so is `Sara` in h13, and a lone registered actor is CROPPED, so the
+       two names resolved to the same sprite over the same nothing. Neither
+       capitulum could see it; the Abraham boss pools all of Liber III. The
+       well is how Genesis 24 identifies her and how this file's own story
+       pages draw her, so the card is now the picture the learner has already
+       read. Sara is untouched — she is the one the linter's own comment names
+       as the residual `Sara`/`Lot` warning, and she keeps her frame. */
     v_rebecca:  { bg: 'desert', items: [
-                  { t: 'person', x: 200, y: G, s: 1.08, role: 'woman' }
+                  { t: 'well',   x: 302, y: G, s: 1 },
+                  { t: 'person', x: 152, y: G, s: 1.08, role: 'woman' }
                 ] },
 
     v_puteus:   { bg: 'desert', items: [
