@@ -179,6 +179,77 @@ var Boss = (function () {
     var HERO_Y = H - GROUND - 78;    /* top of the 80px hero sprite            */
     var FOE_TOP = 96, FOE_SIZE = 152;
 
+    /* ============================================================
+       GAP: THE ARENA TILE, MEASURED IN THE UNIT THAT MATTERS
+       ------------------------------------------------------------
+       The canvas is 480 units wide and CSS-scaled to fit the column. On a
+       375 px phone the screen column is 343 CSS px, so ONE canvas unit is
+       0.715 CSS px — and the phases' hard-coded 54/56/58 units landed as
+       thirty-nine to forty-one CSS PIXELS of picture, held at arm's length by
+       a child. js/game.js already fixed exactly this for the lūdus by sizing
+       its tile in CSS px and converting back; this is that same conversion,
+       moved into the engine so all six phases (three duel, three trial) get
+       it from one place instead of six literals.
+
+       TWO NUMBERS, and both are load-bearing.
+
+       tile(base)     the drawn size. `base` is the phase's own historical
+                      literal, so caterva stays a shade bigger than fuga and
+                      clāmor a shade bigger than both; the SCALE is shared.
+       catchX(base)   the catch half-width. It has to move WITH the tile or
+                      the picture overhangs a catch line that did not grow,
+                      and the learner watches a tile pass through the fox.
+                      It moves by HALF the tile's growth: a catch that grew
+                      one-for-one would make every phase measurably easier,
+                      and — see the clāmor note below — would leave the
+                      player nowhere safe to stand.
+
+       THE CEILING IS A GAMEPLAY LIMIT, NOT A TASTE ONE. caterva puts up to
+       SIX items in the air at region IX+. Six tiles of 56 × 1.40 = 470 of
+       the field's 480 units: at that scale the arena can still lay its own
+       maximum spawn out side by side, and one notch wider it cannot. The
+       floor is 1 — desktop, where the canvas is already 1:1, keeps exactly
+       the game that shipped. */
+    var TILE_TARGET_CSS = 50;   /* CSS px of art we are aiming to put on screen */
+    var TILE_BASE = 56;         /* the historical caterva tile, in canvas units */
+    var TILE_MAX_K = 1.40;      /* 6 × 56 × 1.40 = 470 of 480 units             */
+    var tileK = 1;              /* the live scale factor                        */
+    var tileTimer = 0;          /* seconds until it is re-measured              */
+
+    function measureTileK() {
+      var cssW = 0;
+      try { cssW = canvas.getBoundingClientRect().width; } catch (e) { cssW = 0; }
+      if (!cssW) { cssW = W; }
+      /* ceil on the UNITS, not on the ratio: 50 CSS px is a FLOOR, and
+         rounding 69.97 down to 69 lands at 49.3 — a floor that is not one. */
+      var units = Math.ceil(TILE_TARGET_CSS * (W / cssW));
+      return Math.max(1, Math.min(TILE_MAX_K, units / TILE_BASE));
+    }
+
+    /* THE SCALE IS ADDITIVE, NOT PROPORTIONAL, and that is deliberate. The
+       three bases differ by two units apiece — clāmor 58, caterva 56, fuga 54
+       — and those two units are a deliberate hierarchy between rounds, not a
+       proportion of anything. Multiplying them all by 1.25 would stretch the
+       gap to 2.5 and push clāmor past the top of the 48–52 CSS px band while
+       fuga sat at its floor; growing the ANCHOR and carrying the offset keeps
+       all three inside the band and keeps the hierarchy exactly as authored.
+       Integers, so Scenes.drawTile's raster cache keeps two or three keys
+       instead of one per frame of a resize. */
+    function tileSize(base) {
+      base = (typeof base === 'number') ? base : TILE_BASE;
+      return Math.round(TILE_BASE * tileK) + (base - TILE_BASE);
+    }
+    /* half the tile's growth; see the comment above. */
+    function catchHalf(base) {
+      base = base || 42;
+      return Math.round(base * (1 + (tileK - 1) * 0.5));
+    }
+    /* the margin that keeps a whole tile inside the field, so a bigger tile
+       narrows the spawn range instead of hanging off an edge. */
+    function spawnMargin(base) {
+      return tileSize(base) / 2 + 2;
+    }
+
     /* ---------- run state ---------- */
     var canvas = null, ctx = null, raf = null, running = false;
     var cfg = null, cb = {};
@@ -335,6 +406,13 @@ var Boss = (function () {
         drawBanner: drawBanner,
         wrapText: wrapText,
         shuffled: shuffled,
+
+        /* GAP: the arena's live tile geometry. A phase asks for its own
+           historical base and gets it scaled to the screen; nothing below
+           may hard-code a tile size or a catch radius again. */
+        tile: tileSize,
+        catchX: catchHalf,
+        spawnMargin: spawnMargin,
 
         /* read-only clock, for phases that want to show their own countdown */
         timeLeft: function () { return timeLeft; },
@@ -583,6 +661,15 @@ var Boss = (function () {
     function update(dt) {
       if (foeHurt > 0) { foeHurt = Math.max(0, foeHurt - dt); }
       if (flash) { flash.t -= dt; if (flash.t <= 0) { flash = null; } }
+
+      /* GAP: the tile is sized from the canvas's CSS width, and that width is
+         not final at start() — the header above the canvas, a web font, or the
+         phone turning sideways all change it afterwards. Twice a second keeps
+         the tile honest without asking the browser for layout every frame.
+         Ahead of the interstitial return, so a phase that is about to begin
+         reads a measured scale rather than the 1 of a cold start. */
+      tileTimer -= dt;
+      if (tileTimer <= 0) { tileK = measureTileK(); tileTimer = 0.5; }
 
       /* interstitial: no clock, no input, no phase (brief §4) */
       if (inter > 0) {
@@ -836,6 +923,11 @@ var Boss = (function () {
       hero.x = W / 2;
       hero.hidden = false;
       resetFoe();
+      /* GAP: the tile scale depends on how wide CSS made the canvas, so it can
+         only be known once the element is in the document — which it is by the
+         time start() runs. */
+      tileK = measureTileK();
+      tileTimer = 0.5;
       /* the picture caches are NOT cleared here any more: they moved into
          js/scenes.js so the lūdus minigame shares them (see sceneImage above),
          and they are keyed on the scene's own identity plus the raster size,
@@ -920,14 +1012,21 @@ var Boss = (function () {
         interstitial: inter > 0,
         hpLeft: hpLeft, hpMax: hpMax,
         mistakes: mistakes,
-        timeLeft: timeLeft
+        timeLeft: timeLeft,
+        /* GAP: what the arena settled on for THIS canvas width */
+        tileK: tileK,
+        tile: tileSize(TILE_BASE),
+        catchX: catchHalf()
       };
     }
 
     return {
       start: start, stop: stop, abort: abort,
       registerPhase: registerPhase, PHASES: PHASES,
-      state: state, setFrameSource: setFrameSource, imgReady: imgReady
+      state: state, setFrameSource: setFrameSource, imgReady: imgReady,
+      /* read-only, for tests/regression.html: the arena geometry a given
+         canvas CSS width produces, without starting a fight. */
+      tileSize: tileSize, catchX: catchHalf, spawnMargin: spawnMargin
     };
   }
 
@@ -943,6 +1042,8 @@ var Boss = (function () {
     registerPhase: duel.registerPhase,
     PHASES: duel.PHASES,
     state: duel.state,
+    /* GAP: the duel's live tile geometry, for the regression harness */
+    tileSize: duel.tileSize, catchX: duel.catchX, spawnMargin: duel.spawnMargin,
     /* test/QA seam only — see the frame-source comment inside createEngine */
     setFrameSource: duel.setFrameSource,
     /* js/probatio.js builds its own instance from this factory: same engine,

@@ -279,10 +279,52 @@
     };
   }
 
-  /* falling/drifting catchable: is the hero under it, at catch height? */
+  /* falling/drifting catchable: is the hero under it, at catch height?
+
+     GAP: the half-width used to be the literal 42, sized for a 56-unit tile.
+     The tile is now measured against the SCREEN (js/boss.js tileSize), so on a
+     phone it is 70 units and a fixed 42 would let the picture's own edge pass
+     straight through the fox. env.catchX() grows it by half the tile's growth
+     — see the engine's comment for why half and not one-for-one. */
   function caught(env, item) {
     return item.y > env.CATCH - 30 && item.y < env.CATCH + 34 &&
-           Math.abs(item.x - env.hero.x) < 42;
+           Math.abs(item.x - env.hero.x) < env.catchX();
+  }
+
+  /* GAP: would these two be in the catch band AT THE SAME TIME, close enough
+     in x that the hero cannot take one without the other?
+
+     The arena is 480 units wide and caterva puts up to six items in it. Two
+     spawns that land within one catch-width of each other and arrive together
+     force a double catch — the learner takes the answer and a mistake in the
+     same movement, which is the one kind of loss they cannot play around. The
+     band is ~64 units deep, so "together" is 64 units of falling. */
+  function willCollide(env, a, b) {
+    if (Math.abs(a.x - b.x) >= 2 * env.catchX()) { return false; }
+    var va = a.vy || 1, vb = b.vy || 1;
+    var ta = (env.CATCH - a.y) / va, tb = (env.CATCH - b.y) / vb;
+    return Math.abs(ta - tb) < 64 / Math.max(va, vb);
+  }
+
+  /* a spawn x that keeps the whole tile inside the field AND, where it can,
+     out of the way of what is already falling. Eight tries, then the best of
+     them: a spawn must never be able to stall, and a crowded field where every
+     slot collides is a field where the learner is in trouble anyway. */
+  function spawnX(env, items, vy, base) {
+    var margin = env.spawnMargin(base);
+    var span = env.W - 2 * margin, i, k, x, worst, bestX = null, bestGap = -1;
+    for (k = 0; k < 8; k++) {
+      x = margin + Math.random() * span;
+      worst = Infinity;
+      for (i = 0; i < items.length; i++) {
+        if (willCollide(env, { x: x, y: -30, vy: vy }, items[i])) {
+          worst = Math.min(worst, Math.abs(x - items[i].x));
+        }
+      }
+      if (worst === Infinity) { return x; }        /* clear slot */
+      if (worst > bestGap) { bestGap = worst; bestX = x; }
+    }
+    return bestX;
   }
 
   /* the dark prompt banner every phase writes its Latin into */
@@ -358,11 +400,16 @@
       var w = (Math.random() < this.share)
         ? this.target
         : env.words[Math.floor(Math.random() * env.words.length)];
+      /* GAP: the x used to be `34 + rand * (W - 68)`, a margin sized for the
+         56-unit tile. It is derived now, so a tile that grew with the screen
+         narrows the spawn range instead of hanging off an edge — and the
+         candidate is checked against what is already falling. */
+      var vy = this.speed * (0.85 + Math.random() * 0.5);
       this.items.push({
         word: w,
-        x: 34 + Math.random() * (env.W - 68),
+        x: spawnX(env, this.items, vy, 56),
         y: -30,
-        vy: this.speed * (0.85 + Math.random() * 0.5)
+        vy: vy
       });
     },
 
@@ -401,7 +448,7 @@
     draw: function () {
       var env = this.env, i;
       for (i = 0; i < this.items.length; i++) {
-        env.drawTile(this.items[i].word, this.items[i].x, this.items[i].y, 56);
+        env.drawTile(this.items[i].word, this.items[i].x, this.items[i].y, env.tile(56));
       }
       if (this.target) { promptBanner(env, this.target.la); }
     },
@@ -701,17 +748,27 @@
       opts = env.shuffled(this.item.options);
       this.cards = [];
       bandW = (env.W - 60) / opts.length;
+      /* Each card sways around its OWN lane centre. The gaps between the lanes
+         are what make the phase fair: the hero must be able to stand somewhere
+         that touches NO card while reading the sentence. Widen the sway and
+         there is nowhere safe to stand — which reads as the game catching for
+         you.
+
+         GAP: that used to be a literal ±22 chosen against a literal catch
+         radius of 42, and both of those numbers just became screen-dependent.
+         The invariant is written out instead: between two neighbouring lanes
+         the clear stretch is bandW − 2·sway, and the hero occupies 2·catchX of
+         it, so the sway is whatever leaves SAFE_GAP units over. On a phone
+         (catchX 47) that is ±17 rather than ±22; on desktop nothing moves. */
+      var SAFE_GAP = 12;
+      var sway = Math.max(10,
+        Math.min(22, (bandW - 2 * env.catchX() - SAFE_GAP) / 2));
       for (i = 0; i < opts.length; i++) {
         centre = 30 + i * bandW + bandW / 2;
         this.cards.push({
           word: opts[i],
-          /* Each card sways around its OWN lane centre, ±22 px. The gaps
-             between the lanes are what make the phase fair: the hero (catch
-             radius 42) must be able to stand somewhere that touches no card
-             while reading the sentence. Widen this and there is nowhere safe
-             to stand — which reads as the game catching for you. */
-          lo: centre - 22,
-          hi: centre + 22,
+          lo: centre - sway,
+          hi: centre + sway,
           x: centre,
           y: env.FIELD - 40 - i * 26,
           vx: (Math.random() < 0.5 ? -1 : 1) * (this.drift * (0.7 + Math.random() * 0.6))
@@ -755,7 +812,7 @@
       var env = this.env, ctx = env.ctx, i;
       if (!this.item) { return; }
       /* LABELLED, like ordina's tiles (GAUNTLET F7). A clāmor card is a
-         58 px picture whose art box is 50 px, and at that size two of this
+         58-unit picture whose art box is 50, and at that size two of this
          corpus's scenes can be one brown smudge apiece — the round became
          "tap something and hope". The word under the picture is not a
          giveaway here the way it would be in caterva or fuga: THERE the
@@ -769,7 +826,7 @@
          the answer, so its cards stay mute. */
       var labelled = !this.item.verbum;
       for (i = 0; i < this.cards.length; i++) {
-        env.drawTile(this.cards[i].word, this.cards[i].x, this.cards[i].y, 58,
+        env.drawTile(this.cards[i].word, this.cards[i].x, this.cards[i].y, env.tile(58),
                      { label: labelled });
       }
 
@@ -940,11 +997,15 @@
         var w = (Math.random() < this.share)
           ? this.target
           : env.words[Math.floor(Math.random() * env.words.length)];
+        /* GAP: same derived margin and same collision guard as caterva — see
+           spawnX above. Fuga matters more, not less: the player is watching a
+           lane for the charge, so a forced double catch here is taken blind. */
+        var vy = this.fall * (0.85 + Math.random() * 0.4);
         this.items.push({
           word: w,
-          x: 34 + Math.random() * (env.W - 68),
+          x: spawnX(env, this.items, vy, 54),
           y: -30,
-          vy: this.fall * (0.85 + Math.random() * 0.4)
+          vy: vy
         });
         this.spawnTimer = 0.75 + Math.random() * 0.5;
       }
@@ -997,7 +1058,7 @@
       }
 
       for (i = 0; i < this.items.length; i++) {
-        env.drawTile(this.items[i].word, this.items[i].x, this.items[i].y, 54);
+        env.drawTile(this.items[i].word, this.items[i].x, this.items[i].y, env.tile(54));
       }
       if (this.target) { promptBanner(env, this.target.la); }
     },

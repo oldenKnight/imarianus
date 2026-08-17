@@ -79,9 +79,16 @@ var Probatio = (function () {
   }
   function lower(s) { return String(s).toLowerCase(); }
 
+  /* GAP: the radii used to be the literals 44 (transitus/sententia) and 46
+     (ordina's basket), sized for the 54–58-unit tiles the trials drew. Those
+     tiles are now measured against the SCREEN (js/boss.js tileSize) and are
+     half again as wide on a phone, so the radius has to travel with them or
+     the picture's own edge passes through the basket. env.catchX(base) applies
+     the same half-of-the-growth rule the duel uses, to whichever base the
+     caller has always had. */
   function caught(env, item, radius) {
     return item.y > env.CATCH - 30 && item.y < env.CATCH + 34 &&
-           Math.abs(item.x - env.hero.x) < (radius || 44);
+           Math.abs(item.x - env.hero.x) < env.catchX(radius || 44);
   }
 
   /* coarse part of speech, only ever used to build a default sorting rule */
@@ -209,10 +216,14 @@ var Probatio = (function () {
       if (!this.pool.length) { return; }
       var w = this.pool[Math.floor(Math.random() * this.pool.length)];
       var fromLeft = Math.random() < 0.5;
+      /* GAP: 30 was the edge margin for a 56-unit tile. Derived now, so a tile
+         that grew with the screen turns back at its own rim instead of half
+         hanging off the field. */
+      var edge = env.spawnMargin(56);
       this.items.push({
         word: w,
         zone: this.zoneOf(w),
-        x: fromLeft ? 30 : env.W - 30,
+        x: fromLeft ? edge : env.W - edge,
         y: -30,
         vx: (fromLeft ? 1 : -1) * this.cross,
         vy: 62
@@ -220,7 +231,7 @@ var Probatio = (function () {
     },
 
     update: function (dt) {
-      var env = this.env, i, it, side;
+      var env = this.env, i, it, side, edge;
       this.spawnTimer -= dt;
       if (this.spawnTimer <= 0 && this.items.length < this.max) {
         this.spawn();
@@ -232,8 +243,9 @@ var Probatio = (function () {
         it = this.items[i];
         it.x += it.vx * dt;
         it.y += it.vy * dt;
-        if (it.x < 30) { it.x = 30; it.vx = -it.vx; }
-        if (it.x > env.W - 30) { it.x = env.W - 30; it.vx = -it.vx; }
+        edge = env.spawnMargin(56);
+        if (it.x < edge) { it.x = edge; it.vx = -it.vx; }
+        if (it.x > env.W - edge) { it.x = env.W - edge; it.vx = -it.vx; }
 
         if (caught(env, it, 46)) {
           side = (env.hero.x < env.W / 2) ? 0 : 1;
@@ -291,7 +303,7 @@ var Probatio = (function () {
       /* the word is the QUESTION here (which zone does THIS belong in?), so
          unlike the duel phases the tile carries its label */
       for (i = 0; i < this.items.length; i++) {
-        env.drawTile(this.items[i].word, this.items[i].x, this.items[i].y, 56,
+        env.drawTile(this.items[i].word, this.items[i].x, this.items[i].y, env.tile(56),
                      { label: true });
       }
       this.drawBasket();
@@ -301,7 +313,11 @@ var Probatio = (function () {
     /* the gangway basket the player steers: a wicker box with rope handles */
     drawBasket: function () {
       var env = this.env, ctx = env.ctx;
-      var x = env.hero.x, y = env.CATCH + 12, w = 88, h = 40;
+      /* GAP: the basket is drawn AT ITS REACH. It used to be a flat 88 units
+         wide while caught() accepted ±46, so it already caught four units
+         beyond its own rim; now that the reach grows with the tile, drawing it
+         from the same number is the only way the picture stays honest. */
+      var x = env.hero.x, y = env.CATCH + 12, w = 2 * env.catchX(46), h = 40;
       ctx.save();
       ctx.fillStyle = (this.hint > 0) ? '#d8b45f' : '#c69a5a';
       env.roundRect(x - w / 2, y - h / 2, w, h, 8);
@@ -541,7 +557,7 @@ var Probatio = (function () {
       }
 
       for (i = 0; i < this.items.length; i++) {
-        env.drawTile(this.items[i].word, this.items[i].x, this.items[i].y, 54);
+        env.drawTile(this.items[i].word, this.items[i].x, this.items[i].y, env.tile(54));
       }
       if (this.target) { promptBanner(env, this.target.la); }
     },
@@ -629,11 +645,19 @@ var Probatio = (function () {
       opts = env.shuffled(this.item.options);
       this.cards = [];
       bandW = (env.W - 60) / opts.length;
+      /* GAP: the sway was a literal ±20 against a literal catch radius of 44,
+         and the radius now grows with the screen-sized tile. Same invariant
+         clāmor writes out: the clear stretch between two lanes is
+         bandW − 2·sway, the player occupies 2·catchX of it, and SAFE_GAP units
+         have to be left over or there is nowhere to stand while reading. */
+      var SAFE_GAP = 12;
+      var sway = Math.max(9,
+        Math.min(20, (bandW - 2 * env.catchX(44) - SAFE_GAP) / 2));
       for (i = 0; i < opts.length; i++) {
         centre = 30 + i * bandW + bandW / 2;
         this.cards.push({
           word: opts[i],
-          lo: centre - 20, hi: centre + 20,
+          lo: centre - sway, hi: centre + sway,
           x: centre,
           y: env.FIELD - 30 - i * 22,
           vx: (Math.random() < 0.5 ? -1 : 1) * (this.drift * (0.7 + Math.random() * 0.6))
@@ -679,7 +703,7 @@ var Probatio = (function () {
          F7). `verbum` items, whose prompt IS the word, stay mute. */
       var labelled = !this.item.verbum;
       for (i = 0; i < this.cards.length; i++) {
-        env.drawTile(this.cards[i].word, this.cards[i].x, this.cards[i].y, 58,
+        env.drawTile(this.cards[i].word, this.cards[i].x, this.cards[i].y, env.tile(58),
                      { label: labelled });
       }
       var x = 8, y = env.TOP + 2, w = env.W - 16, h = 92;
