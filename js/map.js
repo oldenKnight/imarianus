@@ -805,7 +805,6 @@ var WorldMap = (function () {
 
   function render(model) {
     var t = TINTS[model.track] || TINTS.fabulae;
-    var segs = segmentsOf(model);
     var L = layout(model);
     var H = L.H;
     var pts = L.pts;
