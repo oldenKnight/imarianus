@@ -835,6 +835,251 @@
       return null;
     });
 
+  /* ================= ART3 — the female figure =================
+     THE BUG, in the owner's words: "Some drawings suck, like 'mulier': it
+     seems like an old man with beard!!"
+
+     He was right and the cause was geometry, not taste. `person`'s veil was
+     two shapes: an arch over the crown, and a slab drawn BEHIND the skull
+     that ran from cy-2 down to cy+26 and out to x=13 — straight across the
+     jaw, past the collar, onto the chest. On a 96px card (~0.8 px per local
+     unit) a pale mass hanging under a chin is a beard and nothing else, so
+     every veiled figure in the book — mulier, Eva, Sara, Rebecca, Rachēl,
+     Dalila, Anna, Maria, Dīdō, Andromachē, the mothers of h47 — read male.
+
+     The veil is now an arch that stops at ear height, plus veilFall(), a pair
+     of panels that start AT the shoulder line. Nothing the veil draws may
+     ever occupy the jaw-to-collar band again, and that is a raster question,
+     so these rows rasterise the sprite and count pixels. */
+
+  /* the pose→shoulder table, mirrored from POSES in js/actors-person.js.
+     If a pose ever moves its shoulders and this is not moved with it, the
+     CROWN control inside the check fails loudly rather than passing on a
+     band that is measuring the wrong part of the figure. */
+  var ART3_SHY = { stand: -58, walk: -58, point: -58, 'arms-up': -58,
+                   carry: -58, amplexus: -58, kneel: -44, sit: -46 };
+
+  /* map a local drawing coordinate to a pixel of the rasterised sprite.
+     sprite() letterboxes with preserveAspectRatio="xMidYMid meet", so the
+     browser's transform is reproduced here rather than guessed. */
+  function spriteMapper(svg, px) {
+    var vb = viewBoxOf(svg).split(/\s+/);
+    var vx = parseFloat(vb[0]), vy = parseFloat(vb[1]);
+    var vw = parseFloat(vb[2]), vh = parseFloat(vb[3]);
+    var k = Math.min(px / vw, px / vh);
+    var ox = (px - vw * k) / 2, oy = (px - vh * k) / 2;
+    return function (x, y) { return [(x - vx) * k + ox, (y - vy) * k + oy]; };
+  }
+
+  /* count pixels of the marker blue inside a local-coordinate rectangle.
+     The figures under test are drawn with veilColor '#0000ff': the veil's
+     COLOUR is a fill and nothing else, so recolouring it does not move one
+     unit of the geometry, and pure blue is a value no other part of this
+     palette (the nearest is indigo #4d6c8a) can be confused with — not even
+     as an antialiased blend, which raises r and g together. */
+  function blueCount(data, w, map, x0, y0, x1, y1) {
+    var a = map(x0, y0), b = map(x1, y1), n = 0, px, py, i;
+    var h = data.length / (4 * w);
+    for (py = Math.max(0, Math.floor(a[1])); py <= Math.min(h - 1, Math.ceil(b[1])); py++) {
+      for (px = Math.max(0, Math.floor(a[0])); px <= Math.min(w - 1, Math.ceil(b[0])); px++) {
+        i = (py * w + px) * 4;
+        if (data[i + 3] > 60 && data[i] < 60 && data[i + 1] < 60 && data[i + 2] > 150) { n++; }
+      }
+    }
+    return n;
+  }
+
+  var ART3_FIGURES = [
+    { name: 'mulier — the card the owner photographed', o: { role: 'woman' } },
+    { name: 'woman · walk', o: { role: 'woman', pose: 'walk' } },
+    { name: 'woman · point', o: { role: 'woman', pose: 'point' } },
+    { name: 'woman · kneel', o: { role: 'woman', pose: 'kneel' } },
+    { name: 'woman · sit', o: { role: 'woman', pose: 'sit' } },
+    { name: 'woman · arms-up', o: { role: 'woman', pose: 'arms-up' } },
+    { name: 'queen (Dīdō, Iūnō, Amāta)', o: { role: 'queen' } },
+    { name: 'queen · point', o: { role: 'queen', pose: 'point' } },
+    { name: 'Maria — veil recoloured by content', o: { role: 'woman', veilColor: '#4d6c8a' } },
+    { name: 'Anna — grey hair under the veil', o: { role: 'woman', hairColor: '#a89c8a' } },
+    { name: 'a veiled crowd extra', o: { role: 'crowd', veil: true, hair: 'long', beard: 'none' } }
+  ];
+
+  checkAsync('ART3', 'the veil never paints below the chin: no veil ink in the jaw-to-collar band, for every veiled figure',
+    function (done) {
+      var PX = 300, idx = 0, results = [];
+      var cv = document.createElement('canvas');
+      cv.width = PX; cv.height = PX;
+      var ctx = cv.getContext('2d');
+      if (!ctx) { return done('no 2d context in this browser'); }
+
+      function next() {
+        if (idx >= ART3_FIGURES.length) {
+          return done(results.length ? results.join(' | ') : null);
+        }
+        var fig = ART3_FIGURES[idx++];
+        var o = {}, k;
+        for (k in fig.o) { if (Object.prototype.hasOwnProperty.call(fig.o, k)) { o[k] = fig.o[k]; } }
+        o.veil = true;
+        o.veilColor = '#0000ff';
+        var svg = Scenes.sprite('person', o, PX);
+        var map = spriteMapper(svg, PX);
+        var shY = ART3_SHY[o.pose || 'stand'];
+        var headY = shY - 16;
+        var img = Scenes.toImage(svg, PX);
+        img.onload = function () {
+          var data;
+          ctx.clearRect(0, 0, PX, PX);
+          ctx.drawImage(img, 0, 0, PX, PX);
+          try {
+            data = ctx.getImageData(0, 0, PX, PX).data;
+          } catch (e) {
+            return done('the canvas is tainted, so this row cannot sample: ' + e.message);
+          }
+          /* CONTROL 1 — the veil is really on the head. Without this the
+             two counts below would both be zero if the veil silently vanished
+             (or if the coordinate mapping drifted) and the row would pass.
+             Sampled at the BACK SIDE of the arch, between the skull edge and
+             the veil's outer edge, because a queen's gold crown sits on top
+             of the crown of the veil and would hide it there. */
+          if (blueCount(data, PX, map, -11.4, headY - 1, -9.2, headY + 4) < 8) {
+            results.push(fig.name + ': no veil down the side of the head — the arch is gone ' +
+                         'or the coordinate mapping has drifted');
+          }
+          /* CONTROL 2 — the cloth still falls past the shoulders, which is
+             half of what makes the female silhouette read at 40px. */
+          if (blueCount(data, PX, map, -18, shY + 6, 18, shY + 20) < 8) {
+            results.push(fig.name + ': the veil no longer falls below the shoulders');
+          }
+          /* THE BUG. The band runs from BELOW the deepest chin (the female
+             skull reaches headY+9.21) to a full unit ABOVE the shoulder line,
+             full width. The old back-drape filled it edge to edge; that is
+             what the owner saw as a beard. */
+          var beard = blueCount(data, PX, map, -20, headY + 9.6, 20, shY - 1);
+          if (beard > 0) {
+            results.push(fig.name + ': ' + beard + ' veil pixels under the chin — that is a beard');
+          }
+          next();
+        };
+        img.onerror = function () { done(fig.name + ': the sprite would not decode'); };
+      }
+      next();
+    });
+
+  check('ART3', 'the female head is its own shape and the veil frames the face without crossing it',
+    function () {
+      var w = Scenes.sprite('person', { role: 'woman' }, 96);
+      var m = Scenes.sprite('person', { role: 'man' }, 96);
+      /* the men keep the blunt r=9 ball; the women get the smaller skull with
+         a tapered jaw, so the two silhouettes differ at the head as well as
+         at the hem */
+      if (m.indexOf('<circle cx="0" cy="0" r="9"') < 0) {
+        return 'the male head is no longer the r=9 circle — this fix was not supposed to touch the men';
+      }
+      if (w.indexOf('<circle cx="0" cy="0" r="9"') >= 0) {
+        return 'the female head is still the male circle';
+      }
+      if (w.indexOf('A8.3,8.3') < 0) { return 'the female skull arc is gone'; }
+      /* the brow strip: a veiled head with hair must paint hairColor, or the
+         veil is a featureless hood */
+      if (Scenes.sprite('person', { role: 'woman', hairColor: '#00ff00' }, 96).indexOf('#00ff00') < 0) {
+        return 'no hair shows at the brow under the veil edge';
+      }
+      /* and a bald veiled head must not invent hair */
+      if (Scenes.sprite('person', { role: 'woman', hair: 'bald', hairColor: '#00ff00' }, 96)
+          .indexOf('#00ff00') >= 0) {
+        return 'a bald veiled figure is painting hair anyway';
+      }
+      /* beard:'none' means no beard geometry, whatever else is on the head */
+      var i, fem = ['woman', 'queen'];
+      for (i = 0; i < fem.length; i++) {
+        if (Scenes.sprite('person', { role: fem[i], beardColor: '#ff00ff' }, 96).indexOf('#ff00ff') >= 0) {
+          return fem[i] + ' emits beard geometry even though the preset says beard:none';
+        }
+      }
+      /* the hem is still the wider female trapezoid — the 40px silhouette */
+      if (w.indexOf('18,0') < 0) { return 'the female robe lost its wider hem'; }
+      return null;
+    });
+
+  check('ART3', 'every veiled figure stays inside the person box (measured with getBBox)',
+    function () {
+      var vb = viewBoxNums('person'), i, b, bad = [];
+      if (vb.w !== 77 || vb.h !== 119) {
+        return 'person bounds changed to ' + vb.w + 'x' + vb.h + ' — every person sprite just moved';
+      }
+      var all = ART3_FIGURES.concat([
+        { name: 'woman · carry', o: { role: 'woman', pose: 'carry' } },
+        { name: 'woman · amplexus', o: { role: 'woman', pose: 'amplexus' } },
+        { name: 'queen · sit', o: { role: 'queen', pose: 'sit' } },
+        { name: 'queen · kneel + staff', o: { role: 'queen', pose: 'kneel', staff: true } }
+      ]);
+      for (i = 0; i < all.length; i++) {
+        b = bboxOf('person', all[i].o);
+        if (b.x < vb.x - 0.75 || b.y < vb.y - 0.75 ||
+            b.x + b.width > vb.x + vb.w + 0.75 || b.y + b.height > vb.y + vb.h + 0.75) {
+          bad.push(all[i].name + ' bbox[' + b.x.toFixed(1) + ',' + b.y.toFixed(1) + ',' +
+            (b.x + b.width).toFixed(1) + ',' + (b.y + b.height).toFixed(1) + ']');
+        }
+      }
+      return bad.length ? 'outside the person box: ' + bad.join(' | ') : null;
+    });
+
+  /* The other half of the promise: the veil fix was allowed to change female
+     figures and NOTHING else. Every spec below is a male or sexless figure
+     and must emit the bytes it emitted before ART3 — the hashes are of the
+     pre-fix markup, taken from js/actors-person.js at commit ed43e40. */
+  check('ART3', 'male and sexless figures are byte-identical to their pre-ART3 markup',
+    function () {
+      function fnv(s) {
+        var h = 2166136261, i;
+        for (i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = (h * 16777619) >>> 0; }
+        return h >>> 0;
+      }
+      /* the sprite() wrapper is scenes.js's; hash the actor BODY only, which
+         is what this file owns */
+      function body(o) {
+        var svg = Scenes.sprite('person', o, 100);
+        return svg.replace(/^[\s\S]*?<svg[^>]*>/, '').replace(/<\/svg>\s*$/, '');
+      }
+      var PINS = [
+        { o: { role: 'man' }, h: 2345334160 },
+        { o: { role: 'man', pose: 'walk' }, h: 2213362978 },
+        { o: { role: 'man', pose: 'kneel' }, h: 197634268 },
+        { o: { role: 'man', pose: 'sit' }, h: 3694278136 },
+        { o: { role: 'man', pose: 'sleep' }, h: 901742704 },
+        { o: { role: 'man', pose: 'arms-up' }, h: 1119750616 },
+        { o: { role: 'man', pose: 'point' }, h: 3483764728 },
+        { o: { role: 'man', pose: 'carry' }, h: 3580581776 },
+        { o: { role: 'man', pose: 'amplexus' }, h: 3519276528 },
+        { o: { role: 'patriarch' }, h: 3751952750 },
+        { o: { role: 'patriarch', pose: 'arms-up', staff: true }, h: 455166960 },
+        { o: { role: 'shepherd', pose: 'walk' }, h: 3717451192 },
+        { o: { role: 'king' }, h: 1405700062 },
+        { o: { role: 'king', pose: 'sit' }, h: 433950944 },
+        { o: { role: 'soldier' }, h: 1967656574 },
+        { o: { role: 'soldier', pose: 'walk' }, h: 3143072672 },
+        { o: { role: 'priest' }, h: 1234984402 },
+        { o: { role: 'child' }, h: 1427226808 },
+        { o: { role: 'child', sling: true }, h: 179083570 },
+        { o: { role: 'crowd' }, h: 4244620056 },
+        { o: { role: 'angel' }, h: 59583680 },
+        { o: { role: 'angel', pose: 'point' }, h: 835666426 },
+        { o: { role: 'man', hair: 'bald', beard: 'long' }, h: 721952134 },
+        { o: { role: 'man', helmet: true, shortTunic: true }, h: 80451584 },
+        { o: { role: 'man', beard: 'none', hair: 'short' }, h: 1571958878 },
+        { o: { role: 'man', hair: 'long' }, h: 3843454388 },
+        { o: { role: 'man', skin: 'deep' }, h: 3709012476 },
+        { o: { role: 'man', mantleColor: false }, h: 4244620056 }
+      ];
+      var i, got, moved = [];
+      for (i = 0; i < PINS.length; i++) {
+        got = fnv(body(PINS[i].o));
+        if (got !== PINS[i].h) { moved.push(JSON.stringify(PINS[i].o) + ' → ' + got); }
+      }
+      return moved.length
+        ? moved.length + ' male figure(s) moved: ' + moved.join(', ')
+        : null;
+    });
+
   check('M-ART2', 'the two track mascots carry Scenes.mascot\'s own 60x60 box',
     function () {
       /* map.js draws the walking mascot at 52px from a -30..30 box; a dove or

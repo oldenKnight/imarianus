@@ -100,6 +100,11 @@
 
   function own(o, k) { return !!k && Object.prototype.hasOwnProperty.call(o, k); }
 
+  /* path-number formatter: two decimals at most, no trailing zeros, so the
+     computed head/veil geometry below emits numbers that read like the
+     hand-written ones ("8.3", "-12", "6.31") instead of "8.300000000001". */
+  function n(v) { return String(Math.round(v * 100) / 100); }
+
   /* ---------- role presets ----------
      Each row is only the DIFFERENCE from `man`; the merge below fills in
      the rest. Keep rows short — that is the point of the table. */
@@ -228,28 +233,56 @@
     return s;
   }
 
-  /* head: neck, skull, hair, beard, minimal dot eyes (3/4 view, facing right) */
+  /* head: neck, skull, hair, beard, minimal dot eyes (3/4 view, facing right)
+
+     ART3 — THE BEARD THAT WAS A VEIL. The veil used to be drawn as a slab
+     BEHIND the skull running from the crown down to cy+26: straight across
+     the jaw, past the collar and onto the chest. At card size (96px, about
+     0.8 px per local unit) a pale mass under the chin is a beard and nothing
+     else, and the owner read `mulier` as "an old man with a beard".
+
+     The veil is now an ARCH. It arcs over the brow and comes down the SIDES
+     of the head only, stopping at ear height (0.72·r, a clear unit and a half
+     above the chin), so the jaw and chin are always bare skin. The half of
+     the cloth that falls behind the shoulders is a separate pair of panels,
+     veilFall(), emitted BELOW the shoulder line where a garment belongs. A
+     strip of hair shows at the brow under the veil edge — without it a veiled
+     head is a blank oval and reads as a hood.
+
+     The female skull is also its own shape: radius 8.3 instead of 9 (a
+     slightly smaller head) with a tapered jaw instead of the men's full
+     circle. Male markup is byte-for-byte what it was — the circle and its
+     chord shade are still written out literally below. */
   function head(c, cx, cy, skin) {
     var s = '';
+    var hr = c.female ? 8.3 : 9;      /* skull radius */
     /* neck */
     s += '<path d="M-3.5,' + (cy + 12) + ' L3.5,' + (cy + 12) + ' L3,' + (cy + 4) + ' L-3,' + (cy + 4) +
       ' Z" fill="' + sh(skin) + '"/>';
-    /* hair behind the skull (long styles and the veil's back drape) */
-    if (c.veil) {
-      s += '<path d="M-12,' + (cy - 2) + ' Q-13,' + (cy + 20) + ' -9,' + (cy + 26) +
-        ' L13,' + (cy + 26) + ' Q13,' + (cy + 16) + ' 11,' + (cy - 2) + ' Z" fill="' +
-        sh(c.veilColor || c.mantleColorResolved || COL.linen) + '"/>';
-    } else if (c.hair === 'long') {
+    /* hair behind the skull (long styles only — the veil no longer drapes
+       anything behind the head; veilFall() owns that cloth now) */
+    if (!c.veil && c.hair === 'long') {
       s += '<path d="M-10,' + (cy - 3) + ' Q-13,' + (cy + 14) + ' -8,' + (cy + 20) +
         ' L2,' + (cy + 20) + ' Q-4,' + (cy + 8) + ' -2,' + (cy - 4) + ' Z" fill="' + sh(c.hairColor) + '"/>';
     }
     s += '<g transform="translate(' + cx + ',' + cy + ')">';
     /* skull */
-    s += '<circle cx="0" cy="0" r="9" fill="' + skin + '"/>';
-    /* the shade side of the face: the right cap of the skull circle, cut
-       by a vertical chord at x=4.5 (y = ±sqrt(81-20.25) = ±7.79). Flat
-       two-tone, same light-from-upper-left rule as every other actor. */
-    s += '<path d="M4.5,-7.79 A9,9 0 0 1 4.5,7.79 Z" fill="' + sh(skin) + '" opacity="0.40"/>';
+    if (c.female) {
+      /* upper half = the circle; lower half = a jaw that narrows to a soft
+         chin, so the silhouette is not the men's blunt ball */
+      s += '<path d="M' + n(-hr) + ',0 A' + n(hr) + ',' + n(hr) + ' 0 0 1 ' + n(hr) + ',0' +
+        ' Q' + n(hr * 0.98) + ',' + n(hr * 0.65) + ' ' + n(hr * 0.59) + ',' + n(hr * 0.93) +
+        ' Q0,' + n(hr * 1.11) + ' ' + n(-hr * 0.59) + ',' + n(hr * 0.93) +
+        ' Q' + n(-hr * 0.98) + ',' + n(hr * 0.65) + ' ' + n(-hr) + ',0 Z" fill="' + skin + '"/>';
+      s += '<path d="M' + n(hr / 2) + ',' + n(-0.8660254 * hr) + ' A' + n(hr) + ',' + n(hr) +
+        ' 0 0 1 ' + n(hr / 2) + ',' + n(0.8660254 * hr) + ' Z" fill="' + sh(skin) + '" opacity="0.40"/>';
+    } else {
+      s += '<circle cx="0" cy="0" r="9" fill="' + skin + '"/>';
+      /* the shade side of the face: the right cap of the skull circle, cut
+         by a vertical chord at x=4.5 (y = ±sqrt(81-20.25) = ±7.79). Flat
+         two-tone, same light-from-upper-left rule as every other actor. */
+      s += '<path d="M4.5,-7.79 A9,9 0 0 1 4.5,7.79 Z" fill="' + sh(skin) + '" opacity="0.40"/>';
+    }
     /* hair */
     if (c.hair !== 'none' && c.hair !== 'bald' && !c.helmet && !c.veil) {
       if (c.hair === 'child') {
@@ -257,12 +290,41 @@
       } else {
         s += '<path d="M-9,-2 q0,-11 9,-11 q9,0 9,11 q-3,-6 -9,-6 q-6,0 -9,6 Z" fill="' + c.hairColor + '"/>';
       }
+    } else if (c.veil && c.hair !== 'bald' && c.hair !== 'none') {
+      /* the brow strip that shows under the veil edge */
+      s += '<path d="M' + n(-hr * 1.06) + ',' + n(-hr * 0.2) +
+        ' Q' + n(-hr * 1.06) + ',' + n(-hr * 1.28) + ' 0,' + n(-hr * 1.28) +
+        ' Q' + n(hr * 1.06) + ',' + n(-hr * 1.28) + ' ' + n(hr * 1.06) + ',' + n(-hr * 0.2) +
+        ' Q' + n(hr * 0.6) + ',' + n(-hr * 0.72) + ' 0,' + n(-hr * 0.72) +
+        ' Q' + n(-hr * 0.6) + ',' + n(-hr * 0.72) + ' ' + n(-hr * 1.06) + ',' + n(-hr * 0.2) +
+        ' Z" fill="' + c.hairColor + '"/>';
     }
-    /* veil: front band arching over the crown, drawn after the face */
+    /* veil: the arch. Outer edge sweeps from ear height up over the crown and
+       back down; inner edge follows the skull, so the cloth frames the face
+       and never crosses it. Both ends stop ABOVE the jaw. */
     if (c.veil) {
       var vc = c.veilColor || COL.linen;
-      s += '<path d="M-11,1 q0,-13 11,-13 q11,0 11,13 q-2,-7 -11,-7 q-9,0 -11,7 Z" fill="' + vc + '"/>';
-      s += '<path d="M0,-12 q11,0 11,13 q-1,-8 -4,-11 Z" fill="' + sh(vc) + '"/>';
+      s += '<path d="M' + n(-hr * 1.33) + ',' + n(hr * 0.76) +
+        ' Q' + n(-hr * 1.4) + ',' + n(-hr * 0.1) + ' ' + n(-hr * 1.18) + ',' + n(-hr * 0.66) +
+        ' Q' + n(-hr * 0.92) + ',' + n(-hr * 1.45) + ' 0,' + n(-hr * 1.45) +
+        ' Q' + n(hr * 0.92) + ',' + n(-hr * 1.45) + ' ' + n(hr * 1.18) + ',' + n(-hr * 0.66) +
+        ' Q' + n(hr * 1.4) + ',' + n(-hr * 0.1) + ' ' + n(hr * 1.33) + ',' + n(hr * 0.72) +
+        ' L' + n(hr * 0.7) + ',' + n(hr * 0.72) +
+        ' Q' + n(hr * 0.98) + ',' + n(hr * 0.52) + ' ' + n(hr) + ',' + n(hr * 0.05) +
+        ' Q' + n(hr) + ',' + n(-hr * 0.55) + ' ' + n(hr * 0.62) + ',' + n(-hr * 0.8) +
+        ' Q' + n(hr * 0.35) + ',' + n(-hr) + ' 0,' + n(-hr) +
+        ' Q' + n(-hr * 0.35) + ',' + n(-hr) + ' ' + n(-hr * 0.62) + ',' + n(-hr * 0.8) +
+        ' Q' + n(-hr) + ',' + n(-hr * 0.55) + ' ' + n(-hr) + ',' + n(hr * 0.05) +
+        ' Q' + n(-hr * 0.98) + ',' + n(hr * 0.52) + ' ' + n(-hr * 0.7) + ',' + n(hr * 0.76) +
+        ' Z" fill="' + vc + '"/>';
+      /* shade: the right (front) half of the same arch */
+      s += '<path d="M0,' + n(-hr * 1.45) +
+        ' Q' + n(hr * 0.92) + ',' + n(-hr * 1.45) + ' ' + n(hr * 1.18) + ',' + n(-hr * 0.66) +
+        ' Q' + n(hr * 1.4) + ',' + n(-hr * 0.1) + ' ' + n(hr * 1.33) + ',' + n(hr * 0.72) +
+        ' L' + n(hr * 0.7) + ',' + n(hr * 0.72) +
+        ' Q' + n(hr * 0.98) + ',' + n(hr * 0.52) + ' ' + n(hr) + ',' + n(hr * 0.05) +
+        ' Q' + n(hr) + ',' + n(-hr * 0.55) + ' ' + n(hr * 0.62) + ',' + n(-hr * 0.8) +
+        ' Q' + n(hr * 0.35) + ',' + n(-hr) + ' 0,' + n(-hr) + ' Z" fill="' + sh(vc) + '"/>';
     }
     /* eyes: two ink dots, the far one nearer the centre (3/4 turn) */
     s += '<circle cx="1.5" cy="-1.5" r="1.5" fill="' + COL.ink + '"/>';
@@ -280,6 +342,25 @@
         '<path d="M2,4 q2,10 2,17 q2,-2 3,-8 q1,-6 1,-11 Z" fill="' + sh(c.beardColor) + '"/>';
     }
     s += '</g>';
+    return s;
+  }
+
+  /* the veil's fall (ART3): two panels of the same cloth coming out from
+     behind the shoulders. This is the half of the veil that used to hang off
+     the back of the head and read as a beard; as a garment starting AT the
+     shoulder line it can never touch the jaw, and it gives woman/queen a
+     second, wider mass below the collar — the thing that tells them apart
+     from the bearded men at 40px, where the face is four pixels wide.
+     Nothing here is emitted above shY, which is what regression.html
+     asserts against a raster. */
+  function veilFall(shY, vc) {
+    var t = shY;
+    var s = '<path d="M-5,' + t + ' Q-14,' + (t + 6) + ' -16,' + (t + 18) +
+      ' Q-16.5,' + (t + 27) + ' -12.5,' + (t + 30) +
+      ' L-4,' + (t + 30) + ' Q-6,' + (t + 15) + ' -5,' + t + ' Z" fill="' + vc + '"/>';
+    s += '<path d="M5,' + t + ' Q13,' + (t + 5) + ' 14.5,' + (t + 15) +
+      ' Q15,' + (t + 22) + ' 11.5,' + (t + 25) +
+      ' L4,' + (t + 25) + ' Q6,' + (t + 13) + ' 5,' + t + ' Z" fill="' + sh(vc) + '"/>';
     return s;
   }
 
@@ -467,6 +548,10 @@
       }
 
       if (mantle) { body += mantleShape(shY, c.female ? -14 : -18, mantle); }
+
+      /* the veil's cloth over the shoulders — after the mantle, because a
+         veil is worn OVER the palla, and never above the shoulder line */
+      if (c.veil) { body += veilFall(shY, c.veilColor); }
 
       /* props held in the front hand, drawn UNDER that hand */
       if (c.staff) { body += staffProp(pose, c.crook); }

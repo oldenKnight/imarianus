@@ -34,6 +34,11 @@
   .grid { display: grid; gap: 12px;
           grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)); }
   .grid.wide { grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); }
+  /* ART3 card-size rows: the sprite is drawn AT the pixel size the bug was
+     reported at (a 96px probatio card) instead of being stretched to fill a
+     260px review cell, because "reads female" is a question about pixels. */
+  .grid.tiny { grid-template-columns: repeat(auto-fill, minmax(108px, 1fr)); }
+  .cell .art.fixed { width: auto; aspect-ratio: auto; margin: 0 auto; }
   .cell { background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
           padding: 6px; text-align: center; }
   .cell .art { background: var(--tile); border-radius: 5px; display: block; width: 100%;
@@ -101,6 +106,20 @@
     shown[name] = true;
   }
 
+  /* a cell drawn at an EXACT pixel size — the art box is sized to the sprite
+     rather than the sprite stretched to the box (ART3 card-size rows) */
+  function cellAt(g, name, opts, label, px) {
+    var c = el('div', 'cell');
+    var art = el('div', 'art fixed');
+    art.style.width = px + 'px';
+    art.style.height = px + 'px';
+    art.innerHTML = Scenes.sprite(name, opts || {}, px);
+    c.appendChild(art);
+    c.appendChild(el('div', 'lab', (label || '')));
+    g.appendChild(c);
+    shown[name] = true;
+  }
+
   /* a full 400x240 scene cell */
   function sceneCell(g, spec, label) {
     var c = el('div', 'cell');
@@ -145,6 +164,11 @@
   cell(g, 'person', { role: 'man', hair: 'bald', beard: 'long' }, 'bald + long beard');
   cell(g, 'person', { role: 'woman', veil: true, veilColor: '#4d6c8a' }, 'veil (indigo) — Maria');
   cell(g, 'person', { role: 'woman', veil: false, hair: 'long' }, 'woman, no veil');
+  cell(g, 'person', { role: 'queen', veil: true }, 'veil under a crown');
+  cell(g, 'person', { role: 'woman', veil: true, hairColor: '#a89c8a' }, 'veil + grey brow — Sibylla, Anna');
+  cell(g, 'person', { role: 'woman', veil: true, hair: 'bald' }, 'veil, no hair strip');
+  cell(g, 'person', { role: 'crowd', veil: true, hair: 'long', beard: 'none' },
+    'veiled crowd extra (male core, veil on)');
   cell(g, 'person', { role: 'man', skin: 'pale' }, 'skin pale');
   cell(g, 'person', { role: 'man', skin: 'mid' }, 'skin mid');
   cell(g, 'person', { role: 'man', skin: 'deep' }, 'skin deep');
@@ -159,6 +183,94 @@
   cell(g, 'person', { role: 'child', stripes: true, k: 0.8 }, 'stripes — Ioseph');
   cell(g, 'person', { role: 'man', robeColor: '#4d6c8a', mantleColor: '#e0a93e' }, 'robe/mantle override');
   cell(g, 'person', { role: 'man', mantleColor: false }, 'no mantle');
+
+  /* ================= 1b. FĒMINAE (ART3) =================
+     THE OWNER'S REPORT: "Some drawings suck, like 'mulier': it seems like an
+     old man with beard!!" The veil's back drape used to run from the crown
+     down across the jaw and onto the chest; at 96px a pale mass under a chin
+     is a beard. The veil is now an arch that stops at ear height plus a pair
+     of panels that start at the shoulder line.
+
+     This section is the acceptance test for the fix, and it is drawn at 96px
+     — the size of a probatio card, where the bug was reported — and again at
+     40px, where only the silhouette survives. Every row below is the option
+     table its content file really passes to `person`, copied from the file
+     named beside it: if a woman reads male HERE, she reads male in the book. */
+  h2('Fēminae — every named woman in the book, at card size');
+
+  var FEMINAE = [
+    { n: 'mulier', src: 'h2 · historia-l1', o: { role: 'woman' } },
+    { n: 'Eva', src: 'h2 · historia-l1', o: { role: 'woman', flip: true } },
+    { n: 'Sara', src: 'h11 · historia-l3', o: { role: 'woman' } },
+    { n: 'Rebecca', src: 'h16 · historia-l3', o: { role: 'woman' } },
+    { n: 'Rachēl', src: 'h20 · historia-l4', o: { role: 'woman' } },
+    { n: 'Dalila', src: 'h40 · historia-l7', o: { role: 'woman', robeColor: '#8e4257' } },
+    { n: 'Anna (Samuēlis)', src: 'h41 · historia-l7', o: { role: 'woman' } },
+    { n: 'Anna ōrāns', src: 'h41 · historia-l7', o: { role: 'woman', pose: 'kneel' } },
+    { n: 'mātrēs I', src: 'h47 · historia-l8', o: { role: 'woman' } },
+    { n: 'mātrēs II', src: 'h47 · historia-l8', o: { role: 'woman', flip: true } },
+    { n: 'Maria', src: 'historia-l9', o: { role: 'woman', robeColor: '#4a6b96',
+        mantleColor: '#f0e6d2', veil: true, hair: 'long', hairColor: '#3a2417', beard: 'none' } },
+    { n: 'Venus', src: 'a1 · aeneis-al1', o: { role: 'woman', robeColor: '#f2e4c9', mantleColor: '#e0a93e' } },
+    { n: 'Iūnō', src: 'a1 · aeneis-al1', o: { role: 'queen', mantleColor: '#e0a93e' } },
+    { n: 'Creūsa', src: 'a2 · aeneis-al2', o: { role: 'woman', robeColor: '#8e4257', mantleColor: '#f4e7cd' } },
+    { n: 'Andromachē', src: 'a3 · aeneis-al3', o: { role: 'woman', robeColor: '#8e4257', mantleColor: '#f4e7cd' } },
+    { n: 'Dīdō', src: 'a4 · aeneis-al4', o: { role: 'queen' } },
+    { n: 'Anna (soror)', src: 'a4 · aeneis-al4', o: { role: 'woman', robeColor: '#7d9aa8', mantleColor: '#f4e7cd' } },
+    { n: 'Sibylla', src: 'a6 · aeneis-al6', o: { role: 'woman', robeColor: '#f4e7cd',
+        mantleColor: '#4d6c8a', veil: true, veilColor: '#4d6c8a', hairColor: '#a89c8a' } },
+    { n: 'umbra fēmina', src: 'a6 · aeneis-al6', o: { role: 'woman', robeColor: '#9a9384',
+        mantleColor: '#8b8578', veilColor: '#8b8578', hairColor: '#8b8578', skin: 'pale' } },
+    { n: 'Dīdōnis umbra', src: 'a6 · aeneis-al6', o: { role: 'queen', robeColor: '#9a9384',
+        mantleColor: '#8b8578', veilColor: '#8b8578', hairColor: '#8b8578', skin: 'pale' } },
+    { n: 'Alēctō', src: 'a7 · aeneis-al7', o: { role: 'woman', robeColor: '#4a4650',
+        mantleColor: '#4a4650', veilColor: '#4a4650', veil: true, hairColor: '#4a4650', skin: 'mid' } },
+    { n: 'Lāvīnia (puella)', src: 'a7 · aeneis-al7', o: { role: 'woman', robeColor: '#f2ece0',
+        mantleColor: '#e0a93e', veil: false, hair: 'long', hairColor: '#7a4a26' } },
+    { n: 'Silvia', src: 'a7 · aeneis-al7', o: { role: 'woman', robeColor: '#a8823f',
+        mantleColor: false, veil: false, hair: 'long', hairColor: '#7a4a26' } },
+    { n: 'Camilla (a7)', src: 'a7 · aeneis-al7', o: { role: 'woman', robeColor: '#8e4257',
+        mantleColor: '#e0a93e', veil: false, hair: 'long', hairColor: '#3a2417', spear: true } },
+    { n: 'Camilla (a11)', src: 'a11 · aeneis-al11', o: { role: 'woman', robeColor: '#8e4257',
+        mantleColor: false, veil: false, hair: 'long', shortTunic: true } },
+    { n: 'Acca', src: 'a11 · aeneis-al11', o: { role: 'woman', robeColor: '#e3d0a8',
+        mantleColor: false, veil: false, hair: 'long', shortTunic: true } },
+    { n: 'Lāvīnia (a12)', src: 'a12 · aeneis-al12', o: { role: 'woman', robeColor: '#7d3f6a',
+        mantleColor: '#f4e7cd', hair: 'long' } },
+    { n: 'Amāta', src: 'a12 · aeneis-al12', o: { role: 'queen', robeColor: '#8e4257', mantleColor: '#f4e7cd' } }
+  ];
+
+  h3('at 96px — the probatio card, the size the owner photographed');
+  g = grid(); g.className = 'grid tiny';
+  for (i = 0; i < FEMINAE.length; i++) {
+    cellAt(g, 'person', FEMINAE[i].o,
+      '<b>' + FEMINAE[i].n + '</b><br><i>' + FEMINAE[i].src + '</i>', 96);
+  }
+
+  h3('at 40px — only the silhouette survives; no woman may be mistaken for a bearded man');
+  g = grid(); g.className = 'grid tiny';
+  for (i = 0; i < FEMINAE.length; i++) {
+    cellAt(g, 'person', FEMINAE[i].o, '<b>' + FEMINAE[i].n + '</b>', 40);
+  }
+
+  h3('the comparison that matters: women against the bearded men, same size');
+  g = grid(); g.className = 'grid tiny';
+  var SILHOUETTE = [
+    { n: 'mulier', o: { role: 'woman' } },
+    { n: 'vir', o: { role: 'man' } },
+    { n: 'rēgīna', o: { role: 'queen' } },
+    { n: 'rēx', o: { role: 'king' } },
+    { n: 'Sibylla', o: { role: 'woman', veil: true, hairColor: '#a89c8a' } },
+    { n: 'patriarcha', o: { role: 'patriarch' } },
+    { n: 'Maria', o: { role: 'woman', veilColor: '#4d6c8a' } },
+    { n: 'sacerdōs', o: { role: 'priest' } }
+  ];
+  for (i = 0; i < SILHOUETTE.length; i++) {
+    cellAt(g, 'person', SILHOUETTE[i].o, '<b>' + SILHOUETTE[i].n + '</b>', 96);
+  }
+  for (i = 0; i < SILHOUETTE.length; i++) {
+    cellAt(g, 'person', SILHOUETTE[i].o, '<b>' + SILHOUETTE[i].n + '</b>', 40);
+  }
 
   h2('Turba — crowdGroup');
   g = grid();
