@@ -2434,8 +2434,29 @@
         var vbSolo = srcViewBox(env.tileImage(solo, 96));
         var vbDuo = srcViewBox(env.tileImage(duo, 96));
         var stage = '0 0 ' + Scenes.W + ' ' + Scenes.H;
-        if (vbDuo !== stage) {
-          done('a TWO-actor scene was cropped (viewBox ' + vbDuo + '); the composition is the meaning there');
+        /* LUDUS restated this half. It used to demand that a two-actor tile
+           rasterise the WHOLE 400x240 stage, which was a proxy for the thing
+           that actually matters — that the COMPOSITION survives. It is not the
+           same claim: the stage is mostly empty sky, and holding the camera
+           that far back is why three multi-actor tiles in a lūdus pool arrived
+           as three identical cream rectangles. A tile may now frame in on the
+           subject; what it may never do is drop an actor, or collapse into one
+           actor's sprite (which is the crop rule leaking where it must not go).
+           So the assertion is that BOTH actors are still inside the frame. */
+        if (vbDuo === viewBoxOf(Scenes.sprite('lamb', {}, 96)) ||
+            vbDuo === viewBoxOf(Scenes.sprite('person', {}, 96))) {
+          done('a TWO-actor scene collapsed to ONE actor\'s sprite (' + vbDuo +
+               '); the composition is the meaning there');
+          return;
+        }
+        var n = String(vbDuo).split(/\s+/);
+        var bx = parseFloat(n[0]), by = parseFloat(n[1]),
+            bw = parseFloat(n[2]), bh = parseFloat(n[3]);
+        function framed(x, y) {
+          return x >= bx - 0.5 && x <= bx + bw + 0.5 && y >= by - 0.5 && y <= by + bh + 0.5;
+        }
+        if (!framed(150, 210) || !framed(250, 210)) {
+          done('the two-actor tile framed one of the actors out of the picture: ' + vbDuo);
           return;
         }
         if (vbSolo === stage) {
@@ -3710,6 +3731,357 @@
         }
         return done(null);
       });
+    });
+
+  /* ================= LUDUS — the fox-catcher's falling tiles =================
+
+     THE OWNER'S SECOND COMPLAINT, and the reason it took a second pass: the
+     CLAR work above fixed the DOM chips and the boss tiles and left js/game.js
+     alone, so the ONE game he actually plays kept rendering each falling item
+     as its whole 400x240 mini-scene squeezed into 56 canvas units — which, on
+     a 375px phone where CSS scales the canvas down again, is forty CSS pixels
+     of landscape with the subject about eight pixels across.
+
+     Three claims are guarded here, in the order they matter:
+       1. one implementation  boss.js and game.js draw tiles with the SAME
+                              function, so the rule cannot drift again;
+       2. big enough          the drawn tile clears 56 CSS px on a phone;
+       3. no labels           a lūdus tile never writes its word, because the
+                              word is the question and the picture the answer.
+     Plus the content sweep: no lūdus pool may drop two items that resolve to
+     the same picture — there is no runtime flip in a canvas game to save it. */
+
+  /* Load every content file the manifest declares, once, and hand the caller
+     the flat track/region list. Several sweeps below need the whole product
+     and must not each append their own copy of thirty-three <script> tags. */
+  var contentWant = null, contentErr = null, contentQueue = [], contentLoading = false;
+  function withAllContent(done, body) {
+    if (!SERVED) { done(null); return; }
+    contentQueue.push({ done: done, body: body });
+    if (contentWant || contentErr) { drainContent(); return; }
+    if (contentLoading) { return; }
+    contentLoading = true;
+    fetchText('../content/manifest.json', function (err, text) {
+      if (err) { contentErr = 'content/manifest.json did not load: ' + err; drainContent(); return; }
+      var man;
+      try { man = JSON.parse(text); }
+      catch (e) { contentErr = 'manifest is not valid JSON: ' + e.message; drainContent(); return; }
+      var want = [], t, r, i;
+      for (t = 0; t < (man.tracks || []).length; t++) {
+        for (r = 0; r < (man.tracks[t].regions || []).length; r++) {
+          want.push({ track: man.tracks[t].id, region: man.tracks[t].regions[r].id });
+        }
+      }
+      if (!want.length) { contentErr = 'the manifest declares no regions at all'; drainContent(); return; }
+      var left = want.length, failedSrc = null;
+      function loaded() {
+        left--;
+        if (left > 0) { return; }
+        if (failedSrc) { contentErr = 'content file did not load: ' + failedSrc; }
+        else { contentWant = want; }
+        drainContent();
+      }
+      for (i = 0; i < want.length; i++) {
+        (function (w) {
+          if (CONTENT.region(w.track, w.region)) { loaded(); return; }
+          var src = '../content/' + w.track + '-' + w.region + '.js';
+          var el = document.createElement('script');
+          el.src = src; el.async = false;
+          el.onload = loaded;
+          el.onerror = function () { failedSrc = src; loaded(); };
+          document.head.appendChild(el);
+        }(want[i]));
+      }
+    });
+  }
+  function drainContent() {
+    var q = contentQueue; contentQueue = [];
+    var i;
+    for (i = 0; i < q.length; i++) {
+      if (contentErr) { q[i].done(contentErr); } else { q[i].body(contentWant); }
+    }
+  }
+
+  /* 1. ONE IMPLEMENTATION. The rule and the painter both live in js/scenes.js;
+     boss.js and game.js are callers. A second copy of either — which is what
+     the whole LUDUS defect was — goes red here. */
+  checkAsync('LUDUS', 'the lūdus and the boss draw tiles through ONE shared painter',
+    function (done) {
+      if (!SERVED) { done(null); return; }
+      if (typeof Scenes.tileImage !== 'function' || typeof Scenes.drawTile !== 'function' ||
+          typeof Scenes.soloActorOf !== 'function') {
+        done('Scenes.tileImage / drawTile / soloActorOf are not all exported — ' +
+             'there is no shared tile helper to share'); return;
+      }
+      withFile('../js/game.js', done, function (game) {
+        var g = stripComments(game);
+        if (g.indexOf('Scenes.drawTile') < 0) {
+          return done('js/game.js no longer paints through Scenes.drawTile — the ' +
+                      'minigame has its own tile renderer again');
+        }
+        if (/Scenes\.render\s*\(/.test(g)) {
+          return done('js/game.js rasterises a scene itself (Scenes.render) instead of ' +
+                      'going through the shared crop rule — this IS the bug');
+        }
+        withFile('../js/boss.js', done, function (boss) {
+          var b = stripComments(boss);
+          if (b.indexOf('Scenes.drawTile') < 0) {
+            return done('js/boss.js no longer forwards to Scenes.drawTile, so the duel ' +
+                        'and the minigame are two different tiles again');
+          }
+          if (/function soloActorOf\s*\(word\)\s*\{[\s\S]{0,400}?actorNames/.test(b)) {
+            return done('js/boss.js has re-grown its own copy of the crop rule');
+          }
+          return done(null, 'scenes.js owns tileImage + drawTile; boss.js and game.js forward');
+        });
+      });
+    });
+
+  /* 2. BIG ENOUGH. Sized in the unit the learner sees: the canvas is 480 units
+     wide and CSS-scaled, so the check runs a real game on a real 343px-wide
+     canvas — the width of the content column on a 375px phone — and converts
+     back. Also guards the gameplay side of the same number: the tile is
+     derived from the canvas, and the spawn margin from the tile, so a bigger
+     tile narrows the lane instead of hanging off the edge. */
+  checkAsync('LUDUS', 'a falling tile is at least 56 CSS px on a 375px phone',
+    function (done) {
+      if (!SERVED) { done(null); return; }
+      if (!window.Game || !Game.tileSize) { done('Game.tileSize is gone'); return; }
+      var host = document.createElement('div');
+      host.style.cssText = 'position:absolute;left:-9999px;top:0;width:343px';
+      var cv = document.createElement('canvas');
+      cv.style.cssText = 'width:100%;max-width:480px;display:block';
+      host.appendChild(cv);
+      document.body.appendChild(host);
+      /* a frame source that never fires: the tile size is settled by start(),
+         and this row must not leave a game running behind it. */
+      Game.setFrameSource(function () { return 0; }, function () {});
+      var words = [{ la: 'a', emoji: '🦊' }, { la: 'b', emoji: '🍇' }];
+      var tile;
+      try {
+        Game.start(cv, words, 8, {});
+        tile = Game.tileSize();
+      } finally {
+        Game.stop();
+        Game.setFrameSource(null, null);
+        document.body.removeChild(host);
+      }
+      var cssPx = tile * (343 / 480);
+      if (!(cssPx >= 56)) {
+        return done('a falling tile is only ' + cssPx.toFixed(1) + ' CSS px on a 375px ' +
+                    'phone (tile=' + tile + ' canvas units) — this is the size complaint');
+      }
+      if (tile > 96) {
+        return done('the tile grew to ' + tile + ' units, over a fifth of the 480-unit ' +
+                    'field: three of these overlap instead of reading as separate items');
+      }
+      withFile('../js/game.js', done, function (game) {
+        var spawn = fnSource(stripComments(game), 'spawnItem') || '';
+        if (spawn.indexOf('tile') < 0) {
+          return done('spawnItem no longer derives its margin from the tile size, so a ' +
+                      'bigger tile hangs off the edge of the field');
+        }
+        return done(null, tile + ' canvas units = ' + cssPx.toFixed(1) + ' CSS px at 375');
+      });
+    });
+
+  /* 3. NO LABELS. Deliberately the opposite of ordina, where the word IS the
+     question; in the lūdus it is the answer. Asserted on the item-drawing
+     block only — the banner at the top of the field prints the target word on
+     purpose, and must go on doing so. */
+  checkAsync('LUDUS', 'a falling tile never writes the word next to the picture',
+    function (done) {
+      if (!SERVED) { done(null); return; }
+      withFile('../js/game.js', done, function (game) {
+        var src = stripComments(game);
+        var from = src.indexOf('for (i = 0; i < items.length; i++)');
+        if (from < 0) { return done('the item-drawing loop is no longer recognisable'); }
+        var block = src.slice(from, from + 400);
+        if (/label/.test(block) || /\.word\.la|target\.la/.test(block)) {
+          return done('the lūdus draws a word on its tiles — the exercise is word→picture, ' +
+                      'and a label lets the learner read instead of recognise');
+        }
+        return done(null, 'tiles carry the picture only');
+      });
+    });
+
+  /* 4. THE CONTENT SWEEP. Every capitulum in the product, through the same
+     fingerprint machinery the chips use. CRITICAL = two items of ONE pool
+     resolve to the same picture; in a canvas game there is no picture→word
+     flip to fall back on, so that round simply cannot be won. */
+  checkAsync('LUDUS', 'no lūdus pool anywhere drops two items with the same picture',
+    function (done) {
+      if (!window.CHIP || typeof CHIP.lintLudus !== 'function') {
+        done('CHIP.lintLudus is missing — the lūdus pools are unswept'); return;
+      }
+      withAllContent(done, function (want) {
+        var caps = [], k, c, reg;
+        for (k = 0; k < want.length; k++) {
+          reg = CONTENT.region(want[k].track, want[k].region);
+          if (!reg) { continue; }
+          for (c = 0; c < (reg.capitula || []).length; c++) { caps.push(reg.capitula[c]); }
+        }
+        var res = CHIP.lintLudus(caps);
+        if (res.pools < 100) {
+          return done('swept only ' + res.pools + ' lūdus pools of ' + res.capitula +
+                      ' capitula — the walk stopped matching the content shape');
+        }
+        if (res.critical) {
+          var lines = [], i;
+          for (i = 0; i < res.flags.length && lines.length < 12; i++) {
+            if (res.flags[i].level !== 'critical') { continue; }
+            lines.push(res.flags[i].cap + ' ' + res.flags[i].a + ' vs ' + res.flags[i].b +
+                       ' — ' + res.flags[i].why);
+          }
+          return done(res.critical + ' CRITICAL: ' + lines.join(' | '));
+        }
+        return done(null, res.pools + ' pools over ' + res.capitula + ' capitula, 0 critical, ' +
+                    res.warn + ' warn');
+      });
+    });
+
+  /* ================= AENIGMATA — the memory board =================
+     Same complaint one screen further on: a fixed four-column grid put a 56px
+     picture inside a 79x68 card on a phone, and matching a cropped actor to a
+     word at that size is guesswork. */
+  checkAsync('AENIGMATA', 'the memory board is a 2- or 3-column grid of >=88px cards on a phone',
+    function (done) {
+      if (!SERVED) { done(null); return; }
+      withFile('../css/styles.css', done, function (css) {
+        if (css.indexOf('.mem-grid.mem-cols-2') < 0 || css.indexOf('.mem-grid.mem-cols-3') < 0) {
+          return done('the memory grid has no per-board-size column rule, so a phone ' +
+                      'still gets four columns of fingernail cards');
+        }
+        if (!/\.mem-card \{[^}]*min-height: 88px/.test(css)) {
+          return done('the phone memory card has no 88px floor');
+        }
+        if (!/\.mem-card\.pic \.scn-thumb \{[^}]*width: 72px/.test(css)) {
+          return done('the phone memory card art is still 56px');
+        }
+        withAppJs(done, function (src) {
+          if (src.indexOf('mem-cols-') < 0) {
+            return done('app.js no longer writes the column class, so the CSS above ' +
+                        'never matches anything');
+          }
+          var mem = src.indexOf('function memory');
+          var body = src.slice(mem, mem + 1400);
+          if (body.indexOf('visualFor(') < 0) {
+            return done('the memory board no longer draws its picture cards through ' +
+                        'visualFor, so they are whole mini-scenes again');
+          }
+          return done(null, '2/3 columns, 88px cards, 72–96px art, cards via visualFor');
+        });
+      });
+    });
+
+  /* ================= AUDIT — every picture-chooser surface =================
+
+     The owner asked, in as many words, for proof that nothing ELSE has this
+     problem. The answer has two halves, and only the second one survives a
+     future change.
+
+     HALF ONE: a registry of every surface in the product that asks the learner
+     to choose between pictures, each named with the file and function that
+     paints it and the shared helper it must reach. Two helpers exist and there
+     is no third: visualFor() for DOM chips (which calls CHIP.soloActor), and
+     Scenes.drawTile() for canvas tiles (which calls Scenes.tileImage). Both
+     end at the same crop rule.
+
+     HALF TWO: a count. Registering surfaces proves the listed ones are routed;
+     it cannot notice a NEW one. So the marker strings that make a picture
+     chooser — the option-button class, the memory-card class, the tile painter
+     call — are counted in the shipped sources and compared with the registry.
+     Add a surface and this row goes red with instructions. */
+  var CHOOSERS = [
+    { surface: 'VERBA quiz — picture options', file: 'js/app.js', fn: 'askWord', via: 'visualFor' },
+    { surface: 'SONUS — picture options', file: 'js/app.js', fn: 'ask', via: 'visualFor' },
+    { surface: 'BOSS quiz — picture options', file: 'js/app.js', fn: 'ask', via: 'visualFor' },
+    { surface: 'REFILL — picture options', file: 'js/app.js', fn: 'ask', via: 'visualFor' },
+    { surface: 'AENIGMATA — memory picture cards', file: 'js/app.js', fn: 'memory', via: 'visualFor' },
+    { surface: 'LUDUS — falling tiles', file: 'js/game.js', fn: 'draw', via: 'Scenes.drawTile' },
+    { surface: 'BOSS caterva — falling tiles', file: 'js/boss-phases.js', fn: null, via: 'env.drawTile' },
+    { surface: 'BOSS clamor — drifting cards', file: 'js/boss-phases.js', fn: null, via: 'env.drawTile' },
+    { surface: 'BOSS fuga — obstacles', file: 'js/boss-phases.js', fn: null, via: 'env.drawTile' },
+    { surface: 'PROBATIO ordina — sorted tiles', file: 'js/probatio.js', fn: null, via: 'env.drawTile' },
+    { surface: 'PROBATIO transitus — stepping tiles', file: 'js/probatio.js', fn: null, via: 'env.drawTile' },
+    { surface: 'PROBATIO sententia — word cards', file: 'js/probatio.js', fn: null, via: 'env.drawTile' }
+  ];
+  /* the marker each kind of chooser leaves in the source, and how many the
+     registry above accounts for. A picture CHOICE is what is counted; a single
+     illustration with nothing to choose between (the fābula page, corrige and
+     complē scenes, the clamor/sententia banner, the intro and victory cards)
+     is not a chooser and is deliberately not here. */
+  var CHOOSER_MARKERS = [
+    { file: 'js/app.js', marker: /class="opt emoji-opt"/g, expect: 4,
+      what: 'DOM picture-option buttons (verba, sonus, boss quiz, refill)' },
+    { file: 'js/app.js', marker: /class="mem-card"/g, expect: 1,
+      what: 'the memory board' },
+    { file: 'js/game.js', marker: /Scenes\.drawTile\(/g, expect: 1,
+      what: 'the lūdus falling tiles' },
+    { file: 'js/boss-phases.js', marker: /env\.drawTile\(/g, expect: 3,
+      what: 'caterva, clamor and fuga' },
+    { file: 'js/probatio.js', marker: /env\.drawTile\(/g, expect: 3,
+      what: 'ordina, transitus and sententia' }
+  ];
+
+  checkAsync('AUDIT', 'every picture-chooser surface routes through a shared crop helper',
+    function (done) {
+      if (!SERVED) { done(null); return; }
+      var files = {}, names = ['js/app.js', 'js/game.js', 'js/boss-phases.js', 'js/probatio.js'];
+      var left = names.length, failed = null;
+      function gotAll() {
+        if (failed) { return done(failed); }
+        var bad = [], i, c, src;
+        for (i = 0; i < CHOOSERS.length; i++) {
+          c = CHOOSERS[i];
+          src = stripComments(files[c.file] || '');
+          if (src.indexOf(c.via) < 0) {
+            bad.push(c.surface + ' (' + c.file + ') never reaches ' + c.via);
+          }
+        }
+        if (bad.length) { return done(bad.join(' | ')); }
+        return done(null, CHOOSERS.length + ' chooser surfaces, all via visualFor or drawTile');
+      }
+      var n;
+      for (n = 0; n < names.length; n++) {
+        (function (name) {
+          fetchText('../' + name, function (err, text) {
+            if (err) { failed = name + ' did not load: ' + err; } else { files[name] = text; }
+            if (--left === 0) { gotAll(); }
+          });
+        }(names[n]));
+      }
+    });
+
+  checkAsync('AUDIT', 'no picture-chooser surface exists that this page does not know about',
+    function (done) {
+      if (!SERVED) { done(null); return; }
+      var left = CHOOSER_MARKERS.length, bad = [], failed = null;
+      var m;
+      for (m = 0; m < CHOOSER_MARKERS.length; m++) {
+        (function (rule) {
+          fetchText('../' + rule.file, function (err, text) {
+            if (err) { failed = rule.file + ' did not load: ' + err; }
+            else {
+              var hits = (stripComments(text).match(rule.marker) || []).length;
+              if (hits !== rule.expect) {
+                bad.push(rule.file + ': ' + hits + ' ' + rule.what + ', expected ' +
+                         rule.expect + ' — ROUTE ME OR EXEMPT ME: a picture-choice ' +
+                         'surface was added or removed. Send it through visualFor ' +
+                         '(DOM) or Scenes.drawTile (canvas), add it to CHOOSERS in ' +
+                         'tests/regression.html, and update this count. If it shows ' +
+                         'ONE picture with nothing to choose between, it is not a ' +
+                         'chooser: say so here.');
+              }
+            }
+            if (--left === 0) {
+              if (failed) { return done(failed); }
+              if (bad.length) { return done(bad.join(' | ')); }
+              return done(null, 'chooser markers match the registry exactly');
+            }
+          });
+        }(CHOOSER_MARKERS[m]));
+      }
     });
 
   runEngineQueue();      /* start the serialized engine tests */

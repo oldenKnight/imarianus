@@ -125,6 +125,15 @@
       window.__QA_CAP = (q.match(/cap=([a-z0-9]+)/) || [])[1] || '';
       window.__QA_PAGE = parseInt((q.match(/page=([0-9]+)/) || [])[1] || '0', 10);
 
+      /* &play=N — PLAY N MOVES OF THE MEMORY BOARD before the shutter opens.
+         A board with every card face-down photographs the card SIZE but not
+         the thing the owner asked about: whether two revealed pictures can be
+         told apart. The route below taps N face-down cards, one every 400ms,
+         through the real click handlers — matched pairs stay face-up, so the
+         shot shows a genuine mid-game board. With &rand= the shuffle is
+         deterministic, so the same URL yields the same board every time. */
+      window.__QA_PLAY = parseInt((q.match(/play=([0-9]+)/) || [])[1] || '0', 10);
+
       /* &rand=N — REPLACE Math.random WITH A SEEDED SEQUENCE.
          The VERBA quick check, SONUS and AENIGMATA all shuffle, so "the
          question about Adam" is not a URL anyone can write: which word is
@@ -356,6 +365,37 @@
       if (window.__QA_LEGACY && window.CHIP) {
         CHIP.soloActor = function () { return null; };
         CHIP.optionAmbiguous = function () { return null; };
+        /* LUDUS adds a fourth thing to undo: the CANVAS crop rule, which the
+           lūdus falling tiles and the boss tiles both reach through
+           Scenes.tileImage. Pointing it straight at the raster puts every
+           tile back on its whole 400x240 mini-scene, which is what the
+           minigame did before this pass. (The tile SIZE is not undone — it is
+           computed from the live canvas width — so a before/after pair of
+           ludus shots shows the crop, and the size is asserted by the
+           'at least 56 CSS px' row in tests/regression.html.) */
+        if (window.Scenes && Scenes.tileImage) {
+          Scenes.tileImage = function (word, px) { return Scenes.sceneImage(word, px); };
+        }
+        /* ?screen=ludus&legacy=1 goes one step further and repaints the
+           falling items EXACTLY as js/game.js used to: a bare 56-unit image
+           off a 60px raster, no tile, no frame, no size-for-the-screen. That
+           is the honest "before" for the lūdus pair — same app, same content,
+           one commit's worth of rendering. Scoped to the lūdus route so a
+           legacy BOSS shot still shows the boss's own tiles. */
+        if (window.Scenes && window.__QA_SCREEN === 'ludus') {
+          Scenes.drawTile = function (ctx, word, cx, cy) {
+            var img = Scenes.sceneImage(word, 60);
+            if (img && img.complete && img.naturalWidth > 0) {
+              ctx.drawImage(img, cx - 28, cy - 28, 56, 56);
+            } else if (word && word.emoji) {
+              ctx.font = '38px serif';
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'middle';
+              ctx.fillStyle = '#3a2417';
+              ctx.fillText(word.emoji, cx, cy);
+            }
+          };
+        }
         window.setInterval(function () {
           var rows = document.querySelectorAll('.opt-row.picks'), i;
           for (i = 0; i < rows.length; i++) { rows[i].className = 'opt-row'; }
@@ -376,7 +416,11 @@
          (see js/boss.js); a 16 ms timer gives the harness a real fight to
          photograph. Only the QA page does this — the app never does. */
       (function () {
-        var engines = [window.Boss, window.Probatio], i;
+        /* window.Game is the LŪDUS fox-catcher. It was missing from this list
+           until the LUDUS pass, so every ?screen=ludus screenshot ever taken
+           was of the game's FIRST FRAME — an empty field — which is precisely
+           why the falling tiles went unaudited for so long. */
+        var engines = [window.Boss, window.Probatio, window.Game], i;
         for (i = 0; i < engines.length; i++) {
           if (!engines[i] || !engines[i].setFrameSource) { continue; }
           engines[i].setFrameSource(
@@ -660,6 +704,17 @@
             when('.steps button.node', function () {
               var b = stepButton(label);
               if (b) { tap(b); }
+              /* &play=N on the memory board: tap N still-hidden cards, one
+                 every 400ms, so the shot catches a board in play. */
+              if (window.__QA_PLAY && target === 'aenigmata') {
+                var moves = window.__QA_PLAY;
+                (function tapCard() {
+                  if (moves <= 0) { return; }
+                  var next = document.querySelector('.mem-card:not(.flip):not(.hit)');
+                  if (next) { tap(next); moves--; }
+                  window.setTimeout(tapCard, 400);
+                }());
+              }
               /* &page=N taps 'perge' N times so a headless shot can reach a
                  named story page instead of only the first one. */
               if (!window.__QA_PAGE) { return; }

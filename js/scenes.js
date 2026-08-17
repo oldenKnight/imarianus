@@ -629,6 +629,317 @@ var Scenes = (function () {
     return img;
   }
 
+  /* ============================================================
+     TILE PICTURES — the ONE "what does this word look like in a
+     small square?" helper, shared by every canvas game.
+     ------------------------------------------------------------
+     LUDUS: this used to live inside boss.js's engine closure as
+     soloActorOf/tileImage, and js/game.js (the lūdus fox-catcher)
+     had its OWN path: makeSceneImage() rendered the whole 400x240
+     mini-scene into 60px and drew it at 56. A mini-scene is sky,
+     ground and the thing itself standing somewhere on it, so four
+     falling items were four copies of the same landscape with a
+     14px difference buried inside — exactly the complaint the CLAR
+     pass fixed for the DOM chips and the boss tiles, still live in
+     the minigame the owner actually plays.
+
+     Two callers of one rule must not be two copies of it, so the
+     rule moved HERE, next to sprite() and render(), which are the
+     only two things it is made of. boss.js keeps its local names
+     (they are published on the phase `env`) but they now delegate,
+     and game.js calls Scenes.tileImage directly. chip-lint.js
+     states the same rule a third time on purpose: it must stay
+     loadable with no art library at all (see its header), so it
+     guards on `typeof Scenes` instead of depending on this.
+
+     THE RULE. A scene that is ONE registered actor and carries no
+     speech bubble is only staging around that actor, so the tile
+     may draw the actor ALONE — a tight, transparent sprite — and
+     let the tile's own face be the background. Anything else keeps
+     the raster, because there the COMPOSITION is the meaning
+     (`mare` is two fish IN water; cropping one fish would lie).
+     ============================================================ */
+
+  var tileSceneCache = {};   /* sceneKey|px  → Image (whole-scene raster)   */
+  var tileSpriteCache = {};  /* name|pose|role|flip|px → Image (crop)       */
+  var tileSeq = 0;
+
+  /* A cache key for a scene OBJECT.
+
+     boss.js keyed its scene cache on `word.la`, which is safe only because one
+     engine instance plays one region. This cache is module-level and outlives
+     every screen, and `silva` in Regiō I is not the same artwork as `silva` in
+     Regiō V — keying on the Latin would serve the first one's picture for the
+     rest of the session. So the key is the scene's own identity: a hidden,
+     NON-ENUMERABLE id stamped on the object the first time it is seen.
+     Non-enumerable matters — chip-lint walks scene items with for-in and the
+     content ledger JSON-stringifies scenes; an ordinary property would show up
+     in both. A frozen scene cannot be stamped, and then we simply do not
+     cache it rather than risk a wrong key. */
+  function sceneKey(sc) {
+    if (!sc) { return null; }
+    if (sc.__tileId) { return sc.__tileId; }
+    try {
+      Object.defineProperty(sc, '__tileId', {
+        value: 'sc' + (++tileSeq), enumerable: false, writable: false, configurable: false
+      });
+    } catch (e) { return null; }
+    return sc.__tileId || null;
+  }
+
+  /* the scene item a word's picture collapses to, or null when the picture
+     must keep its whole raster. Takes the WORD (vocab item / ludus item /
+     authored literal), which is what every canvas caller has in hand. */
+  function soloActorOf(word) {
+    var sc = word && word.scene;
+    if (!sc || !sc.items || sc.items.length !== 1) { return null; }
+    /* a bubble is speech drawn on the STAGE, not on the actor: cropping to the
+       actor would silently delete it, and for `dīcit` the bubble IS the word. */
+    if (sc.bubbles && sc.bubbles.length) { return null; }
+    var it = sc.items[0];
+    if (!it || !it.t) { return null; }
+    return actorFn(it.t) ? it : null;
+  }
+
+  /* ---------- the SUBJECT BOX of a multi-actor scene ----------
+
+     The crop rule above only fires for a scene of ONE actor. Half of every
+     lūdus pool in the product is scenes of two, three or four — `caelum` is a
+     dove and an eagle, `terra` is a tree, a bush and a mountain, `mare` is two
+     fish — and for those the composition really is the meaning, so they keep
+     their raster and the crop rule leaves them alone.
+
+     But the raster is a 400x240 STAGE, and the actors on it stand at ~15% of
+     its height. Squeezed into a tile that is 88 canvas units of art, the dove
+     and the eagle are eight pixels each, and `Deus`, `caelum` and `terra` land
+     on screen as three identical cream rectangles with a brown line across
+     them. Photographed side by side in the lūdus, they are indistinguishable —
+     which is the owner's complaint, arriving by a second road that cropping to
+     a single actor can never close.
+
+     So a tile's raster keeps the WHOLE COMPOSITION but drops the empty sky and
+     the empty ground: the viewBox is tightened to the box the actors actually
+     occupy, padded and squared up. Nothing about the picture changes except
+     how far away the camera stands — two fish in blue water are still two fish
+     in blue water, because the background rect is painted across the whole
+     stage and a narrower viewBox simply shows less of it.
+
+     NOT DONE when the scene carries a bubble: bubbles are drawn at fixed stage
+     coordinates and a tightened viewBox could crop one away, and for `dīcit`
+     the bubble IS the word. Such a scene keeps the whole stage.
+     NOT DONE when the scene has no actors at all (`rīvus` is a river
+     background and nothing else): there the background IS the subject and it
+     already fills the frame. */
+  function subjectBox(spec) {
+    if (!spec) { return null; }
+    if (spec.bubbles && spec.bubbles.length) { return null; }
+    /* A scene with NO actors is a background and nothing else — `rīvus` is the
+       river band, `mare` in some capitula is the water itself. There the
+       background IS the subject, but a 400x240 stage letterboxed into a square
+       tile shows a 56x34 strip with cream above and below it, which is how the
+       river arrived as a thin blue line. A centred square of the stage fills
+       the tile with the thing the word means. */
+    if (!spec.items || !spec.items.length) {
+      return { x: (W - H) / 2, y: 0, w: H, h: H };
+    }
+    var x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9, found = 0;
+    var i, it, b, s, ax, ay;
+    for (i = 0; i < spec.items.length; i++) {
+      it = spec.items[i];
+      if (!it || !it.t || !actorFn(it.t)) { continue; }
+      b = boundsFor(it.t);
+      s = (typeof it.s === 'number') ? it.s : 1;
+      /* g() is translate(x,y) then scale(s) then, for a flip, scale(-1,1) —
+         so the mirrored box is the same width reflected through the actor's
+         own origin, not through the stage. */
+      ax = (typeof it.x === 'number') ? it.x : 0;
+      ay = (typeof it.y === 'number') ? it.y : 0;
+      var lx = it.flip ? (ax - s * (b.x + b.w)) : (ax + s * b.x);
+      var ly = ay + s * b.y;
+      if (lx < x0) { x0 = lx; }
+      if (ly < y0) { y0 = ly; }
+      if (lx + s * b.w > x1) { x1 = lx + s * b.w; }
+      if (ly + s * b.h > y1) { y1 = ly + s * b.h; }
+      found++;
+    }
+    if (!found) { return null; }
+    /* Breathing room, then square the box up around its own centre — the tile
+       is square and "meet" would letterbox a long thin box, giving back the
+       margins that were just removed.
+
+       The squaring only ever GROWS an axis, never shrinks one, and that is the
+       load-bearing rule: shrinking would cut an actor out of the frame, and a
+       tile that silently drops one of `Deus`'s four figures is a worse lie
+       than a tile that is merely small. So a subject wider than the stage is
+       tall stays wide and letterboxes, and the zoom is whatever honesty
+       allows — 1.9x for `mare`, 1.6x for `caelum`, 1.1x for a story page whose
+       actors are spread across the whole stage. */
+    var pad = 16;
+    x0 -= pad; y0 -= pad; x1 += pad; y1 += pad;
+    var side = Math.max(x1 - x0, y1 - y0);
+    var bw = Math.min(side, W), bh = Math.min(side, H);
+    var cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
+    x0 = cx - bw / 2; y0 = cy - bh / 2;
+    /* clamp back inside the stage: outside the viewBox there is no background
+       to show, only transparency. */
+    if (x0 < 0) { x0 = 0; }
+    if (y0 < 0) { y0 = 0; }
+    if (x0 + bw > W) { x0 = W - bw; }
+    if (y0 + bh > H) { y0 = H - bh; }
+    /* nothing to gain when the subject already fills the stage */
+    if (bw >= W - 4 && bh >= H - 4) { return null; }
+    return { x: x0, y: y0, w: bw, h: bh };
+  }
+
+  /* the same SVG render(), re-aimed at the subject box. The viewBox is the
+     only thing that differs, so every actor, background and z-order is exactly
+     what the full illustration draws. */
+  function subjectSvg(spec) {
+    var box = subjectBox(spec);
+    var svg = render(spec);
+    if (!box) { return svg; }
+    return svg.replace('viewBox="0 0 ' + W + ' ' + H + '"',
+      'viewBox="' + box.x + ' ' + box.y + ' ' + box.w + ' ' + box.h + '"');
+  }
+
+  /* the whole mini-scene rastered into a px square. `px` is the RASTER size,
+     not the draw size: a 60px image blown up into a 76px slot is the blur that
+     made the clamor thumbnail unreadable, so a caller drawing bigger must ask
+     for bigger, and the size is part of the key.
+
+     This is the FAITHFUL whole-stage raster, and it stays that way: the boss's
+     clamor banner and probatio's sententia banner show a STORY page next to a
+     sentence, where the staging is the comprehensible input. Only tiles get
+     the subject crop, through tileImage below. */
+  function sceneImage(word, px) {
+    if (!word || !word.scene) { return null; }
+    px = px || 60;
+    var k = sceneKey(word.scene);
+    if (k === null) { return toImage(render(word.scene), px); }   /* uncacheable */
+    k += '|' + px;
+    if (own(tileSceneCache, k)) { return tileSceneCache[k]; }
+    var img = toImage(render(word.scene), px);
+    tileSceneCache[k] = img;
+    return img;
+  }
+
+  /* a transparent single-actor sprite, cached. NEVER a whole scene squeezed
+     into a square — that is what painted an opaque sky over the boss arena. */
+  function actorImage(name, opts, px) {
+    opts = opts || {};
+    px = px || 160;
+    var key = name + '|' + (opts.pose || '') + '|' + (opts.role || '') + '|' +
+              (opts.flip ? 'f' : '') + '|' + px;
+    if (own(tileSpriteCache, key)) { return tileSpriteCache[key]; }
+    var img = null;
+    try { img = toImage(sprite(name, opts, px), px); } catch (e) { img = null; }
+    tileSpriteCache[key] = img;
+    return img;
+  }
+
+  /* the multi-actor scene rastered at its subject box, cached like the rest */
+  function subjectImage(word, px) {
+    if (!word || !word.scene) { return null; }
+    px = px || 60;
+    var k = sceneKey(word.scene);
+    if (k === null) { return toImage(subjectSvg(word.scene), px); }
+    k += '|subj|' + px;
+    if (own(tileSceneCache, k)) { return tileSceneCache[k]; }
+    var img = toImage(subjectSvg(word.scene), px);
+    tileSceneCache[k] = img;
+    return img;
+  }
+
+  /* THE ENTRY POINT: the picture for one word, at the raster size it will
+     actually be drawn. Returns null when the word has no picture at all, and
+     the caller then falls back to its emoji (and finally to the word).
+
+     Two ways to fill a small square with meaning, and the scene decides which:
+     one registered actor with no bubble → that actor alone, transparent;
+     anything else → the composition, aimed at its subject. */
+  function tileImage(word, px) {
+    var solo = soloActorOf(word);
+    if (solo) {
+      return actorImage(solo.t, { pose: solo.pose, role: solo.role, flip: solo.flip }, px);
+    }
+    return subjectImage(word, px);
+  }
+
+  /* ---------- the tile itself ----------
+
+     Every catchable thing in every canvas game is the same object: a parchment
+     square with a word's picture in it. boss.js owned the painter (caterva's
+     falling items, clamor's drifting cards, fuga's obstacles, and probatio's
+     ordina/transitus tiles all call it through the phase `env`), and js/game.js
+     — the lūdus fox-catcher — painted a bare image on the floor instead. That
+     is why the minigame's items read as smudges on a background rather than as
+     things you can catch: they had no edge.
+
+     So the painter moved here with the picture rule it uses. One implementation
+     means the lūdus and the boss cannot drift apart, which is the whole point;
+     boss.js keeps a one-line drawTile that forwards its own ctx.
+
+     `opts.label` writes the word on a strip under the picture. ONLY exercises
+     where the word is the QUESTION may pass it — ordina sorts a named thing.
+     In caterva, clamor, fuga and the lūdus the word is the ANSWER (it is up in
+     the banner, and the picture is what the learner must recognise), so a label
+     there would hand the round away. The lūdus never passes it. */
+  function drawTile(ctx, word, cx, cy, size, opts) {
+    opts = opts || {};
+    var half = size / 2;
+    ctx.save();
+    ctx.fillStyle = opts.bg || 'rgba(246,232,201,0.94)';
+    tileRect(ctx, cx - half, cy - half, size, size, 10);
+    ctx.fill();
+    ctx.strokeStyle = opts.border || 'rgba(58,36,23,0.55)';
+    ctx.lineWidth = opts.lineWidth || 2;
+    tileRect(ctx, cx - half, cy - half, size, size, 10);
+    ctx.stroke();
+    var pad = 4;
+    /* Raster at twice the drawn art box: a tile is 52–96 canvas units, the
+       canvas is scaled up again by CSS on a phone, and a 1:1 raster was
+       visibly soft. Two or three sizes in the whole app, so the extra cache
+       keys cost nothing. */
+    var img = tileImage(word, Math.round((size - 2 * pad) * 2));
+    if (img && img.complete && img.naturalWidth > 0) {
+      ctx.drawImage(img, cx - half + pad, cy - half + pad, size - 2 * pad, size - 2 * pad);
+    } else if (word && word.emoji) {
+      ctx.font = Math.round(size * 0.62) + 'px serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#3a2417';
+      ctx.fillText(word.emoji, cx, cy + 1);
+    } else if (word && word.la) {
+      ctx.font = 'bold 14px Palatino, Georgia, serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#3a2417';
+      ctx.fillText(word.la, cx, cy);
+    }
+    if (opts.label && word && word.la) {
+      ctx.font = 'bold 13px Palatino, Georgia, serif';
+      var tw = ctx.measureText(word.la).width + 12;
+      ctx.fillStyle = 'rgba(58,36,23,0.88)';
+      tileRect(ctx, cx - tw / 2, cy + half - 2, tw, 20, 6);
+      ctx.fill();
+      ctx.fillStyle = '#f6e8c9';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(word.la, cx, cy + half + 8);
+    }
+    ctx.restore();
+  }
+
+  function tileRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
+
   /* tiny standalone fox head used as the app mascot/logo */
   /* the mascot head. Optional `avatar` ('fox'|'crow'|'wolf'|'lamb') tints the
      same friendly head so the four register-screen choices look distinct.
@@ -660,6 +971,10 @@ var Scenes = (function () {
     sizeSvg: sizeSvg, toImage: toImage,
     /* single-actor transparent sprite (BUG-2) */
     sprite: sprite,
+    /* LUDUS: the shared tile-picture rule (boss.js + game.js both use these) */
+    soloActorOf: soloActorOf, tileImage: tileImage,
+    sceneImage: sceneImage, actorImage: actorImage,
+    subjectSvg: subjectSvg, drawTile: drawTile,
     /* extension points for additional art files */
     register: register, registerBg: registerBg,
     actorNames: actorNames, bgNames: bgNames,

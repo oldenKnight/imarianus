@@ -500,6 +500,39 @@ h1, h2, h3 { font-family: var(--serif); }
 .mem-card .face { font-size: 1.05rem; font-family: var(--serif); word-break: break-word; }
 .mem-card.pic .face { font-size: 1.7rem; }
 
+/* ---- AENIGMATA: THE MEMORY BOARD ON A PHONE ----
+   Same complaint as the picture chips, one screen further on. Four fixed
+   columns inside a 343px content column give a card of 79x68 CSS px with a
+   56px picture in it; two cards showing a cropped fox and a cropped wolf at
+   that size are two beige smudges, and the learner matches by memory of
+   POSITION rather than of the word — which is the one thing this exercise is
+   not supposed to teach.
+
+   app.js writes mem-cols-2 or mem-cols-3 on the grid from the card count, and
+   this is the other half of that: two columns for an eight-card board, three
+   for a bigger one, both full-bleed to the content column instead of capped at
+   420px. The numbers at the widths the app supports:
+
+       320px screen (288px column)   3 cols → 90px card    2 cols → 139px
+       375px screen (343px column)   3 cols → 108px card   2 cols → 165px
+       420px screen (388px column)   3 cols → 123px card   2 cols → 189px
+
+   — all above the 88px floor, and `min-height` states that floor outright so
+   a future gap change cannot quietly drop below it. The card is its own touch
+   target and is far past 44px in both axes at every one of those widths. */
+@media (max-width: 480px) {
+  .mem-grid { max-width: none; gap: 0.5rem; }
+  .mem-grid.mem-cols-2 { grid-template-columns: repeat(2, 1fr); }
+  .mem-grid.mem-cols-3 { grid-template-columns: repeat(3, 1fr); }
+  .mem-card { min-height: 88px; }
+  .mem-card .face { font-size: 1.2rem; }
+  /* the picture grows with the card: a three-column card is 90–123px wide, a
+     two-column one 139–189px, so the art gets 72px and 96px respectively
+     instead of the 56px it had at every size. */
+  .mem-card.pic .scn-thumb { width: 72px; height: 72px; }
+  .mem-grid.mem-cols-2 .mem-card.pic .scn-thumb { width: 96px; height: 96px; }
+}
+
 /* scramble */
 .built {
   font-family: var(--serif);

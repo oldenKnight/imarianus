@@ -347,7 +347,58 @@ var CHIP = (function () {
     if (pairs.length >= 2) {
       out.push({ step: 'aenigmata', item: 'memory pairs', options: pairs });
     }
+    var lud = ludusPool(cap);
+    if (lud.length >= 2) {
+      out.push({ step: 'ludus', item: 'falling pool', options: lud });
+    }
     return out;
+  }
+
+  /* LUDUS: the pool the fox-catcher drops.
+
+     Every item of `capitulum.ludus.words` can be in the air at the same time as
+     every other one — the game picks each spawn at random from the whole list —
+     so the POOL is the option set, exactly as it is for the VERBA quiz. And the
+     game gives the learner LESS to go on than a quiz does: the tiles are moving,
+     they are small, there is no label (deliberately: the word is the question),
+     and a wrong catch costs a heart. Two pool items that resolve to the same
+     picture make the round unwinnable by knowledge.
+
+     The fingerprint machinery is the same one the chips use, and so is the
+     ranking — a `scene` always wins over an `emoji` on the same item in
+     js/game.js exactly as it does in visualFor, which is why chipFingerprint
+     can be reused unchanged. */
+  function ludusPool(cap) {
+    var lud = cap && cap.ludus;
+    var words = (lud && lud.words) || [];
+    var out = [], i;
+    for (i = 0; i < words.length; i++) {
+      if (words[i] && (words[i].emoji || words[i].scene)) { out.push(words[i]); }
+    }
+    return out;
+  }
+
+  /* the whole-product LUDUS sweep, in one call so the regression page and any
+     future authoring tool ask the identical question. Returns
+       { capitula, pools, critical, warn, flags:[{cap, level, a, b, why}] } */
+  function lintLudus(capList) {
+    var res = { capitula: 0, pools: 0, critical: 0, warn: 0, flags: [] };
+    var i, j, cap, pool, lint, f;
+    for (i = 0; i < (capList || []).length; i++) {
+      cap = capList[i];
+      if (!cap) { continue; }
+      res.capitula++;
+      pool = ludusPool(cap);
+      if (pool.length < 2) { continue; }
+      res.pools++;
+      lint = lintOptions(pool);
+      for (j = 0; j < lint.flags.length; j++) {
+        f = lint.flags[j];
+        if (f.level === 'critical') { res.critical++; } else { res.warn++; }
+        res.flags.push({ cap: cap.id || '?', level: f.level, a: f.a, b: f.b, why: f.why });
+      }
+    }
+    return res;
   }
 
   return {
@@ -358,6 +409,9 @@ var CHIP = (function () {
     optionsDistinct: optionsDistinct,
     optionAmbiguous: optionAmbiguous,
     optionSets: optionSets,
-    visuals: visuals
+    visuals: visuals,
+    /* LUDUS: the fox-catcher's falling pool */
+    ludusPool: ludusPool,
+    lintLudus: lintLudus
   };
 })();

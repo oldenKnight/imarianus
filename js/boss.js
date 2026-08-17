@@ -199,21 +199,22 @@ var Boss = (function () {
 
     /* ---------- sprites ---------- */
     var heroImg = null, foeImg = null;
-    var sceneCache = {};      /* word.la  → Image (60px scene thumbnail)       */
-    var spriteCache = {};     /* name|pose|px → Image (transparent actor)      */
+
+    /* LUDUS: the three picture helpers below MOVED to js/scenes.js and are now
+       thin delegations. They kept their names because they are published on
+       every phase's `env` (see buildEnv) and a dozen phases call them; what
+       changed is that js/game.js — the lūdus minigame, which had its own
+       whole-scene raster path — now calls the SAME functions through
+       Scenes.tileImage, so the crop rule cannot drift between the boss tiles
+       and the falling items of the minigame. The caches moved with them, which
+       also fixed a latent key collision: they were keyed on `word.la`, and two
+       regions can spell the same Latin word over different artwork. */
 
     /* `px` is the RASTER size, not the draw size. A 60 px image blown up to
        fill a 76 px banner slot is the blur that made the clamor thumbnail
-       unreadable, so a caller that draws bigger must ask for bigger. The size
-       is part of the cache key or the first caller would fix it for everyone. */
+       unreadable, so a caller that draws bigger must ask for bigger. */
     function sceneImage(word, px) {
-      if (!word) { return null; }
-      px = px || 60;
-      var key = word.la + '|' + px;
-      if (Object.prototype.hasOwnProperty.call(sceneCache, key)) { return sceneCache[key]; }
-      var img = word.scene ? Scenes.toImage(Scenes.render(word.scene), px) : null;
-      sceneCache[key] = img;
-      return img;
+      return Scenes.sceneImage(word, px);
     }
 
     /* ---------- POLISH: the tile picture ----------
@@ -234,41 +235,18 @@ var Boss = (function () {
        Returns null when the item has no picture at all; drawTile then falls
        back to the emoji and finally to the word itself. */
     function soloActorOf(word) {
-      var sc = word && word.scene;
-      if (!sc || !sc.items || sc.items.length !== 1) { return null; }
-      /* bubbles are speech drawn on the STAGE, not on the actor: a scene that
-         carries one would lose it in the crop, so it keeps the raster. */
-      if (sc.bubbles && sc.bubbles.length) { return null; }
-      var it = sc.items[0];
-      if (!it || !it.t) { return null; }
-      var names = (window.Scenes && Scenes.actorNames) ? Scenes.actorNames() : [];
-      var i;
-      for (i = 0; i < names.length; i++) { if (names[i] === it.t) { return it; } }
-      return null;
+      return Scenes.soloActorOf(word);
     }
 
     /* the picture for a tile, at the raster size it will actually be drawn */
     function tileImage(word, px) {
-      var solo = soloActorOf(word);
-      if (solo) {
-        return actorImage(solo.t,
-          { pose: solo.pose, role: solo.role, flip: solo.flip }, px);
-      }
-      return sceneImage(word, px);
+      return Scenes.tileImage(word, px);
     }
 
     /* a transparent single-actor sprite, cached. BUG-2: never a whole scene
        squeezed into a square — that painted an opaque sky over the arena. */
     function actorImage(name, opts, px) {
-      opts = opts || {};
-      px = px || 160;
-      var key = name + '|' + (opts.pose || '') + '|' + (opts.role || '') + '|' +
-                (opts.flip ? 'f' : '') + '|' + px;
-      if (Object.prototype.hasOwnProperty.call(spriteCache, key)) { return spriteCache[key]; }
-      var img = null;
-      try { img = Scenes.toImage(Scenes.sprite(name, opts, px), px); } catch (e) { img = null; }
-      spriteCache[key] = img;
-      return img;
+      return Scenes.actorImage(name, opts, px);
     }
 
     /* ---------- input (keyboard arrows + pointer/touch X) ----------
@@ -434,54 +412,14 @@ var Boss = (function () {
 
     /* a drifting/falling item: parchment tile + the word's picture. Every
        phase draws its catchables through this, which is what makes caterva,
-       clamor and fuga read as three rounds of ONE game. */
+       clamor and fuga read as three rounds of ONE game — and, since the
+       LUDUS pass, the lūdus fox-catcher too: the painter itself now lives in
+       js/scenes.js beside the crop rule it uses, so the minigame and the duel
+       cannot drift into two different-looking tiles. This wrapper only feeds
+       it this engine instance's ctx, so the env.drawTile(word, x, y, size,
+       opts) signature every phase calls is unchanged. */
     function drawTile(word, cx, cy, size, opts) {
-      opts = opts || {};
-      var half = size / 2;
-      ctx.save();
-      ctx.fillStyle = opts.bg || 'rgba(246,232,201,0.94)';
-      roundRect(cx - half, cy - half, size, size, 10);
-      ctx.fill();
-      ctx.strokeStyle = opts.border || 'rgba(58,36,23,0.55)';
-      ctx.lineWidth = opts.lineWidth || 2;
-      roundRect(cx - half, cy - half, size, size, 10);
-      ctx.stroke();
-      var pad = 4;
-      /* Raster at twice the drawn art box: these tiles are 52–58 CSS px and a
-         60px raster blown up was visibly soft. Two sizes in the whole game, so
-         the extra cache keys cost nothing. */
-      var img = tileImage(word, Math.round((size - 2 * pad) * 2));
-      if (imgReady(img)) {
-        ctx.drawImage(img, cx - half + pad, cy - half + pad, size - 2 * pad, size - 2 * pad);
-      } else if (word && word.emoji) {
-        ctx.font = Math.round(size * 0.62) + 'px serif';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillStyle = '#3a2417';
-        ctx.fillText(word.emoji, cx, cy + 1);
-      } else if (word && word.la) {
-        ctx.font = 'bold 14px Palatino, Georgia, serif';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillStyle = '#3a2417';
-        ctx.fillText(word.la, cx, cy);
-      }
-      /* opts.label writes the word on a strip under the picture. Only phases
-         where the word is the QUESTION may use it (ordina sorts a named
-         thing); in caterva/clamor/fuga the word IS the answer, so a label
-         there would hand the round to the player. */
-      if (opts.label && word && word.la) {
-        ctx.font = 'bold 13px Palatino, Georgia, serif';
-        var tw = ctx.measureText(word.la).width + 12;
-        ctx.fillStyle = 'rgba(58,36,23,0.88)';
-        roundRect(cx - tw / 2, cy + half - 2, tw, 20, 6);
-        ctx.fill();
-        ctx.fillStyle = '#f6e8c9';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(word.la, cx, cy + half + 8);
-      }
-      ctx.restore();
+      Scenes.drawTile(ctx, word, cx, cy, size, opts);
     }
 
     /* the dark banner every phase writes its prompt into */
@@ -898,8 +836,11 @@ var Boss = (function () {
       hero.x = W / 2;
       hero.hidden = false;
       resetFoe();
-      sceneCache = {};
-      spriteCache = {};
+      /* the picture caches are NOT cleared here any more: they moved into
+         js/scenes.js so the lūdus minigame shares them (see sceneImage above),
+         and they are keyed on the scene's own identity plus the raster size,
+         so nothing a new fight can ask for could collide with what an old one
+         left behind. Clearing them per fight only re-decoded the same SVGs. */
       startedAt = now();
 
       heroImg = Scenes.toImage(Scenes.mascot(80, cfg.avatar), 80);

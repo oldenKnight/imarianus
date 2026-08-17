@@ -242,7 +242,14 @@
             { pose: solo.pose, role: solo.role, flip: solo.flip }) +
           '</span>';
       }
-      return '<span class="scn-thumb">' + Scenes.render(item.scene) + '</span>';
+      /* LUDUS: the raster branch draws the composition FRAMED ON ITS SUBJECT
+         rather than the whole 400x240 stage. Same picture, same actors, same
+         order — the camera just stops standing back across an empty sky, which
+         inside a 72–140px chip is the difference between `terra` reading as a
+         tree beside a mountain and reading as a beige rectangle. The canvas
+         tiles were given this at the same time and by the same function, so a
+         memory card and a falling tile of one word are the same image. */
+      return '<span class="scn-thumb">' + Scenes.subjectSvg(item.scene) + '</span>';
     }
     return (item && item.emoji) || '';
   }
@@ -2203,7 +2210,18 @@
           '<span class="mem-meter" id="mm-miss">❌ 0</span>' +
           '<span class="mem-clock"><span class="mem-clock-bar" id="mm-bar"></span></span>' +
         '</div>' +
-        '<div class="mem-grid">';
+        /* AENIGMATA phone sizing (owner addendum A). The board used to be a
+           fixed 4-column grid capped at 420px, so on a 375px phone one card
+           was 79x68 CSS px holding a 56px picture: below the 88px floor the
+           ruling asked for, and small enough that matching a cropped actor to
+           a word was guesswork. The column COUNT is the only sensible knob —
+           the cards must fill the width they are given — so it follows the
+           board size: an eight-card board (four pairs) is two columns of
+           ~165px, a bigger one three columns of ~108px. Both clear 88px down
+           to a 320px screen. Above the phone breakpoint the grid keeps the
+           four columns it always had, where the size was never the complaint;
+           css/styles.css holds both halves of this. */
+        '<div class="mem-grid mem-cols-' + ((cards.length <= 8) ? 2 : 3) + '">';
       for (i = 0; i < cards.length; i++) {
         html += '<button type="button" class="mem-card" data-i="' + i + '"><span class="face"></span></button>';
       }
