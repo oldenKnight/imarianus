@@ -362,6 +362,16 @@ h1, h2, h3 { font-family: var(--serif); }
 .opt:disabled { opacity: 0.35; border-color: var(--cream-dim); cursor: default; }
 .emoji-opt { font-size: 2.4rem; padding: 0.5rem 1rem; }
 
+/* CLAR: a chip that draws a CROPPED ACTOR rather than a whole mini-scene.
+   The sprite is transparent — the chip's own parchment face is the
+   background — so it gets a little breathing room instead of the raster's
+   edge-to-edge fill, and no clipping radius it does not need. */
+.scn-thumb.crop { padding: 3px; box-sizing: border-box; }
+
+/* PICTURE-CHOICE ROWS (verba quick check, sonus, boss quiz, refill).
+   Above 480px the flex row is right; the grid below is the phone rule. */
+.opt-row.picks .opt { min-height: 44px; }
+
 /* NARROW PHONES: a SONUS question offers up to four picture tiles, and a
    picture tile is 72px of art + 32px of padding + 4px of border = 108px.
    Four of those need 460px and the content column is 343px at 375 and 388px
@@ -381,6 +391,45 @@ h1, h2, h3 { font-family: var(--serif); }
   .emoji-opt .scn-thumb {
     width: 15vw; height: 15vw;
     max-width: 72px; max-height: 72px;
+  }
+}
+
+/* ---- CLAR: PHONE PICTURE CHIPS ARE A 2-COLUMN GRID ----
+   The shrink-to-fit rule above solved the WRAPPING problem by making the
+   art smaller, and at 375px that lands on a 56px picture: a whole
+   mini-scene, or now a cropped actor, inside a square the size of a
+   fingernail. The owner's students hold the phone at arm's length.
+
+   Four tiles never belonged on one line of a 343px column. Two columns of
+   ~160px do, and they give the art 96–140px — between 1.7x and 2.5x the
+   old width, so four to six times the area — with no third tile squeezed
+   against the right edge and no orphan on a line of its own. A set of
+   three fills the first row and centres the last chip under it, which is
+   the ordinary shape of a phone quiz.
+
+   `width` + `max-width` + `min-width` is min()/max() spelled out, so this
+   file stays readable as plain CSS (same reasoning as the block above).
+   34vw is 109px at 320, 127px at 375, 143px (capped to 140) at 420. The
+   button's own 44px minimum is stated in the base rule, so a chip is never
+   below the touch-target floor even if the art ever shrinks. */
+@media (max-width: 480px) {
+  .opt-row.picks {
+    display: -ms-grid;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-items: center;
+    gap: 0.5rem;
+    margin: 0.7rem 0;
+  }
+  /* an odd last chip centres itself across both columns instead of hugging
+     the left edge — three options are the commonest set in the app. */
+  .opt-row.picks .opt:last-child:nth-child(odd) {
+    grid-column: 1 / span 2;
+  }
+  .opt-row.picks .emoji-opt { padding: 0.35rem; }
+  .opt-row.picks .emoji-opt .scn-thumb {
+    width: 34vw;  min-width: 96px;  max-width: 140px;
+    height: 34vw; min-height: 96px; max-height: 140px;
   }
 }
 
@@ -656,6 +705,137 @@ h1, h2, h3 { font-family: var(--serif); }
 .map-screen .btn.primary, .provincia .btn.primary {
   display: block;
   margin: 0 auto;
+}
+
+/* ============================================================
+   NAV — the continuous track board
+   ------------------------------------------------------------
+   The board shows every region of the track at once, so the screen
+   grew two pieces of navigation: the track name is now a control
+   that opens the REGION INDEX, and the index itself is a sheet over
+   the board (never a new screen — losing the board you were reading
+   is exactly the disorientation this fix exists to remove).
+   ============================================================ */
+
+.prov-title {
+  cursor: pointer;
+  display: inline-block;
+  border-radius: 8px;
+  padding: 0.1rem 0.5rem;
+}
+.prov-title:active { opacity: 0.75; }
+.prov-title:focus-visible { outline: 3px solid var(--ochre); outline-offset: 2px; }
+.prov-caret { font-size: 0.7em; opacity: 0.7; vertical-align: 0.12em; }
+
+/* the region index sheet */
+.regio-index {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgba(10, 6, 3, 0.62);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.regio-index[hidden] { display: none; }
+.ri-panel {
+  width: 100%;
+  max-width: 560px;
+  max-height: 82vh;
+  display: flex;
+  flex-direction: column;
+  background: #24160e;
+  border: 1px solid rgba(224, 169, 62, 0.28);
+  border-bottom: 0;
+  border-radius: 16px 16px 0 0;
+  box-shadow: 0 -12px 34px rgba(0, 0, 0, 0.55);
+}
+@media (min-width: 720px) {
+  .regio-index { align-items: center; }
+  .ri-panel { border-bottom: 1px solid rgba(224, 169, 62, 0.28); border-radius: 16px; }
+}
+.ri-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.7rem 0.9rem 0.5rem;
+  border-bottom: 1px solid rgba(224, 169, 62, 0.18);
+}
+.ri-head h3 {
+  margin: 0;
+  color: var(--ochre);
+  font-size: 1.15rem;
+  letter-spacing: 0.06em;
+}
+.ri-close {
+  background: none;
+  border: 0;
+  color: var(--cream-dim);
+  font-size: 1.2rem;
+  line-height: 1;
+  padding: 0.35rem 0.5rem;
+  cursor: pointer;
+  min-width: 44px;
+  min-height: 44px;
+}
+.ri-list {
+  list-style: none;
+  margin: 0;
+  padding: 0.35rem 0.5rem 0.9rem;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.ri-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  min-height: 48px;          /* touch target, DESIGN §9 */
+  padding: 0.45rem 0.6rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(224, 169, 62, 0.14);
+  border-radius: 10px;
+  margin: 0.28rem 0;
+  color: var(--cream);
+  font-family: inherit;
+  font-size: 1rem;
+  text-align: left;
+  cursor: pointer;
+}
+.ri-row:active { opacity: 0.75; }
+.ri-row:focus-visible { outline: 3px solid var(--ochre); outline-offset: 2px; }
+.ri-row.is-here { border-color: var(--ochre); background: rgba(224, 169, 62, 0.12); }
+.ri-row.is-shut { color: var(--cream-dim); opacity: 0.62; cursor: default; }
+.ri-num {
+  flex: 0 0 auto;
+  min-width: 2.6em;
+  color: var(--ochre);
+  font-weight: bold;
+  letter-spacing: 0.05em;
+}
+.ri-name { flex: 1 1 auto; }
+.ri-prog { flex: 0 0 auto; color: var(--cream-dim); font-size: 0.85rem; }
+.ri-mark { font-size: 0.95rem; }
+/* a locked row answers the tap instead of ignoring it */
+.ri-deny { animation: ri-shake 0.4s ease; }
+@keyframes ri-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ri-deny { animation: none; border-color: var(--fresco); }
+}
+
+/* the two lines the victory screen gained: where you are being sent next,
+   and the one that says a whole track is finished */
+.next-regio { color: var(--ochre); font-size: 1.05rem; margin: 0.2rem 0 0.6rem; }
+.cursus-done {
+  color: var(--ochre);
+  font-size: 1.2rem;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+  margin: 0.3rem 0 0.6rem;
 }
 
 /* --- boss intro --- */

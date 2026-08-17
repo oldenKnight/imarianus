@@ -32,12 +32,24 @@
         qa.html?screen=bossintro the boss intro card (actor + challenge)
         qa.html?screen=boss      the M3 three-phase duel
         qa.html?screen=probatio  the non-combat trial engine
+        qa.html?screen=bosswin   WIN the region's boss and pass its quiz,
+                                 landing on the victory screen — the only
+                                 way a headless run reaches the NAV
+                                 auto-advance (mapNode moves to the next
+                                 region). Pair with &region=.
 
      Region knob (works with every screen above):
-        &region=r02              open the track at THAT region instead of
-                                 its first one — the app has no UI for
-                                 moving between regions yet, so this is the
-                                 only way to see Regiō II's Leō boss.
+        &region=r02              stand the learner IN that region: every
+                                 capitulum before it is seeded done and the
+                                 saved map node is its first capitulum, so
+                                 the door resumes there and the continuous
+                                 board opens scrolled to that segment.
+                                 (It used to rotate the region to the front
+                                 of the manifest, which was the only way in
+                                 when the app rendered one region and had no
+                                 navigation. The board now draws the whole
+                                 track, so rotating it would DESTROY the
+                                 thing under test — the region order.)
         &track=historia          which DOOR the route walks through. Defaults
                                  to fabulae, and to historia when the screen
                                  or the region id is a Historia one. The step
@@ -66,8 +78,13 @@
         &w=360                   nothing to do with layout; recorded
                                  in the title so a screenshot is
                                  self-identifying
-        &scroll=1                scroll the map to its bottom (to
-                                 check the boss node is reachable)
+        &scroll=1|top|mid|bottom park the board at a named scroll position
+                                 instead of auto-centring on the current
+                                 node. `1` and `top` are the summit (the
+                                 last region's boss); `bottom` is the foot
+                                 of regiō I. A continuous board is 6–7k CSS
+                                 pixels tall, so one shot cannot show it.
+        &index=1                 open the REGIŌNĒS index over the board
 
      Screenshot with:
         chrome --headless=new --hide-scrollbars --screenshot=out.png \
@@ -97,7 +114,8 @@
     (function () {
       var q = location.search;
       window.__QA_SCREEN = (q.match(/screen=([a-z]+)/) || [])[1] || 'doors';
-      window.__QA_SCROLL = /scroll=1/.test(q);
+      window.__QA_SCROLL = (q.match(/scroll=([a-z0-9]+)/) || [])[1] || '';
+      window.__QA_INDEX = /index=1/.test(q);
       window.__QA_PHASE = (q.match(/phase=([a-z]+)/) || [])[1] || '';
       window.__QA_REGION = (q.match(/region=([a-z0-9]+)/) || [])[1] || '';
       /* &cap=f16 — photograph a NAMED capitulum instead of the region's
@@ -106,6 +124,38 @@
          &cap= every route below behaves exactly as it did before. */
       window.__QA_CAP = (q.match(/cap=([a-z0-9]+)/) || [])[1] || '';
       window.__QA_PAGE = parseInt((q.match(/page=([0-9]+)/) || [])[1] || '0', 10);
+
+      /* &rand=N — REPLACE Math.random WITH A SEEDED SEQUENCE.
+         The VERBA quick check, SONUS and AENIGMATA all shuffle, so "the
+         question about Adam" is not a URL anyone can write: which word is
+         asked, and which two distractors stand beside it, is a coin toss on
+         every load. A screenshot of a coin toss cannot be compared with
+         another screenshot of a coin toss, so before/after shots of one
+         option set were impossible to take honestly.
+         With the knob the whole run is a pure function of N: the same URL
+         photographs the same question every time, on any machine. Only this
+         harness ever does it — nothing in js/ is touched, and without the
+         knob Math.random is left exactly as the browser shipped it. */
+      window.__QA_RAND = (q.match(/rand=([0-9]+)/) || [])[1] || '';
+      if (window.__QA_RAND) {
+        (function (seed) {
+          var s = (parseInt(seed, 10) || 1) >>> 0;
+          Math.random = function () {
+            s = (s * 1664525 + 1013904223) >>> 0;
+            return s / 4294967296;
+          };
+        }(window.__QA_RAND));
+      }
+
+      /* &legacy=1 — RENDER THE WAY THE APP DID BEFORE THE CLAR PASS.
+         The "before" half of a before/after pair has to be the real app on
+         the real content, not a mock-up and not a git checkout: the two shots
+         differ only in the three things the pass changed. So this knob puts
+         all three back — chips draw whole mini-scenes instead of cropped
+         actors, picture rows lose the phone grid, and no question is ever
+         flipped to picture→word. It is applied in the route script below,
+         after js/chip-lint.js has loaded. */
+      window.__QA_LEGACY = /legacy=1/.test(q);
       /* which DOOR the route walks through. Explicit &track= wins; otherwise
          the region id implies it. Test `al…` BEFORE `l…`: the Aeneis ids are
          al1/al2 (rules.php keys regions in one flat namespace, so they cannot
@@ -173,10 +223,70 @@
         return out;
       }
 
+      /* Where does a node live? The app asks CONTENT.locate() the same
+         question; the seed runs before content-loader exists, so it walks
+         the manifest itself. */
+      function locate(nodeId) {
+        var tracks = (window.CONTENT_MANIFEST && CONTENT_MANIFEST.tracks) || [];
+        var ti, ri, ci, regs, caps;
+        for (ti = 0; ti < tracks.length; ti++) {
+          regs = tracks[ti].regions || [];
+          for (ri = 0; ri < regs.length; ri++) {
+            caps = regs[ri].capitula || [];
+            for (ci = 0; ci < caps.length; ci++) {
+              if (caps[ci] === nodeId) {
+                return { track: tracks[ti].id, region: regs[ri].id };
+              }
+            }
+            if (regs[ri].boss === nodeId) {
+              return { track: tracks[ti].id, region: regs[ri].id };
+            }
+          }
+        }
+        return null;
+      }
+      /* every capitulum of a track BEFORE the named region, plus that
+         region's own capitula. THE UNLOCK RULE IS NOW CROSS-REGION (it
+         always was on the server: lib/progress.php gates a step on the
+         previous capitulum IN THE SAME TRACK), so seeding "open r05"
+         means finishing f1–f12, not rotating r05 to the front. */
+      function regionSeed(regionId) {
+        var tracks = (window.CONTENT_MANIFEST && CONTENT_MANIFEST.tracks) || [];
+        var ti, ri, ci, regs, caps, before = [];
+        for (ti = 0; ti < tracks.length; ti++) {
+          regs = tracks[ti].regions || [];
+          before = [];
+          for (ri = 0; ri < regs.length; ri++) {
+            caps = regs[ri].capitula || [];
+            if (regs[ri].id === regionId) {
+              return { track: tracks[ti].id, before: before, caps: caps };
+            }
+            for (ci = 0; ci < caps.length; ci++) { before.push(caps[ci]); }
+          }
+        }
+        return null;
+      }
+
       if (window.__QA_SCREEN === 'boss' || window.__QA_SCREEN === 'probatio' ||
-          window.__QA_SCREEN === 'bossintro') {
+          window.__QA_SCREEN === 'bossintro' || window.__QA_SCREEN === 'bosswin') {
         state.completed = allCapsDone();
         state.mapNode = 'b_' + (window.__QA_REGION || 'r01');
+      } else if (window.__QA_REGION) {
+        /* stand the learner at the foot of the named region */
+        var seed = regionSeed(window.__QA_REGION);
+        if (seed) {
+          var comp = {}, k;
+          for (k = 0; k < seed.before.length; k++) { comp[seed.before[k]] = DONE; }
+          if (seed.caps.length) {
+            comp[seed.caps[0]] = f2;
+            state.mapNode = seed.caps[0];
+            window.__QA_FIRSTCAP = seed.caps[0];   /* the step routes' target */
+          }
+          state.completed = comp;
+          window.__QA_TRACK = seed.track;      /* the region names its track */
+        } else if (window.console) {
+          console.warn('qa.html: &region=' + window.__QA_REGION + ' is not in the manifest');
+        }
       }
       /* &cap=X: everything before X is finished and X itself is unlocked up
          to the step being photographed — the same shape the default seed
@@ -186,6 +296,8 @@
         all[window.__QA_CAP] = f2;
         state.completed = all;
         state.mapNode = window.__QA_CAP;
+        var cloc = locate(window.__QA_CAP);
+        if (cloc) { window.__QA_TRACK = cloc.track; }
       }
       /* the landing screen is the LOGGED-OUT route: no cached name, and a
          stub Api whose me() fails, which is exactly what a visitor with no
@@ -219,6 +331,7 @@
   <script src="js/data-core.js" defer></script>
   <!-- content/manifest.js is loaded ABOVE, before the seed script -->
   <script src="js/content-loader.js" defer></script>
+  <script src="js/chip-lint.js" defer></script>
   <script src="js/auth-ui.js" defer></script>
   <script src="js/game.js" defer></script>
   <script src="js/boss.js" defer></script>
@@ -233,28 +346,29 @@
     window.addEventListener('load', function () {
       var target = window.__QA_SCREEN;
 
-      /* &region=r02 — the app opens a track at its FIRST region and has no UI
-         yet for moving between regions, so a later region is unreachable by
-         clicking. CONTENT.manifest() hands back the live manifest object and
-         every lookup reads it fresh, so moving the wanted region to the front
-         of its track makes the door open there. QA-ONLY: it mutates nothing
-         on disk and nothing the app writes back. */
-      if (window.__QA_REGION && window.CONTENT && CONTENT.manifest) {
-        (function () {
-          var tracks = (CONTENT.manifest() || {}).tracks || [];
-          var i, j, regs;
-          for (i = 0; i < tracks.length; i++) {
-            regs = tracks[i].regions || [];
-            for (j = 0; j < regs.length; j++) {
-              if (regs[j].id === window.__QA_REGION) {
-                tracks[i].regions = [regs[j]].concat(
-                  regs.slice(0, j)).concat(regs.slice(j + 1));
-                return;
-              }
-            }
-          }
-        }());
+      /* &legacy=1 (see the knob block in <head>): undo the three CLAR changes
+         so the "before" shot is this app on this content, one commit's worth
+         of behaviour older. `soloActor` returning null sends every chip back
+         through the whole-scene raster; `optionAmbiguous` returning null
+         means no question ever flips; and the class sweep takes the phone
+         grid off the picture rows, which app.js re-adds on every render — so
+         it runs on an interval rather than once. */
+      if (window.__QA_LEGACY && window.CHIP) {
+        CHIP.soloActor = function () { return null; };
+        CHIP.optionAmbiguous = function () { return null; };
+        window.setInterval(function () {
+          var rows = document.querySelectorAll('.opt-row.picks'), i;
+          for (i = 0; i < rows.length; i++) { rows[i].className = 'opt-row'; }
+        }, 120);
       }
+
+      /* &region= NO LONGER TOUCHES THE MANIFEST. It used to rotate the
+         wanted region to the front of its track, because the app opened a
+         track at its first region and had no navigation at all. The board
+         is one continuous track now and the region ORDER is part of what a
+         screenshot has to prove, so the knob works entirely through the
+         seed above (progress + saved map node) and the app's own resume
+         path. Nothing here mutates content. */
 
       /* Headless Chrome renders roughly one frame a second, so a canvas game
          driven by requestAnimationFrame is still on its first frame when the
@@ -311,7 +425,7 @@
          change: every route below was already track-shaped, it just had
          'fabulae' spelled into it. */
       var DOOR = '.door-' + window.__QA_TRACK;
-      var FIRST_CAP = window.__QA_CAP ||
+      var FIRST_CAP = window.__QA_CAP || window.__QA_FIRSTCAP ||
         ((window.__QA_TRACK === 'historia') ? 'h1'
           : (window.__QA_TRACK === 'aeneis') ? 'a1' : 'f2');
 
@@ -398,6 +512,59 @@
         ];
       }
 
+      /* ---- screen=bosswin — THE AUTO-ADVANCE, END TO END ----
+         NAV's second half is what happens AFTER a boss falls: app.js must
+         move the saved map node onto the first capitulum of the NEXT
+         region, so the board reopens on the new segment instead of on a
+         summit with no road off it. That path starts in Boss.onEnd and runs
+         through the quiz, and neither can be reached by a headless
+         screenshot playing a canvas game for real.
+
+         So the harness WINS THE FIGHT for it, through the public API only:
+         Boss.start is wrapped so it reports an immediate victory with a
+         plausible payload, and the quiz is then answered correctly (the
+         right option is the one whose data-la is the prompt word). Every
+         line of app.js after that — the mirror update, runBossQuiz,
+         showBossResult, advanceAfterBoss — is the real thing. Nothing in
+         js/ has a test hook. */
+      if (target === 'bosswin') {
+        var wrid = window.__QA_REGION || 'r01';
+        if (window.Boss && Boss.start) {
+          var realStart = Boss.start;
+          Boss.start = function (canvas, cfg, handlers) {
+            window.setTimeout(function () {
+              if (handlers && handlers.onEnd) {
+                handlers.onEnd(true, { region: cfg.region, ms: 45000, mistakes: 1, phases: [] });
+              }
+            }, 60);
+          };
+          Boss.start.real = realStart;
+        }
+        /* answer every quiz question with the option that matches the word */
+        function answerQuiz() {
+          var prompt = document.querySelector('.prompt-word');
+          if (!prompt) {
+            if (document.querySelector('.finis')) { return; }   /* done */
+            window.setTimeout(answerQuiz, 120);
+            return;
+          }
+          var word = String(prompt.textContent).replace(/🔊/g, '').replace(/^\s+|\s+$/g, '');
+          var opts = [].slice.call(document.querySelectorAll('.emoji-opt')), i;
+          for (i = 0; i < opts.length; i++) {
+            if (opts[i].getAttribute('data-la') === word) { tap(opts[i]); break; }
+          }
+          window.setTimeout(answerQuiz, 220);
+        }
+        when(DOOR, function (door) {
+          tap(door);
+          when('.map-node[data-id="b_' + wrid + '"]', function (node) {
+            tap(node);
+            when('#fight', function (btn) { tap(btn); answerQuiz(); });
+          });
+        });
+        return;
+      }
+
       if (target === 'boss' || target === 'probatio' || target === 'bossintro') {
         var rid = window.__QA_REGION || 'r01';
         /* the boss node id is per-region content (b_r01, b_r02, …) */
@@ -463,13 +630,24 @@
                 WorldMap.bind(host, model, { onNode: function () {} });
               }, 300);
             }
+            /* A continuous board is 6–7k CSS pixels tall, so "photograph
+               the map" is three shots, not one. `top` is the summit of the
+               last region, `bottom` the foot of regiō I, `mid` halfway. */
             if (window.__QA_SCROLL) {
               /* re-query: &long=1 REPLACES the frame's contents, so the
                  `view` captured above may be a detached element by now. */
               setTimeout(function () {
                 var v = document.querySelector('.map-view');
-                if (v) { v.scrollTop = 0; }        /* top of the board = the boss */
+                if (!v) { return; }
+                var max = v.scrollHeight - v.clientHeight;
+                var where = window.__QA_SCROLL;
+                v.scrollTop = (where === 'bottom') ? max
+                  : (where === 'mid' || where === 'middle') ? Math.round(max / 2)
+                  : 0;                              /* '1' / 'top' = the summit */
               }, 1200);
+            }
+            if (window.__QA_INDEX) {
+              when('#to-regiones', function (btn) { setTimeout(function () { tap(btn); }, 900); });
             }
             return;
           }

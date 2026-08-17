@@ -198,8 +198,17 @@
                 ],
                 bubbles: [{ x: 92, y: 92, w: 56, h: 40, text: '👴', kind: 'thought', tail: 'right', fs: 20 }] },
 
+    /* CLAR. `Isaac` and `puer` were the same child sprite on two different
+       grounds, and the sprite crop keeps the child while dropping the ground
+       — so the two chips became one picture and h14's quiz asked the learner
+       to tell a boy from the same boy. Isaac is now the child of ABRAHAM'S
+       HOUSEHOLD: the tent that stands over every camp scene of this region
+       (h12's `manet`, h13) puts him somewhere, which is what a proper name
+       needs and what a common noun must not have. `puer` keeps the bare
+       child, which is exactly what "a boy" should look like. */
     v_isaac:    { bg: 'desert', items: [
-                  { t: 'person', x: 200, y: G, s: 1.25, role: 'child' }
+                  { t: 'tent',   x: 306, y: G, s: 0.85 },
+                  { t: 'person', x: 168, y: G, s: 1.25, role: 'child' }
                 ] },
 
     v_puer:     { bg: 'plain', items: [

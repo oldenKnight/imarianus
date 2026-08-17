@@ -10,15 +10,35 @@
    This module only RENDERS and reports clicks. app.js owns all
    progress logic and decides which node is open, done or locked.
 
+   NAV — ONE CONTINUOUS BOARD PER TRACK. The board used to be one
+   region, and the app had no way to reach another: after beating a
+   region's boss the learner stood on a summit with nowhere to go, so
+   142 shipped capitula came down to each track's first board. The
+   board now stacks EVERY region of the track, bottom (regiō I) to top,
+   each region keeping its own 0..1 node layout scaled into its own
+   band, with a carved REGION TITLE BAND between segments and the path
+   ribbon running straight across them (a region's boss connects to the
+   next region's first capitulum). Locked regions are veiled and their
+   nodes padlocked. It is still ONE SVG: 66 tiles is the worst case
+   (Historia) and an SVG of that size parses once and then scrolls on
+   the compositor, which a per-chunk lazy build could not beat without
+   inventing a virtual scroller.
+
    Public API:
      WorldMap.render(model) -> html string
-     WorldMap.bind(rootEl, model, handlers)
+     WorldMap.bind(rootEl, model, handlers) -> { scrollToRegion, scrollToNode }
    model = {
+     // EITHER the continuous form (segments, BOTTOM-FIRST = track order):
+     segments: [{ id:'r01', titulus:'Silva', numeral:'I',
+                  locked:false, cleared:false, nodes:[…] }],
+     // OR the single-region form, which is what the segment-less board
+     // has always been and still renders identically:
      nodes: [{ id, kind:'fable'|'boss', x, y,      // x,y are 0..1 FRACTIONS
                label, titulus, state:'done'|'open'|'shut' }],
      foxNode: 'f2',            // node the mascot stands on
      track:   'fabulae',       // per-track background tint
      titulus: 'Silva',
+     trackDone: false,         // draws the summit "Cursum cōnfēcistī!" band
      avatar:  'fox'
    }
    handlers = { onNode: function (nodeId, kind) {} }
@@ -280,6 +300,17 @@ var WorldMap = (function () {
     aeneis:   { carved: ['equus'], props: ['columna', 'amphora', 'palmTree'] }
   };
 
+  /* The prop helpers below WALK pts IN ASCENDING y. The node list is in
+     walking order, which runs UP the board — pts[0] is the lowest tile and
+     therefore has the LARGEST y — so they get a sorted copy. On a one-region
+     board the old code silently returned pts[0].x for every height (the
+     first `y <= pts[i].y` test matched immediately), which merely meant the
+     props dodged one column; across a twelve-region board that column would
+     be wrong for eleven of them. */
+  function byY(pts) {
+    return pts.slice().sort(function (a, b) { return a.y - b.y; });
+  }
+
   /* half-width of the widest tile within reach of this y, so a prop never
      tucks itself under the boss slab (which is wider than a capitulum one) */
   function clearanceAt(y, pts) {
@@ -311,15 +342,45 @@ var WorldMap = (function () {
 
   /* Scatter props down the board, never over the path or a tile, scaled and
      faded by depth (higher up the board = further away = smaller, dimmer). */
-  function scenery(track, H, pts) {
+  /* Depth is per REGION, not per board.
+     "Higher up = further away = smaller and dimmer" is a horizon rule, and
+     a stacked board has ONE HORIZON PER REGION — the boss at each summit.
+     Measured against the whole 12-region board instead, every prop in regiō
+     XII would be drawn at maximum distance and every prop in regiō I at
+     minimum, which is not depth, it is a six-thousand-pixel size gradient
+     with nothing behind it. spans[] carries each segment's [top, bottom] so
+     the ramp restarts at every region, exactly as it does on a one-region
+     board. */
+  function nearnessAt(y, spans, H) {
+    var i;
+    if (!spans || !spans.length) { return y / H; }
+    for (i = 0; i < spans.length; i++) {
+      if (y >= spans[i].top && y <= spans[i].bot) {
+        return (y - spans[i].top) / ((spans[i].bot - spans[i].top) || 1);
+      }
+    }
+    /* inside a title band: treat it as the foot of the region above it */
+    return 0.5;
+  }
+
+  function scenery(track, H, ptsIn, spans) {
     var rnd = rngFrom('props2:' + track);
     var set = PROPS[track] || PROPS.fabulae;
     var carved = [], props = [], i;
+    var pts = byY(ptsIn);
     for (i = 0; i < set.carved.length; i++) { if (hasActor(set.carved[i])) { carved.push(set.carved[i]); } }
     for (i = 0; i < set.props.length; i++) { if (hasActor(set.props[i])) { props.push(set.props[i]); } }
 
     var s = '';
-    var count = Math.round(H / 74);          /* plenty of them, DESIGN §3 */
+    /* One prop per 74 units — plenty of them, DESIGN §3 — and the density
+       is per UNIT, not per board, so the continuous board is furnished as
+       richly per screenful as the single-region one always was. The cap is
+       a fuse, not a budget: the tallest track (Historia, 66 nodes) asks for
+       ~157, and 48 tiles + 157 props measured 3 ms to build and 9 ms to
+       parse on desktop. Halving it to save bytes was tried first and it
+       showed: a board you scroll for six thousand pixels cannot afford to
+       look empty. */
+    var count = Math.min(Math.round(H / 74), 180);
 
     for (i = 0; i < count; i++) {
       var y = 70 + (i / count) * (H - 120) + (rnd() - 0.5) * 40;
@@ -333,8 +394,7 @@ var WorldMap = (function () {
       if (rightRoom > leftRoom) { x = px + CLEAR + rnd() * Math.max(10, rightRoom - 10); }
       else { x = 30 + rnd() * Math.max(10, leftRoom - 10); }
 
-      var depth = 1 - (y / H);                   /* 1 top, 0 bottom */
-      var near = 1 - depth;                      /* 0 top, 1 bottom */
+      var near = nearnessAt(y, spans, H);        /* 0 at a region's horizon, 1 at its foot */
       var opacity = (0.55 + near * 0.3).toFixed(2);
       var roll = rnd();
       var art = '';
@@ -552,6 +612,101 @@ var WorldMap = (function () {
       art + '</g>';
   }
 
+  /* ---------- region title bands (NAV) ---------- */
+
+  /* Shrink-to-fit for a band caption.
+     The estimate is DELIBERATELY PESSIMISTIC. A caption is Latin text in
+     whatever serif the device actually has, and the fallback a headless
+     Chrome or a stripped-down phone picks can be a fifth wider than the
+     Palatino this was measured in — which is exactly how 'Regiō VII ·
+     Lītus' ran off the right edge of a board that measured fine in a
+     desktop browser. So: 0.62 em per letter (measured 0.58 in Palatino,
+     rounded up), a full 1.5 em for an emoji (a padlock or a crown is not a
+     letter), the letter-spacing counted in, and a cartouche that is
+     narrower than the plank. Overshooting costs a caption a point of type;
+     undershooting costs it the edge of the screen. */
+  var EMOJI_EM = 1.5;
+  function captionEm(label) {
+    var s = String(label), em = 0, i, c;
+    for (i = 0; i < s.length; i++) {
+      c = s.charCodeAt(i);
+      /* surrogate pair = an emoji: one glyph, two code units */
+      if (c >= 0xD800 && c <= 0xDBFF) { em += EMOJI_EM; i++; }
+      else if (c > 0x2000) { em += EMOJI_EM; }
+      else { em += 0.62; }
+    }
+    return em;
+  }
+  function bandFit(label, maxW, fs, spacing) {
+    var est = captionEm(label) * fs + (spacing || 0) * String(label).length;
+    if (est <= maxW) { return { fs: fs, squeeze: '' }; }
+    return { fs: fs * (maxW / est), squeeze: maxW };
+  }
+
+  /* A carved plank across the board announcing the region ABOVE it — the
+     learner climbs out of regiō I, crosses the band, and is in regiō II.
+     Locked regions still say their name (a named door is a promise; an
+     anonymous padlock is a wall) with the padlock in front of it. */
+  function regionBand(t, b) {
+    var seg = b.seg;
+    var y = b.y, h = b.h;
+    /* THE PADLOCK AND THE CROWN ARE THEIR OWN GLYPHS, not part of the
+       caption string. An emoji's ink is wider than its advance in most of
+       the serif fallbacks a phone will pick, so '🔒 Regiō VII' drew the
+       padlock straight over the R. Set apart at the two ends of the
+       cartouche they cannot collide with anything, and the caption's width
+       estimate stops having to guess at emoji metrics. */
+    var caption = (seg.numeral ? ('Regiō ' + seg.numeral) : '') +
+                  (seg.titulus ? ' · ' + seg.titulus : '');
+    var mark = seg.locked ? '🔒' : (seg.cleared ? '👑' : '');
+    var f = bandFit(caption, W - (mark ? 240 : 168), 32, 1);
+    var s = '<g class="mm-band' + (seg.locked ? ' is-shut' : '') +
+            '" data-region="' + escXml(seg.id || '') + '" pointer-events="none">';
+    s += '<rect x="0" y="' + y + '" width="' + W + '" height="' + h + '" fill="' + t.woodDk + '"/>';
+    s += '<rect x="0" y="' + y + '" width="' + W + '" height="3.5" fill="' + t.seam + '" opacity="0.9"/>';
+    s += '<rect x="0" y="' + (y + h - 3.5) + '" width="' + W + '" height="3.5" fill="' + t.seam + '" opacity="0.9"/>';
+    /* the carved cartouche the caption is cut into */
+    s += '<rect x="52" y="' + (y + 13) + '" width="' + (W - 104) + '" height="' + (h - 26) +
+         '" rx="' + ((h - 26) / 2).toFixed(0) + '" fill="' + t.seam + '" opacity="0.5"/>';
+    s += '<rect x="52" y="' + (y + 13) + '" width="' + (W - 104) + '" height="' + (h - 26) +
+         '" rx="' + ((h - 26) / 2).toFixed(0) + '" fill="none" stroke="' + C.badgeRim +
+         '" stroke-width="1.6" opacity="' + (seg.locked ? '0.28' : '0.55') + '"/>';
+    s += '<text x="' + (W / 2) + '" y="' + (y + h / 2 + f.fs * 0.35).toFixed(0) +
+         '" text-anchor="middle" font-family="Palatino, Georgia, serif" font-size="' +
+         f.fs.toFixed(1) + '" letter-spacing="1" fill="' +
+         (seg.locked ? C.creamDim : C.cream) + '" opacity="' + (seg.locked ? '0.72' : '1') + '"' +
+         (f.squeeze ? ' textLength="' + f.squeeze.toFixed(1) + '" lengthAdjust="spacingAndGlyphs"' : '') +
+         '>' + escXml(caption) + '</text>';
+    if (mark) {
+      s += '<text x="86" y="' + (y + h / 2 + 12) + '" text-anchor="middle" font-size="30"' +
+           (seg.locked ? ' opacity="0.9"' : '') + '>' + mark + '</text>';
+    }
+    s += '</g>';
+    return s;
+  }
+
+  /* the summit of a finished track: the one screen in the app that says the
+     whole cursus is done. Reuses the band plank so it belongs to the board. */
+  function summitBand(t, y, h) {
+    var s = '<g class="mm-summit" pointer-events="none">';
+    s += '<rect x="0" y="' + y + '" width="' + W + '" height="' + h + '" fill="' + t.woodDk + '"/>';
+    s += '<rect x="0" y="' + (y + h - 3.5) + '" width="' + W + '" height="3.5" fill="' + t.seam + '" opacity="0.9"/>';
+    s += '<rect x="40" y="' + (y + 12) + '" width="' + (W - 80) + '" height="' + (h - 24) +
+         '" rx="' + ((h - 24) / 2).toFixed(0) + '" fill="' + t.seam + '" opacity="0.55"/>';
+    s += '<rect x="40" y="' + (y + 12) + '" width="' + (W - 80) + '" height="' + (h - 24) +
+         '" rx="' + ((h - 24) / 2).toFixed(0) + '" fill="none" stroke="' + C.badgeRim +
+         '" stroke-width="2.4" opacity="0.85"/>';
+    var cap = 'Cursum cōnfēcistī! 🏆';
+    var cf = bandFit(cap, W - 130, 32, 1);
+    s += '<text x="' + (W / 2) + '" y="' + (y + h / 2 + cf.fs * 0.36).toFixed(0) +
+         '" text-anchor="middle" font-family="Palatino, Georgia, serif" font-size="' +
+         cf.fs.toFixed(1) + '" font-weight="bold" letter-spacing="1" fill="' + C.badgeRim + '"' +
+         (cf.squeeze ? ' textLength="' + cf.squeeze.toFixed(1) + '" lengthAdjust="spacingAndGlyphs"' : '') +
+         '>' + cap + '</text>';
+    s += '</g>';
+    return s;
+  }
+
   /* ---------- render ---------- */
 
   /* Node y fractions are authored per region and need not span the full
@@ -563,30 +718,94 @@ var WorldMap = (function () {
      tall above their tile. */
   var TOP_MARGIN = 104, BOTTOM_MARGIN = 74;
 
-  function layout(model) {
-    var H = boardHeight(model.nodes.length);
+  /* Per-segment geometry on the continuous board. SEG_TOP is the same
+     castle-and-pennant headroom TOP_MARGIN buys; 150 units per node is the
+     one scale rule of the whole module (5–7 tiles at 375px). */
+  var SEG_TOP = 96, SEG_BOT = 54, BAND_H = 88, SUMMIT_H = 96;
+
+  /* The model in its canonical form: a bottom-first list of segments. A
+     board handed the old single-region `nodes` array becomes ONE anonymous
+     segment and takes the single-region code path below, byte for byte. */
+  function segmentsOf(model) {
+    if (model.segments && model.segments.length) { return model.segments; }
+    return [{ id: null, titulus: null, numeral: null, locked: false,
+              nodes: model.nodes || [] }];
+  }
+
+  /* every node of the board, in walking order (bottom of regiō I upward) */
+  function allNodes(model) {
+    var segs = segmentsOf(model), out = [], i, j;
+    for (i = 0; i < segs.length; i++) {
+      for (j = 0; j < (segs[i].nodes || []).length; j++) { out.push(segs[i].nodes[j]); }
+    }
+    return out;
+  }
+
+  /* place one segment's nodes inside [top, top+height], keeping the author's
+     proportions exactly as the single-region layout always has */
+  function placeSegment(nodes, top, height, padTop, padBot, segIndex, pts) {
     var i, n, lo = 1, hi = 0;
-    for (i = 0; i < model.nodes.length; i++) {
-      lo = Math.min(lo, model.nodes[i].y);
-      hi = Math.max(hi, model.nodes[i].y);
+    for (i = 0; i < nodes.length; i++) {
+      lo = Math.min(lo, nodes[i].y);
+      hi = Math.max(hi, nodes[i].y);
     }
     var span = (hi - lo) || 1;
-    var band = H - TOP_MARGIN - BOTTOM_MARGIN;
-    var pts = [];
-    for (i = 0; i < model.nodes.length; i++) {
-      n = model.nodes[i];
+    var band = height - padTop - padBot;
+    for (i = 0; i < nodes.length; i++) {
+      n = nodes[i];
       pts.push({
         id: n.id,
         x: Math.round(n.x * W),
-        y: Math.round(TOP_MARGIN + ((n.y - lo) / span) * band),
+        y: Math.round(top + padTop + ((n.y - lo) / span) * band),
+        seg: segIndex,
         n: n
       });
     }
-    return { H: H, pts: pts };
+  }
+
+  function segHeight(count) { return 150 * count + SEG_TOP + SEG_BOT; }
+
+  function layout(model) {
+    var segs = segmentsOf(model);
+    var pts = [], bands = [], i;
+
+    /* --- the single-region board: unchanged --- */
+    if (segs.length === 1 && !segs[0].titulus) {
+      var nodes = segs[0].nodes;
+      var H1 = boardHeight(nodes.length);
+      placeSegment(nodes, 0, H1, TOP_MARGIN, BOTTOM_MARGIN, 0, pts);
+      return { H: H1, pts: pts, bands: bands, segTops: [0], summit: 0,
+               spans: [{ top: 0, bot: H1 }] };
+    }
+
+    /* --- the continuous track board ---
+       Drawn top-down, so the LAST region is laid out first; each region's
+       title band sits directly under its own nodes, which puts it between
+       that region and the one below — the threshold you cross climbing in. */
+    var summit = model.trackDone ? SUMMIT_H : 0;
+    var y = summit;
+    var tops = [], spans = [];
+    for (i = segs.length - 1; i >= 0; i--) {
+      var h = segHeight((segs[i].nodes || []).length);
+      tops[i] = y;
+      placeSegment(segs[i].nodes || [], y, h, SEG_TOP, SEG_BOT, i, pts);
+      spans[i] = { top: y, bot: y + h };
+      y += h;
+      bands[i] = { y: y, h: BAND_H, seg: segs[i], index: i };
+      y += BAND_H;
+    }
+    /* pts were built top-down; the path, the mascot and the props all want
+       WALKING order (regiō I first), so flip back. */
+    pts.sort(function (a, b) {
+      if (a.seg !== b.seg) { return a.seg - b.seg; }
+      return b.y - a.y;
+    });
+    return { H: y, pts: pts, bands: bands, segTops: tops, summit: summit, spans: spans };
   }
 
   function render(model) {
     var t = TINTS[model.track] || TINTS.fabulae;
+    var segs = segmentsOf(model);
     var L = layout(model);
     var H = L.H;
     var pts = L.pts;
@@ -600,12 +819,17 @@ var WorldMap = (function () {
     /* PARALLAX LAYER: bind() shifts this group as the board scrolls, so the
        scenery drifts slower than the path and the board reads as deep. */
     s += '<g class="mm-parallax" filter="url(#mmCarved)">' +
-         scenery(model.track || 'fabulae', H, pts) + '</g>';
+         scenery(model.track || 'fabulae', H, pts, L.spans) + '</g>';
 
     var i;
     for (i = 0; i < pts.length; i++) {
       s += '<ellipse cx="' + pts[i].x + '" cy="' + pts[i].y + '" rx="130" ry="95" fill="url(#mmHaze)"/>';
     }
+
+    /* bands go UNDER the path on purpose: the ribbon crossing the plank is
+       what makes twelve boards read as one road instead of twelve cards. */
+    for (i = 0; i < L.bands.length; i++) { s += regionBand(t, L.bands[i]); }
+    if (L.summit) { s += summitBand(t, 0, SUMMIT_H); }
 
     s += pathLine(pts);
 
@@ -639,6 +863,18 @@ var WorldMap = (function () {
       s += '</g>';
     }
 
+    /* A LOCKED REGION IS IN SHADOW. The tiles already wear the grey shut
+       palette; the veil is what stops a padlocked region from competing for
+       attention with the lit one the learner is standing in. A translucent
+       rect costs nothing — an feColorMatrix over a 12k-unit group would
+       force the whole board through a filter buffer on every scroll. */
+    for (i = 0; i < L.bands.length; i++) {
+      if (!L.bands[i].seg.locked) { continue; }
+      s += '<rect class="mm-veil" x="0" y="' + L.segTops[i] + '" width="' + W +
+           '" height="' + ((L.bands[i].y + L.bands[i].h) - L.segTops[i]) +
+           '" fill="#0a0603" opacity="0.34" pointer-events="none"/>';
+    }
+
     s += '<rect width="' + W + '" height="' + H + '" fill="url(#mmVig)" pointer-events="none"/>';
     s += '</svg></div>';
     return s;
@@ -649,9 +885,11 @@ var WorldMap = (function () {
   function bind(root, model, handlers) {
     var view = root.querySelector('.map-view');
     var svg = root.querySelector('svg.worldmap');
-    if (!view || !svg) { return; }
+    if (!view || !svg) { return { scrollToRegion: function () {}, scrollToNode: function () {} }; }
     var L = layout(model);
     var H = L.H;
+    var segs = segmentsOf(model);
+    var flat = allNodes(model);
 
     /* one SVG unit is this many CSS pixels right now */
     function scale() { return (view.clientWidth || svg.clientWidth || W) / W; }
@@ -673,24 +911,78 @@ var WorldMap = (function () {
     sizeBoard();
 
     var par = svg.querySelector('.mm-parallax');
+
+    /* HOW FAR THE SCENERY MAY LAG.
+       0.3 of the scroll was right when the whole board scrolled ~300 px:
+       the props drifted a few units and the board read as deep. On a
+       continuous board the scroll range is six thousand pixels, and 0.3 of
+       that is a THIRD OF THE BOARD — every prop ends up drawn against a
+       region it was not placed in (and the ones near the foot are pushed
+       clean off the bottom, which is why the last screenful came up bare).
+       The lag is therefore capped in absolute drawing units: short boards
+       keep exactly the old 0.3, and long ones get the largest factor whose
+       total drift still stays under half a screenful, which is all the eye
+       needs to read one plane moving behind another. */
+    var MAX_DRIFT = 300;
+    function driftFactor() {
+      var maxUnits = (view.scrollHeight - view.clientHeight) / (scale() || 1);
+      if (maxUnits <= 0) { return 0.3; }
+      return Math.min(0.3, MAX_DRIFT / maxUnits);
+    }
     function onScroll() {
       if (!par) { return; }
-      var dy = (view.scrollTop / (scale() || 1)) * 0.3;
+      var dy = (view.scrollTop / (scale() || 1)) * driftFactor();
       par.setAttribute('transform', 'translate(0,' + dy.toFixed(1) + ')');
     }
     view.addEventListener('scroll', onScroll);
 
-    function centreOnce() {
-      var i, p = null;
-      for (i = 0; i < L.pts.length; i++) { if (L.pts[i].id === model.foxNode) { p = L.pts[i]; } }
-      if (!p) { p = L.pts[L.pts.length - 1]; }
-      if (!p) { return true; }
+    /* put a board Y (in drawing units) in the middle of the viewport */
+    function centreOnY(unitY, smooth) {
       var max = view.scrollHeight - view.clientHeight;
       if (max <= 0) { return false; }               /* not laid out yet */
-      var target = p.y * scale() - view.clientHeight / 2;
-      view.scrollTop = Math.max(0, Math.min(max, target));
+      var target = Math.max(0, Math.min(max, unitY * scale() - view.clientHeight / 2));
+      if (smooth && view.scrollTo) {
+        try { view.scrollTo({ top: target, behavior: 'smooth' }); }
+        catch (e) { view.scrollTop = target; }
+      } else {
+        view.scrollTop = target;
+      }
       onScroll();
       return true;
+    }
+
+    function pointOf(nodeId) {
+      var i;
+      for (i = 0; i < L.pts.length; i++) { if (L.pts[i].id === nodeId) { return L.pts[i]; } }
+      return null;
+    }
+
+    function centreOnce() {
+      var p = pointOf(model.foxNode);
+      if (!p) { p = L.pts[L.pts.length - 1]; }
+      if (!p) { return true; }
+      return centreOnY(p.y, false);
+    }
+
+    /* THE REGION INDEX'S HANDLE. Tapping a region in the index scrolls the
+       board to that region's FIRST node — you arrive at its foot and read
+       upward, which is the direction the whole board is drawn in. */
+    function scrollToRegion(regionId, smooth) {
+      var i, j;
+      for (i = 0; i < segs.length; i++) {
+        if (segs[i].id !== regionId) { continue; }
+        var first = (segs[i].nodes || [])[0];
+        var p = first ? pointOf(first.id) : null;
+        if (p) { return centreOnY(p.y, smooth); }
+        for (j = 0; j < L.bands.length; j++) {
+          if (L.bands[j].index === i) { return centreOnY(L.bands[j].y, smooth); }
+        }
+      }
+      return false;
+    }
+    function scrollToNode(nodeId, smooth) {
+      var p = pointOf(nodeId);
+      return p ? centreOnY(p.y, smooth) : false;
     }
     onScroll();                          /* parallax at the rest position */
     if (!centreOnce()) {
@@ -728,8 +1020,8 @@ var WorldMap = (function () {
       var id = gEl.getAttribute('data-id');
       var kind = gEl.getAttribute('data-kind');
       var st = 'shut', i;
-      for (i = 0; i < model.nodes.length; i++) {
-        if (model.nodes[i].id === id) { st = model.nodes[i].state; break; }
+      for (i = 0; i < flat.length; i++) {
+        if (flat[i].id === id) { st = flat[i].state; break; }
       }
       if (st !== 'open' && st !== 'done') { return; }
       function fire() { if (handlers.onNode) { handlers.onNode(id, kind); } }
@@ -741,12 +1033,18 @@ var WorldMap = (function () {
         if (e.keyCode === 13 || e.keyCode === 32) { e.preventDefault(); fire(); }
       });
     });
+
+    return { scrollToRegion: scrollToRegion, scrollToNode: scrollToNode, view: view };
   }
 
   /* numeralFit is exported for the regression suite: GAUNTLET F1 is a
      numbers fix, and a row that asserts the numbers beats one that squints
      at a screenshot. TILE/BOSS go with it so a row can name the real geometry
      instead of copying magic numbers that would rot the moment TILE changes. */
+  /* layout() and segmentsOf() go out with them for NAV: "the track board
+     contains every region's nodes" is a claim about the LAYOUT, and a row
+     that reads the geometry beats one that greps the SVG string. */
   return { render: render, bind: bind, TINTS: TINTS,
-           numeralFit: numeralFit, TILE: TILE, BOSS: BOSS };
+           numeralFit: numeralFit, TILE: TILE, BOSS: BOSS,
+           layout: layout, segmentsOf: segmentsOf, allNodes: allNodes };
 })();

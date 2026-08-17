@@ -43,7 +43,31 @@ upward, decorative game pieces and gears scattered at depth. Our version per tra
   than path on scroll (two SVG groups, transform on scroll).
 - Vertical scroll/pan with touch drag + wheel; auto-centers current node on entry.
 - Implementation: map.js renders SVG (not canvas) for crispness; keeps 0..1 fractional
-  node positions; region = one tall SVG per screenful chunk.
+  node positions.
+- **ONE CONTINUOUS BOARD PER TRACK** (revised; this section previously said "region =
+  one tall SVG per screenful chunk", i.e. one board per region). A board per region
+  turned out to be the whole navigation: the app rendered the region it had loaded and
+  offered no way to reach another, so beating a boss left the learner on a gold summit
+  with no road off it and 142 shipped capitula reduced to each track's first board.
+  The board now stacks EVERY region of the track — regiō I at the foot, the last
+  region at the summit — each region keeping its own 0..1 layout scaled into its own
+  band, separated by a carved REGION TITLE BAND (numeral + titulus, padlock when
+  locked) that the path ribbon runs straight across. Locked regions are veiled and
+  padlocked. Depth (prop size/opacity) and the parallax lag are per REGION, not per
+  board: each region has its own horizon, and a lag proportional to a six-thousand-
+  pixel scroll would drag the scenery off the bottom of the board.
+- Region membership, names and boss keys live in `content/manifest.js` so a locked
+  region can be drawn and named without downloading its content file; the loaded file
+  wins whenever it is in memory.
+- **REGIŌNĒS** — a region index over the board (track title or the Regiōnēs button):
+  numeral, titulus, n/m capitula, boss mark, tap to scroll the board there. Distinct
+  from CURSUS, which lists one region's capitula.
+- **AUTO-ADVANCE** — clearing a region's boss moves the saved map node to the first
+  capitulum of the next region, so returning to the board lands on the new segment.
+  The last region of a track shows `Cursum cōnfēcistī! 🏆` on the summit instead.
+- Unlock is per TRACK, mirroring `server/lib/progress.php`: a capitulum opens when the
+  previous capitulum IN THE SAME TRACK is complete. Clearing the boss is the ceremony,
+  not the gate (Historia's liber I has no boss at all).
 
 ## 4. Step types per capitulum (7)
 

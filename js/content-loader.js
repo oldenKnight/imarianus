@@ -67,6 +67,168 @@ var CONTENT = (function () {
     var rs = regionEntries(trackId);
     return rs.length ? rs[0].id : null;
   }
+
+  /* ============================================================
+     TRACK NAVIGATION (NAV — the continuous board)
+     ------------------------------------------------------------
+     The map used to render ONE region and the app had no way to reach
+     another, so a learner who beat a boss was stranded: 142 capitula
+     shipped and only each track's first board was reachable. js/map.js now
+     draws the WHOLE TRACK as one scrolling board, which means the client
+     must be able to answer "what comes after this?" for a region whose
+     content file is not (and must not have to be) in memory — twelve
+     Aeneis files are a megabyte, and nobody downloads a megabyte to look
+     at a map.
+
+     Everything below is therefore a pure MANIFEST query: no content file
+     is touched, no network happens, and the answers are the same before
+     and after a region is loaded. Where the manifest is thin (a
+     capitulum's titulus) the app enriches from the loaded region and
+     falls back to the numeral, which is what the badge shows anyway.
+     ============================================================ */
+
+  /* Roman numerals, 1..3999. The board numbers capitula by their position
+     in the TRACK (f4 is 'IV', a48 is 'XLVIII'), which is exactly what the
+     content files author by hand — so an unloaded region can be numbered
+     without being downloaded. */
+  var ROMAN = [[1000, 'M'], [900, 'CM'], [500, 'D'], [400, 'CD'], [100, 'C'],
+               [90, 'XC'], [50, 'L'], [40, 'XL'], [10, 'X'], [9, 'IX'],
+               [5, 'V'], [4, 'IV'], [1, 'I']];
+  function roman(n) {
+    n = Math.floor(n);
+    if (!(n > 0) || n > 3999) { return String(n); }
+    var out = '', i;
+    for (i = 0; i < ROMAN.length; i++) {
+      while (n >= ROMAN[i][0]) { out += ROMAN[i][1]; n -= ROMAN[i][0]; }
+    }
+    return out;
+  }
+
+  /* The region's display name. The loaded content file wins (it is the
+     authority); the manifest copy is what makes a locked, never-downloaded
+     region nameable on the board and in the index. */
+  function regionTitulus(trackId, regionId) {
+    var reg = region(trackId, regionId);
+    if (reg && reg.titulus) { return reg.titulus; }
+    var e = regionEntry(trackId, regionId);
+    return (e && e.titulus) ? e.titulus : '';
+  }
+
+  /* The key boss progress is stored under on the server. Frozen ids: r01's
+     rows say 'region1' and renaming them would lose a cleared boss. */
+  function regionProgressId(trackId, regionId) {
+    var reg = region(trackId, regionId);
+    if (reg && reg.progressId) { return reg.progressId; }
+    var e = regionEntry(trackId, regionId);
+    if (!e) { return regionId; }
+    return e.progressId || e.id;
+  }
+
+  function regionIndexOf(trackId, regionId) {
+    var rs = regionEntries(trackId), i;
+    for (i = 0; i < rs.length; i++) { if (rs[i].id === regionId) { return i; } }
+    return -1;
+  }
+
+  function nextRegionId(trackId, regionId) {
+    var rs = regionEntries(trackId);
+    var i = regionIndexOf(trackId, regionId);
+    return (i >= 0 && i + 1 < rs.length) ? rs[i + 1].id : null;
+  }
+
+  function firstCapitulumId(trackId, regionId) {
+    var e = regionEntry(trackId, regionId);
+    return (e && e.capitula && e.capitula.length) ? e.capitula[0] : '';
+  }
+
+  /* THE AUTO-ADVANCE. Beating a region's boss used to leave the learner on
+     a summit with nowhere to go; the map now walks them onto the first
+     capitulum of the next region. Returns '' at the end of a track, which
+     is the signal to show the track-complete state instead. Pure: the
+     caller decides whether the node is actually unlocked (it always is —
+     the boss was only open because every capitulum before it was done). */
+  function nextNodeAfterBoss(trackId, regionId) {
+    var nxt = nextRegionId(trackId, regionId);
+    return nxt ? firstCapitulumId(trackId, nxt) : '';
+  }
+
+  /* Every node of a track, in walking order: capitula then the region's
+     boss, region by region. This is the spine the continuous board is
+     built on AND the prerequisite chain the server enforces
+     (lib/progress.php: "the previous capitulum IN THE SAME TRACK must be
+     fully complete"). One list, so the two can never disagree. */
+  function trackChain(trackId) {
+    var rs = regionEntries(trackId), out = [], i, j, caps, capNo = 0;
+    for (i = 0; i < rs.length; i++) {
+      caps = rs[i].capitula || [];
+      for (j = 0; j < caps.length; j++) {
+        capNo++;
+        out.push({ id: caps[j], kind: 'fable', track: trackId,
+                   region: rs[i].id, regionIndex: i, indexInRegion: j,
+                   capNumber: capNo });
+      }
+      if (rs[i].boss) {
+        out.push({ id: rs[i].boss, kind: 'boss', track: trackId,
+                   region: rs[i].id, regionIndex: i, indexInRegion: caps.length,
+                   capNumber: 0 });
+      }
+    }
+    return out;
+  }
+
+  /* Just the capitula of a track, in order — the prerequisite chain. */
+  function trackCapitula(trackId) {
+    var rs = regionEntries(trackId), out = [], i, j, caps;
+    for (i = 0; i < rs.length; i++) {
+      caps = rs[i].capitula || [];
+      for (j = 0; j < caps.length; j++) { out.push(caps[j]); }
+    }
+    return out;
+  }
+
+  /* The capitulum that must be finished before this one, or null when it
+     opens its track. MIRRORS rule_fable_prev() in server/lib/rules.php —
+     if these two ever disagree the client offers a step the server then
+     refuses with 409 step_locked, which is the silent-failure shape. */
+  function prevCapitulumId(trackId, capId) {
+    var list = trackCapitula(trackId), i;
+    for (i = 0; i < list.length; i++) {
+      if (list[i] === capId) { return i > 0 ? list[i - 1] : null; }
+    }
+    return null;
+  }
+
+  /* Where does this node live? Accepts a capitulum id OR a boss id, and
+     searches every track — S.mapNode may now name a node in any region of
+     any track, so its reader cannot assume the current context. */
+  function locate(nodeId) {
+    var ts = tracks(), i, j, k, regs, caps;
+    for (i = 0; i < ts.length; i++) {
+      regs = ts[i].regions || [];
+      for (j = 0; j < regs.length; j++) {
+        caps = regs[j].capitula || [];
+        for (k = 0; k < caps.length; k++) {
+          if (caps[k] === nodeId) {
+            return { track: ts[i].id, region: regs[j].id, kind: 'fable',
+                     indexInRegion: k, capNumber: 0 };
+          }
+        }
+        if (regs[j].boss === nodeId) {
+          return { track: ts[i].id, region: regs[j].id, kind: 'boss',
+                   indexInRegion: caps.length, capNumber: 0 };
+        }
+      }
+    }
+    return null;
+  }
+
+  /* 1-based position of a capitulum in its track — the number its badge
+     shows. 0 for a boss or an unknown id. */
+  function capNumber(trackId, capId) {
+    var list = trackCapitula(trackId), i;
+    for (i = 0; i < list.length; i++) { if (list[i] === capId) { return i + 1; } }
+    return 0;
+  }
   function defaultSteps() {
     return (manifest.steps && manifest.steps.length) ? manifest.steps : DATA.STEPS;
   }
@@ -617,6 +779,19 @@ var CONTENT = (function () {
     regionEntry: regionEntry,
     firstRegionId: firstRegionId,
     defaultSteps: defaultSteps,
+    /* track navigation (NAV — the continuous board) */
+    roman: roman,
+    regionTitulus: regionTitulus,
+    regionProgressId: regionProgressId,
+    regionIndexOf: regionIndexOf,
+    nextRegionId: nextRegionId,
+    firstCapitulumId: firstCapitulumId,
+    nextNodeAfterBoss: nextNodeAfterBoss,
+    trackChain: trackChain,
+    trackCapitula: trackCapitula,
+    prevCapitulumId: prevCapitulumId,
+    locate: locate,
+    capNumber: capNumber,
     /* loading */
     registerRegion: registerRegion,
     loadRegion: loadRegion,

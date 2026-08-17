@@ -402,7 +402,16 @@
     v_lepus:     { bg: 'plain', items: [{ t: 'lepus', x: 195, y: G, s: 1.7 }] },
     v_mons:      { bg: 'plain', items: [{ t: 'mountain', x: 200, y: G, s: 1.3 }] },
     v_celer:     { bg: 'plain', items: [{ t: 'lepus', x: 190, y: G, s: 1.7, pose: 'run' }] },
-    v_tardus:    { bg: 'plain', items: [{ t: 'testudo', x: 190, y: G, s: 1.9 }] },
+    /* CLAR. `tardus` used to be the identical turtle of v_testudo one tenth
+       of a scale-step smaller: two chips that were the same picture, so the
+       question "which one is tardus?" had no answer. `celer` gets its meaning
+       from the hare's RUN pose, but the tortoise art has no "slow" pose, so
+       the hourglass carries it — the same device 🥇 uses in v_vincit. It also
+       keeps the card off the sprite-crop path (a scene with a bubble always
+       draws its raster), so the turtle of `testūdō` and the turtle of
+       `tardus` can never resolve to one sprite again. */
+    v_tardus:    { bg: 'plain', items: [{ t: 'testudo', x: 190, y: G, s: 1.9 }],
+                   bubbles: [{ x: 78, y: 96, w: 50, h: 38, text: '⏳', kind: 'thought', tail: 'right', fs: 20 }] },
     v_vincit:    { bg: 'plain', items: [
                    { t: 'tree',    x: 340, y: G, s: 0.95 },
                    { t: 'testudo', x: 270, y: G, s: 1.4 },

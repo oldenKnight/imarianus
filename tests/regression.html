@@ -74,7 +74,15 @@
      file registers itself with CONTENT the moment it is injected, and
      CONTENT.region() is a plain registry read, so no manifest is needed. -->
 <script src="../js/data-core.js"></script>
+<!-- THE MANIFEST, BEFORE content-loader.js — which captures CONTENT_MANIFEST
+     once, at evaluation time, so the order is load-bearing. NAV moved the
+     track's shape (which regions exist, in what order, holding which
+     capitula) into the manifest and out of the twelve content files, so the
+     navigation rows below are asking the real index the app ships, not a
+     fixture that could be made to agree with whatever the code does. -->
+<script src="../content/manifest.js"></script>
 <script src="../js/content-loader.js"></script>
+<script src="../js/chip-lint.js"></script>
 <script src="../content/fabulae-r01.js"></script>
 <!-- M9 offline queue. storage.js + api.js are a PAIR here: the queue lives in
      storage.js but the event id is minted and replayed by api.js, and the bug
@@ -134,10 +142,13 @@
     var set = row(bug, name);
     pending++;
     var settled = false;
-    function done(msg) {
+    /* `detail` is what a PASSING check wants to say out loud — a sweep that
+       reports "0 critical, 1561 warn" is worth more than another "ok".
+       Optional and second, so every existing one-argument caller is unchanged. */
+    function done(msg, detail) {
       if (settled) { return; }
       settled = true;
-      set(!msg, msg || 'ok');
+      set(!msg, msg || detail || 'ok');
       pending--;
       finish();
     }
@@ -1973,6 +1984,20 @@
 
   var SERVED = window.location.protocol !== 'file:';
 
+  /* read a project file as text. Several rows below assert things about
+     SOURCE that cannot be observed by running it (that app.js calls a
+     function at all, that qa.html seeds from the manifest). cb(err, text). */
+  function fetchText(path, cb) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', path, true);
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState !== 4) { return; }
+      if (xhr.status < 200 || xhr.status >= 300) { cb('HTTP ' + xhr.status, null); return; }
+      cb(null, xhr.responseText);
+    };
+    xhr.send(null);
+  }
+
   /* sw.js is never executed here — a service worker cannot run in a page
      context — so this is a SYNTAX gate: fetch the bytes the browser would be
      asked to install and hand them to the JS parser via new Function. A typo
@@ -2567,6 +2592,300 @@
       return null;
     });
 
+  /* ============================================================
+     NAV — the continuous track board
+     ------------------------------------------------------------
+     THE BUG: the app rendered ONE region's map and had no UI to reach any
+     other. After beating a region's boss the learner stood on a gold summit
+     with no road off it; 142 capitula shipped and only each track's FIRST
+     board was ever reachable. It was found on the live site.
+
+     The rows below guard the three pieces of the fix, and each is written
+     to fail loudly the way the bug failed quietly.
+     ============================================================ */
+
+  /* build the board model the app builds, from the REAL manifest, with a
+     progress predicate the caller supplies. Mirrors trackModel() in
+     js/app.js closely enough that a divergence in the SHAPE shows up here. */
+  function navBoard(trackId, isDone) {
+    isDone = isDone || function () { return false; };
+    var es = CONTENT.regionEntries(trackId), segs = [], i, j;
+    for (i = 0; i < es.length; i++) {
+      var caps = es[i].capitula || [], total = caps.length + (es[i].boss ? 1 : 0);
+      var nodes = [], allDone = caps.length > 0;
+      for (j = 0; j < caps.length; j++) {
+        if (!isDone(caps[j])) { allDone = false; }
+        nodes.push({ id: caps[j], kind: 'fable',
+                     x: (j % 2 === 0) ? 0.28 : 0.71,
+                     y: 0.87 - j * (total > 1 ? 0.71 / (total - 1) : 0),
+                     label: CONTENT.roman(CONTENT.capNumber(trackId, caps[j])),
+                     titulus: '', state: isDone(caps[j]) ? 'done' : 'shut' });
+      }
+      if (es[i].boss) {
+        nodes.push({ id: es[i].boss, kind: 'boss', x: 0.5, y: 0.16, label: '👑',
+                     titulus: '', state: allDone ? 'open' : 'shut' });
+      }
+      segs.push({ id: es[i].id, titulus: CONTENT.regionTitulus(trackId, es[i].id),
+                  numeral: CONTENT.roman(i + 1), locked: i > 0, cleared: false,
+                  capsDone: 0, capsTotal: caps.length, nodes: nodes });
+    }
+    return { segments: segs, foxNode: (segs[0] && segs[0].nodes[0]) ? segs[0].nodes[0].id : '',
+             track: trackId, titulus: trackId, avatar: 'fox' };
+  }
+
+  /* ---- NAV — every region is ON the board ---- */
+  check('NAV-BOARD', 'one board per track carries EVERY region\'s capitula and boss, regiō I lowest',
+    function () {
+      if (!window.CONTENT_MANIFEST) { return 'the manifest is not loaded — the board cannot be checked'; }
+      var tracks = ['fabulae', 'historia', 'aeneis'], t, i, j;
+      for (t = 0; t < tracks.length; t++) {
+        var tr = tracks[t];
+        var es = CONTENT.regionEntries(tr);
+        if (!es.length) { return tr + ' has no regions in the manifest'; }
+        var model = navBoard(tr);
+        var html = WorldMap.render(model);
+        var L = WorldMap.layout(model);
+
+        /* 1. every id the manifest declares is a tile on the board. This is
+              the bug itself: before the fix only region one was drawn. */
+        var want = 0;
+        for (i = 0; i < es.length; i++) {
+          var caps = es[i].capitula || [];
+          for (j = 0; j < caps.length; j++) {
+            want++;
+            if (html.indexOf('data-id="' + caps[j] + '"') < 0) {
+              return tr + ': ' + caps[j] + ' (' + es[i].id + ') is not on the board';
+            }
+          }
+          if (es[i].boss) {
+            want++;
+            if (html.indexOf('data-id="' + es[i].boss + '"') < 0) {
+              return tr + ': the boss ' + es[i].boss + ' is not on the board';
+            }
+          }
+          /* 2. and each region announces itself with a title band */
+          if (html.indexOf('data-region="' + es[i].id + '"') < 0) {
+            return tr + ': region ' + es[i].id + ' has no title band';
+          }
+        }
+        if (L.pts.length !== want) {
+          return tr + ': the board laid out ' + L.pts.length + ' nodes, not ' + want;
+        }
+
+        /* 3. ORDER + CONTINUITY. The nodes are in walking order and the
+              board is drawn bottom-up, so y must fall monotonically from
+              the first capitulum of regiō I to the last boss — INCLUDING
+              across every region seam. A break here is a path ribbon that
+              doubles back, which is what a stack of unconnected cards
+              would look like. */
+        for (i = 1; i < L.pts.length; i++) {
+          if (L.pts[i].y >= L.pts[i - 1].y) {
+            return tr + ': the path stops climbing at ' + L.pts[i].id +
+                   ' (y ' + L.pts[i].y + ' after ' + L.pts[i - 1].y + ')';
+          }
+        }
+        if (L.bands.length !== es.length) {
+          return tr + ': ' + L.bands.length + ' title bands for ' + es.length + ' regions';
+        }
+
+        /* 4. REGIŌ I IS AT THE FOOT. Monotonic y proves the ribbon never
+              doubles back, but it would hold just as well for a board
+              stacked upside down — layout() draws whatever order it is
+              handed. So name the two ends: the manifest's first capitulum
+              must be the lowest tile and its last node the highest. */
+        var firstId = (es[0].capitula || [])[0];
+        var lastRegion = es[es.length - 1];
+        var lastId = lastRegion.boss ||
+          (lastRegion.capitula || [])[(lastRegion.capitula || []).length - 1];
+        if (L.pts[0].id !== firstId) {
+          return tr + ': the board starts at ' + L.pts[0].id + ', not at ' + firstId;
+        }
+        if (L.pts[L.pts.length - 1].id !== lastId) {
+          return tr + ': the summit is ' + L.pts[L.pts.length - 1].id + ', not ' + lastId;
+        }
+        for (i = 0; i < L.pts.length; i++) {
+          if (L.pts[i].y > L.pts[0].y) {
+            return tr + ': ' + L.pts[i].id + ' is drawn below regiō I';
+          }
+        }
+      }
+      return null;
+    });
+
+  /* ---- NAV — the auto-advance ---- */
+  check('NAV-ADVANCE', 'clearing a boss hands back the NEXT region\'s first capitulum, and \'\' at a track\'s end',
+    function () {
+      if (!window.CONTENT_MANIFEST) { return 'the manifest is not loaded'; }
+      var tracks = ['fabulae', 'historia', 'aeneis'], t, i;
+      for (t = 0; t < tracks.length; t++) {
+        var tr = tracks[t], es = CONTENT.regionEntries(tr);
+        for (i = 0; i < es.length; i++) {
+          var got = CONTENT.nextNodeAfterBoss(tr, es[i].id);
+          if (i + 1 < es.length) {
+            var want = (es[i + 1].capitula || [])[0];
+            if (got !== want) {
+              return tr + '/' + es[i].id + ': advanced to "' + got + '", not to ' + want;
+            }
+            /* THE POINT: it crosses the region boundary. A node that is
+               still inside the region just cleared is the stranding bug. */
+            if ((es[i].capitula || []).indexOf(got) >= 0) {
+              return tr + '/' + es[i].id + ': advanced to a node inside the SAME region';
+            }
+          } else if (got !== '') {
+            return tr + ': the last region advanced to "' + got + '" instead of stopping';
+          }
+        }
+      }
+      /* r01 → r02 is the exact journey the owner could not make */
+      if (CONTENT.nextNodeAfterBoss('fabulae', 'r01') !== 'f4') {
+        return 'beating Lupus in Silva still does not lead to f4';
+      }
+      return null;
+    });
+
+  /* ---- NAV — the unlock rule the SERVER enforces ----
+     server/lib/progress.php gates a step on "the previous capitulum IN THE
+     SAME TRACK is fully complete" (rule_fable_prev) and answers 409 when it
+     is not. A client that disagreed would offer a lesson the server then
+     refuses — a locked door that looks open, which fails silently. */
+  check('NAV-UNLOCK', 'the prerequisite chain is per-track, unbroken across regions, and open only at a track\'s head',
+    function () {
+      if (!window.CONTENT_MANIFEST) { return 'the manifest is not loaded'; }
+      var tracks = ['fabulae', 'historia', 'aeneis'], t, i;
+      var seen = {};
+      for (t = 0; t < tracks.length; t++) {
+        var tr = tracks[t], chain = CONTENT.trackCapitula(tr);
+        if (!chain.length) { return tr + ' has no capitula'; }
+        if (CONTENT.prevCapitulumId(tr, chain[0]) !== null) {
+          return tr + ': its first capitulum has a prerequisite';
+        }
+        for (i = 1; i < chain.length; i++) {
+          if (CONTENT.prevCapitulumId(tr, chain[i]) !== chain[i - 1]) {
+            return tr + ': ' + chain[i] + ' does not follow ' + chain[i - 1];
+          }
+          /* the seam that matters: the first capitulum of every region
+             AFTER the first must depend on the region before it */
+          var loc = CONTENT.locate(chain[i]);
+          var prevLoc = CONTENT.locate(chain[i - 1]);
+          if (loc.track !== tr || prevLoc.track !== tr) {
+            return tr + ': the chain leaked into another track at ' + chain[i];
+          }
+        }
+        for (i = 0; i < chain.length; i++) {
+          if (seen[chain[i]]) { return chain[i] + ' appears in two tracks'; }
+          seen[chain[i]] = tr;
+        }
+      }
+      /* 142 capitula is the number that shipped and the number that must be
+         reachable — the bug left 3 + 5 + 4 of them behind one door each */
+      var total = 0;
+      for (t = 0; t < tracks.length; t++) { total += CONTENT.trackCapitula(tracks[t]).length; }
+      if (total !== 142) { return 'the three tracks hold ' + total + ' capitula, not 142'; }
+      return null;
+    });
+
+  /* ---- NAV — the region index has something to list ----
+     The index names every region of the track, and a LOCKED region is named
+     too: a padlock beside a name is a promise, a padlock beside nothing is
+     a wall. The names live in the manifest precisely so a region nobody has
+     downloaded can still be listed. */
+  check('NAV-INDEX', 'every region of every track is nameable and countable without loading its content file',
+    function () {
+      if (!window.CONTENT_MANIFEST) { return 'the manifest is not loaded'; }
+      var tracks = ['fabulae', 'historia', 'aeneis'], t, i, n = 0;
+      for (t = 0; t < tracks.length; t++) {
+        var tr = tracks[t], es = CONTENT.regionEntries(tr);
+        for (i = 0; i < es.length; i++) {
+          n++;
+          var tit = CONTENT.regionTitulus(tr, es[i].id);
+          if (!tit) { return tr + '/' + es[i].id + ' has no titulus — the index would list a blank row'; }
+          if (!(es[i].capitula || []).length) { return tr + '/' + es[i].id + ' lists no capitula'; }
+          if (!CONTENT.regionProgressId(tr, es[i].id)) {
+            return tr + '/' + es[i].id + ' has no progress id, so its boss tick cannot be read';
+          }
+          if (CONTENT.roman(i + 1).length === 0) { return 'no numeral for ' + es[i].id; }
+        }
+      }
+      if (n !== 33) { return 'the manifest names ' + n + ' regions, not 33'; }
+      /* r01's server rows say 'region1' and always will (content/README §5) */
+      if (CONTENT.regionProgressId('fabulae', 'r01') !== 'region1') {
+        return 'r01 lost its frozen progress id — a cleared Lupus would vanish';
+      }
+      return null;
+    });
+
+  /* ---- NAV — a band caption cannot run off the board ----
+     'Regiō VII · Lītus' overflowed the right edge of a 375 px phone the
+     first time, because the width estimate assumed the desktop serif it was
+     measured in. The estimate is pessimistic now; this row holds it there
+     against every caption the manifest can actually produce. */
+  check('NAV-BAND', 'no region title band can overflow the board at any track length',
+    function () {
+      if (!window.CONTENT_MANIFEST) { return 'the manifest is not loaded'; }
+      var tracks = ['fabulae', 'historia', 'aeneis'], t, i;
+      for (t = 0; t < tracks.length; t++) {
+        var tr = tracks[t];
+        var html = WorldMap.render(navBoard(tr));
+        var doc = new DOMParser().parseFromString(
+          html.replace(/^[\s\S]*?<svg/, '<svg').replace(/<\/svg>[\s\S]*$/, '</svg>'),
+          'image/svg+xml');
+        var texts = doc.getElementsByTagName('text'), k;
+        for (k = 0; k < texts.length; k++) {
+          var x = parseFloat(texts[k].getAttribute('x'));
+          var tl = texts[k].getAttribute('textLength');
+          if (!tl) { continue; }
+          /* a squeezed caption is pinned to its box; that box must sit
+             inside the 600-unit board with the cartouche's own margin */
+          if (x - parseFloat(tl) / 2 < 40 || x + parseFloat(tl) / 2 > 560) {
+            return tr + ': a pinned caption spans past the board edge (' +
+                   texts[k].textContent + ')';
+          }
+        }
+        /* and the longest caption the corpus holds still fits unsqueezed or
+           is squeezed rather than allowed to run */
+        var es = CONTENT.regionEntries(tr);
+        for (i = 0; i < es.length; i++) {
+          var cap = 'Regiō ' + CONTENT.roman(i + 1) + ' · ' + CONTENT.regionTitulus(tr, es[i].id);
+          if (html.indexOf('>' + cap.replace(/&/g, '&amp;') + '<') < 0) {
+            return tr + ': the band for ' + es[i].id + ' does not carry its caption';
+          }
+        }
+      }
+      return null;
+    });
+
+  /* ---- NAV — the app is actually WIRED to all of it ----
+     The four rows above prove the primitives. This one proves js/app.js
+     calls them: a perfect nextNodeAfterBoss() that nobody invokes leaves
+     the learner exactly as stranded as before. */
+  checkAsync('NAV-WIRING', 'js/app.js advances the map node after a boss clear and builds a row per region',
+    function (done) {
+      if (!SERVED) { done(null); return; }
+      fetchText('../js/app.js', function (err, src) {
+        if (err) { done('could not read js/app.js: ' + err); return; }
+        if (!/function\s+advanceAfterBoss/.test(src)) {
+          return done('advanceAfterBoss is gone — nothing moves the learner off the summit');
+        }
+        if (!/CONTENT\.nextNodeAfterBoss\(/.test(src)) {
+          return done('advanceAfterBoss no longer asks CONTENT for the next region');
+        }
+        if (!/showBossResult[\s\S]{0,900}advanceAfterBoss\(/.test(src)) {
+          return done('the victory screen no longer calls advanceAfterBoss');
+        }
+        if (!/function\s+regionIndexHtml/.test(src) || !/model\.segments\.length/.test(src)) {
+          return done('the region index no longer walks the whole track');
+        }
+        if (!/function\s+trackModel/.test(src) || !/CONTENT\.regionEntries\(/.test(src)) {
+          return done('the map model no longer reads every region of the track');
+        }
+        /* the old single-region model must not come back */
+        if (/function\s+mapModel\s*\(/.test(src)) {
+          return done('mapModel() is back — the board is one region again');
+        }
+        return done(null);
+      });
+    });
+
   /* ---- POLISH-QASEED ----
      tests/qa.html seeded "everything finished" from three HAND-WRITTEN id
      ranges. Every content wave made them stale, and a stale range does not
@@ -3081,6 +3400,313 @@
         if (Tts.prep('ab oris / Italiam').indexOf('oris, Italiam') < 0) {
           return done('the verse break should become the comma that is the breath, ' +
                       'not vanish: ' + Tts.prep('ab oris / Italiam'));
+        }
+        return done(null);
+      });
+    });
+
+  /* ================= CLAR — picture-chip distinctness =================
+     THE COMPLAINT. In every picture-choice step the options were the items'
+     whole 400x240 mini-scenes shrunk into ~72px squares, so three options
+     from one capitulum were three copies of the same background: h2 offered
+     three identical gardens for `Adam`, and l1 h1 offered three rectangles of
+     grass for `terra`. Three mechanisms answer it and all three are guarded
+     here — the crop rule, the linter, and the runtime flip. */
+
+  check('CLAR', 'the chip crop rule is exactly boss.js soloActorOf',
+    function () {
+      if (!window.CHIP || typeof CHIP.soloActor !== 'function') {
+        return 'CHIP.soloActor is missing — the renderer and the linter no ' +
+               'longer share one rule';
+      }
+      /* ONE registered actor, no bubble: the background is staging, so the
+         chip may draw the actor alone. */
+      var solo = CHIP.soloActor({ bg: 'plain', items: [{ t: 'fox', pose: 'walk' }] });
+      if (!solo || solo.t !== 'fox') { return 'a lone registered actor did not crop'; }
+      /* TWO actors: the composition IS the meaning (`mare` is two fish IN
+         water — cropping one fish would lie). */
+      if (CHIP.soloActor({ bg: 'sea', items: [{ t: 'piscis' }, { t: 'piscis' }] })) {
+        return 'a two-actor scene was cropped to one of them';
+      }
+      /* a BUBBLE is drawn on the stage, not on the actor: cropping deletes it,
+         and for `dīcit` the bubble is the whole word. */
+      if (CHIP.soloActor({ bg: 'plain', items: [{ t: 'fox' }],
+                           bubbles: [{ text: '💬' }] })) {
+        return 'a scene with a speech bubble was cropped, losing the bubble';
+      }
+      /* an actor the art library does not have has no sprite to crop to */
+      if (CHIP.soloActor({ bg: 'plain', items: [{ t: 'no-such-actor-exists' }] })) {
+        return 'an unregistered actor name was treated as a croppable sprite';
+      }
+      return null;
+    });
+
+  check('CLAR', 'the fingerprint reads variant flags and bubbles, not just actor names',
+    function () {
+      /* THE FALSE POSITIVE THIS KILLS. `dōnum` is Abel's cold altar and
+         `ārdet` is the same altar ALIGHT (`flame:true`); `rāmus` is the dove
+         WITH the olive branch (`ramus:true`) and `volat` the same dove without
+         it. A fingerprint that read only `t` called each pair one picture and
+         would have demanded content "fixes" that deleted the actual lesson. */
+      var cold = CHIP.chipFingerprint({ la: 'dōnum', scene: { bg: 'plain', items: [{ t: 'altar', flame: false }] } });
+      var lit  = CHIP.chipFingerprint({ la: 'ārdet', scene: { bg: 'plain', items: [{ t: 'altar', flame: true, smoke: true }] } });
+      if (cold.solo === lit.solo) { return 'a lit altar and a cold altar fingerprint the same'; }
+      /* and the same in reverse: position and scale must NOT count, or every
+         pair looks different and the linter reports nothing. */
+      var a = CHIP.chipFingerprint({ la: 'a', scene: { bg: 'plain', items: [{ t: 'testudo', x: 195, y: 210, s: 2 }] } });
+      var b = CHIP.chipFingerprint({ la: 'b', scene: { bg: 'plain', items: [{ t: 'testudo', x: 190, y: 210, s: 1.9 }] } });
+      if (a.solo !== b.solo) { return 'the same turtle moved 5px counted as a different picture'; }
+      /* bubbles: `magnus` and `parvus` are the same camel beside the same lamb
+         and differ ONLY by an ⬆ or a ⬇ in a bubble. */
+      var up = CHIP.chipFingerprint({ la: 'magnus', scene: { bg: 'plain', items: [{ t: 'camelus' }], bubbles: [{ text: '⬆' }] } });
+      var dn = CHIP.chipFingerprint({ la: 'parvus', scene: { bg: 'plain', items: [{ t: 'camelus' }], bubbles: [{ text: '⬇' }] } });
+      if (up.bubbles === dn.bubbles) { return 'two different bubbles fingerprinted the same'; }
+      return null;
+    });
+
+  check('CLAR', 'the flip fires on the ANSWER only, never on two look-alike distractors',
+    function () {
+      /* A set where two DISTRACTORS look alike but the answer is unmistakable
+         is still a good question — flipping it would throw one away. */
+      var fox   = { la: 'vulpēs', scene: { bg: 'plain', items: [{ t: 'fox' }] } };
+      var lupus = { la: 'lupus',  scene: { bg: 'paradise', items: [{ t: 'wolf' }, { t: 'tree' }] } };
+      var ursus = { la: 'ursus',  scene: { bg: 'paradise', items: [{ t: 'ursus' }, { t: 'tree' }] } };
+      var set = [fox, lupus, ursus];
+      if (CHIP.optionAmbiguous(set, 'vulpēs')) {
+        return 'a question whose own picture is distinct was flipped because two ' +
+               'wrong answers resemble each other';
+      }
+      if (!CHIP.optionAmbiguous(set, 'lupus')) {
+        return 'a question WAS answerable-by-luck (its picture matches a distractor) ' +
+               'and did not flip';
+      }
+      return null;
+    });
+
+  /* THE PRODUCT-WIDE SWEEP. Every option set of every capitulum of every
+     region the MANIFEST declares — the verba quiz pool, hand-authored and
+     generated sonus, the aenigmata memory grid — through the shipped linter.
+
+     CRITICAL fails the build: it means two chips render the SAME artwork
+     (the same cropped sprite, or the same background with the same actors and
+     the same bubble), and no learner and no runtime trick can choose between
+     them. WARN is REPORTED, not failed: it is the residual ambiguity — two
+     robed figures for `Sara` and `Lot`, two cards on one garden — that no
+     scene swap can remove, and the runtime flip to picture→word is what
+     answers it. */
+  checkAsync('CLAR', 'no shipped option set anywhere renders the same picture twice',
+    function (done) {
+      if (!SERVED) { done(null); return; }
+      if (!window.CHIP || typeof CHIP.optionSets !== 'function') {
+        done('CHIP.optionSets is missing — the sweep cannot see the shipped sets');
+        return;
+      }
+      var mx = new XMLHttpRequest();
+      mx.open('GET', '../content/manifest.json', true);
+      mx.onreadystatechange = function () {
+        if (mx.readyState !== 4) { return; }
+        if (mx.status < 200 || mx.status >= 300) {
+          done('content/manifest.json did not load: HTTP ' + mx.status); return;
+        }
+        var man;
+        try { man = JSON.parse(mx.responseText); }
+        catch (e) { done('manifest is not valid JSON: ' + e.message); return; }
+
+        var want = [], t, r, i;
+        for (t = 0; t < (man.tracks || []).length; t++) {
+          for (r = 0; r < (man.tracks[t].regions || []).length; r++) {
+            want.push({ track: man.tracks[t].id, region: man.tracks[t].regions[r].id });
+          }
+        }
+        if (!want.length) { done('the manifest declares no regions at all'); return; }
+
+        var left = want.length, failedSrc = null;
+        function loaded() {
+          left--;
+          if (left > 0) { return; }
+          if (failedSrc) { done('content file did not load: ' + failedSrc); return; }
+
+          var critical = [], warns = 0, sets = 0, caps = 0;
+          var k, c, sIdx, reg, cap, all, res, f;
+          for (k = 0; k < want.length; k++) {
+            reg = CONTENT.region(want[k].track, want[k].region);
+            if (!reg) { critical.push(want[k].region + ' registered nothing'); continue; }
+            for (c = 0; c < (reg.capitula || []).length; c++) {
+              cap = reg.capitula[c];
+              caps++;
+              all = CHIP.optionSets(cap);
+              for (sIdx = 0; sIdx < all.length; sIdx++) {
+                sets++;
+                res = CHIP.lintOptions(all[sIdx].options);
+                for (f = 0; f < res.flags.length; f++) {
+                  if (res.flags[f].level !== 'critical') { warns++; continue; }
+                  critical.push(want[k].track + '-' + want[k].region + '.js ' +
+                    cap.id + ' ' + all[sIdx].step + ' [' + all[sIdx].item + '] ' +
+                    res.flags[f].a + ' vs ' + res.flags[f].b + ' — ' + res.flags[f].why);
+                }
+              }
+            }
+          }
+          if (caps < 100 || sets < 400) {
+            done('swept only ' + caps + ' capitula / ' + sets + ' option sets — the ' +
+                 'walk stopped matching the content shape'); return;
+          }
+          if (critical.length) {
+            done(critical.length + ' CRITICAL: ' + critical.join(' | ')); return;
+          }
+          done(null, caps + ' capitula, ' + sets + ' option sets, 0 critical, ' +
+                     warns + ' warn (the runtime flip covers these)');
+        }
+
+        for (i = 0; i < want.length; i++) {
+          (function (w) {
+            if (CONTENT.region(w.track, w.region)) { loaded(); return; }
+            var src = '../content/' + w.track + '-' + w.region + '.js';
+            var el = document.createElement('script');
+            el.src = src; el.async = false;
+            el.onload = loaded;
+            el.onerror = function () { failedSrc = src; loaded(); };
+            document.head.appendChild(el);
+          }(want[i]));
+        }
+      };
+      mx.send(null);
+    });
+
+  /* The two cases the owner named by hand. They are asserted as BEHAVIOUR —
+     "asking this word in this capitulum does not put the learner in front of
+     three pictures they cannot tell apart" — not as a scene literal, so a
+     future re-illustration is free to satisfy them any way it likes. */
+  checkAsync('CLAR', "the owner's cases: h2 `Adam` and l1 h1 `terra` are answerable",
+    function (done) {
+      if (!SERVED) { done(null); return; }
+      var el = document.createElement('script');
+      el.src = '../content/historia-l1.js'; el.async = false;
+      el.onerror = function () { done('historia-l1.js did not load'); };
+      el.onload = function () {
+        var reg = CONTENT.region('historia', 'l1');
+        if (!reg) { done('historia/l1 registered nothing'); return; }
+        var report = [], bad = [];
+        var cases = [['h2', 'Adam'], ['h1', 'terra']];
+        var ci, c, cap, pool, target, i, j, set, total, safe;
+        for (ci = 0; ci < cases.length; ci++) {
+          c = cases[ci];
+          cap = CONTENT.capitulum(reg, c[0]);
+          if (!cap) { bad.push(c[0] + ' is gone'); continue; }
+          pool = CHIP.visuals(cap);
+          target = null;
+          for (i = 0; i < pool.length; i++) { if (pool[i].la === c[1]) { target = pool[i]; } }
+          if (!target) { bad.push(c[1] + ' is no longer in ' + c[0] + "'s vocabulary"); continue; }
+          /* EVERY three-option set the quiz can build around this word: each
+             must either be visually distinct or be caught by the flip. There
+             is no third outcome — that is the whole claim. */
+          total = 0; safe = 0;
+          for (i = 0; i < pool.length; i++) {
+            if (pool[i].la === c[1]) { continue; }
+            for (j = i + 1; j < pool.length; j++) {
+              if (pool[j].la === c[1]) { continue; }
+              set = [target, pool[i], pool[j]];
+              total++;
+              if (CHIP.optionAmbiguous(set, c[1]) || CHIP.optionsDistinct(set)) { safe++; }
+            }
+          }
+          if (!total) { bad.push(c[0] + '/' + c[1] + ' has no distractors to test'); continue; }
+          if (safe !== total) {
+            bad.push(c[0] + '/' + c[1] + ': ' + (total - safe) + ' of ' + total +
+                     ' option sets are neither distinct nor flipped');
+          }
+          report.push(c[0] + '/' + c[1] + ' ' + total + ' sets ok');
+        }
+        /* `Adam` is the named case and it is the strong one: his card shares
+           the garden with every other card in h2, so EVERY set flips. */
+        cap = CONTENT.capitulum(reg, 'h2');
+        pool = CHIP.visuals(cap);
+        target = null;
+        for (i = 0; i < pool.length; i++) { if (pool[i].la === 'Adam') { target = pool[i]; } }
+        if (target) {
+          for (i = 0; i < pool.length; i++) {
+            if (pool[i].la === 'Adam') { continue; }
+            for (j = i + 1; j < pool.length; j++) {
+              if (pool[j].la === 'Adam') { continue; }
+              if (!CHIP.optionAmbiguous([target, pool[i], pool[j]], 'Adam')) {
+                bad.push('an Adam set against ' + pool[i].la + '/' + pool[j].la +
+                         ' was left as three same-garden pictures');
+              }
+            }
+          }
+        }
+        done(bad.length ? bad.join(' | ') : null, report.join('; '));
+      };
+      document.head.appendChild(el);
+    });
+
+  /* The phone layout the ruling required, read out of the shipped CSS: the
+     chips are a 2-column grid at phone width, the art is at least 96px, and
+     the button itself clears the 44px touch-target floor. */
+  checkAsync('CLAR', 'phone picture chips are a 2-column grid at >=96px with 44px targets',
+    function (done) {
+      if (!SERVED) { done(null); return; }
+      withFile('../css/styles.css', done, function (css) {
+        var picks = css.indexOf('.opt-row.picks');
+        if (picks < 0) { return done('no .opt-row.picks rule — the picture rows have no phone layout'); }
+        if (css.indexOf('grid-template-columns: 1fr 1fr') < 0) {
+          return done('the phone picture row is not a 2-column grid');
+        }
+        if (css.indexOf('min-width: 96px') < 0 || css.indexOf('min-height: 96px') < 0) {
+          return done('the phone chip art has no 96px floor — this is the size complaint');
+        }
+        if (css.indexOf('max-width: 140px') < 0) {
+          return done('the phone chip art has no 140px cap and can overflow a 2-column row');
+        }
+        if (!/\.opt-row\.picks \.opt \{[^}]*min-height: 44px/.test(css)) {
+          return done('picture options do not declare the 44px touch-target minimum');
+        }
+        /* the old shrink-to-fit rule must not win inside the grid, or the art
+           goes back to 15vw = 56px at 375 */
+        if (css.indexOf('.opt-row.picks .emoji-opt .scn-thumb') < 0) {
+          return done('the grid does not override the 15vw shrink rule, so the ' +
+                      'chips are still fingernail-sized on a phone');
+        }
+        return done(null);
+      });
+    });
+
+  /* app.js cannot be executed in this page (it boots itself against the app
+     shell), so the two engine claims about it are asserted against its BYTES,
+     which is this file's established way of guarding it. */
+  checkAsync('CLAR', 'app.js draws chips through the crop rule and can flip a question',
+    function (done) {
+      if (!SERVED) { done(null); return; }
+      withFile('../js/app.js', done, function (src) {
+        var vf = src.indexOf('function visualFor');
+        if (vf < 0) { return done('visualFor is gone — there is no shared chip renderer'); }
+        var body = src.slice(vf, vf + 900);
+        if (body.indexOf('CHIP.soloActor') < 0) {
+          return done('visualFor no longer asks CHIP.soloActor, so chips are whole ' +
+                      'mini-scenes again and the linter is guarding nothing');
+        }
+        if (body.indexOf('Scenes.sprite') < 0) {
+          return done('visualFor never reaches Scenes.sprite — nothing is actually cropped');
+        }
+        if (src.indexOf('CHIP.optionAmbiguous') < 0) {
+          return done('the verba quiz no longer consults the linter, so an ' +
+                      'unanswerable question can reach a learner');
+        }
+        if (src.indexOf('function askPicture') < 0) {
+          return done('the picture→word fallback is gone');
+        }
+        /* the flipped direction asks "Quod verbum?" and the picture-choice
+           direction must NOT, or both read as the same question */
+        if (src.indexOf('UI.quaeImago') < 0) {
+          return done('the picture-choice direction still borrows the word prompt');
+        }
+        /* every picture row must be a `picks` row or it gets no phone grid */
+        var rows = src.match(/class="opt-row[^"]*"/g) || [];
+        var picks = 0, k;
+        for (k = 0; k < rows.length; k++) { if (rows[k].indexOf('picks') >= 0) { picks++; } }
+        if (picks < 4) {
+          return done('only ' + picks + ' picture rows are marked `picks` — the verba ' +
+                      'quiz, sonus, the boss quiz and the refill all need the phone grid');
         }
         return done(null);
       });

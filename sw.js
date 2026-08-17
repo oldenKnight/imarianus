@@ -37,7 +37,7 @@
    survives reloads and would be untraceable from the outside.
    ============================================================ */
 
-var VERSION = 'v1-2026-08-14';
+var VERSION = 'v1-2026-08-17';
 var SHELL_CACHE = 'mariane-shell-' + VERSION;
 var RUNTIME_CACHE = 'mariane-runtime-' + VERSION;
 var SHELL_INDEX = 'index.html';
@@ -64,6 +64,7 @@ var SHELL = [
   'js/data-core.js',
   'content/manifest.js',
   'js/content-loader.js',
+  'js/chip-lint.js',
   'js/auth-ui.js',
   'js/game.js',
   'js/boss.js',

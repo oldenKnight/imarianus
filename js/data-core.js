@@ -54,7 +54,16 @@ var DATA = (function () {
     nullaCorda: 'Nūlla corda! Verba iterā.',
     cordaPlena: 'Corda plēna sunt!',
     proximamente: 'mox…',
+    /* The VERBA quick check runs in TWO directions now (CLAR): normally the
+       word is the question and the pictures are the answers, but when the
+       asked word's picture cannot be told apart from a distractor's the
+       question flips and the picture becomes the question. `quaerere` is the
+       prompt for the flipped direction, where "Quod verbum?" is literally
+       what is being asked; `quaeImago` is the picture-choice direction, which
+       used to borrow "Quod verbum?" and so asked for a word while offering
+       three pictures. */
     quaerere: 'Quod verbum?',
+    quaeImago: 'Quae imāgō est?',
     tange: 'Tange verbum falsum!',
     ordina: 'Verba ōrdinā!',
     inveni: 'Paria invenī!',
@@ -278,7 +287,14 @@ var DATA = (function () {
     victus: 'Iterum tempta!',
     tempus: 'Tempus',
     cursus: 'Cursus',
-    provincia: 'Prōvincia'
+    provincia: 'Prōvincia',
+    /* NAV — the continuous board. `cursus` opens the capitula of ONE
+       region; `regiones` opens the index of the whole track, which is the
+       navigation that did not exist and left a learner stranded on the
+       summit of regiō I. */
+    regiones: 'Regiōnēs',
+    regio: 'Regiō',
+    cursusConfectus: 'Cursum cōnfēcistī!'
   };
 
   return {

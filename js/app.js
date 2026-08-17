@@ -136,8 +136,67 @@
     }
     return true;
   }
+  /* ---- CROSS-REGION PROGRESSION (NAV) ----
+     The board is one continuous track now, so "is this capitulum open?" can
+     no longer be answered inside the current region. The rule below is the
+     SERVER'S rule, restated: lib/progress.php unlocks a step when "the
+     previous capitulum IN THE SAME TRACK is fully complete"
+     (rule_fable_prev), and it enforces it with a 409. A client rule that
+     said anything else would offer a lesson the server then refuses —
+     which fails silently, as a locked door that looks open always does.
+
+     Note what the server does NOT require: clearing a region's BOSS is not
+     a prerequisite for the next region. Finishing the last capitulum is.
+     (Historia's liber I has no boss at all, so it could not be otherwise.)
+     The boss is still the ceremony, and beating it walks the learner
+     forward — see advanceAfterBoss() — but it never bars the road. */
+
+  /* the step list of a capitulum named by ID, in any region, loaded or not.
+     CONTENT.steps() falls back to the manifest's default list when the
+     region is not in memory, which is the right answer: no shipped
+     capitulum overrides its steps. */
+  function stepsForCap(capId) {
+    var loc = CONTENT.locate ? CONTENT.locate(capId) : null;
+    var reg = loc ? CONTENT.region(loc.track, loc.region) : null;
+    var cap = reg ? CONTENT.capitulum(reg, capId) : null;
+    return CONTENT.steps(reg, cap) || [];
+  }
+  function capDoneById(capId) {
+    var st = stepsForCap(capId), i;
+    if (!st.length) { return false; }
+    for (i = 0; i < st.length; i++) {
+      if (!isStepDone(capId, st[i])) { return false; }
+    }
+    return true;
+  }
+  function capUnlockedById(capId) {
+    var loc = CONTENT.locate ? CONTENT.locate(capId) : null;
+    /* no manifest (a bare-files deploy): fall back to the old rule, where
+       the region IS the track and its first capitulum is always open */
+    if (!loc) { return true; }
+    var prev = CONTENT.prevCapitulumId(loc.track, capId);
+    return (prev === null) ? true : capDoneById(prev);
+  }
+  /* every capitulum of a region finished — the boss's own gate, server-side
+     (progress_boss_fight) and here */
+  function regionCapsDoneIn(trackId, regionId) {
+    var e = CONTENT.regionEntry(trackId, regionId);
+    var caps = (e && e.capitula) ? e.capitula : [], i;
+    if (!caps.length) { return false; }
+    for (i = 0; i < caps.length; i++) { if (!capDoneById(caps[i])) { return false; } }
+    return true;
+  }
+  function bossClearedIn(trackId, regionId) {
+    var e = CONTENT.regionEntry(trackId, regionId);
+    if (!e || !e.boss) { return false; }
+    var b = S.bosses[CONTENT.regionProgressId(trackId, regionId)];
+    return !!(b && b.fight && b.quiz);
+  }
+
   function fableUnlocked(fi) {
-    return fi === 0 || fableDone(fi - 1);
+    if (fi > 0) { return fableDone(fi - 1); }
+    var f = capAt(0);
+    return f ? capUnlockedById(f.id) : false;
   }
   function stepUnlocked(fi, si) {
     if (!fableUnlocked(fi)) { return false; }
@@ -152,11 +211,40 @@
      SVG scene (preferred when available) or the legacy emoji glyph. Used by
      verba check, refill, and aenigmata memory so the new scene-based vocab
      (silva, vōx, pulcher, rīvus) flows through every exercise. */
+  /* ---------- CLAR: the ONE picture-chip renderer ----------
+
+     THE OWNER'S COMPLAINT. Every picture option used to be the item's whole
+     400x240 mini-scene squeezed into a ~72px square. A mini-scene is sky,
+     ground, and the thing itself standing somewhere on it, so three options
+     from one capitulum were three copies of the same garden with a 14px
+     difference buried inside them: the `Adam` question showed three identical
+     paradise thumbnails, and `terra` showed three rectangles of grass.
+
+     THE RULE (identical to boss.js soloActorOf/tileImage, and shared with
+     tests/regression.html through js/chip-lint.js): when a scene resolves to
+     ONE registered actor and carries no speech bubble, the background is only
+     staging and the actor is the whole meaning — so the chip draws the ACTOR
+     ALONE, as a tight transparent sprite, and the chip's own face is the
+     background it needed. Anything else — two or more actors, a bubble, an
+     actor the art library does not have — still draws the scene raster,
+     because there the COMPOSITION is the meaning (`mare` is two fish IN
+     water; cropping one fish would lie).
+
+     Used by the VERBA quick check, SONUS, the AENIGMATA picture cards and the
+     boss quiz, so all four look like one game and all four improve together. */
   function visualFor(item) {
-    if (item.scene) {
+    if (item && item.scene) {
+      var solo = (typeof CHIP !== 'undefined' && CHIP.soloActor)
+        ? CHIP.soloActor(item.scene) : null;
+      if (solo) {
+        return '<span class="scn-thumb crop">' +
+          Scenes.sprite(solo.t,
+            { pose: solo.pose, role: solo.role, flip: solo.flip }) +
+          '</span>';
+      }
       return '<span class="scn-thumb">' + Scenes.render(item.scene) + '</span>';
     }
-    return item.emoji || '';
+    return (item && item.emoji) || '';
   }
 
   /* same item is also used to decide whether to include it in pools that
@@ -743,94 +831,279 @@
     var b = S.bosses[regionProgressId()];
     return !!(b && b.fight && b.quiz);
   }
+  /* every region of the track finished, boss included — the summit state */
+  function trackCleared(trackId) {
+    var es = CONTENT.regionEntries(trackId), i;
+    if (!es.length) { return false; }
+    for (i = 0; i < es.length; i++) {
+      if (!regionCapsDoneIn(trackId, es[i].id)) { return false; }
+      if (es[i].boss && !bossClearedIn(trackId, es[i].id)) { return false; }
+    }
+    return true;
+  }
   function bossNodeId() {
     return (CUR.region && CUR.region.boss) ? CUR.region.boss.id : 'boss';
   }
 
-  /* Compute the map model from the region config + progress.
-     Node positions stay 0..1 FRACTIONS (DESIGN §3) so one layout serves
-     every screen width and any region length. */
-  function mapModel() {
-    var nodes = [], i, f, st;
-    var list = caps();
-    for (i = 0; i < list.length; i++) {
-      f = list[i];
-      st = fableDone(i) ? 'done' : (fableUnlocked(i) ? 'open' : 'shut');
-      nodes.push({
-        id: f.id,
-        kind: 'fable',
-        x: (f.pos && f.pos.x) || 0.5,
-        y: (f.pos && f.pos.y) || (0.9 - i * 0.2),
-        label: f.numerus || String(i + 1),
-        titulus: f.titulus,
-        icon: f.icon,
-        links: (i + 1 < list.length) ? [list[i + 1].id] : [bossNodeId()],
-        state: st
-      });
-    }
-    if (CUR.region && CUR.region.boss) {
-      var b = CUR.region.boss;
-      nodes.push({
-        id: b.id,
-        kind: 'boss',
-        x: (b.pos && b.pos.x) || 0.5,
-        y: (b.pos && b.pos.y) || 0.12,
-        label: '👑',
-        titulus: b.name,
-        links: [],
-        state: bossCleared() ? 'done' : (regionCapsDone() ? 'open' : 'shut')
-      });
-    }
-    /* the mascot stands on the saved node when it still exists here, else on
-       the first unfinished capitulum (a learner arriving from another track
-       must not see the fox on a node that isn't on this map). */
-    var here = S.mapNode, found = false;
-    for (i = 0; i < nodes.length; i++) { if (nodes[i].id === here) { found = true; } }
-    if (!found) {
-      here = nodes.length ? nodes[0].id : '';
-      for (i = 0; i < list.length; i++) {
-        if (!fableDone(i)) { here = list[i].id; break; }
+  /* Where a node sits on its region's 0..1 grid when its content file is
+     NOT in memory. The board draws every region of the track at once and
+     must not download twelve content files to do it, so an unvisited
+     region is laid out on the convention its authors follow anyway:
+     alternating sides, evenly spaced, boss at the top. map.js normalises
+     each segment independently, so the only thing that has to match the
+     authored layout is the RHYTHM — and it does. */
+  function defaultPos(k, total) {
+    var span = (total > 1) ? (0.71 / (total - 1)) : 0;
+    return { x: (k % 2 === 0) ? 0.28 : 0.71, y: 0.87 - k * span };
+  }
+
+  /* THE CONTINUOUS TRACK MODEL (NAV).
+     One segment per region of the track, bottom-first, built from the
+     MANIFEST and enriched from whichever content files happen to be in
+     memory. Node positions stay 0..1 FRACTIONS (DESIGN §3) so one layout
+     serves every screen width and any region length. */
+  function trackModel(trackId) {
+    var entries = CONTENT.regionEntries(trackId);
+    var segs = [], i, j;
+
+    for (i = 0; i < entries.length; i++) {
+      var e = entries[i];
+      var reg = CONTENT.region(trackId, e.id);
+      var capIds = e.capitula || [];
+      var total = capIds.length + (e.boss ? 1 : 0);
+      var nodes = [], allDone = capIds.length > 0;
+
+      for (j = 0; j < capIds.length; j++) {
+        var cid = capIds[j];
+        var cap = reg ? CONTENT.capitulum(reg, cid) : null;
+        var d = defaultPos(j, total);
+        var done = capDoneById(cid);
+        if (!done) { allDone = false; }
+        nodes.push({
+          id: cid,
+          kind: 'fable',
+          x: (cap && cap.pos && cap.pos.x) || d.x,
+          y: (cap && cap.pos && cap.pos.y) || d.y,
+          label: (cap && cap.numerus) || CONTENT.roman(CONTENT.capNumber(trackId, cid)),
+          titulus: (cap && cap.titulus) || '',
+          icon: cap ? cap.icon : '',
+          state: done ? 'done' : (capUnlockedById(cid) ? 'open' : 'shut')
+        });
       }
+
+      if (e.boss) {
+        var b = (reg && reg.boss) || null;
+        var bd = defaultPos(total - 1, total);
+        var cleared = bossClearedIn(trackId, e.id);
+        nodes.push({
+          id: e.boss,
+          kind: 'boss',
+          x: (b && b.pos && b.pos.x) || 0.5,
+          y: (b && b.pos && b.pos.y) || bd.y,
+          label: '👑',
+          titulus: (b && b.name) || CONTENT.regionTitulus(trackId, e.id),
+          state: cleared ? 'done' : (allDone ? 'open' : 'shut')
+        });
+      }
+
+      segs.push({
+        id: e.id,
+        titulus: CONTENT.regionTitulus(trackId, e.id),
+        numeral: CONTENT.roman(i + 1),
+        /* a region is locked when you cannot yet set foot in it */
+        locked: !(capIds.length && capUnlockedById(capIds[0])),
+        cleared: allDone && (!e.boss || bossClearedIn(trackId, e.id)),
+        capsDone: countDone(capIds),
+        capsTotal: capIds.length,
+        bossCleared: e.boss ? bossClearedIn(trackId, e.id) : null,
+        nodes: nodes
+      });
     }
+
     return {
-      nodes: nodes,
-      foxNode: here,
-      track: CUR.trackId,
-      titulus: CUR.region ? CUR.region.titulus : '',
+      segments: segs,
+      foxNode: currentNodeOn(trackId, segs),
+      track: trackId,
+      titulus: trackTitle(trackId),
+      trackDone: trackCleared(trackId),
       avatar: S.avatar || 'fox'
     };
   }
 
+  function countDone(capIds) {
+    var n = 0, i;
+    for (i = 0; i < capIds.length; i++) { if (capDoneById(capIds[i])) { n++; } }
+    return n;
+  }
+
+  /* The tile the mascot stands on. S.mapNode may now name a node in ANY
+     region of ANY track (that is the whole point of the fix), so a node
+     belonging to a different track falls back to the first unfinished
+     capitulum of THIS one rather than putting the fox nowhere. */
+  function currentNodeOn(trackId, segs) {
+    var here = S.mapNode, i, j, first = '';
+    for (i = 0; i < segs.length; i++) {
+      for (j = 0; j < segs[i].nodes.length; j++) {
+        if (!first) { first = segs[i].nodes[j].id; }
+        if (segs[i].nodes[j].id === here) { return here; }
+      }
+    }
+    var chain = CONTENT.trackCapitula(trackId);
+    for (i = 0; i < chain.length; i++) {
+      if (!capDoneById(chain[i])) { return chain[i]; }
+    }
+    return chain.length ? chain[chain.length - 1] : first;
+  }
+
+  /* Open whatever a tile leads to, LOADING ITS REGION FIRST when the tap
+     crossed a region boundary. Everything downstream (showCapitulum,
+     showBossIntro, the step engines) reads CUR, so CUR must be pointing at
+     the node's own region before any of them runs. */
+  function goToNode(id, kind) {
+    var loc = CONTENT.locate ? CONTENT.locate(id) : null;
+    S.mapNode = id; save();
+    function route() {
+      if (kind === 'boss') { showBossIntro(id); }
+      else { showCapitulum(capIndexById(id)); }
+    }
+    if (!loc || (loc.track === CUR.trackId && loc.region === CUR.regionId)) {
+      route();
+      return;
+    }
+    openRegion(loc.track, loc.region, route);
+  }
+
   function showMap() {
-    if (!CUR.region) { openTrack(CUR.trackId || 'fabulae', showMap); return; }
+    var trackId = CUR.trackId || 'fabulae';
+    if (!CUR.region) { openTrack(trackId, showMap); return; }
+    /* KEEP CUR UNDER THE LEARNER'S FEET. The board is track-wide, but CUR is
+       still one region — it is what the Cursus button lists and what the step
+       engines read. After an auto-advance the saved node has crossed into the
+       next region while CUR has not, and a learner who has just beaten Silva
+       and is standing in Ager must not open a cursus full of Silva. One
+       content file, for the region they are already in. */
+    var at = CONTENT.locate ? CONTENT.locate(S.mapNode) : null;
+    if (at && at.track === trackId && at.region !== CUR.regionId && nodeReachable(at)) {
+      openRegion(at.track, at.region, showMap);
+      return;
+    }
     renderTopbar(false);
-    var model = mapModel();
+    var model = trackModel(trackId);
     var html =
       '<section class="provincia">' +
-        '<header class="prov-head"><h2>' + esc(model.titulus || DATA.MAP_UI.provincia) + '</h2>' +
-        '<p class="prov-sub">' + esc(trackTitle()) + '</p></header>' +
+        '<header class="prov-head">' +
+          '<h2 id="prov-title" class="prov-title" role="button" tabindex="0" ' +
+            'aria-label="' + esc(DATA.MAP_UI.regiones) + '">' +
+            esc(model.titulus || DATA.MAP_UI.provincia) + ' <span class="prov-caret">▾</span></h2>' +
+          '<p class="prov-sub">' + esc(regionSubtitle(model)) + '</p>' +
+        '</header>' +
         '<div class="map-frame">' + WorldMap.render(model) + '</div>' +
         '<div class="cap-actions">' +
-          '<button id="to-cursus" class="btn ghost small" type="button">📜 ' + esc(DATA.MAP_UI.cursus) + '</button>' +
+          '<button id="to-regiones" class="btn ghost small" type="button">🗺️ ' +
+            esc(DATA.MAP_UI.regiones) + '</button>' +
+          '<button id="to-cursus" class="btn ghost small" type="button">📜 ' +
+            esc(DATA.MAP_UI.cursus) + '</button>' +
         '</div>' +
+        regionIndexHtml(model) +
       '</section>';
     setScreen(html, 'map-screen');
-    WorldMap.bind($('.map-frame'), model, {
-      onNode: function (id, kind) {
-        if (kind === 'fable') {
-          S.mapNode = id; save();
-          showCapitulum(capIndexById(id));
-        } else if (kind === 'boss') {
-          S.mapNode = id; save();
-          showBossIntro(id);
-        }
-      }
-    });
+    var api = WorldMap.bind($('.map-frame'), model, { onNode: goToNode });
+    bindRegionIndex(model, api);
     $('#to-cursus').addEventListener('click', showHome);
   }
 
-  function trackTitle() {
-    var t = DATA.trackById(CUR.trackId);
+  /* the line under the track name: which region the learner is standing in */
+  function regionSubtitle(model) {
+    var loc = CONTENT.locate ? CONTENT.locate(model.foxNode) : null;
+    var i, seg;
+    if (!loc) { return DATA.MAP_UI.provincia; }
+    for (i = 0; i < model.segments.length; i++) {
+      seg = model.segments[i];
+      if (seg.id === loc.region) {
+        return DATA.MAP_UI.regio + ' ' + seg.numeral + (seg.titulus ? ' · ' + seg.titulus : '');
+      }
+    }
+    return DATA.MAP_UI.provincia;
+  }
+
+  /* =================== REGIŌNĒS: the region index ===================
+     The Cursus button opens the capitula of ONE region; this opens the
+     track. It is the map's table of contents — numeral, name, how much of
+     it is finished, whether its boss is down — and tapping a row scrolls
+     the board to that region instead of navigating away, so the learner
+     never loses the board they were reading. */
+
+  function regionIndexHtml(model) {
+    var h = '<div class="regio-index" id="regio-index" hidden>' +
+      '<div class="ri-panel" role="dialog" aria-modal="true" aria-label="' +
+        esc(DATA.MAP_UI.regiones) + '">' +
+      '<header class="ri-head"><h3>' + esc(DATA.MAP_UI.regiones) + '</h3>' +
+      '<button id="ri-close" class="ri-close" type="button" aria-label="claudere">✕</button></header>' +
+      '<ol class="ri-list">';
+    var i, seg;
+    for (i = 0; i < model.segments.length; i++) {
+      seg = model.segments[i];
+      var mark = seg.locked ? '🔒'
+        : (seg.cleared ? '👑' : (seg.bossCleared ? '✔' : ''));
+      h += '<li><button type="button" class="ri-row' +
+             (seg.locked ? ' is-shut' : '') + (seg.id === currentRegionOf(model) ? ' is-here' : '') +
+             '" data-region="' + esc(seg.id) + '"' + (seg.locked ? ' aria-disabled="true"' : '') + '>' +
+           '<span class="ri-num">' + esc(seg.numeral) + '</span>' +
+           '<span class="ri-name">' + esc(seg.titulus || ('—')) + '</span>' +
+           '<span class="ri-prog">' + seg.capsDone + '/' + seg.capsTotal +
+             (mark ? ' <span class="ri-mark">' + mark + '</span>' : '') + '</span>' +
+           '</button></li>';
+    }
+    h += '</ol></div></div>';
+    return h;
+  }
+
+  function currentRegionOf(model) {
+    var loc = CONTENT.locate ? CONTENT.locate(model.foxNode) : null;
+    return loc ? loc.region : '';
+  }
+
+  function bindRegionIndex(model, api) {
+    var panel = $('#regio-index');
+    if (!panel) { return; }
+    function open() {
+      panel.hidden = false;
+      var first = $('.ri-row.is-here', panel) || $('.ri-row', panel);
+      if (first && first.scrollIntoView) { first.scrollIntoView({ block: 'center' }); }
+      if (first && first.focus) { first.focus(); }
+    }
+    function close() { panel.hidden = true; }
+    $('#to-regiones').addEventListener('click', open);
+    $('#ri-close').addEventListener('click', close);
+    /* tapping the backdrop (never the panel) closes it */
+    panel.addEventListener('click', function (e) { if (e.target === panel) { close(); } });
+    var title = $('#prov-title');
+    if (title) {
+      title.addEventListener('click', open);
+      title.addEventListener('keydown', function (e) {
+        if (e.keyCode === 13 || e.keyCode === 32) { e.preventDefault(); open(); }
+      });
+    }
+    $all('.ri-row', panel).forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var rid = btn.getAttribute('data-region');
+        if (btn.className.indexOf('is-shut') >= 0) {
+          /* a locked region says so and stays put — nothing to scroll to
+             that the learner could act on */
+          btn.className = btn.className.replace(/ ri-deny/g, '') + ' ri-deny';
+          window.setTimeout(function () {
+            btn.className = btn.className.replace(/ ri-deny/g, '');
+          }, 620);
+          return;
+        }
+        close();
+        if (api && api.scrollToRegion) { api.scrollToRegion(rid, true); }
+      });
+    });
+  }
+
+  function trackTitle(trackId) {
+    var t = DATA.trackById(trackId || CUR.trackId);
     return t ? t.titulus : '';
   }
 
@@ -1213,7 +1486,7 @@
         '<header class="step-head"><span class="step-ic">⚔️</span><h2>' + esc(DATA.MAP_UI.quizTitle) + '</h2></header>' +
         '<p class="ask">' + esc(UI.quaerere) + '</p>' +
         '<p class="prompt-word">' + esc(q.la) + ' <button type="button" id="say" class="speak" aria-label="audi">🔊</button></p>' +
-        '<div class="opt-row">';
+        '<div class="opt-row picks">';
       var k;
       for (k = 0; k < opts.length; k++) {
         html += '<button type="button" class="opt emoji-opt" data-la="' + esc(opts[k].la) + '">' + visualFor(opts[k]) + '</button>';
@@ -1258,9 +1531,41 @@
     return (typeof b.postWin === 'string' && b.postWin) ? b.postWin : '';
   }
 
+  /* NAV — AUTO-ADVANCE.
+     The bug this whole change exists for ended here: the learner beat a
+     boss, tapped "Prōvincia", and landed back on a board whose every tile
+     was gold with no road off it. Clearing a boss now MOVES the learner —
+     S.mapNode becomes the first capitulum of the next region, so the map
+     opens on the new segment with the current-node glow already there.
+
+     Returns the node advanced to, or '' when there is nowhere to go (the
+     last region of a track), which is the track-complete state. The
+     unlock check is not ceremony: it is the same rule the server will
+     apply to the first step taken there. */
+  /* "Regiō II · Ager →" — the road ahead, named. Read AFTER the advance, so
+     it names the region the learner has just been walked into. */
+  function nextRegionLine() {
+    var loc = CONTENT.locate ? CONTENT.locate(S.mapNode) : null;
+    if (!loc) { return ''; }
+    var i = CONTENT.regionIndexOf(loc.track, loc.region);
+    var tit = CONTENT.regionTitulus(loc.track, loc.region);
+    return DATA.MAP_UI.regio + ' ' + CONTENT.roman(i + 1) + (tit ? ' · ' + tit : '') + ' →';
+  }
+
+  function advanceAfterBoss() {
+    if (!bossCleared()) { return ''; }
+    var next = CONTENT.nextNodeAfterBoss(CUR.trackId, CUR.regionId);
+    if (!next || !capUnlockedById(next)) { return ''; }
+    S.mapNode = next;
+    save();
+    return next;
+  }
+
   function showBossResult(nodeId, won) {
     renderTopbar(false);
     var fullyClear = bossCleared();
+    var advanced = (won && fullyClear) ? advanceAfterBoss() : '';
+    var finished = (won && fullyClear && !advanced && trackCleared(CUR.trackId));
     var html = '<section class="finis">';
     if (won && fullyClear) {
       html += '<p class="euge">' + esc(DATA.MAP_UI.vicisti) + ' 👑</p>' +
@@ -1268,6 +1573,11 @@
         '<p class="bonus">+30 ⭐</p>';
       if (bossPostWin()) {
         html += '<p class="post-win">' + esc(bossPostWin()) + '</p>';
+      }
+      if (finished) {
+        html += '<p class="cursus-done">' + esc(DATA.MAP_UI.cursusConfectus) + ' 🏆</p>';
+      } else if (advanced) {
+        html += '<p class="next-regio">' + esc(nextRegionLine()) + '</p>';
       }
     } else if (won) {
       /* won the fight but quiz not yet passed, or vice-versa */
@@ -1415,7 +1725,7 @@
       var html = '<section class="refill">' +
         '<h2>💔 ' + esc(UI.nullaCorda) + '</h2>' +
         '<p class="prompt-word">' + esc(q.la) + '</p>' +
-        '<div class="opt-row">';
+        '<div class="opt-row picks">';
       var i2;
       for (i2 = 0; i2 < opts.length; i2++) {
         html += '<button type="button" class="opt emoji-opt" data-la="' + esc(opts[i2].la) + '">' + visualFor(opts[i2]) + '</button>';
@@ -1464,7 +1774,8 @@
       $('#next').addEventListener('click', function () { i++; Tts.stop(); card(); });
     }
 
-    /* quick check: word → pick the matching image */
+    /* quick check: word → pick the matching image, OR (see the flip below)
+       picture → pick the matching word. */
     function check() {
       var pool = [];
       var k;
@@ -1473,28 +1784,13 @@
       }
       var quiz = shuffle(pool).slice(0, 4);
       var qi = 0;
-      function ask() {
-        if (qi >= quiz.length) {
-          finishStep(fi, 'verba', 20);
-          return;
-        }
-        var q = quiz[qi];
-        var opts = shuffle([q].concat(shuffle(pool.filter(function (w) { return w.la !== q.la; })).slice(0, 2)));
-        var html = stepHeader(fi, 'verba') +
-          '<section class="quickcheck">' +
-          '<p class="ask">' + esc(UI.quaerere) + '</p>' +
-          '<p class="prompt-word">' + esc(q.la) + ' <button type="button" id="say" class="speak" aria-label="audi">🔊</button></p>' +
-          '<div class="opt-row">';
-        var i2;
-        for (i2 = 0; i2 < opts.length; i2++) {
-          html += '<button type="button" class="opt emoji-opt" data-la="' + esc(opts[i2].la) + '">' + visualFor(opts[i2]) + '</button>';
-        }
-        html += '</div><p class="card-progress">' + (qi + 1) + ' / ' + quiz.length + '</p></section>';
-        setScreen(html, 'verba-screen');
-        Tts.speak(q.la);
-        $('#say').addEventListener('click', function () { Tts.speak(q.la); });
-        $all('.emoji-opt').forEach(function (b) {
+
+      /* one grader for both directions: every option button carries data-la,
+         and the answer is always the asked word. */
+      function wire(q) {
+        $all('.quickcheck .opt').forEach(function (b) {
           b.addEventListener('click', function () {
+            if (b.disabled) { return; }
             if (b.getAttribute('data-la') === q.la) {
               toast(true);
               addXP(10);
@@ -1507,6 +1803,71 @@
             }
           });
         });
+      }
+
+      /* THE FLIP (CLAR, ruling (d)). Some option sets cannot be made visually
+         distinct by any amount of art: a capitulum whose vocabulary is
+         `Abraham`, `Sara` and `Lot` has three robed figures and no fourth
+         picture of Sara to swap in, and repainting a verb's scene to look
+         unlike its own noun would delete the verb. Asking "which picture is
+         Sara?" there is not a hard question, it is an unanswerable one.
+
+         So when the ASKED word's picture is flagged against a distractor's,
+         this item turns around: ONE large picture of the asked item, and the
+         three WORDS as the choices. The same knowledge is tested, the picture
+         is big enough to read on a phone, and the answer is decidable. It is
+         a per-item runtime fallback, not a content change — the same capitulum
+         still asks its distinct items the normal way round.
+
+         Only the ANSWER's flags count: if two DISTRACTORS look alike but the
+         asked item is unmistakable, the learner still has a question they can
+         answer, and flipping it would throw away a good one (CHIP.optionAmbiguous). */
+      function askPicture(q, opts) {
+        var html = stepHeader(fi, 'verba') +
+          '<section class="quickcheck flipped">' +
+          '<p class="ask">' + esc(UI.quaerere) + '</p>' +
+          '<figure class="scene small">' + Scenes.render(q.scene) + '</figure>' +
+          '<div class="opt-row">';
+        var i2;
+        var words = shuffle(opts.slice());
+        for (i2 = 0; i2 < words.length; i2++) {
+          html += '<button type="button" class="opt word-opt" data-la="' +
+            esc(words[i2].la) + '">' + esc(words[i2].la) + '</button>';
+        }
+        html += '</div><p class="card-progress">' + (qi + 1) + ' / ' + quiz.length + '</p></section>';
+        setScreen(html, 'verba-screen');
+        wire(q);
+      }
+
+      function askWord(q, opts) {
+        var html = stepHeader(fi, 'verba') +
+          '<section class="quickcheck">' +
+          '<p class="ask">' + esc(UI.quaeImago) + '</p>' +
+          '<p class="prompt-word">' + esc(q.la) + ' <button type="button" id="say" class="speak" aria-label="audi">🔊</button></p>' +
+          '<div class="opt-row picks">';
+        var i2;
+        for (i2 = 0; i2 < opts.length; i2++) {
+          html += '<button type="button" class="opt emoji-opt" data-la="' + esc(opts[i2].la) + '">' + visualFor(opts[i2]) + '</button>';
+        }
+        html += '</div><p class="card-progress">' + (qi + 1) + ' / ' + quiz.length + '</p></section>';
+        setScreen(html, 'verba-screen');
+        Tts.speak(q.la);
+        $('#say').addEventListener('click', function () { Tts.speak(q.la); });
+        wire(q);
+      }
+
+      function ask() {
+        if (qi >= quiz.length) {
+          finishStep(fi, 'verba', 20);
+          return;
+        }
+        var q = quiz[qi];
+        var opts = shuffle([q].concat(shuffle(pool.filter(function (w) { return w.la !== q.la; })).slice(0, 2)));
+        /* the flip needs a picture to enlarge; an emoji-only item has none, so
+           it stays in the picture-choice direction whatever the linter says. */
+        var flip = q.scene && (typeof CHIP !== 'undefined') && CHIP.optionAmbiguous &&
+                   CHIP.optionAmbiguous(opts, q.la);
+        if (flip) { askPicture(q, opts); } else { askWord(q, opts); }
       }
       ask();
     }
@@ -1737,7 +2098,7 @@
         '<section class="sonus">' +
         '<p class="ask">' + esc(UI.audiEtElige) + '</p>' +
         '<button type="button" id="say" class="big-speak" aria-label="' + esc(UI.audiIterum) + '">🔊</button>' +
-        '<div class="opt-row">';
+        '<div class="opt-row picks">';
       var i;
       for (i = 0; i < opts.length; i++) {
         html += '<button type="button" class="opt emoji-opt" data-la="' + esc(opts[i].la) + '">' +
@@ -2264,12 +2625,32 @@
     });
   }
 
-  /* Open a track at its first region. Tracks with no region yet (Historia,
-     Aeneis) show the "MOX — in fabricā" screen instead of a dead door. */
+  /* Open a track. Tracks with no region yet show the "MOX — in fabricā"
+     screen instead of a dead door.
+
+     NAV: the door used to always land on region ONE, which is half of why
+     a learner who had cleared six regions was stuck looking at Silva. It
+     now RESUMES: whichever region the saved map node belongs to, provided
+     that node is actually reachable (a mapNode from a stale or hand-edited
+     save must not open a region the learner has not earned). The board
+     shows the whole track either way — this only decides which region's
+     content file is loaded, and therefore which region the Cursus button
+     and the step engines are pointed at. */
   function openTrack(trackId, then) {
     var regionId = CONTENT.firstRegionId(trackId);
     if (!regionId) { showMox(trackId); return; }
+    var loc = CONTENT.locate ? CONTENT.locate(S && S.mapNode) : null;
+    if (loc && loc.track === trackId && nodeReachable(loc)) { regionId = loc.region; }
     openRegion(trackId, regionId, then || function () { showMap(); });
+  }
+
+  /* is the node this location describes one the learner may stand on? */
+  function nodeReachable(loc) {
+    if (loc.kind === 'boss') { return regionCapsDoneIn(loc.track, loc.region); }
+    var e = CONTENT.regionEntry(loc.track, loc.region);
+    var caps = (e && e.capitula) ? e.capitula : [];
+    var id = caps[loc.indexInRegion];
+    return id ? capUnlockedById(id) : false;
   }
 
   function showLoading() {

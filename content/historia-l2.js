@@ -148,9 +148,18 @@
                   { t: 'mountain', x: 200, y: G, s: 1.15 }
                 ] },
 
-    /* operit: the SAME mountain as v_mons, with the water over it */
+    /* operit: the SAME mountain as v_mons, with the water over it.
+       CLAR. That "same mountain" was the bug: v_mons and v_operit were each
+       ONE mountain and nothing else, so both took the sprite-crop path, which
+       throws the background away — and the background was the entire
+       difference between a peak and a drowned peak. The flood is now what
+       Gn 7,19 says it is, PLURAL: "operuit omnēs montēs excelsōs". Two peaks
+       barely above the water is a picture the crop rule leaves alone (two
+       actors keep their raster), it is true to the verse, and no Latin
+       moved. */
     v_operit:   { bg: 'sea', items: [
-                  { t: 'mountain', x: 200, y: 238, s: 0.55 }
+                  { t: 'mountain', x: 138, y: 240, s: 0.5 },
+                  { t: 'mountain', x: 286, y: 244, s: 0.42 }
                 ] },
 
     v_diluvium: { bg: 'stormSea', items: [

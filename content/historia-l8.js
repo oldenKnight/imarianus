@@ -340,9 +340,14 @@
                 ],
                 bubbles: [{ x: 316, y: 74, w: 60, h: 42, text: '⬜1️⃣', kind: 'thought', tail: 'left', fs: 18 }] },
 
+    /* CLAR. `baculus` and `David` were the same two figures on the same
+       ground — flock right, shepherd left — differing only by a few pixels of
+       scale, so the two chips were one picture. The FLOCK is what makes the
+       boy read as "David the shepherd", so v_david keeps it and this card
+       drops it: the staff alone, held large and close, the same way v_lapis
+       isolates the stone by putting David alone with the sling. */
     v_baculus:  { bg: 'plain', items: [
-                  { t: 'grex', x: 306, y: G, s: 0.95 },
-                  david(140, 1.2, { staff: true, crook: true })
+                  david(200, 1.5, { staff: true, crook: true })
                 ] },
 
     v_hasta:    { bg: 'interior', items: [
