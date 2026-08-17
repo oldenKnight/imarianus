@@ -3223,7 +3223,14 @@
           drawBanner: function () {},
           roundRect: function () { ctx.beginPath(); },
           imgReady: function () { return false; },
-          wrapText: function (t) { return [String(t)]; }
+          wrapText: function (t) { return [String(t)]; },
+          /* GAP: the engine now hands every phase its live tile geometry, and
+             a fake env that lacks it makes draw() throw — which this row would
+             have reported as an unlabelled card. The stand-ins are the 1:1
+             desktop values, which is what a 360-wide fake canvas is. */
+          tile: function (base) { return base || 56; },
+          catchX: function (base) { return base || 42; },
+          spawnMargin: function (base) { return (base || 56) / 2 + 2; }
         };
       }
       /* run one phase implementation's draw() against a fake env and report
@@ -3937,6 +3944,299 @@
         }
         return done(null, res.pools + ' pools over ' + res.capitula + ' capitula, 0 critical, ' +
                     res.warn + ' warn');
+      });
+    });
+
+  /* ================= GAP — the REGION-WIDE boss pools =================
+
+     THE HOLE. Everything above sweeps ONE capitulum at a time, because every
+     screen above is one capitulum's screen. The boss arena is not: app.js
+     bossWords() unions the whole region's vocabulary, deduplicated by `la`,
+     and hands that single list to the engine as env.words — caterva's falling
+     tiles, fuga's counter-words, clāmor's distractors, the three probātiō
+     rounds and the boss quiz's two distractors all come out of it. Two
+     look-alike words from DIFFERENT capitula of one region therefore never met
+     on a swept screen, and then met in the air of the arena, where there is no
+     picture→word flip to fall back on and a wrong catch costs a heart.
+
+     The sweep found four such pairs on the day it was written, all of them
+     invisible to the per-capitulum walk:
+       fabulae-r08  f22 `flat`    / f23 `flectit`  one bent reed and one cloud
+       historia-l2  h7  `arca`    / h8  `natat`    one cropped ark, twice
+       historia-l2  h7  `columba` / h9  `volat`    one cropped dove in flight
+       historia-l3  h13 `Sara`    / h16 `Rebecca`  one cropped woman, twice
+     All four are fixed in content (scene/variant swap, no Latin moved).
+
+     Same semantics as every other sweep: CRITICAL fails the build, WARN is
+     reported. WARN is LOUD here — a region pool is twenty-five words to a
+     hundred and every pair is compared — and that is expected: two robed
+     figures, or two cards on one plain background, are exactly the residue
+     the crop rule cannot remove and the runtime flip absorbs. */
+  checkAsync('GAP', 'no boss draws its region-wide pool from two words with the same picture',
+    function (done) {
+      if (!window.CHIP || typeof CHIP.lintRegions !== 'function') {
+        done('CHIP.lintRegions is missing — the region-wide boss pools are unswept');
+        return;
+      }
+      withAllContent(done, function (want) {
+        var regs = [], k, reg;
+        for (k = 0; k < want.length; k++) {
+          reg = CONTENT.region(want[k].track, want[k].region);
+          if (!reg) { return done(want[k].track + '-' + want[k].region + ' registered nothing'); }
+          regs.push(reg);
+        }
+        var res = CHIP.lintRegions(regs);
+        /* the shape guard every other sweep carries: a walk that has silently
+           stopped matching the content passes with flying colours otherwise. */
+        if (res.pools < 33 || res.words < 600) {
+          return done('swept only ' + res.pools + ' region pools / ' + res.words +
+                      ' pooled words — the walk stopped matching the content shape');
+        }
+        if (res.critical) {
+          var lines = [], i;
+          for (i = 0; i < res.flags.length && lines.length < 12; i++) {
+            if (res.flags[i].level !== 'critical') { continue; }
+            lines.push(res.flags[i].region + ' ' + res.flags[i].a + ' vs ' + res.flags[i].b +
+                       ' — ' + res.flags[i].why);
+          }
+          return done(res.critical + ' CRITICAL: ' + lines.join(' | '));
+        }
+        return done(null, res.regions + ' regions, ' + res.words + ' pooled words, 0 critical, ' +
+                    res.warn + ' warn (cross-capitulum residue the flip absorbs)');
+      });
+    });
+
+  /* Every word a boss quiz names has to BE in the pool the quiz draws from.
+     app.js runBossQuiz() resolves each entry through findWord() over
+     bossWords() and SILENTLY DROPS the ones it cannot find — a five-question
+     quiz quietly becomes a three-question one and nothing anywhere says so.
+     The same union is what the sweep above walks, so it answers this for
+     free. */
+  checkAsync('GAP', 'every boss quiz word exists in that region\'s pooled vocabulary',
+    function (done) {
+      if (!window.CHIP || typeof CHIP.regionSets !== 'function') {
+        done('CHIP.regionSets is missing'); return;
+      }
+      withAllContent(done, function (want) {
+        var regs = [], k, reg, quizzed = 0;
+        for (k = 0; k < want.length; k++) {
+          reg = CONTENT.region(want[k].track, want[k].region);
+          if (!reg) { continue; }
+          regs.push(reg);
+          quizzed += ((reg.boss && reg.boss.quiz) || []).length;
+        }
+        if (quizzed < 100) {
+          return done('only ' + quizzed + ' quiz entries seen — the walk stopped ' +
+                      'matching the content shape');
+        }
+        var res = CHIP.lintRegions(regs);
+        if (res.unresolved.length) {
+          return done(res.unresolved.length + ' quiz word(s) not in the pool: ' +
+                      res.unresolved.join(' | '));
+        }
+        return done(null, quizzed + ' quiz entries over ' + res.regions +
+                    ' regions, all resolvable');
+      });
+    });
+
+  /* The dedupe is part of the RULE, not an optimisation: bossWords() keeps the
+     FIRST entry for a given `la`, so a linter that pooled duplicates would
+     report criticals that can never co-occur — and would go on reporting them
+     after the content had been "fixed". Asserted on a literal so a future
+     refactor of regionPool cannot quietly drop it. */
+  check('GAP', 'the region pool deduplicates by `la`, exactly as bossWords() does',
+    function () {
+      if (!window.CHIP || typeof CHIP.regionPool !== 'function') {
+        return 'CHIP.regionPool is missing';
+      }
+      var first  = { la: 'agnus', scene: { bg: 'plain', items: [{ t: 'lamb' }] } };
+      var second = { la: 'agnus', scene: { bg: 'desert', items: [{ t: 'lamb' }] } };
+      var other  = { la: 'lupus', scene: { bg: 'plain', items: [{ t: 'wolf' }] } };
+      var pool = CHIP.regionPool({ capitula: [
+        { id: 'x1', vocab: [first, { la: 'nūllus' }] },   /* no picture: skipped */
+        { id: 'x2', vocab: [second, other] }
+      ] });
+      if (pool.length !== 2) {
+        return 'pooled ' + pool.length + ' words where 2 were expected (the second ' +
+               '`agnus` must be dropped and the pictureless word skipped)';
+      }
+      if (pool[0] !== first) { return 'the dedupe kept the LAST `agnus`, not the first'; }
+      if (CHIP.lintOptions(pool).level === 'critical') {
+        return 'two words that cannot co-occur were reported as a critical pair';
+      }
+      return null;
+    });
+
+  /* ================= GAP — the ARENA TILE =================
+
+     The LUDUS row above proved the fox-catcher's tile against the unit the
+     learner actually sees. The duel and the trials were left on the literals
+     54 / 56 / 58 canvas units, and the boss canvas is CSS-scaled exactly as
+     the lūdus canvas is: on a 375 px phone the column is 343 CSS px, one
+     canvas unit is 0.715 CSS px, and those literals landed as 38.6 to 41.4
+     CSS PIXELS of picture. js/boss.js now derives the size from the live
+     canvas (tileSize/catchX/spawnMargin) and every phase asks for its own
+     historical base.
+
+     Three things have to stay true together, which is why this is three rows
+     and not one: the tile has to be big enough on a phone, the arena still has
+     to hold six of them, and the catch geometry has to leave the player
+     somewhere to stand. */
+
+  /* the harness a boss row needs: a canvas of a given CSS width, a config with
+     enough picturable vocabulary for any phase to start, and the fight torn
+     down again on the way out.
+
+     `body` runs INSIDE the fight, before stop(): teardown() empties every
+     phase's own state, so anything read afterwards reads a cleared object.
+     The frame source is NOT touched — the page installs a timer source once
+     for both engines, and resetting it here would strand whichever engine row
+     is mid-flight. That is also why the three rows below go through checkBoss:
+     Boss is a singleton with one loop, and these start a fight. */
+  function withBossOn(cssW, phases, body) {
+    var host = document.createElement('div');
+    host.style.cssText = 'position:absolute;left:-9999px;top:0;width:' + cssW + 'px';
+    var cv = document.createElement('canvas');
+    cv.style.cssText = 'width:100%;max-width:480px;display:block';
+    host.appendChild(cv);
+    document.body.appendChild(host);
+    var words = [
+      { la: 'vulpēs', emoji: '🦊', pars: 'nomen' },
+      { la: 'lupus',  emoji: '🐺', pars: 'nomen' },
+      { la: 'agnus',  emoji: '🐑', pars: 'nomen' },
+      { la: 'corvus', emoji: '🐦', pars: 'nomen' }
+    ];
+    try {
+      Boss.start(cv, { words: words, capitula: [], phases: phases,
+                       region: '__gap__', regionIndex: 0, name: 'Test' }, {});
+      return body(Boss.state());
+    } finally {
+      Boss.stop();
+      document.body.removeChild(host);
+    }
+  }
+
+  var PHONE_UNIT = 343 / 480;      /* CSS px per canvas unit at 375 */
+
+  checkBoss('GAP', 'a boss arena tile is 48-52 CSS px on a 375px phone',
+    function (done) {
+      if (!window.Boss || !Boss.state || !Boss.tileSize) { return done('Boss.tileSize is gone'); }
+      var st = withBossOn(343, [{ type: 'caterva', hp: 2, seconds: 22 }],
+        function (s) { return s; });
+      var caterva = st.tile;                       /* base 56 */
+      var css = caterva * PHONE_UNIT;
+      if (!(css >= 48 && css <= 52)) {
+        return done('a caterva tile is ' + css.toFixed(1) + ' CSS px on a 375px phone ' +
+               '(tile=' + caterva + ' units, k=' + st.tileK.toFixed(3) + ') — the ' +
+               'target band is 48-52');
+      }
+      /* the other two bases ride the same scale and must land in the band too */
+      var fuga = Boss.tileSize(54) * PHONE_UNIT;
+      var clamor = Boss.tileSize(58) * PHONE_UNIT;
+      if (fuga < 48 || clamor > 52) {
+        return done('fuga is ' + fuga.toFixed(1) + ' and clāmor ' + clamor.toFixed(1) +
+               ' CSS px — one of the bases has drifted out of the band');
+      }
+      /* THE ARENA STILL HOLDS ITS OWN MAXIMUM. caterva puts six items in the
+         air at region IX+; six tiles wider than the field cannot be laid out
+         side by side at all, whatever the spawn logic does. */
+      if (6 * caterva > 480) {
+        return done('six caterva tiles are ' + (6 * caterva) + ' units of a 480-unit ' +
+               'field — the arena cannot hold its own maximum spawn count');
+      }
+      if (Boss.spawnMargin(56) !== caterva / 2 + 2) {
+        return done('the spawn margin is no longer derived from the tile, so a bigger ' +
+               'tile hangs off the edge of the field');
+      }
+      return done(null);
+    });
+
+  checkBoss('GAP', 'the desktop arena is EXACTLY the game that shipped',
+    function (done) {
+      if (!window.Boss || !Boss.tileSize) { return done('Boss.tileSize is gone'); }
+      /* a 480px canvas is 1:1, so the scale factor is its floor of 1 and every
+         literal the phases used to carry comes back unchanged. Growing the
+         phone must not have moved the desktop. */
+      var st = withBossOn(480, [{ type: 'caterva', hp: 2, seconds: 22 }],
+        function (s) { return s; });
+      if (st.tile !== 56 || Boss.tileSize(54) !== 54 || Boss.tileSize(58) !== 58) {
+        return done('at 1:1 the tiles are ' + st.tile + '/' + Boss.tileSize(54) + '/' +
+               Boss.tileSize(58) + ' where 56/54/58 shipped');
+      }
+      if (st.catchX !== 42 || Boss.catchX(44) !== 44 || Boss.catchX(46) !== 46) {
+        return done('at 1:1 the catch half-widths are ' + st.catchX + '/' + Boss.catchX(44) +
+               '/' + Boss.catchX(46) + ' where 42/44/46 shipped');
+      }
+      return done(null);
+    });
+
+  /* THE FAIRNESS INVARIANT, asserted as BEHAVIOUR. clāmor's three cards sway
+     inside their own lanes and the player must be able to stand somewhere that
+     touches NONE of them while reading the sentence — otherwise the round
+     catches for you, and a wrong catch costs four seconds and a mistake.
+     Both numbers that decide it (the sway and the catch half-width) now move
+     with the screen, so the check reads the geometry the phase actually built
+     rather than re-deriving it. */
+  checkBoss('GAP', 'the clāmor lanes still leave the hero somewhere safe to stand',
+    function (done) {
+      if (!window.Boss || !Boss.PHASES || !Boss.PHASES.clamor) {
+        return done('the clāmor phase is not registered');
+      }
+      var snap = withBossOn(343, [{ type: 'clamor', hp: 2, seconds: 28 }],
+        function (s) {
+          var c = Boss.PHASES.clamor.cards || [], out = [], n;
+          for (n = 0; n < c.length; n++) { out.push({ lo: c[n].lo, hi: c[n].hi }); }
+          return { catchX: s.catchX, cards: out };
+        });
+      var cards = snap.cards;
+      if (cards.length < 3) {
+        return done('clāmor built ' + cards.length + ' cards; three lanes or nothing');
+      }
+      var reach = snap.catchX, x, i, safe = 0, ok;
+      /* the hero is clamped to [35, W-35] by the engine */
+      for (x = 35; x <= 445; x++) {
+        ok = true;
+        for (i = 0; i < cards.length; i++) {
+          /* a card occupies its whole [lo, hi] over time, so a place is only
+             safe if it clears the NEAREST edge of that whole stretch */
+          if (x > cards[i].lo - reach && x < cards[i].hi + reach) { ok = false; break; }
+        }
+        if (ok) { safe++; }
+      }
+      if (safe < 10) {
+        return done('only ' + safe + ' of 411 standing positions touch no card at catch ' +
+               'radius ' + reach + ' — there is nowhere to read the sentence from');
+      }
+      return done(null);
+    });
+
+  /* THE LITERALS ARE GONE. A phase that hard-codes 54/56/58 into drawTile, or
+     a catch test that hard-codes its radius, is a phase that has quietly opted
+     out of the conversion — and it would look right on the desktop where the
+     scale is 1, which is exactly how the lūdus went unnoticed for a release. */
+  checkAsync('GAP', 'no duel or trial phase hard-codes a tile size or a catch radius',
+    function (done) {
+      if (!SERVED) { done(null); return; }
+      withFile('../js/boss-phases.js', done, function (phases) {
+        withFile('../js/probatio.js', done, function (probatio) {
+          var bad = [], srcs = [['js/boss-phases.js', stripComments(phases)],
+                                ['js/probatio.js', stripComments(probatio)]];
+          var i, name, src, m, re;
+          for (i = 0; i < srcs.length; i++) {
+            name = srcs[i][0]; src = srcs[i][1];
+            /* drawTile(word, x, y, <number>) — the size argument must be a call */
+            re = /drawTile\s*\([^;]*?,\s*(\d+)\s*[,)]/g;
+            while ((m = re.exec(src))) {
+              bad.push(name + ' draws a tile at the literal ' + m[1] + ' units');
+            }
+            /* the catch test must go through env.catchX */
+            if (/hero\.x\s*\)\s*<\s*\d/.test(src)) {
+              bad.push(name + ' compares the hero against a literal catch radius');
+            }
+          }
+          if (bad.length) { return done(bad.join(' | ')); }
+          return done(null, 'six phases, every tile and radius through env.tile/env.catchX');
+        });
       });
     });
 
