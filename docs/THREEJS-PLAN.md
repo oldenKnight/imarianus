@@ -64,7 +64,13 @@ steps, the map (SVG board is the product's face and is at reference tier).
   Each S: ~1 agent-wave incl. tuning + QA. Each A1 scene: ~1/2 wave.
   Total for the recommended package: ~3-4 agent-waves + a QA pass.
 
-## Open questions for the owner (choose before implementation)
+## OWNER DECISION (2026-08-15, recorded)
+
+Package: S1 + S2 + A1. Default: automatice (device probe + EFFECTUS 3D
+toggle). Timing: implementation starts AFTER the map/art/clarity fix round
+is verified by the owner on production. S3, A2 declined; A3 open for later.
+
+## Original open questions (answered above)
 
   Q1 Which package: [recommended S1+S2+A1] / [also A3] / [also S3, A2] /
      [custom pick]?
