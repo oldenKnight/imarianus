@@ -134,3 +134,9 @@ the ledgers are already committed and are not theirs to touch.
   usage wall, no confirmation needed. No PC migration planned.
 - Agent transcripts expire fast — put full assignments in prompts, not
   follow-ups; audit fixes go to a NEW agent if resume fails.
+
+- server/config.php on THIS machine holds the owner PRODUCTION DB
+  credentials (localized for FTP deploy). It is git skip-worktree flagged
+  (git ls-files -v shows S) so local changes are invisible to git and can
+  never be committed or pushed. NEVER unset the flag; the repo keeps the
+  CHANGE_ME placeholder. Agents: never cat/print this file.
