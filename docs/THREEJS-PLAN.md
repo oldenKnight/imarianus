@@ -1,3 +1,6 @@
+> **ABORTED 2026-08-16 by owner instruction. No implementation was started
+> and none is scheduled. This file is reference only.**
+
 # THREE.JS ENRICHMENT PLAN (design only — NOT implemented; owner choosing)
 
 Goal per owner: use three.js to SUBSTITUTE specific minigames or storytelling

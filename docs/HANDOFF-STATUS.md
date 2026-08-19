@@ -140,3 +140,10 @@ the ledgers are already committed and are not theirs to touch.
   (git ls-files -v shows S) so local changes are invisible to git and can
   never be committed or pushed. NEVER unset the flag; the repo keeps the
   CHANGE_ME placeholder. Agents: never cat/print this file.
+
+## SESSION CLOSED (2026-08-16)
+
+Owner cleared ALL standing autonomous instructions: no loops, no scheduled
+wakeups, no auto-restart after usage limits, no auto-push, no queued agents.
+The three.js milestone is ABORTED (docs/THREEJS-PLAN.md is reference only).
+Nothing runs unattended. Full account of the build: docs/PROJECT-REPORT.md.
